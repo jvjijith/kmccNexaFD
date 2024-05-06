@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap');
+
+
+body{
+  font-family: 'Nunito', sans-serif;
+  color:#676767;
+  background-color: #1e1e1e;
+}
+
+.bg-card{
+  background-color:#171717;
+}
+.bg-sidebar-card-top{
+  background-color: #353535;
+}
+.sidebar-separator-top{
+  border-bottom: 1px solid #2e2e2e;
+}
+.sidebar-separator-bottom{
+  border-top: 1px solid #2e2e2e;
+}
+.text-premium-yellow{
+  color: #f7b91c;
+}
+.icon-background{
+  background: #2d2d2d;
+}
+
+.tooltip-head{
+background: #1d1d1d;
+}
+.tooltip-body{
+  background:#252525 ;
+}
+
+.search-icon{
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.card-stack-border{
+  border-bottom: 2px solid #696969;
+}
+.bg-details{
+  background-color: #1e1e1e;
+}
+
+.add-component-head{
+  background-color: #181818;
+  background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+}
+
+.sidebar-item-selected{
+  color: #ff4a17;
+  border-right: 2px solid #ff4a17;
+}
+.sidebar-item{
+  border-right: 2px solid transparent;
+}
+.sidebar-item:hover {
+ color:#a1a0a0;
+}
+.card
+{
+  min-height: 89% !important;
+  color:#fff;
+}
+.card-header
+{
+  border-bottom: 1px solid rgba(255, 255, 255, 0.125)
+}
+
+
+.rmd-text-field
+{
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  background-color: #000 !important;
+  color:#fff !important;
+  width: 100%;
+  height: 2.5rem;
+  display: block;
+}
+
+.rmd-listbox
+{
+  background-color: #000 !important;
+}
+
+.rmd-list-item
+{
+  border-bottom: 1px solid rgba(255, 255, 255, 0.125);
+  padding: 10px;
+  cursor: pointer;
+}
+
+.rmd-list-item--clickable:hover {
+  --rmd-states-background-color: var(--rmd-states-hover-color,rgba(0,0,0,.08)) !important;
+}
+
+.rmd-list li:hover span
+{
+  color:#ff4a17;
+  
+}
+
+.rmd-list
+{
+  overflow-y: scroll;
+}
+@keyframes borderAnimation {
+  0% {
+    top: 0;
+    left: 0;
+    transform: rotate(0deg);
+  }
+  25% {
+    top: 0;
+    left: 100%;
+    transform: rotate(0deg);
+  }
+  50% {
+    top: 100%;
+    left: 100%;
+    transform: rotate(180deg);
+  }
+  75% {
+    top: 100%;
+    left: 0;
+    transform: rotate(90deg);
+  }
+  100% {
+    top: 0;
+    left: 0;
+    transform: rotate(180deg);
+  }
+}
+
+.animate-border {
+  animation: borderAnimation 4s linear infinite;
+}

@@ -1,0 +1,25 @@
+
+export default function IconButton({
+    onClick = () => {},
+    icon = 'options',
+    className = 'w-4 h-4',
+  }) {
+    return (
+      <button onClick={onClick} type="button" className={className}>
+        {icon==="res-react-dash-logo"? <img
+          src={`/nexa.png`}
+          alt=""
+          className="w-full h-full"
+          width={50}
+          height={40}
+        />: <img
+        src={`https://assets.codepen.io/3685267/${icon}.svg`}
+        alt=""
+        className="w-full h-full"
+      />}
+       
+      </button>
+    );
+  }
+  
+  
