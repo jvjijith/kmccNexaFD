@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'https://dev.nexalogics.com.au/api';
 
 // Configure Axios instance with base URL
 const api = axios.create({
