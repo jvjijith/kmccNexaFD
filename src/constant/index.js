@@ -45,16 +45,120 @@ export const employeeData = [
   
   export const sidebarItems = [
     [
-      { id: '0', title: 'Dashboard', notifications: false,route:"/",parent:"/" },
+      { id: '0', title: 'Dashboard', notifications: false, route: "/", parent: "/" },
     ],
     [
-      { id: '4', title: 'Customer', notifications: false,route:"/customer",parent:"/customer" },
-      { id: '5', title: 'Contacts', notifications: false,route:"/contact", parent:"/contact"},
-      { id: '6', title: 'Groups', notifications: false,route:"/group", parent:"/group"},
-      { id: '7', title: 'Marketing', notifications: false,route:"/marketing",parent:"/marketing" },
+      {
+        id: '1', title: 'Customer', notifications: false, route: "/customer", parent: "/customer", dropdownItems: [
+          { id: '1-1', title: "Add Customer", route: "/customer/add" },
+          { id: '1-2', title: "List Customer", route: "/customer" },
+          { id: '1-3', title: "Customer Category", route: "/customer/category" },
+          { id: '1-4', title: "Contacts", route: "/customer/contacts" }
+        ]
+      },
+      {
+        id: '2', title: 'Vendor', notifications: false, route: "/vendor", parent: "/vendor", dropdownItems: [
+          { id: '2-1', title: "Add Vendor", route: "/vendor/add" },
+          { id: '2-2', title: "List Vendor", route: "/vendor/list" },
+          { id: '2-3', title: "Vendor Category", route: "/vendor/category" },
+          { id: '2-4', title: "Contacts", route: "/vendor/contacts" }
+        ]
+      },
+      {
+        id: '3', title: 'Product', notifications: false, route: "/product", parent: "/product", dropdownItems: [
+          { id: '3-1', title: "Add Products", route: "/product/add" },
+          { id: '3-2', title: "List Products", route: "/product/list" },
+          { id: '3-3', title: "Product Category", route: "/product/category" },
+          { id: '3-4', title: "Prices", route: "/product/prices" },
+          { id: '3-5', title: "Inventory", route: "/product/inventory" }
+        ]
+      },
+      {
+        id: '4', title: 'Services', notifications: false, route: "/services", parent: "/services", dropdownItems: [
+          { id: '4-1', title: "Service Category", route: "/services/category" },
+          { id: '4-2', title: "Add Services", route: "/services/add" },
+          { id: '4-3', title: "List Services", route: "/services/list" },
+          { id: '4-4', title: "Prices", route: "/services/prices" }
+        ]
+      },
+      {
+        id: '5', title: 'Pre-Sales', notifications: false, route: "/presales", parent: "/presales", dropdownItems: [
+          { id: '5-1', title: "Add Quotes", route: "/presales/quotes/add" },
+          { id: '5-2', title: "View Quotes", route: "/presales/quotes/view" },
+          { id: '5-3', title: "Add Enquiry", route: "/presales/enquiry/add" },
+          { id: '5-4', title: "List Enquiry", route: "/presales/enquiry/list" },
+          { id: '5-5', title: "Add Purchase Order", route: "/presales/purchaseorder/add" },
+          { id: '5-6', title: "List Purchase Order", route: "/presales/purchaseorder/list" },
+          { id: '5-7', title: "Add Delivery Note", route: "/presales/deliverynote/add" },
+          { id: '5-8', title: "List Delivery Note", route: "/presales/deliverynote/list" }
+        ]
+      },
+      {
+        id: '6', title: 'Delivery', notifications: false, route: "/delivery", parent: "/delivery", dropdownItems: [
+          { id: '6-1', title: "Shipping Carrier", route: "/delivery/shippingcarrier" },
+          { id: '6-2', title: "Logistic Management", route: "/delivery/logisticmanagement" },
+          { id: '6-3', title: "Delivery By Owner", route: "/delivery/byowner" },
+          { id: '6-4', title: "Tracking", route: "/delivery/tracking" }
+        ]
+      },
+      {
+        id: '7', title: 'Store', notifications: false, route: "/store", parent: "/store", dropdownItems: [
+          {
+            id: '7-1', title: "Order Management", route: "/store/ordermanagement", dropdownItems: [
+              { id: '7-1-1', title: "Add Orders", route: "/store/ordermanagement/add" },
+              { id: '7-1-2', title: "List Orders", route: "/store/ordermanagement/list" },
+              { id: '7-1-3', title: "Cancel Orders", route: "/store/ordermanagement/cancel" },
+              { id: '7-1-4', title: "Refund", route: "/store/ordermanagement/refund" }
+            ]
+          },
+          {
+            id: '7-2', title: "RFQ", route: "/store/rfq", dropdownItems: [
+              { id: '7-2-1', title: "Add RFQ", route: "/store/rfq/add" },
+              { id: '7-2-2', title: "View RFQ", route: "/store/rfq/view" },
+              { id: '7-2-3', title: "Cancel", route: "/store/rfq/cancel" },
+              { id: '7-2-4', title: "Send RFQ", route: "/store/rfq/send" }
+            ]
+          },
+          {
+            id: '7-3', title: "App Management", route: "/store/appmanagement", dropdownItems: [
+              { id: '7-3-1', title: "Geo-Blocking", route: "/store/appmanagement/geoblocking" },
+              { id: '7-3-2', title: "Layout", route: "/store/appmanagement/layout" },
+              { id: '7-3-3', title: "Menu", route: "/store/appmanagement/menu" },
+              { id: '7-3-4', title: "Payment Configuration", route: "/store/appmanagement/paymentconfig" },
+              { id: '7-3-5', title: "Mail Template", route: "/store/appmanagement/mailtemplate" },
+              { id: '7-3-6', title: "Branding And Themes", route: "/store/appmanagement/branding" }
+            ]
+          },
+          {
+            id: '7-4', title: "Payment", route: "/store/payment", dropdownItems: [
+              { id: '7-4-1', title: "List Payments", route: "/store/payment/list" },
+              { id: '7-4-2', title: "Cancel Payments", route: "/store/payment/cancel" },
+              { id: '7-4-3', title: "Refund", route: "/store/payment/refund" }
+            ]
+          }
+        ]
+      },
+      {
+        id: '8', title: 'Reporting And Analytics', notifications: false, route: "/reporting", parent: "/reporting", dropdownItems: [
+          { id: '8-1', title: "Reports", route: "/reporting/reports" },
+          { id: '8-2', title: "Analytics", route: "/reporting/analytics" }
+        ]
+      },
+      {
+        id: '9', title: 'Admin And Security', notifications: false, route: "/admin", parent: "/admin", dropdownItems: [
+          { id: '9-1', title: "Organization", route: "/admin/organization" },
+          { id: '9-2', title: "Teams", route: "/admin/teams" },
+          { id: '9-3', title: "Add User", route: "/admin/adduser" },
+          { id: '9-4', title: "View User", route: "/admin/viewuser" },
+          { id: '9-5', title: "User Permission", route: "/admin/userpermission" },
+          { id: '9-6', title: "Login Info", route: "/admin/logininfo" },
+          { id: '9-7', title: "Logs", route: "/admin/logs" }
+        ]
+      }
     ],
   ];
-
+  
+  
 
   export const industries = [
     'Aerospace and Defense',

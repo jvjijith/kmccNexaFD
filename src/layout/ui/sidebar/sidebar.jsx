@@ -56,15 +56,31 @@ export default function Sidebar() {
             />
           </div>
         </div>
-        {sidebarItems[0].map((i) => (
-          <MenuItem key={i.id} item={i} />
-        ))}
-        <div className="mt-8 mb-0 font-bold px-3 block sm:hidden xl:block">
+        {/* {sidebarItems[0].map((i) => (
+          <MenuItem
+          item={{
+            id: i.id,
+            title: i.title,
+            notifications: i.notifications,
+            route: i.route,
+            parent: i.parent,
+            dropdownItems: [
+              { title: "Subitem 1", route: "/home/subitem1" },
+              { title: "Subitem 2", route: "/home/subitem2" }
+            ]
+          }}
+        />
+        ))} */}
+        {/* <div className="mt-8 mb-0 font-bold px-3 block sm:hidden xl:block">
           SHORTCUTS
-        </div>
-        {sidebarItems[1].map((i) => (
-          <MenuItem key={i.id} item={i} />
-        ))}
+        </div> */}
+        {sidebarItems.flat().map((i) => (
+        <MenuItem
+          key={i.id}
+          item={i}
+        />
+      ))}
+        
         <div className="flex-grow" />
         <div className="w-full p-3 h-28 hidden sm:block sm:h-20 xl:h-32">
           <div
@@ -83,30 +99,30 @@ export default function Sidebar() {
                 {precentage.interpolate((i) => `${Math.round(i)}%`)}
               </animated.div>
               <div className="w-full text-gray-300">
-                <svg
-                  viewBox="0 0 100 11"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="5"
-                    y1="5.25"
-                    x2="95"
-                    y2="5.25"
-                    stroke="#3C3C3C"
-                    strokeWidth="5"
-                    strokeLinecap="round"
-                  />
-                  <animated.line
-                    x1="5"
-                    y1="5.25"
-                    x2={indicatorWidth}
-                    y2="5.25"
-                    stroke="currentColor"
-                    strokeWidth="5"
-                    strokeLinecap="round"
-                  />
-                </svg>
+              <svg
+  viewBox="0 0 100 11"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <line
+    x1="5"
+    y1="5.25"
+    x2="95"
+    y2="5.25"
+    stroke="#3C3C3C"
+    strokeWidth="5"
+    strokeLinecap="round"
+  />
+  <animated.line
+    x1="5"
+    y1="5.25"
+    x2={indicatorWidth}
+    y2="5.25"
+    stroke="currentColor"
+    strokeWidth="5"
+    strokeLinecap="round"
+  />
+</svg>
               </div>
             </div>
 
