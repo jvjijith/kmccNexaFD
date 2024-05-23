@@ -47,11 +47,19 @@ const useInvalidateQueries = () => {
 
 // Define a generic hook for fetching data
 const useApiQuery = (key, url, options = {}) => {
-  return useQuery(key, async () => {
-    const { data } = await api.get(url, options);
-    console.log(data);
-    return data;
+ return useQuery({
+    queryKey: [key],
+    queryFn: async () => {
+      const { data } = await api.get(url, options);
+      console.log(data);
+      return data;
+    },
   });
+  // return useQuery({key, async ()  {
+  //   const { data } = await api.get(url, options);
+  //   console.log(data);
+  //   return data;
+  // }});
 };
 
 // Define a generic hook for posting, updating, or deleting data

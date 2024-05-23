@@ -14,6 +14,8 @@ import Loading from "./pages/loading/loading";
 import { ApiProvider } from "./common/api";
 import Group from "./pages/groups";
 import EditCustomer from "./pages/customer/editCustomer";
+import Team from "./pages/adminAndSecurity/teamList";
+// import AddTeam from "./pages/adminAndSecurity/addTeam";
 
 const App = () => {
   return (
@@ -24,11 +26,13 @@ const App = () => {
       <Route exact path="/" element={<Dashboard></Dashboard>}></Route>
       <Route exact path="home" element={<Dashboard></Dashboard>}></Route> 
       <Route exact path="customer" element={<Customer></Customer>}></Route>
+      <Route exact path="admin/teams" element={<Team></Team>}></Route>
       <Route exact path="contact" element={<Contact></Contact>}></Route>
       <Route exact path="group" element={<Group></Group>}></Route>      
       <Route exact path="addContact" element={<AddContact></AddContact>}></Route>
       <Route exact path="loading" element={<Loading></Loading>}></Route>
       <Route path="customer/add" element={<AddCustomer />} />
+      {/* <Route path="team/add" element={<AddTeam />} /> */}
       <Route path="customer/edit/:Id" element={<EditCustomer />} />
       </Route>
 

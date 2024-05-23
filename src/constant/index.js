@@ -510,5 +510,10 @@ export const categoryDefault = {
   
 }
 
+export const teamDefault = {
+  teamName: ""
+};
+
+
 
 

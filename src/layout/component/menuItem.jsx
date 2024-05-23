@@ -9,7 +9,6 @@ export default function MenuItem({ item }) {
   const { pathname } = location;
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedDropdownItem, setSelectedDropdownItem] = useState("");
 
   const handleItemClick = () => {
     if (dropdownItems && dropdownItems.length > 0) {
@@ -19,13 +18,7 @@ export default function MenuItem({ item }) {
     }
   };
 
-  const handleDropdownItemClick = (dropdownRoute) => {
-    navigate(dropdownRoute);
-    setSelectedDropdownItem(dropdownRoute);
-    setIsDropdownOpen(false);
-  };
-
-  const isSelected = route !== "/" ? pathname === route || selectedDropdownItem === route || pathname.startsWith(parent) : pathname === route;
+  const isSelected = pathname === route || pathname.startsWith(parent);
 
   return (
     <div className="relative w-full">
@@ -61,16 +54,7 @@ export default function MenuItem({ item }) {
       {isDropdownOpen && dropdownItems && (
         <div className="mt-2 w-full bg-sidebar-card-top shadow-lg z-10">
           {dropdownItems.map((dropdownItem) => (
-            <div
-              key={dropdownItem.route}
-              className={clsx(
-                'px-4 py-2 cursor-pointer',
-                pathname === dropdownItem.route ? 'bg-gray-200' : ''
-              )}
-              onClick={() => handleDropdownItemClick(dropdownItem.route)}
-            >
-              {dropdownItem.title}
-            </div>
+            <MenuItem key={dropdownItem.route} item={dropdownItem} />
           ))}
         </div>
       )}
