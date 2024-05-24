@@ -1,22 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Icon from '../ui/icon/icon';
 import IconButton from '../ui/icon/iconButton';
 import Card from '../ui/card/card';
 import { useSidebar } from '../../context/sidebar.context';
-import PopUpModal from '../ui/modal/modal';
-import TeamForm from './teamForm';
 
-function TeamCard({children,title}) {
-
-     const [isModalOpen, setModalOpen] = useState(false);
-
-  const openModal = () => {
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+function AdminCard({children,title}) {
   const {toggleSidebar} = useSidebar();
     return (
         <div className="flex w-full">
@@ -63,24 +51,13 @@ function TeamCard({children,title}) {
           </div>
 
           
-          <Card 
-      title={title} 
-      component={
-        <button className="bg-nexa-orange hover:bg-green-400 text-white px-4 py-2 rounded" onClick={openModal}>
-          Add Team
-        </button>
-      }
-    >
+           <Card title={title}>
                {children}
             </Card>
             </div>
-            <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Team"}>
-        {/* Modal Content */}
 
-        <TeamForm></TeamForm>
-      </PopUpModal>
         </div>
     );
 }
 
-export default TeamCard;
+export default AdminCard;

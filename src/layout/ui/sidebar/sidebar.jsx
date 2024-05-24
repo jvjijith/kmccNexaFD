@@ -7,7 +7,6 @@ import Image from "../image/image";
 import { animated, useSpring, config } from "@react-spring/web";
 import { useSidebar } from "../../../context/sidebar.context";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
-import { Dropdown } from "flowbite-react";
 
 
 export default function Sidebar() {

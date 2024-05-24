@@ -15,7 +15,7 @@ import { ApiProvider } from "./common/api";
 import Group from "./pages/groups";
 import EditCustomer from "./pages/customer/editCustomer";
 import Team from "./pages/adminAndSecurity/teamList";
-// import AddTeam from "./pages/adminAndSecurity/addTeam";
+import AddUser from "./pages/adminAndSecurity/addUser";
 
 const App = () => {
   return (
@@ -32,7 +32,7 @@ const App = () => {
       <Route exact path="addContact" element={<AddContact></AddContact>}></Route>
       <Route exact path="loading" element={<Loading></Loading>}></Route>
       <Route path="customer/add" element={<AddCustomer />} />
-      {/* <Route path="team/add" element={<AddTeam />} /> */}
+      <Route path="admin/adduser" element={<AddUser />} />
       <Route path="customer/edit/:Id" element={<EditCustomer />} />
       </Route>
 

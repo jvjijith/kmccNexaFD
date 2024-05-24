@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { Dropdown, Table } from "flowbite-react";
 import { useNavigate } from "react-router";
-import { useGetData } from "../../common/api";
+import { useGetData, usePutData } from "../../common/api";
 import PopUpModal from "../ui/modal/modal";
-import TeamForm from "./teamForm"; 
+import TeamForm from "./teamForm";
 
 function TeamTable() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState(null);
   
-  const { data, isLoading, error } = useGetData("teamData", "/team", {});
+  const { data, isLoading, error, refetch } = useGetData("teamData", "/team", {});
+  const { mutate: deactivateTeam, isLoading: isDeactivating, error: deactivationError } = usePutData("deactivateTeam", `/team/deactivate/${selectedTeamId}`);
+  
   const navigate = useNavigate();
 
   const openModal = (teamId) => {
@@ -20,6 +22,21 @@ function TeamTable() {
   const closeModal = () => {
     setSelectedTeamId(null);
     setModalOpen(false);
+  };
+
+  const handleDeactivateTeam = (teamId) => {
+    setSelectedTeamId(teamId);
+    deactivateTeam(
+      {},
+      {
+        onSuccess: () => {
+          refetch(); // Refetch the data to update the table
+        },
+        onError: (error) => {
+          console.error("Error deactivating team:", error);
+        },
+      }
+    );
   };
 
   if (isLoading) {
@@ -35,6 +52,7 @@ function TeamTable() {
       <Table theme={{ dark: true }}>
         <Table.Head className="border-gray-700 bg-black text-white">
           <Table.HeadCell className="border-gray-700 bg-black text-white">Team Name</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
@@ -42,6 +60,9 @@ function TeamTable() {
             <Table.Row key={team.teamId} className="border-gray-700 bg-zinc-950">
               <Table.Cell className="whitespace-nowrap font-medium text-white">
                 {team.name}
+              </Table.Cell>
+              <Table.Cell className={`whitespace-nowrap ${team.active ? "text-green-500" : "text-red-500"}`}>
+                {team.active ? "Active" : "Inactive"}
               </Table.Cell>
               <Table.Cell className="text-gray-300">
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
@@ -53,7 +74,7 @@ function TeamTable() {
                   </Dropdown.Item>
                   <Dropdown.Item
                     className="text-gray-300 hover:!bg-orange-600"
-                    onClick={() => navigate(`/deactivateTeam/${team.teamId}`)}
+                    onClick={() => handleDeactivateTeam(team.teamId)}
                   >
                     Deactivate Team
                   </Dropdown.Item>

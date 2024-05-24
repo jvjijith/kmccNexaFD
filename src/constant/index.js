@@ -45,7 +45,7 @@ export const employeeData = [
   
   export const sidebarItems = [
     [
-      { id: '0', title: 'Dashboard', notifications: false, route: "/", parent: "/" },
+      { id: '0', title: 'Dashboard', notifications: false, route: "/", parent: "/home" },
     ],
     [
       {
@@ -514,6 +514,22 @@ export const teamDefault = {
   teamName: ""
 };
 
-
+export const employeeDefault = {
+  
+    userId: "",
+    teamId: "",
+    admin: "",
+    superAdmin: "",
+    designation: "",
+    superior: "",
+    address: "",
+    passport: "",
+    dateOfBirth: "",
+    dateOfJoining: "",
+    phoneNumber: "",
+    activeUser: "",
+    emergencyContact: [{ name: '', phone: '', relationship: '' }]
+  
+}
 
 
