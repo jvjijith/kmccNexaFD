@@ -515,7 +515,7 @@ export const teamDefault = {
 };
 
 export const employeeDefault = {
-  
+    name: "",
     userId: "",
     teamId: "",
     admin: "",

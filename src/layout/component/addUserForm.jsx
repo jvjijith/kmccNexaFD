@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { employeeDefault } from '../../constant';
-import { useGetData, usePostData } from '../../common/api';
-import { ToastContainer, toast } from 'react-toastify';
+import { useGetData, usePutData } from '../../common/api';
+import { toast } from 'react-toastify';
 import Select from 'react-select';
 import LoadingScreen from "../ui/loading/loading";
 
-function UserForm() {
+function UserForm({ userId }) {
   const [employeeData, setEmployeeData] = useState(employeeDefault);
-  const { data: teamData, isLoading: teamLoading, error: teamError, refetch: refetchTeam } = useGetData("teamData", "/team/active", {});
-  const { data: employeeDatas, isLoading: employeeLoading, error: employeeError, refetch: refetchEmployee } = useGetData("employeeData", "/employee/active", {});
-  // const { mutate: addEmployee, isPending: isAdding, error: addError } = usePostData("addEmployee", "/employee/add");
-  // const { mutate: Employee, isPending: isAdding, error: addError } = useGetData("Employee", "/employee/user/"+{userId});
-  // const { mutate: editEmployee, isPending: isAdding, error: addError } = useGetData("editEmployee", "/employee/update/user/"+{userId});
-  const { mutate: signup, isPending: isSigningUp, error: signupError } = usePostData("signup", "/auth/signup");
   const [emergencyContacts, setEmergencyContacts] = useState([]);
+
+  const { data: teamData, isLoading: teamLoading, refetch: refetchTeam } = useGetData("teamData", "/team/active", {});
+  const { data: employeeDatas, isLoading: employeeLoading, refetch: refetchEmployee } = useGetData("employeeData", "/employee/active", {});
+  const { data: employeeDetail, isLoading: employeeDetailLoading, refetch: refetchEmployeeDetail } = useGetData("Employee", `/employee/user/${userId}`);
+  const { mutate: editEmployee, isPending: isAdding, error: addError } = usePutData("editEmployee", `/employee/update/user/${userId}`);
 
   useEffect(() => {
     refetchTeam();
     refetchEmployee();
-  }, [refetchTeam, refetchEmployee]);
+    refetchEmployeeDetail();
+  }, [refetchTeam, refetchEmployee, refetchEmployeeDetail]);
+
+  useEffect(() => {
+    if (employeeDetail) {
+      setEmployeeData(employeeDetail);
+      setEmergencyContacts(employeeDetail.emergencyContact || []);
+    }
+  }, [employeeDetail]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +56,7 @@ function UserForm() {
 
   const validateFields = () => {
     const requiredFields = [
-      'name', 'email', 'password', 'address', 'designation', 'superior',
+      'name', 'email', 'address', 'designation', 'superior',
       'dateOfBirth', 'dateOfJoining', 'phoneNumber', 'userRole'
     ];
 
@@ -65,7 +72,7 @@ function UserForm() {
       return false;
     }
 
-    if (employeeData.password.length < 6) {
+    if (employeeData.password && employeeData.password.length < 6) {
       toast.error('Password must be at least 6 characters long.');
       return false;
     }
@@ -97,48 +104,33 @@ function UserForm() {
       return;
     }
 
-    const signupRequestBody = {
+    const updateEmployeeRequestBody = {
+      name: employeeData.name,
       email: employeeData.email,
-      password: employeeData.password,
+      userId: employeeData.userId,
+      teamId: employeeData.teamId,
+      admin: employeeData.admin,
+      superAdmin: employeeData.superAdmin,
+      designation: employeeData.designation,
+      superior: employeeData.superior,
+      address: employeeData.address,
+      passport: employeeData.passport,
+      dateOfBirth: employeeData.dateOfBirth,
+      dateOfJoining: employeeData.dateOfJoining,
+      phoneNumber: employeeData.phoneNumber,
+      activeUser: employeeData.activeUser,
+      emergencyContact: emergencyContacts,
     };
 
-    signup(signupRequestBody, {
-      onSuccess: (signupResponse) => {
-        const userId = signupResponse.uid;
-
-        const addEmployeeRequestBody = {
-          name: employeeData.name,
-          email: employeeData.email,
-          userId,
-          teamId: employeeData.teamId,
-          admin: employeeData.userRole === 'admin',
-          superAdmin: employeeData.userRole === 'superAdmin',
-          designation: employeeData.designation,
-          superior: employeeData.superior,
-          address: employeeData.address,
-          passport: employeeData.passport,
-          dateOfBirth: employeeData.dateOfBirth,
-          dateOfJoining: employeeData.dateOfJoining,
-          phoneNumber: employeeData.phoneNumber,
-          activeUser: true,
-          emergencyContact: emergencyContacts,
-        };
-
-        addEmployee(addEmployeeRequestBody, {
-          onSuccess: () => {
-            toast.success('Employee added successfully!');
-            setEmployeeData(employeeDefault);
-            setEmergencyContacts([]);
-          },
-          onError: (error) => {
-            console.error("Error adding employee:", error);
-            toast.error('Error adding employee.');
-          },
-        });
+    editEmployee(updateEmployeeRequestBody, {
+      onSuccess: () => {
+        toast.success('Employee updated successfully!');
+        setEmployeeData(employeeDefault);
+        setEmergencyContacts([]);
       },
       onError: (error) => {
-        console.error("Error signing up:", error);
-        toast.error('Error signing up.');
+        console.error("Error updating employee:", error);
+        toast.error('Error updating employee.');
       },
     });
   };
@@ -156,16 +148,38 @@ function UserForm() {
     label: employee.name,
   }));
 
- 
-  if (employeeLoading || teamLoading) {
+  const userRoleOptions = [
+    { value: 'superAdmin', label: 'Super Admin' },
+    { value: 'admin', label: 'Admin' },
+    { value: 'user', label: 'User' },
+  ];
+
+  const handleUserRoleChange = (selectedOption) => {
+    const { value } = selectedOption;
+    setEmployeeData(prevState => ({
+      ...prevState,
+      userRole: value,
+      superAdmin: value === 'superAdmin',
+      admin: value === 'admin',
+    }));
+  };
+
+  useEffect(() => {
+    if (employeeDetail) {
+      const role = employeeDetail.superAdmin ? 'superAdmin' : (employeeDetail.admin ? 'admin' : 'user');
+      setEmployeeData(prevState => ({
+        ...prevState,
+        userRole: role
+      }));
+    }
+  }, [employeeDetail]);
+
+  if (employeeLoading || teamLoading || employeeDetailLoading) {
     return <LoadingScreen />;
   }
 
-  // if (teamError || employeeError || addError || signupError) {
-  //   return <div>Error loading data</div>;
-  // }
   return (
-    <div>
+    <div style={{ overflowY: 'auto', maxHeight: '80vh' }}>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
@@ -202,21 +216,6 @@ function UserForm() {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Password *</label>
-              <input
-                type="password"
-                name="password"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                placeholder="Enter Password"
-                autoComplete="off"
-                value={employeeData.password}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <div className="w-full sm:w-1/2 p-4">
-            <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Address *</label>
               <textarea
                 name="address"
@@ -228,9 +227,7 @@ function UserForm() {
               ></textarea>
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="block w-full mb-2 text-white">Team *</label>
@@ -245,39 +242,33 @@ function UserForm() {
                     backgroundColor: 'black',
                     borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
                     borderBottomWidth: '2px',
-                    borderRadius: '0px',
-                    height: '40px', // h-10: 2.5rem = 40px
-                    paddingLeft: '8px', // px-2: 0.5rem = 8px
-                    paddingRight: '8px', // px-2: 0.5rem = 8px
+                    borderRadius: '0',
+                    minHeight: '40px',
                     color: 'white'
                   }),
                   singleValue: (provided) => ({
                     ...provided,
                     color: 'white',
                   }),
-                  placeholder: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
                   menu: (provided) => ({
                     ...provided,
                     backgroundColor: 'black',
-                    color: 'white',
+                    color: 'white'
                   }),
-                  option: (provided, state) => ({
+                  placeholder: (provided) => ({
                     ...provided,
-                    backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                    color: state.isSelected ? 'black' : 'white',
-                    cursor: 'pointer'
+                    color: 'white'
                   })
                 }}
               />
             </div>
           </div>
+        </div>
 
+        <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-white">Designation *</label>
+              <label className="float-left inline-block mb-2 text-white">Designation *</label>
               <input
                 type="text"
                 name="designation"
@@ -289,9 +280,7 @@ function UserForm() {
               />
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="block w-full mb-2 text-white">Superior *</label>
@@ -306,47 +295,24 @@ function UserForm() {
                     backgroundColor: 'black',
                     borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
                     borderBottomWidth: '2px',
-                    borderRadius: '0px',
-                    height: '40px', // h-10: 2.5rem = 40px
-                    paddingLeft: '8px', // px-2: 0.5rem = 8px
-                    paddingRight: '8px', // px-2: 0.5rem = 8px
+                    borderRadius: '0',
+                    minHeight: '40px',
                     color: 'white'
                   }),
                   singleValue: (provided) => ({
                     ...provided,
                     color: 'white',
                   }),
-                  placeholder: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
                   menu: (provided) => ({
                     ...provided,
                     backgroundColor: 'black',
-                    color: 'white',
+                    color: 'white'
                   }),
-                  option: (provided, state) => ({
+                  placeholder: (provided) => ({
                     ...provided,
-                    backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                    color: state.isSelected ? 'black' : 'white',
-                    cursor: 'pointer'
+                    color: 'white'
                   })
                 }}
-              />
-            </div>
-          </div>
-
-          <div className="w-full sm:w-1/2 p-4">
-            <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Passport </label>
-              <input
-                type="text"
-                name="passport"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                placeholder="Enter Passport"
-                autoComplete="off"
-                value={employeeData.passport}
-                onChange={handleChange}
               />
             </div>
           </div>
@@ -387,7 +353,7 @@ function UserForm() {
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Phone Number *</label>
               <input
-                type="text"
+                type="tel"
                 name="phoneNumber"
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Enter Phone Number"
@@ -400,71 +366,132 @@ function UserForm() {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">User Role *</label>
-              <select
-                name="userRole"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                value={employeeData.userRole}
-                onChange={handleChange}
-              >
-                <option value="">Select</option>
-                <option value="admin">Admin</option>
-                <option value="superAdmin">Super Admin</option>
-                <option value="user">User</option>
-              </select>
+              <label className="block w-full mb-2 text-white">User Role *</label>
+              <Select
+                options={userRoleOptions}
+                value={userRoleOptions.find(option => option.value === employeeData.userRole)}
+                onChange={handleUserRoleChange}
+                styles={{
+                  control: (provided, state) => ({
+                    ...provided,
+                    backgroundColor: 'black',
+                    borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                    borderBottomWidth: '2px',
+                    borderRadius: '0',
+                    minHeight: '40px',
+                    color: 'white'
+                  }),
+                  singleValue: (provided) => ({
+                    ...provided,
+                    color: 'white',
+                  }),
+                  menu: (provided) => ({
+                    ...provided,
+                    backgroundColor: 'black',
+                    color: 'white'
+                  }),
+                  placeholder: (provided) => ({
+                    ...provided,
+                    color: 'white'
+                  })
+                }}
+              />
             </div>
           </div>
         </div>
 
-        <div>
-          <label className="block w-full mb-2 text-white">Emergency Contacts</label>
-          {emergencyContacts.map((contact, index) => (
-            <div key={index} className="flex flex-wrap p-4 mb-4 bg-nexa-gray">
-              <div className="w-full sm:w-1/3 p-4">
-                <input
-                  type="text"
-                  name={`emergencyContactName${index}`}
-                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                  placeholder="Contact Name"
-                  value={contact.name}
-                  onChange={(e) => handleEmergencyContactChange(index, 'name', e.target.value)}
-                />
-              </div>
-              <div className="w-full sm:w-1/3 p-4">
-                <input
-                  type="text"
-                  name={`emergencyContactPhone${index}`}
-                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                  placeholder="Contact Phone"
-                  value={contact.phone}
-                  onChange={(e) => handleEmergencyContactChange(index, 'phone', e.target.value)}
-                />
-              </div>
-              <div className="w-full sm:w-1/3 p-4">
-                <input
-                  type="text"
-                  name={`emergencyContactRelationship${index}`}
-                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                  placeholder="Contact Relationship"
-                  value={contact.relationship}
-                  onChange={(e) => handleEmergencyContactChange(index, 'relationship', e.target.value)}
-                />
-              </div>
-              <div className="w-full sm:w-1/3 p-4">
-                <button type="button" onClick={() => deleteEmergencyContact(index)} className="bg-black text-white px-4 py-2 rounded">Delete</button>
-              </div>
+        <div className="flex flex-wrap">
+          <div className="w-full sm:w-1/2 p-4">
+            <div className="mb-4">
+              <label className="float-left inline-block mb-2 text-white">Passport</label>
+              <input
+                type="text"
+                name="passport"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                placeholder="Enter Passport"
+                autoComplete="off"
+                value={employeeData.passport}
+                onChange={handleChange}
+              />
             </div>
-          ))}
-          <button type="button" onClick={addEmergencyContact} className="bg-black text-white px-4 py-2 rounded">Add Emergency Contact</button>
+          </div>
+
+          {/* <div className="w-full sm:w-1/2 p-4">
+            <div className="mb-4">
+              <label className="float-left inline-block mb-2 text-white">Active User</label>
+              <input
+                type="checkbox"
+                name="activeUser"
+                className="float-left h-5 w-5 text-blue-600"
+                checked={employeeData.activeUser}
+                onChange={(e) => setEmployeeData(prevState => ({ ...prevState, activeUser: e.target.checked }))}
+              />
+            </div>
+          </div> */}
         </div>
 
-        <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">Add Employee</button>
+        <div className="flex flex-wrap">
+          <div className="w-full p-4">
+            <h3 className="text-white mb-2">Emergency Contacts</h3>
+            {emergencyContacts.map((contact, index) => (
+              <div key={index} className="flex flex-wrap mb-4">
+                <div className="w-full sm:w-1/3 p-2">
+                  <input
+                    type="text"
+                    className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                    placeholder="Name"
+                    value={contact.name}
+                    onChange={(e) => handleEmergencyContactChange(index, 'name', e.target.value)}
+                  />
+                </div>
+                <div className="w-full sm:w-1/3 p-2">
+                  <input
+                    type="tel"
+                    className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                    placeholder="Phone"
+                    value={contact.phone}
+                    onChange={(e) => handleEmergencyContactChange(index, 'phone', e.target.value)}
+                  />
+                </div>
+                <div className="w-full sm:w-1/3 p-2">
+                  <input
+                    type="text"
+                    className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                    placeholder="Relationship"
+                    value={contact.relationship}
+                    onChange={(e) => handleEmergencyContactChange(index, 'relationship', e.target.value)}
+                  />
+                </div>
+                <div className="w-full sm:w-auto p-2">
+                  <button
+                    type="button"
+                    className="h-10 px-4 text-white border border-white rounded focus:outline-none hover:bg-black hover:text-white transition"
+                    onClick={() => deleteEmergencyContact(index)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="h-10 px-4 mb-4 text-white border border-white rounded focus:outline-none hover:bg-white hover:text-white transition"
+              onClick={addEmergencyContact}
+            >
+              Add Emergency Contact
+            </button>
+          </div>
         </div>
+
+        <button
+          type="submit"
+          className="w-full h-12 px-4 text-white bg-nexa-orange rounded hover:bg-nexa-orange transition"
+        >
+          Submit
+        </button>
       </form>
-      <ToastContainer />
     </div>
   );
-}
+};
 
 export default UserForm;

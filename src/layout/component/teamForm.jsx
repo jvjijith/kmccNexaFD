@@ -1,27 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { teamDefault } from "../../constant";
 import { usePostData, usePutData } from "../../common/api";
 
-function TeamForm({ id }) {
-  
+function TeamForm({ id, name, closeModal }) {
   const [teamData, setTeamData] = useState(teamDefault);
+
+  useEffect(() => {
+    if (name) {
+      setTeamData((prevState) => ({
+        ...prevState,
+        teamName: name,
+      }));
+    }
+  }, [name]);
+
   const { mutate: addTeam, isPending: isAdding, error: addError } = usePostData("addTeam", "/team/add");
   const { mutate: editTeam, isPending: isEditing, error: editError } = usePutData("editTeam", `/team/update/${id}`);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTeamData(prevState => ({
+    setTeamData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (id) {
-      editTeam({ name: teamData.teamName }); // Call the editTeam mutation with the team name
+      editTeam(
+        { name: teamData.teamName },
+        {
+          onSuccess: () => {
+            
+            closeModal();
+          },
+          onError: (error) => {
+            
+            closeModal();
+          },
+        }
+      );
     } else {
-      addTeam({ name: teamData.teamName }); // Call the addTeam mutation with the team name
+      addTeam(
+        { name: teamData.teamName },
+        {
+          onSuccess: () => {
+            
+            closeModal();
+          },
+          onError: (error) => {
+            
+            closeModal();
+          },
+        }
+      );
     }
     setTeamData(teamDefault); // Reset the form to default state
   };
@@ -49,16 +82,12 @@ function TeamForm({ id }) {
             </div>
           </div>
           <div className="flex flex-wrap justify-end p-4">
-            <button type="submit" className="bg-nexa-orange hover:bg-green-400 text-white px-4 py-2 rounded">
+            <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded">
               {id ? "Update Team" : "Add Team"}
             </button>
           </div>
         </div>
       </form>
-      {isAdding && <div>Submitting...</div>}
-      {addError && <div>Error submitting form: {addError.message}</div>}
-      {isEditing && <div>Updating...</div>}
-      {editError && <div>Error updating form: {editError.message}</div>}
     </div>
   );
 }

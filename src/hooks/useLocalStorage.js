@@ -14,11 +14,24 @@ export const useLocalStorage = (keyName, defaultValue) => {
       return defaultValue;
     }
   });
+
   const setValue = (newValue) => {
     try {
       window.localStorage.setItem(keyName, JSON.stringify(newValue));
-    } catch (err) {}
+    } catch (err) {
+      console.error("Error setting localStorage key:", err);
+    }
     setStoredValue(newValue);
   };
-  return [storedValue, setValue];
+
+  const removeValue = () => {
+    try {
+      window.localStorage.removeItem(keyName);
+    } catch (err) {
+      console.error("Error removing localStorage key:", err);
+    }
+    setStoredValue(defaultValue);
+  };
+
+  return [storedValue, setValue, removeValue];
 };

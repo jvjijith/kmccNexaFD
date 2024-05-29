@@ -66,7 +66,7 @@ function TeamCard({children,title}) {
           <Card 
       title={title} 
       component={
-        <button className="bg-nexa-orange hover:bg-green-400 text-white px-4 py-2 rounded" onClick={openModal}>
+        <button className="bg-black text-white px-4 py-2 rounded" onClick={openModal}>
           Add Team
         </button>
       }

@@ -25,7 +25,7 @@ export default function MenuItem({ item }) {
       <div
         className={clsx(
           'w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer',
-          isSelected ? 'sidebar-item-selected' : 'sidebar-item'
+          isSelected ? 'sidebar-item-selected' : 'sidebar-item text-white'
         )}
         onClick={handleItemClick}
       >

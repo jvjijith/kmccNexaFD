@@ -7,6 +7,7 @@ import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { useEffect } from "react";
 
 function Login() {
   const email = useFormInput("");
@@ -15,8 +16,60 @@ function Login() {
   const navigate = useNavigate();
   const [userObj, setUserObj] = useLocalStorage("user", null);
 
+  useEffect(() => {
+    if (location.state?.toastMessage) {
+      toast.error(location.state.toastMessage); // Show the toast message
+    }
+  }, [location.state]);
+
+  const fetchEmployeeData = async (email) => {
+    try {
+      const response = await fetch(`https://dev.nexalogics.com.au/api/employee/user/email/${email}`, { // Replace with your API server URL
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Response:', response);
+
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        console.error(`Expected JSON, but received ${contentType}: ${text}`);
+        throw new TypeError(`Expected JSON, but received ${contentType}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+      return null;
+    }
+  };
+
   async function signInWEAP(event) {
     event.preventDefault();
+
+    const employeeData = await fetchEmployeeData(email.value);
+    if (!employeeData) {
+      toast.error("Not authorized", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+      return;
+    }
+
     await signInWithEmailAndPassword(auth, email.value, password.value)
       .then((userCredential) => {
         // Signed in
@@ -32,7 +85,6 @@ function Login() {
           transition: Bounce,
         });
         const user = userCredential.user;
-        console.log(userCredential._tokenResponse.refreshToken);
         const authObj = {
           accessToken: user.accessToken,
           refreshToken: userCredential._tokenResponse.refreshToken,
@@ -40,13 +92,9 @@ function Login() {
           uid: user.uid,
         };
         setUserObj(authObj);
-        console.log(userObj);
-
         navigate("/");
-        // ...
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
         toast.error(errorMessage, {
           position: "top-right",
