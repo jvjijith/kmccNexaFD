@@ -7,11 +7,12 @@ import Image from "../image/image";
 import { animated, useSpring, config } from "@react-spring/web";
 import { useSidebar } from "../../../context/sidebar.context";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
-import { Dropdown } from "flowbite-react";
+import { useNavigate } from "react-router";
 
 
 export default function Sidebar() {
-  const [userObj, setUserObj] = useLocalStorage("user", null);
+  const navigate = useNavigate();
+  const [userObj, setUserObj, clearUser] = useLocalStorage("user", null);
   const { showSidebar, toggleSidebar } = useSidebar();
   const { dashOffset, indicatorWidth, precentage } = useSpring({
     dashOffset: 26.015,
@@ -20,6 +21,14 @@ export default function Sidebar() {
     from: { dashOffset: 113.113, indicatorWidth: 0, precentage: 0 },
     config: config.molasses,
   });
+
+  
+       const handleLogout = () => {
+      clearUser();
+      navigate("/login");
+    };
+
+
   return (
     <div
       className={clsx(
@@ -56,15 +65,31 @@ export default function Sidebar() {
             />
           </div>
         </div>
-        {sidebarItems[0].map((i) => (
-          <MenuItem key={i.id} item={i} />
-        ))}
-        <div className="mt-8 mb-0 font-bold px-3 block sm:hidden xl:block">
-          SHORTCUTS
-        </div>
-        {sidebarItems[1].map((i) => (
-          <MenuItem key={i.id} item={i} />
-        ))}
+        {/* {sidebarItems[0].map((i) => (
+          <MenuItem
+          item={{
+            id: i.id,
+            title: i.title,
+            notifications: i.notifications,
+            route: i.route,
+            parent: i.parent,
+            dropdownItems: [
+              { title: "Subitem 1", route: "/home/subitem1" },
+              { title: "Subitem 2", route: "/home/subitem2" }
+            ]
+          }}
+        />
+        ))} */}
+        <button className="mt-8 mb-0 font-bold px-3 block sm:hidden xl:block" onClick={handleLogout}>
+          LOGOUT
+        </button>
+        {sidebarItems.flat().map((i) => (
+        <MenuItem
+          key={i.id}
+          item={i}
+        />
+      ))}
+        
         <div className="flex-grow" />
         <div className="w-full p-3 h-28 hidden sm:block sm:h-20 xl:h-32">
           <div
@@ -75,7 +100,7 @@ export default function Sidebar() {
             }}
           >
             <div className="block sm:hidden xl:block pt-3">
-              <div className="font-bold text-gray-300 text-sm">Used Space</div>
+              <div className="font-bold text-gray-300 text-sm" >Used Space</div>
               <div className="text-gray-500 text-xs">
                 Admin updated 09:12 am November 08,2020
               </div>
@@ -83,30 +108,30 @@ export default function Sidebar() {
                 {precentage.interpolate((i) => `${Math.round(i)}%`)}
               </animated.div>
               <div className="w-full text-gray-300">
-                <svg
-                  viewBox="0 0 100 11"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="5"
-                    y1="5.25"
-                    x2="95"
-                    y2="5.25"
-                    stroke="#3C3C3C"
-                    strokeWidth="5"
-                    strokeLinecap="round"
-                  />
-                  <animated.line
-                    x1="5"
-                    y1="5.25"
-                    x2={indicatorWidth}
-                    y2="5.25"
-                    stroke="currentColor"
-                    strokeWidth="5"
-                    strokeLinecap="round"
-                  />
-                </svg>
+              <svg
+  viewBox="0 0 100 11"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <line
+    x1="5"
+    y1="5.25"
+    x2="95"
+    y2="5.25"
+    stroke="#3C3C3C"
+    strokeWidth="5"
+    strokeLinecap="round"
+  />
+  <animated.line
+    x1="5"
+    y1="5.25"
+    x2={indicatorWidth}
+    y2="5.25"
+    stroke="currentColor"
+    strokeWidth="5"
+    strokeLinecap="round"
+  />
+</svg>
               </div>
             </div>
 
@@ -138,7 +163,9 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="flex-shrink-0 overflow-hidden p-2">
+      <div className="flex-shrink-0 overflow-hidden p-2"
+      
+      >
         <div className="flex items-center h-full sm:justify-center xl:justify-start p-2 sidebar-separator-bottom">
           <Image path="mock_faces_8" className="w-10 h-10" />
           <div
