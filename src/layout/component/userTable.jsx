@@ -170,13 +170,14 @@ function UserTable() {
                 </Table.Cell>
                 <Table.Cell className="text-gray-300">
                   <Dropdown label="Actions" inline className="bg-black text-white border-black">
+                  {employee.superAdmin !== true && (
                     <Dropdown.Item
                       className="text-gray-300 hover:!bg-orange-600"
-                      // onClick={() => handleEditUser(employee)}
                       onClick={() => openModal(employee)}
                     >
                       Edit User
                     </Dropdown.Item>
+                    )}
                     <Dropdown.Item
                       className="text-gray-300 hover:!bg-orange-600"
                       onClick={() => handleViewDetails(employee)}
