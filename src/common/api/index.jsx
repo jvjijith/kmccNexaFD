@@ -47,6 +47,7 @@ const useInvalidateQueries = () => {
 
 // Define a generic hook for fetching data
 const useApiQuery = (key, url, options = {}) => {
+  console.log(options);
  return useQuery({
     queryKey: [key],
     queryFn: async () => {
@@ -85,6 +86,7 @@ const useApiMutation = (key, url, method) => {
 
 // Define your generic hooks using the configured axios instance
 const useGetData = (key, url, options = {}) => {
+  console.log(options);
   return useApiQuery(key, url, options);
 };
 

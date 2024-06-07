@@ -13,11 +13,12 @@ import Contact from "./pages/contact";
 import Loading from "./pages/loading/loading";
 import { ApiProvider } from "./common/api";
 import Group from "./pages/groups";
-import EditCustomer from "./pages/customer/editCustomer";
 import Team from "./pages/adminAndSecurity/teamList";
 import AddUser from "./pages/adminAndSecurity/addUser";
 import User from "./pages/adminAndSecurity/userList";
 import Profile from "./pages/profilePage/profile";
+import AddVendor from "./pages/vendor/addVendor";
+import Vendor from "./pages/vendor/vendorList";
 
 const App = () => {
   return (
@@ -27,17 +28,24 @@ const App = () => {
       <Route element={<ProtectedRoute></ProtectedRoute>}>
       <Route exact path="/" element={<Dashboard></Dashboard>}></Route>
       <Route exact path="home" element={<Dashboard></Dashboard>}></Route> 
-      <Route exact path="customer" element={<Customer></Customer>}></Route>
+      <Route exact path="customer" element={<Customer></Customer>}></Route> 
+      <Route exact path="vendor/list" element={<Vendor></Vendor>}></Route>
       <Route exact path="admin/teams" element={<Team></Team>}></Route>
       <Route exact path="admin/viewuser" element={<User></User>}></Route>
-      <Route exact path="contact" element={<Contact></Contact>}></Route>
+      <Route exact path="vendor/contacts" element={<Contact></Contact>}></Route>
+      <Route exact path="customer/contacts" element={<Contact></Contact>}></Route>
+      <Route exact path="vendor/add" element={<AddVendor></AddVendor>}></Route>
+      <Route exact path="vendor/edit" element={<AddVendor></AddVendor>}></Route>
       <Route exact path="group" element={<Group></Group>}></Route>      
+      <Route exact path="customer/addContact" element={<AddContact></AddContact>}></Route>      
+      <Route exact path="vendor/addContact" element={<AddContact></AddContact>}></Route>      
       <Route exact path="addContact" element={<AddContact></AddContact>}></Route>
       <Route exact path="loading" element={<Loading></Loading>}></Route>
       <Route path="customer/add" element={<AddCustomer />} />
+      {/* <Route path="customer/edit" element={<AddCustomer />} /> */}
       <Route path="admin/adduser" element={<AddUser />} />
       <Route path="admin/edituser" element={<AddUser />} />
-      <Route path="customer/edit/:Id" element={<EditCustomer />} />
+      <Route path="customer/edit/:id" element={<AddCustomer />} />
       <Route path="/profile/:userId/details" element={<Profile />} />
       </Route>
 

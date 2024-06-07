@@ -1,10 +1,38 @@
 import { Dropdown, Table } from "flowbite-react";
 import { useNavigate} from "react-router";
 import { FaWhatsapp } from "react-icons/fa";
-
+import { useGetData } from '../../common/api';
+import { useState } from "react";
+import LoadingScreen from "../ui/loading/loading";
 function ContactTable() {
 
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [selectedContact, setSelectedContact] = useState(null);
+    const [isApiLoading, setApiLoading] = useState(false);
+  
+    const { data, isLoading, error, refetch } = useGetData("contactData", "/contact", {});
     const navigate = useNavigate();
+  
+    const openModal = (team) => {
+      setSelectedContact(team);
+      setModalOpen(true);
+    };
+  
+    const closeModal = () => {
+      setSelectedContact(null);
+      setModalOpen(false);
+    };
+  
+  
+  
+    if (isLoading) {
+      return <LoadingScreen />;
+    }
+  
+    if (error) {
+      return <div>Error loading data</div>;
+    }
+  
     return (
         <div className="overflow-x-auto min-h-96">
       <Table theme={{
