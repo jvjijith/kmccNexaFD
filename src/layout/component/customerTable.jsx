@@ -101,7 +101,7 @@ function CustomerTable() {
               <Table.Cell className="text-gray-300">{customer.identificationNumbers ? customer.identificationNumbers.length : 0}</Table.Cell>
               <Table.Cell className="text-gray-300">
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/edit/${customer._id}`)}>
+                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/edit`, { state: { customer }})}>
                     Edit Customer
                   </Dropdown.Item>
                   <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/addContact`, { state: { customer } })}>

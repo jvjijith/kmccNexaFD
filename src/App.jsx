@@ -19,6 +19,8 @@ import User from "./pages/adminAndSecurity/userList";
 import Profile from "./pages/profilePage/profile";
 import AddVendor from "./pages/vendor/addVendor";
 import Vendor from "./pages/vendor/vendorList";
+import EditCustomer from "./pages/customer/editCustomer";
+import EditVendor from "./pages/vendor/editVendor";
 
 const App = () => {
   return (
@@ -35,17 +37,17 @@ const App = () => {
       <Route exact path="vendor/contacts" element={<Contact></Contact>}></Route>
       <Route exact path="customer/contacts" element={<Contact></Contact>}></Route>
       <Route exact path="vendor/add" element={<AddVendor></AddVendor>}></Route>
-      <Route exact path="vendor/edit" element={<AddVendor></AddVendor>}></Route>
+      <Route exact path="vendor/edit" element={<EditVendor></EditVendor>}></Route>
       <Route exact path="group" element={<Group></Group>}></Route>      
-      <Route exact path="customer/addContact" element={<AddContact></AddContact>}></Route>      
+      <Route exact path="customer/addContact" element={<AddContact></AddContact>}></Route> 
+      <Route exact path="contact/addContact" element={<AddContact></AddContact>}></Route>      
       <Route exact path="vendor/addContact" element={<AddContact></AddContact>}></Route>      
       <Route exact path="addContact" element={<AddContact></AddContact>}></Route>
       <Route exact path="loading" element={<Loading></Loading>}></Route>
       <Route path="customer/add" element={<AddCustomer />} />
-      {/* <Route path="customer/edit" element={<AddCustomer />} /> */}
       <Route path="admin/adduser" element={<AddUser />} />
       <Route path="admin/edituser" element={<AddUser />} />
-      <Route path="customer/edit/:id" element={<AddCustomer />} />
+      <Route path="customer/edit" element={<EditCustomer />} />
       <Route path="/profile/:userId/details" element={<Profile />} />
       </Route>
 

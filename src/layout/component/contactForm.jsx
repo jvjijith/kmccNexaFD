@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useGetData, usePostData, usePutData } from "../../common/api";
 
 function ContactForm({ typeData, customerId }) {
-  const customerDefault = {
+  const [contactData, setContactData] = useState({
     name: '',
     email: '',
     primaryPhoneNumber: '',
@@ -13,80 +13,94 @@ function ContactForm({ typeData, customerId }) {
     country: '',
     state: '',
     customer: '',
-    note: '',
+    note: [],
     designation: '',
-    decisionMaker: false
-  };
+    decisionMaker: false,
+  });
 
-  const [customerData, setCustomerData] = useState(customerDefault);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  const { data: customerDetail, isLoading: customerDetailLoading, refetch: refetchCustomerDetail } = useGetData("Customer", typeData === 'contacts' ? `/contact/${customerId}` : `/contact/customer/${customerId}`);
-  const { mutate: addContact, isPending: isAddingContact, error: addContactError } = usePostData("addContact", `/contact/add/`);
-  const { mutate: updateContact, isPending: isUpdatingContact, error: updateContactError } = usePutData("updateContact", `/contact/update/${customerId}`);
-
-  useEffect(() => {
-    if (typeData === 'update' && customerId) {
-      refetchCustomerDetail();
-    }
-  }, [typeData, customerId, refetchCustomerDetail]);
+  const { data: contactDetail, refetch: refetchContactDetail } = useGetData('contactDetail',
+    typeData === "contacts" ? `contact/${customerId}` : `contact/customer/${customerId}`
+  );
+  const { mutate: addContact } = usePostData("addContact", "/contact/add");
+  const { mutate: updateContact } = usePutData("updateContact", `/contact/update/${customerId}`);
 
   useEffect(() => {
-    if (customerDetail) {
-      setCustomerData({
-        name: customerDetail.name,
-        email: customerDetail.email,
-        primaryPhoneNumber: customerDetail.primaryPhoneNumber,
-        secondaryPhoneNumber: customerDetail.secondaryPhoneNumber,
-        primaryPhoneWhatsApp: customerDetail.primaryPhoneWhatsApp,
-        secondaryPhoneWhatsApp: customerDetail.secondaryPhoneWhatsApp,
-        address: customerDetail.address,
-        country: customerDetail.country,
-        state: customerDetail.state,
-        customer: customerDetail.customer,
-        note: customerDetail.note,
-        designation: customerDetail.designation,
-        decisionMaker: customerDetail.decisionMaker
-      });
+    if (customerId) {
+      refetchContactDetail();
     }
-  }, [customerDetail]);
+  }, [customerId, refetchContactDetail]);
+
+  useEffect(() => {
+    if (contactDetail) {
+      if (Array.isArray(contactDetail.contacts)) {
+        if (contactDetail.contacts[currentPage]) {
+          setContactData((prevState) => ({
+            ...prevState,
+            ...contactDetail.contacts[currentPage],
+            note: contactDetail.contacts[currentPage].note || [],
+          }));
+        }
+      } else {
+        setContactData((prevState) => ({
+          ...prevState,
+          ...contactDetail,
+          note: contactDetail.note || [],
+        }));
+      }
+    }
+  }, [contactDetail, currentPage]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCustomerData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setCustomerData(prevState => ({
-      ...prevState,
-      [name]: checked
-    }));
+    const { name, value, type, checked } = e.target;
+    if (name === 'note') {
+      setContactData((prevState) => ({
+        ...prevState,
+        note: value?.split(",").map(note => note.trim()),
+      }));
+    } else {
+      setContactData((prevState) => ({
+        ...prevState,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = {
-      ...customerData,
-      note: customerData.note.split(',').map(n => n.trim()),
-      active: true
-    };
-
-    if (typeData === 'update' && customerId) {
+    const payload = { ...contactData };
+    if (customerId) {
       updateContact(payload);
     } else {
       addContact(payload);
     }
-
-    setCustomerData(customerDefault);
+    setContactData({
+      name: '',
+      email: '',
+      primaryPhoneNumber: '',
+      secondaryPhoneNumber: '',
+      primaryPhoneWhatsApp: false,
+      secondaryPhoneWhatsApp: false,
+      address: '',
+      country: '',
+      state: '',
+      customer: '',
+      note: [],
+      designation: '',
+      decisionMaker: false,
+    });
   };
 
-  if (customerDetailLoading) {
-    return <div>Loading...</div>;
-  }
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+  };
 
+  const handleNextPage = () => {
+    if (contactDetail && Array.isArray(contactDetail.contacts)) {
+      setCurrentPage((prevPage) => Math.min(prevPage + 1, contactDetail.contacts.length - 1));
+    }
+  };
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -97,28 +111,23 @@ function ContactForm({ typeData, customerId }) {
               <input
                 type="text"
                 name="name"
+                value={contactData.name}
+                onChange={handleChange}
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
                 placeholder="Enter Your Customer Name"
-                value={customerData.name}
-                onChange={handleChange}
-                autoComplete="off"
-                style={{ textAlign: "initial" }}
               />
             </div>
           </div>
-
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Email Address *</label>
               <input
                 type="email"
                 name="email"
+                value={contactData.email}
+                onChange={handleChange}
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
                 placeholder="Enter Customer Email"
-                value={customerData.email}
-                onChange={handleChange}
-                autoComplete="off"
-                style={{ textAlign: "initial" }}
               />
             </div>
           </div>
@@ -130,27 +139,22 @@ function ContactForm({ typeData, customerId }) {
               <label className="float-left inline-block mb-2 text-white">Address *</label>
               <textarea
                 name="address"
+                value={contactData.address}
+                onChange={handleChange}
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
                 placeholder="Enter Customer Address ..."
-                value={customerData.address}
-                onChange={handleChange}
-                autoComplete="off"
-                style={{ textAlign: "initial" }}
               ></textarea>
             </div>
           </div>
-
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Notes *</label>
               <textarea
                 name="note"
+                value={contactData.note.join(", ")}
+                onChange={handleChange}
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
                 placeholder="Enter Notes ..."
-                value={customerData.note}
-                onChange={handleChange}
-                autoComplete="off"
-                style={{ textAlign: "initial" }}
               ></textarea>
             </div>
           </div>
@@ -163,30 +167,24 @@ function ContactForm({ typeData, customerId }) {
               <input
                 type="text"
                 name="state"
+                value={contactData.state}
+                onChange={handleChange}
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
                 placeholder="Enter Your State"
-                value={customerData.state}
-                onChange={handleChange}
-                autoComplete="off"
-                style={{ textAlign: "initial" }}
               />
             </div>
           </div>
-
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Customer *</label>
-              <select
+              <input
+                type="text"
                 name="customer"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
-                value={customerData.customer}
+                value={contactData.customer}
                 onChange={handleChange}
-                style={{ textAlign: "initial" }}
-              >
-                <option value={"Amazon"}>Amazon</option>
-                <option value={"Broadcast Media"}>Broadcast Media</option>
-                <option value={"Healthcare"}>Healthcare</option>
-              </select>
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                placeholder="Enter Customer ID"
+              />
             </div>
           </div>
         </div>
@@ -198,28 +196,23 @@ function ContactForm({ typeData, customerId }) {
               <input
                 type="text"
                 name="designation"
+                value={contactData.designation}
+                onChange={handleChange}
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
                 placeholder="Enter Your Designation"
-                value={customerData.designation}
-                onChange={handleChange}
-                autoComplete="off"
-                style={{ textAlign: "initial" }}
               />
             </div>
           </div>
-
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Country *</label>
               <input
                 type="text"
                 name="country"
+                value={contactData.country}
+                onChange={handleChange}
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
                 placeholder="Enter Country"
-                value={customerData.country}
-                onChange={handleChange}
-                autoComplete="off"
-                style={{ textAlign: "initial" }}
               />
             </div>
           </div>
@@ -228,53 +221,28 @@ function ContactForm({ typeData, customerId }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Primary Phone Number *</label>
+              <label className="float-left inline-block mb-2 text-white">Primary PhoneNumber *</label>
               <input
                 type="text"
                 name="primaryPhoneNumber"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
-                placeholder="Enter Primary Phone Number"
-                value={customerData.primaryPhoneNumber}
+                value={contactData.primaryPhoneNumber}
                 onChange={handleChange}
-                autoComplete="off"
-                style={{ textAlign: "initial" }}
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                placeholder="Enter Your Phone Number"
               />
-              <label className="flex items-center text-sm text-white mt-2">
-                <input
-                  type="checkbox"
-                  name="primaryPhoneWhatsApp"
-                  checked={customerData.primaryPhoneWhatsApp}
-                  onChange={handleCheckboxChange}
-                  className="mr-2"
-                />
-                Is WhatsApp
-              </label>
             </div>
           </div>
-
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Secondary Phone Number *</label>
+              <label className="float-left inline-block mb-2 text-white">Secondary PhoneNumber *</label>
               <input
                 type="text"
                 name="secondaryPhoneNumber"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
-                placeholder="Enter Secondary Phone Number"
-                value={customerData.secondaryPhoneNumber}
+                value={contactData.secondaryPhoneNumber}
                 onChange={handleChange}
-                autoComplete="off"
-                style={{ textAlign: "initial" }}
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                placeholder="Enter Phone Number"
               />
-              <label className="flex items-center text-sm text-white mt-2">
-                <input
-                  type="checkbox"
-                  name="secondaryPhoneWhatsApp"
-                  checked={customerData.secondaryPhoneWhatsApp}
-                  onChange={handleCheckboxChange}
-                  className="mr-2"
-                />
-                Is WhatsApp
-              </label>
             </div>
           </div>
         </div>
@@ -282,29 +250,81 @@ function ContactForm({ typeData, customerId }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="flex items-center text-sm text-white mt-2">
+              <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  name="decisionMaker"
-                  checked={customerData.decisionMaker}
-                  onChange={handleCheckboxChange}
-                  className="mr-2"
+                  name="primaryPhoneWhatsApp"
+                  checked={contactData.primaryPhoneWhatsApp}
+                  onChange={handleChange}
+                  className="sr-only peer"
                 />
-                Is Decision Maker
+                <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
+                <span className="ml-3 text-sm font-medium text-white">Primary WhatsApp Number</span>
+              </label>
+            </div>
+          </div>
+          <div className="w-full sm:w-1/2 p-4">
+            <div className="mb-4">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="secondaryPhoneWhatsApp"
+                  checked={contactData.secondaryPhoneWhatsApp}
+                  onChange={handleChange}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
+                <span className="ml-3 text-sm font-medium text-white">Secondary WhatsApp Number</span>
               </label>
             </div>
           </div>
         </div>
 
-        <div className="text-right px-4 py-2">
-          <button type="submit" className="bg-blue-500 text-white font-semibold py-2 px-4 rounded">
-            {isAddingContact || isUpdatingContact ? 'Submitting...' : 'Submit'}
+        <div className="w-full sm:w-1/2 p-4">
+          <div className="mb-4">
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                name="decisionMaker"
+                checked={contactData.decisionMaker}
+                onChange={handleChange}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
+              <span className="ml-3 text-sm font-medium text-white">Decision Maker</span>
+            </label>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap justify-end p-4">
+          <button
+            type="submit"
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+          >
+            Submit
           </button>
         </div>
       </form>
 
-      {addContactError && <div className="text-red-500 text-center mt-2">{addContactError.message}</div>}
-      {updateContactError && <div className="text-red-500 text-center mt-2">{updateContactError.message}</div>}
+      {/* {contactDetail && contactDetail.contacts.length > 1 && ( */}
+        <div className="flex justify-center items-center mt-4">
+          <button
+            onClick={handlePreviousPage}
+            // disabled={currentPage === 0}
+            className="text-white px-2 py-1 bg-gray-600 rounded hover:bg-gray-700 disabled:opacity-50"
+          >
+            {"<"}
+          </button>
+          <span className="mx-2 text-white">{currentPage + 1}</span>
+          <button
+            onClick={handleNextPage}
+            // disabled={currentPage === contactDetail.contacts.length - 1}
+            className="text-white px-2 py-1 bg-gray-600 rounded hover:bg-gray-700 disabled:opacity-50"
+          >
+            {">"}
+          </button>
+        </div>
+      {/* )} */}
     </div>
   );
 }

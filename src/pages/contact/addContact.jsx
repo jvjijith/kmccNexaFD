@@ -9,18 +9,19 @@ function AddContact() {
 
   const location = useLocation();
   const customer = location.state?.customer || null;
+  const contact = location.state?.contact || null;
 
     return (
        <Container>
            <ContactCard
           
-          title={customer ? "Edit Contact" : "Add Contact"}
+          title={customer ? "Edit Contact" : contact ? "Edit Contact" : "Add Contact"}
           >
             
           <ContactForm
           
-          typeData={customer ? "update" : ""}
-          customerId={customer ? customer._id : null}
+          typeData={customer ? "update" : contact ? "contacts" : ""}
+          customerId={customer ? customer._id : contact ? contact._id : null}
           ></ContactForm>
           </ContactCard>
        </Container>

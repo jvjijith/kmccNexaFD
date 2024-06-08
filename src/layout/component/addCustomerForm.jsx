@@ -8,7 +8,7 @@ import { useParams } from 'react-router';
 
 const states = Object.keys(stateCountryCurrencyMapping);
 
-function CustomerForm({ typeData, customerId }) {
+function AddCustomerForm({ typeData, customerId }) {
   // const {id} = useParams();
   // const typeData =id?'update':'add';
   const [languageValue, setLanguageValue] = useState('');
@@ -650,4 +650,4 @@ const renderSuggestion = (suggestion) => (
   );
 }
 
-export default CustomerForm;
+export default AddCustomerForm;
