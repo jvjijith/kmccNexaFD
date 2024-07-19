@@ -1,41 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useGetData, usePostData, usePutData } from '../../common/api';
-import { customerDefault, stateCountryCurrencyMapping, languages } from '../../constant';
+import { vendorDefault, stateCountryCurrencyMapping, languages } from '../../constant';
 import Select from 'react-select';
 import Autosuggest from 'react-autosuggest';
 import LoadingScreen from '../ui/loading/loading';
-import { useParams } from 'react-router';
 
 const states = Object.keys(stateCountryCurrencyMapping);
 
-function CustomerForm({ typeData, customerId }) {
-  // const {id} = useParams();
-  // const typeData =id?'update':'add';
-  const [languageValue, setLanguageValue] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
-  const [customerData, setCustomerData] = useState(customerDefault);
+function VendorForm({ typeData, vendorId }) {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [customerData, setCustomerData] = useState(vendorDefault);
   const [isIndividual, setIsIndividual] = useState(false);
-  const [isStoreUser, setStoreUser] = useState(false);
   const [identificationNumbers, setIdentificationNumbers] = useState([]);
   const [bankDetails, setBankDetails] = useState([]);
+  const [isStoreUser, setStoreUser] = useState(false);
   const [categories, setCategories] = useState([]);
-  
+  const [languageValue, setLanguageValue] = useState('');
+  const [suggestions, setSuggestions] = useState([]); 
   const [stateSuggestions, setStateSuggestions] = useState([]);
   const [stateValue, setStateValue] = useState('');
-
+  
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
-  const api_url = typeData === 'update' ? '/customer/update' : '/customer/add';
-  const api_key = typeData === 'update' ? 'updateCustomer' : 'addCustomer';
+  const api_url = typeData === 'update' ? '/vendor/update' : '/vendor/add';
+  const api_key = typeData === 'update' ? 'updateVendor' : 'addVendor';
   const { mutate: saveCustomer, isLoading, isError } = mutationHook(api_key, api_url);
-  const { data: customerDetail, isLoading: customerDetailLoading, refetch: refetchCustomerDetail } = useGetData("Customer", `/customer/customer/${customerId}`);
-  const { data: categoryData, refetch: refetchCategories } = useGetData("categories", "/category");
+  const { data: vendorDetail, isLoading: vendorDetailLoading, refetch: refetchVendorDetail } = useGetData("Vendor", `/vendor/vendor/${vendorId}`);
+  const { data: categoryData, isPending: isCategories, refetch: refetchCategories } = useGetData("categories", "/category");
   const { mutate: signup, isPending: isSigningUp, error: signupError } = usePostData("signup", "/auth/signup");
-
 
   useEffect(() => {
     refetchCategories();
-    refetchCustomerDetail();
-  }, [ refetchCategories, refetchCustomerDetail]);
+    refetchVendorDetail();
+  }, [ refetchCategories, refetchVendorDetail]);
 
 
   useEffect(() => {
@@ -43,21 +39,20 @@ function CustomerForm({ typeData, customerId }) {
       setCategories(categoryData.categories);
     }
 
-    if (customerDetail) {
-      setCustomerData(customerDetail);
-      setIdentificationNumbers(customerDetail.identificationNumbers || [{ type: '', number: '' }]);
-      setBankDetails(customerDetail.bankDetails || [{ accountNumber: '', bankName: '', location: '', IBAN: '', swiftCode: '', IFSC: '' }]);
-      setIsIndividual(customerDetail.individual);
-      setStoreUser(customerDetail.storeUser);
-      setStateValue(customerDetail.state);
-      const selectedLanguage = languages.find(lang => lang.code === customerDetail.language);
+    if (vendorDetail) {
+      setCustomerData(vendorDetail);
+      setIdentificationNumbers(vendorDetail.identificationNumbers || [{ type: '', number: '' }]);
+      setBankDetails(vendorDetail.bankDetails || [{ accountNumber: '', bankName: '', location: '', IBAN: '', swiftCode: '', IFSC: '' }]);
+      setIsIndividual(vendorDetail.individual);
+      setStoreUser(vendorDetail.storeUser);
+      setStateValue(vendorDetail.state);
+      const selectedLanguage = languages.find(lang => lang.code === vendorDetail.language);
       setLanguageValue(selectedLanguage.name);
       // const value=categories.find(option => option._id === customerDetail.category);
       // setCategories(value.categoryName);
     }
-   
-  }, [categoryData,customerDetail]);
-
+    
+  }, [categoryData,vendorDetail]);
   const handleSuggestionsFetchRequested = ({ value }) => {
     setSuggestions(getSuggestions(value));
   };
@@ -67,7 +62,7 @@ function CustomerForm({ typeData, customerId }) {
   };
 
   const getSuggestions = (value) => {
-    const inputValue = value?.trim().toLowerCase();
+    const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
 
     return inputLength === 0 ? [] : languages.filter(lang =>
@@ -76,6 +71,7 @@ function CustomerForm({ typeData, customerId }) {
   };
 
   const onLanguageChange = (event, { newValue }) => {
+   
     setLanguageValue(newValue);
     const selectedLanguage = languages.find(lang => lang.name === newValue);
     if (selectedLanguage) {
@@ -84,6 +80,7 @@ function CustomerForm({ typeData, customerId }) {
         language: selectedLanguage.code
       }));
     }
+
   };
 
 
@@ -119,7 +116,7 @@ function CustomerForm({ typeData, customerId }) {
   };
 
   const getStateSuggestion = (value) => {
-    const inputValue = value?.trim().toLowerCase();
+    const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
     return inputLength === 0 ? [] : states.filter(state =>
       state.toLowerCase().slice(0, inputLength) === inputValue
@@ -150,6 +147,8 @@ const renderSuggestion = (suggestion) => (
     }));
     updateCountryAndCurrency(newValue);
   };
+
+
 
   const handleIdentificationChange = (index, field, value) => {
     const newIdentificationNumbers = [...identificationNumbers];
@@ -198,54 +197,45 @@ const renderSuggestion = (suggestion) => (
         email: customerData.email,
         password: customerData.password,
       };
-      signup(signupRequestBody, {
-        onSuccess: (signupResponse) => {
-          customerUserId = signupResponse.uid;
+    signup(signupRequestBody, {
+      onSuccess: (signupResponse) => {
+        const customerUserId = signupResponse.uid;
 
-          const payload = {
-            ...customerData,
-            storeUser: isStoreUser,
-            individual: isIndividual,
-            active: true,
-            customerUserId,
-            identificationNumbers,
-            bankDetails,
-          };
-          saveCustomer(payload);
-          setCustomerData(customerDefault);
-        },
-        onError: (error) => {
-          console.error("Error signing up:", error);
-          toast.error('Error signing up.');
-        },
-      });
-    } else {
-      const payload = {
-        ...customerData,
-        storeUser: isStoreUser,
-        individual: isIndividual,
-        active: true,
-        customerUserId,
-        identificationNumbers,
-        bankDetails,
-      };
-      saveCustomer(payload);
-      setCustomerData(customerDefault);
-    }
+        const payload = {
+          ...customerData,
+          storeUser: isStoreUser,
+          individual: isIndividual,
+          active: true,
+          customerUserId,
+          identificationNumbers,
+          bankDetails,
+        };
+        saveCustomer(payload);
+        setCustomerData(vendorDefault);
+  },
+  onError: (error) => {
+    console.error("Error signing up:", error);
+    toast.error('Error signing up.');
+  },})
+}
+else{
+    const payload = {
+      ...customerData,
+      storeUser: isStoreUser,
+      individual: isIndividual,
+      active: true,
+      customerUserId,
+      identificationNumbers,
+      bankDetails,
+    };
+    saveCustomer(payload);
+    setCustomerData(vendorDefault);
+  }
   };
-
 
   if (isLoading) {
     return <LoadingScreen />;
   }
-
-  // const inputProps = {
-  //   placeholder: 'Enter Language',
-  //   value: languageValue,
-  //   onChange: onLanguageChange,
-  //   className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white',
-  //   autoComplete: 'off'
-  // };
 
   return (
     <div>
@@ -257,10 +247,10 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name="name"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Enter Customer Name"
                 autoComplete="off"
-                value={customerData?.name}
+                value={customerData.name}
                 onChange={handleChange}
               />
             </div>
@@ -271,10 +261,10 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="email"
                 name="email"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Enter Customer Email"
                 autoComplete="off"
-                value={customerData?.email}
+                value={customerData.email}
                 onChange={handleChange}
               />
             </div>
@@ -288,10 +278,10 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name="phone"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Enter Phone Number"
                 autoComplete="off"
-                value={customerData?.phone}
+                value={customerData.phone}
                 onChange={handleChange}
               />
             </div>
@@ -302,10 +292,10 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name="website"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Enter Customer Website"
                 autoComplete="off"
-                value={customerData?.website}
+                value={customerData.website}
                 onChange={handleChange}
               />
             </div>
@@ -337,17 +327,16 @@ const renderSuggestion = (suggestion) => (
       />
     </div>
   </div>
-          
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Location</label>
               <input
                 type="text"
                 name="location"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Enter Location"
                 autoComplete="off"
-                value={customerData?.location}
+                value={customerData.location}
                 onChange={handleChange}
               />
             </div>
@@ -364,7 +353,7 @@ const renderSuggestion = (suggestion) => (
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
                 placeholder="Enter Country"
                 autoComplete="off"
-                value={customerData?.country}
+                value={customerData.country}
                 onChange={handleChange}
                 
               />
@@ -408,23 +397,22 @@ const renderSuggestion = (suggestion) => (
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
                 placeholder="Enter Currency"
                 autoComplete="off"
-                value={customerData?.currency}
+                value={customerData.currency}
                 onChange={handleChange}
                 
               />
             </div>
           </div>
-
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Shipping Address *</label>
               <textarea
                 type="text"
                 name="shippingAddress"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Enter Shipping Address"
                 autoComplete="off"
-                value={customerData?.shippingAddress}
+                value={customerData.shippingAddress}
                 onChange={handleChange}
               />
             </div>
@@ -438,10 +426,10 @@ const renderSuggestion = (suggestion) => (
               <textarea
                 type="text"
                 name="billingAddress"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Enter Billing Address"
                 autoComplete="off"
-                value={customerData?.billingAddress}
+                value={customerData.billingAddress}
                 onChange={handleChange}
               />
             </div>
@@ -450,8 +438,8 @@ const renderSuggestion = (suggestion) => (
   <div className="mb-4">
     <label className="block w-full mb-2 text-white">Category *</label>
     <Select
-      options={categories?.map(category => ({ value: category._id, label: category.categoryName }))}
-      value={categories?.find(option => option._id === customerData.category)}
+      options={categories.map(category => ({ value: category._id, label: category.categoryName }))}
+      value={categories.find(option => option._id === customerData.category)}
       onChange={(selectedOption) => setCustomerData(prevState => ({ ...prevState, category: selectedOption.value }))}
       styles={{
         control: (provided, state) => ({
@@ -488,36 +476,35 @@ const renderSuggestion = (suggestion) => (
     />
   </div>
 </div>
-
         </div>
 
         {/* Password Field */}
-        {isIndividual && (
+        {/* {isIndividual && (
           <div className="w-full p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Password *</label>
               <input
                 type="password"
                 name="password"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Enter Password"
                 autoComplete="off"
-                value={customerData?.password}
+                value={customerData.password}
                 onChange={handleChange}
               />
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Identification Numbers */}
         <div className="w-full p-4">
           <label className="block w-full mb-2 text-white">Identification Numbers</label>
-          {identificationNumbers?.map((identification, index) => (
+          {identificationNumbers.map((identification, index) => (
             <div key={index} className="flex mb-2">
               <input
                 type="text"
                 name={`identificationType-${index}`}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Type"
                 value={identification.type}
                 onChange={(e) => handleIdentificationChange(index, 'type', e.target.value)}
@@ -525,7 +512,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`identificationNumber-${index}`}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
                 placeholder="Number"
                 value={identification.number}
                 onChange={(e) => handleIdentificationChange(index, 'number', e.target.value)}
@@ -539,12 +526,12 @@ const renderSuggestion = (suggestion) => (
         {/* Bank Details */}
         <div className="w-full p-4">
           <label className="block w-full mb-2 text-white">Bank Details</label>
-          {bankDetails?.map((bank, index) => (
+          {bankDetails.map((bank, index) => (
             <div key={index} className="flex mb-2">
               <input
                 type="text"
                 name={`accountNumber-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
                 placeholder="Account Number"
                 value={bank.accountNumber}
                 onChange={(e) => handleBankDetailChange(index, 'accountNumber', e.target.value)}
@@ -552,7 +539,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`bankName-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
                 placeholder="Bank Name"
                 value={bank.bankName}
                 onChange={(e) => handleBankDetailChange(index, 'bankName', e.target.value)}
@@ -560,7 +547,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`location-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
                 placeholder="Location"
                 value={bank.location}
                 onChange={(e) => handleBankDetailChange(index, 'location', e.target.value)}
@@ -568,7 +555,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`IBAN-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
                 placeholder="IBAN"
                 value={bank.IBAN}
                 onChange={(e) => handleBankDetailChange(index, 'IBAN', e.target.value)}
@@ -576,7 +563,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`swiftCode-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
                 placeholder="Swift Code"
                 value={bank.swiftCode}
                 onChange={(e) => handleBankDetailChange(index, 'swiftCode', e.target.value)}
@@ -584,7 +571,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`IFSC-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
                 placeholder="IFSC"
                 value={bank.IFSC}
                 onChange={(e) => handleBankDetailChange(index, 'IFSC', e.target.value)}
@@ -615,14 +602,14 @@ const renderSuggestion = (suggestion) => (
             </div>
           </div>
 
-          <div className="w-full sm:w-1/2 p-4">
-            {" "}
+          {/* <div className="w-full sm:w-1/2 p-4">
+            {" "} */}
             {/* col-sm-6 */}
-            <div className="mb-4">
+            {/* <div className="mb-4">
             <label className="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" value="" className="sr-only peer" name="individual"
                 id="individual"
-                checked={isIndividual}
+                checked={customerData.individual}
                 onChange={() => handleToggle('individual')} />
                 <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
                 <span className="ms-3 text-md font-medium text-white dark:text-white">
@@ -631,7 +618,7 @@ const renderSuggestion = (suggestion) => (
               </label>
               <div className="correct"></div>
             </div>
-          </div>
+          </div> */}
         {/* <div className="flex p-4"> */}
           {/* <button type="button" className={`mr-2 ${customerData.vendor ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('vendor')}>Vendor</button>
           <button type="button" className={`mr-2 ${customerData.storeUser ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('storeUser')}>Store User</button>
@@ -650,4 +637,4 @@ const renderSuggestion = (suggestion) => (
   );
 }
 
-export default CustomerForm;
+export default VendorForm;

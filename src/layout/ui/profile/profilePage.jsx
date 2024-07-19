@@ -5,18 +5,21 @@ import Image from '../image/image';
 
 function ProfilePage() {
     const { userId } = useParams();
-    const { data: employee, isPending, error } = useGetData('Employee', `/employee/user/${userId}`);
+    const { data: employee, isPending: isEmployeePending, error: employeeError } = useGetData('Employee', `/employee/user/${userId}`);
+    
+    const superiorId = employee ? employee.superior : null;
+    const { data: memployee, isPending: isMemployeePending, error: memployeeError } = useGetData('Employee', `/employee/metadata/${superiorId}`, { enabled: !!superiorId });
 
-    if (isPending) {
+    if (isEmployeePending || isMemployeePending) {
         return <div className="text-center text-gray-500 py-5">Loading...</div>;
     }
 
-    if (error) {
+    if (employeeError || memployeeError) {
         return <div className="text-center text-red-500 py-5">Error loading data</div>;
     }
 
     return (
-        <div className="flex w-full h-screen ">
+        <div className="flex w-full h-screen">
             <div className="hidden sm:block sm:w-20 xl:w-60 flex-shrink-0">
                 {/* Sidebar placeholder */}
             </div>
@@ -38,13 +41,43 @@ function ProfilePage() {
                         <nav className="mb-5">
                             <ul className="flex justify-center list-none p-0 m-0 bg-sidebar-card-top border-b border-gray-700">
                                 <li className="mr-5">
-                                    <NavLink to={`/profile/${userId}/details`} activeClassName="border-b-2 border-nexa-orange text-nexa-orange" className="no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange">Details</NavLink>
+                                    <NavLink 
+                                        exact
+                                        to={`/profile/${userId}/details`}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
+                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                        }
+                                    >
+                                        Details
+                                    </NavLink>
                                 </li>
                                 <li className="mr-5">
-                                    <NavLink to={`/profile/${userId}/permissions`} activeClassName="border-b-2 border-nexa-orange text-nexa-orange" className="no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange">Permissions</NavLink>
+                                    <NavLink 
+                                        exact
+                                        to={`/profile/${userId}/permissions`}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
+                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                        }
+                                    >
+                                        Permissions
+                                    </NavLink>
                                 </li>
                                 <li className="mr-5">
-                                    <NavLink to={`/profile/${userId}/activities`} activeClassName="border-b-2 border-nexa-orange text-nexa-orange" className="no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange">Activities</NavLink>
+                                    <NavLink 
+                                        exact
+                                        to={`/profile/${userId}/activities`}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
+                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                        }
+                                    >
+                                        Activities
+                                    </NavLink>
                                 </li>
                             </ul>
                         </nav>
@@ -86,7 +119,7 @@ function ProfilePage() {
                                     <div className="grid grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Superior</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{employee.superior}</div>
+                                            <div className="p-2 bg-sidebar-card-top rounded">{memployee ? memployee.name : 'N/A'}</div>
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Date of Joining</label>

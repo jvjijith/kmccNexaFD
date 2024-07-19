@@ -9,10 +9,8 @@ function UserForm() {
   const [employeeData, setEmployeeData] = useState(employeeDefault);
   const { data: teamData, isLoading: teamLoading, error: teamError, refetch: refetchTeam } = useGetData("teamData", "/team/active", {});
   const { data: employeeDatas, isLoading: employeeLoading, error: employeeError, refetch: refetchEmployee } = useGetData("employeeData", "/employee/active", {});
-  // const { mutate: addEmployee, isPending: isAdding, error: addError } = usePostData("addEmployee", "/employee/add");
-  // const { mutate: Employee, isPending: isAdding, error: addError } = useGetData("Employee", "/employee/user/"+{userId});
-  // const { mutate: editEmployee, isPending: isAdding, error: addError } = useGetData("editEmployee", "/employee/update/user/"+{userId});
   const { mutate: signup, isPending: isSigningUp, error: signupError } = usePostData("signup", "/auth/signup");
+  const { mutate: addEmployee, isPending: isAdding, error: addError } = usePostData("addEmployee", "/employee/add");
   const [emergencyContacts, setEmergencyContacts] = useState([]);
 
   useEffect(() => {
@@ -146,13 +144,13 @@ function UserForm() {
   const teamOptions = [
     { value: null, label: "None" },
     ...(teamData?.teams?.map(team => ({
-      value: team.teamId,
+      value: team._id,
       label: team.name,
     })) || [])
   ];
 
   const employeeOptions = employeeDatas?.employees?.map(employee => ({
-    value: employee.metadataId,
+    value: employee.userId,
     label: employee.name,
   }));
 

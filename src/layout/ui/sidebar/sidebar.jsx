@@ -8,6 +8,7 @@ import { animated, useSpring, config } from "@react-spring/web";
 import { useSidebar } from "../../../context/sidebar.context";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { useNavigate } from "react-router";
+import { Dropdown } from "flowbite-react";
 
 
 export default function Sidebar() {
@@ -80,9 +81,9 @@ export default function Sidebar() {
           }}
         />
         ))} */}
-        <button className="mt-8 mb-0 font-bold px-3 block sm:hidden xl:block" onClick={handleLogout}>
+        {/* <button className="mt-8 mb-0 font-bold px-3 block sm:hidden xl:block" onClick={handleLogout}>
           LOGOUT
-        </button>
+        </button> */}
         {sidebarItems.flat().map((i) => (
         <MenuItem
           key={i.id}
@@ -184,10 +185,19 @@ export default function Sidebar() {
           </div>
           <div className="flex-grow block sm:hidden xl:block" />
           
-          <Icon
+          <Dropdown label={<Icon
             path="res-react-dash-options"
             className="block sm:hidden xl:block w-3 h-3"
-          />
+          />} inline className="bg-card text-white">
+          
+            <Dropdown.Item
+              className="text-gray-300"
+              onClick={handleLogout}
+            >
+              LOGOUT
+            </Dropdown.Item>
+          
+        </Dropdown>
         </div>
       </div>
     </div>
