@@ -1094,8 +1094,73 @@ export const categoryDefault = {
   
 }
 
+export const productDefault = {
+  "name": "",
+  "description": "",
+  "category": "",
+  "subCategory": "",
+  "brand": "",
+  "subBrand": "",
+  "stock": '',
+  "images": [
+    {
+       "url": "https://example.com/image1.jpg",
+      "altText": "Image 1"
+    }
+  ],
+  "RFQ": false,
+  "HSN": "",
+  "model": "",
+  "productCode": "",
+  "notes": [
+    {
+      "name": "",
+      "description": ""
+    }
+  ],
+  "variants": [],
+  "active": true
+}
+
+
+export const varientDefault ={
+  "name": "",
+  "color": "",
+  "size": "",
+  "productId": "",
+  "images": [
+    {
+      "url": "",
+      "altText": ""
+    }
+  ],
+  "notes": [
+    {
+      "name": "",
+      "description": ""
+    }
+  ],
+  "model": "",
+  "RFQ": false,
+  "HSN": "",
+  "productCode": "",
+  "active": true
+}
+
 export const teamDefault = {
   teamName: ""
+};
+
+export const brandDefault = {
+  "name": "",
+  "category": "",
+  "active": true
+};
+
+export const subBrandDefault = {
+  "subBrandName": "",
+  "brandId": "",
+  "active": true
 };
 
 export const employeeDefault = {

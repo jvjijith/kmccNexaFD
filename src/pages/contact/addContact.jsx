@@ -10,18 +10,22 @@ function AddContact() {
   const location = useLocation();
   const customer = location.state?.customer || null;
   const contact = location.state?.contact || null;
+  const vendor = location.state?.vendor || null;
 
+  console.log("customer",customer);
+  console.log("contact",contact);
+  console.log("vendor",vendor);
     return (
        <Container>
            <ContactCard
           
-          title={customer ? "Edit Contact" : contact ? "Edit Contact" : "Add Contact"}
+          title={customer ? "Edit Contact" : vendor ? "Add Contact" : contact ? "Edit Contact" : "Add Contact"}
           >
             
           <ContactForm
           
-          typeData={customer ? "update" : contact ? "contacts" : ""}
-          customerId={customer ? customer._id : contact ? contact._id : null}
+          typeData={contact ? "contacts" : ""}
+          customerId={customer ? customer._id : vendor ? vendor._id : contact ? contact._id : null}
           ></ContactForm>
           </ContactCard>
        </Container>

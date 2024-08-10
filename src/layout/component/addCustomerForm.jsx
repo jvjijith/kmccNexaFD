@@ -66,6 +66,13 @@ function AddCustomerForm({ typeData, customerId }) {
     setSuggestions([]);
   };
 
+  const categoryOptions = categoryData?.categories?.map(category => ({
+    value: category._id, 
+    label: category.categoryName
+    // value: employee.metadataId,
+    // label: employee.name,
+  }));
+  
   const getSuggestions = (value) => {
     const inputValue = value?.trim().toLowerCase();
     const inputLength = inputValue.length;
@@ -450,8 +457,8 @@ const renderSuggestion = (suggestion) => (
   <div className="mb-4">
     <label className="block w-full mb-2 text-white">Category *</label>
     <Select
-      options={categories?.map(category => ({ value: category._id, label: category.categoryName }))}
-      value={categories?.find(option => option._id === customerData.category)}
+      options={categoryOptions}
+      value={categoryOptions?.find(option => option._id === customerData.category)}
       onChange={(selectedOption) => setCustomerData(prevState => ({ ...prevState, category: selectedOption.value }))}
       styles={{
         control: (provided, state) => ({
@@ -459,24 +466,22 @@ const renderSuggestion = (suggestion) => (
           backgroundColor: 'black',
           borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
           borderBottomWidth: '2px',
-          borderRadius: '0px',
-          height: '40px', // h-10: 2.5rem = 40px
-          paddingLeft: '8px', // px-2: 0.5rem = 8px
-          paddingRight: '8px', // px-2: 0.5rem = 8px
+          borderRadius: '0',
+          minHeight: '40px',
           color: 'white'
         }),
         singleValue: (provided) => ({
           ...provided,
           color: 'white',
         }),
-        placeholder: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
         menu: (provided) => ({
           ...provided,
           backgroundColor: 'black',
-          color: 'white',
+          color: 'white'
+        }),
+        placeholder: (provided) => ({
+          ...provided,
+          color: 'white'
         }),
         option: (provided, state) => ({
           ...provided,

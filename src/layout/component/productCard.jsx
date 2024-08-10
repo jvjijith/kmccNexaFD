@@ -3,11 +3,8 @@ import Icon from '../ui/icon/icon';
 import IconButton from '../ui/icon/iconButton';
 import Card from '../ui/card/card';
 import { useSidebar } from '../../context/sidebar.context';
-import { useNavigate } from "react-router";
 
-function ContactCard({children,title}) {
-  
-  const navigate = useNavigate();
+function ProductCard({children,title}) {
   const {toggleSidebar} = useSidebar();
     return (
         <div className="flex w-full">
@@ -19,7 +16,7 @@ function ContactCard({children,title}) {
             <div className="sm:flex-grow flex justify-between">
               <div className="">
                 <div className="flex items-center">
-                  <div className="text-3xl font-bold text-white">Contact</div>
+                  <div className="text-3xl font-bold text-white">Product</div>
                   
                 </div>
              {/*    <div className="flex items-center">
@@ -54,14 +51,8 @@ function ContactCard({children,title}) {
           </div>
 
           
-           <Card title={title}
-           component={
-            <button className="bg-black text-white px-4 py-2 rounded" onClick={() => navigate('/addContact')}>
-              Add Contacts
-            </button>
-          }>
+           <Card title={title}>
                {children}
-               
             </Card>
             </div>
 
@@ -69,4 +60,4 @@ function ContactCard({children,title}) {
     );
 }
 
-export default ContactCard;
+export default ProductCard;

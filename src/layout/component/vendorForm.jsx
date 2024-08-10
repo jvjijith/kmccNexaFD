@@ -46,7 +46,7 @@ function VendorForm({ typeData, vendorId }) {
       setIsIndividual(vendorDetail.individual);
       setStoreUser(vendorDetail.storeUser);
       setStateValue(vendorDetail.state);
-      const selectedLanguage = languages.find(lang => lang.code === vendorDetail.language);
+      const selectedLanguage = languages?.find(lang => lang.code === vendorDetail.language);
       setLanguageValue(selectedLanguage.name);
       // const value=categories.find(option => option._id === customerDetail.category);
       // setCategories(value.categoryName);
@@ -73,7 +73,7 @@ function VendorForm({ typeData, vendorId }) {
   const onLanguageChange = (event, { newValue }) => {
    
     setLanguageValue(newValue);
-    const selectedLanguage = languages.find(lang => lang.name === newValue);
+    const selectedLanguage = languages?.find(lang => lang.name === newValue);
     if (selectedLanguage) {
       setCustomerData(prevState => ({
         ...prevState,
@@ -83,6 +83,13 @@ function VendorForm({ typeData, vendorId }) {
 
   };
 
+  const categoryOptions = categoryData?.categories?.map(category => ({
+    value: category._id, 
+    label: category.categoryName
+    // value: employee.metadataId,
+    // label: employee.name,
+  }));
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -243,12 +250,12 @@ else{
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Customer Name *</label>
+              <label className="float-left inline-block mb-2 text-white">Vendor Name *</label>
               <input
                 type="text"
                 name="name"
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                placeholder="Enter Customer Name"
+                placeholder="Enter Vendor Name"
                 autoComplete="off"
                 value={customerData.name}
                 onChange={handleChange}
@@ -438,8 +445,8 @@ else{
   <div className="mb-4">
     <label className="block w-full mb-2 text-white">Category *</label>
     <Select
-      options={categories.map(category => ({ value: category._id, label: category.categoryName }))}
-      value={categories.find(option => option._id === customerData.category)}
+      options={categoryOptions}
+      value={categoryOptions?.find(option => option._id === customerData.category)}
       onChange={(selectedOption) => setCustomerData(prevState => ({ ...prevState, category: selectedOption.value }))}
       styles={{
         control: (provided, state) => ({
@@ -496,92 +503,6 @@ else{
           </div>
         )} */}
 
-        {/* Identification Numbers */}
-        <div className="w-full p-4">
-          <label className="block w-full mb-2 text-white">Identification Numbers</label>
-          {identificationNumbers.map((identification, index) => (
-            <div key={index} className="flex mb-2">
-              <input
-                type="text"
-                name={`identificationType-${index}`}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                placeholder="Type"
-                value={identification.type}
-                onChange={(e) => handleIdentificationChange(index, 'type', e.target.value)}
-              />
-              <input
-                type="text"
-                name={`identificationNumber-${index}`}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
-                placeholder="Number"
-                value={identification.number}
-                onChange={(e) => handleIdentificationChange(index, 'number', e.target.value)}
-              />
-              <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={() => removeIdentificationNumber(index)}>Remove</button>
-            </div>
-          ))}
-          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addIdentificationNumber}>Add Identification Number</button>
-        </div>
-
-        {/* Bank Details */}
-        <div className="w-full p-4">
-          <label className="block w-full mb-2 text-white">Bank Details</label>
-          {bankDetails.map((bank, index) => (
-            <div key={index} className="flex mb-2">
-              <input
-                type="text"
-                name={`accountNumber-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                placeholder="Account Number"
-                value={bank.accountNumber}
-                onChange={(e) => handleBankDetailChange(index, 'accountNumber', e.target.value)}
-              />
-              <input
-                type="text"
-                name={`bankName-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
-                placeholder="Bank Name"
-                value={bank.bankName}
-                onChange={(e) => handleBankDetailChange(index, 'bankName', e.target.value)}
-              />
-              <input
-                type="text"
-                name={`location-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
-                placeholder="Location"
-                value={bank.location}
-                onChange={(e) => handleBankDetailChange(index, 'location', e.target.value)}
-              />
-              <input
-                type="text"
-                name={`IBAN-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
-                placeholder="IBAN"
-                value={bank.IBAN}
-                onChange={(e) => handleBankDetailChange(index, 'IBAN', e.target.value)}
-              />
-              <input
-                type="text"
-                name={`swiftCode-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
-                placeholder="Swift Code"
-                value={bank.swiftCode}
-                onChange={(e) => handleBankDetailChange(index, 'swiftCode', e.target.value)}
-              />
-              <input
-                type="text"
-                name={`IFSC-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
-                placeholder="IFSC"
-                value={bank.IFSC}
-                onChange={(e) => handleBankDetailChange(index, 'IFSC', e.target.value)}
-              />
-              <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={() => removeBankDetail(index)}>Remove</button>
-            </div>
-          ))}
-          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addBankDetail}>Add Bank Detail</button>
-        </div>
-
         {/* Toggle Buttons */}
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
@@ -624,6 +545,104 @@ else{
           <button type="button" className={`mr-2 ${customerData.storeUser ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('storeUser')}>Store User</button>
           <button type="button" className={`${isIndividual ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('individual')}>Individual</button> */}
         </div>
+
+        {/* Identification Numbers */}
+        <div className="w-full p-4">
+        <div className="flex items-center justify-between mb-4">
+          <label className="block w-full mb-2 text-white">Identification Numbers</label>
+          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addIdentificationNumber}>Add</button>
+          </div>
+          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+          {(identificationNumbers.length===0)&&<p>No Identification Number added</p>}
+          {identificationNumbers?.map((identification, index) => (
+            <div key={index} className="flex mb-2">
+              <input
+                type="text"
+                name={`identificationType-${index}`}
+                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                placeholder="Type"
+                value={identification.type}
+                onChange={(e) => handleIdentificationChange(index, 'type', e.target.value)}
+              />
+              <input
+                type="text"
+                name={`identificationNumber-${index}`}
+                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                placeholder="Number"
+                value={identification.number}
+                onChange={(e) => handleIdentificationChange(index, 'number', e.target.value)}
+              />
+              <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={() => removeIdentificationNumber(index)}>Remove</button>
+            </div>
+          ))}
+          </div>
+        </div>
+
+        {/* Bank Details */}
+        <div className="w-full p-4">
+        <div className="flex items-center justify-between mb-4">
+          <label className="block w-full mb-2 text-white">Bank Details</label>
+          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addBankDetail}>Add</button>
+        </div>
+        <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+        {(bankDetails.length===0)&&<p>No Bank Details added</p>}
+          {bankDetails?.map((bank, index) => (
+            <div key={index} className="flex mb-2">
+              <input
+                type="text"
+                name={`accountNumber-${index}`}
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                placeholder="Account Number"
+                value={bank.accountNumber}
+                onChange={(e) => handleBankDetailChange(index, 'accountNumber', e.target.value)}
+              />
+              <input
+                type="text"
+                name={`bankName-${index}`}
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                placeholder="Bank Name"
+                value={bank.bankName}
+                onChange={(e) => handleBankDetailChange(index, 'bankName', e.target.value)}
+              />
+              <input
+                type="text"
+                name={`location-${index}`}
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                placeholder="Location"
+                value={bank.location}
+                onChange={(e) => handleBankDetailChange(index, 'location', e.target.value)}
+              />
+              <input
+                type="text"
+                name={`IBAN-${index}`}
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                placeholder="IBAN"
+                value={bank.IBAN}
+                onChange={(e) => handleBankDetailChange(index, 'IBAN', e.target.value)}
+              />
+              <input
+                type="text"
+                name={`swiftCode-${index}`}
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                placeholder="Swift Code"
+                value={bank.swiftCode}
+                onChange={(e) => handleBankDetailChange(index, 'swiftCode', e.target.value)}
+              />
+              <input
+                type="text"
+                name={`IFSC-${index}`}
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                placeholder="IFSC"
+                value={bank.IFSC}
+                onChange={(e) => handleBankDetailChange(index, 'IFSC', e.target.value)}
+              />
+              <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={() => removeBankDetail(index)}>Remove</button>
+            </div>
+          ))}
+         </div>
+         </div>
+
+        
 
         <div className="flex flex-wrap justify-end p-4">
           <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">

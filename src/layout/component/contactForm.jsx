@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useGetData, usePostData, usePutData } from "../../common/api";
+import Select from 'react-select';
+import { toast } from "react-toastify";
 
 function ContactForm({ typeData, customerId }) {
+  console.log("customerId", customerId);
+  console.log("typeData", typeData);
   const [contactData, setContactData] = useState({
     name: '',
     email: '',
@@ -19,12 +23,14 @@ function ContactForm({ typeData, customerId }) {
   });
 
   const [currentPage, setCurrentPage] = useState(0);
+  const [contactId, setContactId] = useState(null);
 
   const { data: contactDetail, refetch: refetchContactDetail } = useGetData('contactDetail',
     typeData === "contacts" ? `contact/${customerId}` : `contact/customer/${customerId}`
   );
+  const { data: vendorData, isLoading, error } = useGetData("VendorData", "/vendor", {});
   const { mutate: addContact } = usePostData("addContact", "/contact/add");
-  const { mutate: updateContact } = usePutData("updateContact", `/contact/update/${customerId}`);
+  const { mutate: updateContact } = usePutData("updateContact", `/contact/update/${contactId}`);
 
   useEffect(() => {
     if (customerId) {
@@ -34,23 +40,20 @@ function ContactForm({ typeData, customerId }) {
 
   useEffect(() => {
     if (contactDetail) {
-      if (Array.isArray(contactDetail.contacts)) {
-        if (contactDetail.contacts[currentPage]) {
-          setContactData((prevState) => ({
-            ...prevState,
-            ...contactDetail.contacts[currentPage],
-            note: contactDetail.contacts[currentPage].note || [],
-          }));
-        }
-      } else {
+      let currentContact = Array.isArray(contactDetail.contacts) ? contactDetail.contacts[currentPage] : contactDetail;
+      
+      if (currentContact) {
         setContactData((prevState) => ({
           ...prevState,
-          ...contactDetail,
-          note: contactDetail.note || [],
+          ...currentContact,
+          note: currentContact.note || [],
         }));
+        setContactId(currentContact._id);
       }
     }
   }, [contactDetail, currentPage]);
+
+  const vendorsArray = Array.isArray(vendorData) ? vendorData : vendorData?.customers;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -69,27 +72,44 @@ function ContactForm({ typeData, customerId }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = { ...contactData };
-    if (customerId) {
-      updateContact(payload);
-    } else {
-      addContact(payload);
-    }
-    setContactData({
-      name: '',
-      email: '',
-      primaryPhoneNumber: '',
-      secondaryPhoneNumber: '',
-      primaryPhoneWhatsApp: false,
-      secondaryPhoneWhatsApp: false,
-      address: '',
-      country: '',
-      state: '',
-      customer: '',
-      note: [],
-      designation: '',
-      decisionMaker: false,
+
+    const { _id, __v, ...cleanedData } = contactData;
+
+    const payload = customerId ? { 
+      ...cleanedData, 
+      customer: customerId 
+    } : { 
+      ...cleanedData 
+    };
+
+    const mutate = contactId ? updateContact : addContact;
+    mutate(payload, {
+      onSuccess: () => {
+        toast.success(`Contact ${contactId ? 'updated' : 'added'} successfully!`);
+      },
+      onError: (error) => {
+        console.error(`Error ${contactId ? 'updating' : 'adding'} contact:`, error);
+        toast.error(`Error ${contactId ? 'updating' : 'adding'} contact`);
+      },
     });
+
+    if (!contactId) {
+      setContactData({
+        name: '',
+        email: '',
+        primaryPhoneNumber: '',
+        secondaryPhoneNumber: '',
+        primaryPhoneWhatsApp: false,
+        secondaryPhoneWhatsApp: false,
+        address: '',
+        country: '',
+        state: '',
+        customer: '',
+        note: [],
+        designation: '',
+        decisionMaker: false,
+      });
+    }
   };
 
   const handlePreviousPage = () => {
@@ -101,6 +121,14 @@ function ContactForm({ typeData, customerId }) {
       setCurrentPage((prevPage) => Math.min(prevPage + 1, contactDetail.contacts.length - 1));
     }
   };
+
+  // Handle case when contactDetail or contacts array is not available or empty
+  if (customerId && !typeData && (!contactDetail || !contactDetail.contacts || contactDetail.contacts.length < 1)) {
+    return <div>No contacts available</div>;
+  }
+
+  console.log(contactDetail);
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -174,22 +202,9 @@ function ContactForm({ typeData, customerId }) {
               />
             </div>
           </div>
-          <div className="w-full sm:w-1/2 p-4">
-            <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Customer *</label>
-              <input
-                type="text"
-                name="customer"
-                value={contactData.customer}
-                onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
-                placeholder="Enter Customer ID"
-              />
-            </div>
-          </div>
-        </div>
+          
 
-        <div className="flex flex-wrap">
+        
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Designation *</label>
@@ -203,6 +218,9 @@ function ContactForm({ typeData, customerId }) {
               />
             </div>
           </div>
+          </div>
+
+        <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Country *</label>
@@ -216,9 +234,7 @@ function ContactForm({ typeData, customerId }) {
               />
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-wrap">
+        
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Primary PhoneNumber *</label>
@@ -232,6 +248,9 @@ function ContactForm({ typeData, customerId }) {
               />
             </div>
           </div>
+          </div>
+
+        <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Secondary PhoneNumber *</label>
@@ -245,7 +264,54 @@ function ContactForm({ typeData, customerId }) {
               />
             </div>
           </div>
-        </div>
+        
+{!(customerId)&&
+        <div className="w-full sm:w-1/2 p-4">
+  <div className="mb-4">
+    <label className="block w-full mb-2 text-white">Customer *</label>
+    <Select
+      options={vendorsArray?.map(vendor => ({ value: vendor._id, label: vendor.name })) || []}
+      value={vendorsArray?.find(option => option._id === contactData.customer) || null}
+      onChange={(selectedOption) => setContactData(prevState => ({ ...prevState, customer: selectedOption.value }))}
+      styles={{
+        control: (provided, state) => ({
+          ...provided,
+          backgroundColor: 'black',
+          borderColor: state.isFocused ? 'white' : '#D3D3D3',
+          borderBottomWidth: '2px',
+          borderRadius: '0px',
+          height: '40px',
+          paddingLeft: '8px',
+          paddingRight: '8px',
+          color: 'white'
+        }),
+        singleValue: (provided) => ({
+          ...provided,
+          color: 'white',
+        }),
+        placeholder: (provided) => ({
+          ...provided,
+          color: 'white',
+        }),
+        menu: (provided) => ({
+          ...provided,
+          backgroundColor: 'black',
+          color: 'white',
+        }),
+        option: (provided, state) => ({
+          ...provided,
+          backgroundColor: state.isSelected ? '#007bff' : 'black',
+          color: state.isSelected ? 'black' : 'white',
+          cursor: 'pointer'
+        })
+      }}
+      isLoading={isLoading}
+      isDisabled={isLoading || error}
+    />
+  </div>
+</div>
+}
+</div>
 
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
@@ -307,7 +373,7 @@ function ContactForm({ typeData, customerId }) {
       </form>
 
       {/* {contactDetail && contactDetail.contacts.length > 1 && ( */}
-        <div className="flex justify-center items-center mt-4">
+       {(contactDetail?.contacts?.length < 1) && <div className="flex justify-center items-center mt-4">
           <button
             onClick={handlePreviousPage}
             // disabled={currentPage === 0}
@@ -323,7 +389,7 @@ function ContactForm({ typeData, customerId }) {
           >
             {">"}
           </button>
-        </div>
+        </div>}
       {/* )} */}
     </div>
   );

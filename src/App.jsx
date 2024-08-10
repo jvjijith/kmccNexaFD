@@ -21,6 +21,11 @@ import AddVendor from "./pages/vendor/addVendor";
 import Vendor from "./pages/vendor/vendorList";
 import EditCustomer from "./pages/customer/editCustomer";
 import EditVendor from "./pages/vendor/editVendor";
+import AddProduct from "./pages/product/addProduct";
+import AddVarient from "./pages/product/addVarients";
+import Product from "./pages/product/productLIst";
+import AddPrice from "./pages/price/addPrice";
+import ListPrice from "./pages/price/priceList";
 
 const App = () => {
   return (
@@ -47,6 +52,10 @@ const App = () => {
       <Route path="customer/add" element={<AddCustomer />} />
       <Route path="admin/adduser" element={<AddUser />} />
       <Route path="admin/edituser" element={<AddUser />} />
+      <Route path="product/add" element={<AddProduct />} />
+      <Route path="product/list" element={<Product />} />
+      <Route path="variant/add" element={<AddVarient />} />
+      <Route path="product/prices" element={<ListPrice />} />
       <Route path="customer/edit" element={<EditCustomer />} />
       <Route path="/profile/:userId/details" element={<Profile />} />
       </Route>

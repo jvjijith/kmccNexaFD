@@ -87,46 +87,53 @@ function CustomerTable() {
           <Table.HeadCell className="border-gray-700 bg-black text-white">Category</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">State</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Location</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Number of Contacts</Table.HeadCell>
+          {/* <Table.HeadCell className="border-gray-700 bg-black text-white">Number of Contacts</Table.HeadCell> */}
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {customerData && customerData.customers.map((customer, index) => (
-            <Table.Row key={index} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">{customer.name}</Table.Cell>
-              <Table.Cell className="text-gray-300">{customer.country}</Table.Cell>
-              <Table.Cell className="text-gray-300">{customer.category}</Table.Cell>
-              <Table.Cell className="text-gray-300">{customer.state}</Table.Cell>
-              <Table.Cell className="text-gray-300">{customer.location}</Table.Cell>
-              <Table.Cell className="text-gray-300">{customer.identificationNumbers ? customer.identificationNumbers.length : 0}</Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/edit`, { state: { customer }})}>
-                    Edit Customer
-                  </Dropdown.Item>
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/addContact`, { state: { customer } })}>
-                    Add Contacts
-                  </Dropdown.Item>
-                  {customer.active ? (
-                    <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
-                      onClick={() => handleDeactivateCustomer(customer)}
-                    >
-                      Deactivate Customer
-                    </Dropdown.Item>
-                  ) : (
-                    <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
-                      onClick={() => handleActivateCustomer(customer)}
-                    >
-                      Activate Customer
-                    </Dropdown.Item>
-                  )}
-                </Dropdown>
+  {customerData && customerData.customers.map((customer, index) => (
+    <Table.Row key={index} className="border-gray-700 bg-zinc-950">
+      <Table.Cell className="whitespace-nowrap font-medium text-white">{customer.name}</Table.Cell>
+      <Table.Cell className="text-gray-300">{customer.country}</Table.Cell>
+      <Table.Cell className="text-gray-300">
+        {customer.category?.categoryName || "N/A"}
+      </Table.Cell>
+      <Table.Cell className="text-gray-300">{customer.state}</Table.Cell>
+      <Table.Cell className="text-gray-300">{customer.location}</Table.Cell>
+      {/* <Table.Cell className="text-gray-300">{customer.identificationNumbers ? customer.identificationNumbers.length : 0}</Table.Cell> */}
+      <Table.Cell className={`whitespace-nowrap ${customer.active ? "text-green-500" : "text-red-500"}`}>
+                {customer.active ? "Active" : "Inactive"}
               </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
+      <Table.Cell className="text-gray-300">
+        <Dropdown label="Actions" inline className="bg-black text-white border-black">
+          <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/edit`, { state: { customer }})}>
+            Edit Customer
+          </Dropdown.Item>
+          <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/addContact`, { state: { customer } })}>
+          Edit Contacts
+          </Dropdown.Item>
+          {customer.active ? (
+            <Dropdown.Item
+              className="text-gray-300 hover:!bg-orange-600"
+              onClick={() => handleDeactivateCustomer(customer)}
+            >
+              Deactivate Customer
+            </Dropdown.Item>
+          ) : (
+            <Dropdown.Item
+              className="text-gray-300 hover:!bg-orange-600"
+              onClick={() => handleActivateCustomer(customer)}
+            >
+              Activate Customer
+            </Dropdown.Item>
+          )}
+        </Dropdown>
+      </Table.Cell>
+    </Table.Row>
+  ))}
+</Table.Body>
+
       </Table>
     </div>
   );
