@@ -46,33 +46,36 @@ function ContactTable() {
           <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {data.contacts.map((contact) => (
-            <Table.Row key={contact._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
-                {contact.name}
-              </Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.country}</Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.customer}</Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.state}</Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <div className="flex">
-                  {contact.primaryPhoneWhatsApp && <FaWhatsapp size={18} />}
-                  &nbsp; {contact.primaryPhoneNumber}
-                </div>
-              </Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.email}</Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.designation}</Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.decisionMaker ? "Yes" : "No"}</Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate('/addContact')}>Add Contact</Dropdown.Item>
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/contact/addContact`, { state: { contact: contact } })}>Edit Contact</Dropdown.Item>
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate('/addCustomer')}>Delete Contact</Dropdown.Item>
-                </Dropdown>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
+  {data.contacts.map((contact) => (
+    <Table.Row key={contact._id} className="border-gray-700 bg-zinc-950">
+      <Table.Cell className="whitespace-nowrap font-medium text-white">
+        {contact.name}
+      </Table.Cell>
+      <Table.Cell className="text-gray-300">{contact.country}</Table.Cell>
+      <Table.Cell className="text-gray-300">
+        {contact.customer?.name || "N/A"} {/* Display the customer's name or "N/A" if not available */}
+      </Table.Cell>
+      <Table.Cell className="text-gray-300">{contact.state}</Table.Cell>
+      <Table.Cell className="text-gray-300">
+        <div className="flex">
+          {contact.primaryPhoneWhatsApp && <FaWhatsapp size={18} />}
+          &nbsp; {contact.primaryPhoneNumber}
+        </div>
+      </Table.Cell>
+      <Table.Cell className="text-gray-300">{contact.email}</Table.Cell>
+      <Table.Cell className="text-gray-300">{contact.designation}</Table.Cell>
+      <Table.Cell className="text-gray-300">{contact.decisionMaker ? "Yes" : "No"}</Table.Cell>
+      <Table.Cell className="text-gray-300">
+        <Dropdown label="Actions" inline className="bg-black text-white border-black">
+          {/* <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate('/addContact')}>Edit Contact</Dropdown.Item> */}
+          <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/contact/addContact`, { state: { contact: contact } })}>Edit Contact</Dropdown.Item>
+          {/* <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate('/addCustomer')}>Delete Contact</Dropdown.Item> */}
+        </Dropdown>
+      </Table.Cell>
+    </Table.Row>
+  ))}
+</Table.Body>
+
       </Table>
     </div>
   );

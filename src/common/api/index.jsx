@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { B2 } from 'backblaze-b2';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -84,6 +85,35 @@ const useApiMutation = (key, url, method) => {
   });
 };
 
+const generatePreSignedUrl = async (bucketId="ace08604054d19a29613061f", fileName="2019-03-08.png") => {
+  // Initialize B2 with restricted key
+  const b2 = new B2({
+    applicationKeyId: 'c0645d92636f', // Replace with your restricted key ID
+    applicationKey: '0055b8264f72e8cbc18f4d25b66b9475892416b1e0', // Replace with your restricted key
+  });
+
+  try {
+    // Authorize B2 account
+    await b2.authorize();
+
+    // Generate pre-signed URL
+    const response = await b2.getDownloadAuthorization({
+      bucketId,
+      fileNamePrefix: fileName, // Use fileName to determine the file path
+      validDurationInSeconds: 3600, // 1 hour
+    });
+
+    const preSignedUrl = response.data.authorizationToken;
+    console.log('Pre-signed URL:', preSignedUrl); // Log pre-signed URL to console
+    toast.success('Pre-signed URL generated successfully');
+    return preSignedUrl;
+  } catch (error) {
+    console.error('Error generating pre-signed URL:', error);
+    toast.error('Failed to generate pre-signed URL. Please try again later.');
+    throw error;
+  }
+};
+
 // Define your generic hooks using the configured axios instance
 const useGetData = (key, url, options = {}) => {
   console.log(options);
@@ -112,4 +142,4 @@ export const ApiProvider = ({ children }) => {
   );
 };
 
-export { useGetData, usePostData, usePutData, useDeleteData };
+export { useGetData, usePostData, usePutData, useDeleteData, generatePreSignedUrl };

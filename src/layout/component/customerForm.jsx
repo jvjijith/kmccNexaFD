@@ -11,6 +11,8 @@ const states = Object.keys(stateCountryCurrencyMapping);
 function CustomerForm({ typeData, customerId }) {
   // const {id} = useParams();
   // const typeData =id?'update':'add';
+  console.log('customerId', customerId);
+  console.log('typeData', typeData);
   const [languageValue, setLanguageValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [customerData, setCustomerData] = useState(customerDefault);
@@ -109,6 +111,14 @@ function CustomerForm({ typeData, customerId }) {
       }));
     }
   };
+
+  const categoryOptions = categoryData?.categories?.map(category => ({
+    value: category._id, 
+    label: category.categoryName
+    // value: employee.metadataId,
+    // label: employee.name,
+  }));
+  
 
   const handleStateSuggestionsFetchRequested = ({ value }) => {
     setStateSuggestions(getStateSuggestion(value));
@@ -246,6 +256,9 @@ const renderSuggestion = (suggestion) => (
   //   className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white',
   //   autoComplete: 'off'
   // };
+
+  console.log('customerId', customerId);
+  console.log('typeData', typeData);
 
   return (
     <div>
@@ -451,7 +464,7 @@ const renderSuggestion = (suggestion) => (
     <label className="block w-full mb-2 text-white">Category *</label>
     <Select
       options={categories?.map(category => ({ value: category._id, label: category.categoryName }))}
-      value={categories?.find(option => option._id === customerData.category)}
+      value={categoryOptions?.find(option => option._id === customerData.category)}
       onChange={(selectedOption) => setCustomerData(prevState => ({ ...prevState, category: selectedOption.value }))}
       styles={{
         control: (provided, state) => ({
@@ -509,9 +522,57 @@ const renderSuggestion = (suggestion) => (
           </div>
         )}
 
+        {/* Toggle Buttons */}
+        <div className="flex flex-wrap">
+          <div className="w-full sm:w-1/2 p-4">
+            {" "}
+            {/* col-sm-6 */}
+            <div className="mb-4">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" className="sr-only peer" name="storeUser"
+                id="storeUser"
+                checked={isStoreUser}
+                onChange={() => handleToggle('storeUser')} />
+                <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
+                <span className="ms-3 text-md font-medium text-white dark:text-white">
+                Store User
+                </span>
+              </label>
+              <div className="correct"></div>
+            </div>
+          </div>
+
+          <div className="w-full sm:w-1/2 p-4">
+            {" "}
+            {/* col-sm-6 */}
+            <div className="mb-4">
+            <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" className="sr-only peer" name="individual"
+                id="individual"
+                checked={isIndividual}
+                onChange={() => handleToggle('individual')} />
+                <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
+                <span className="ms-3 text-md font-medium text-white dark:text-white">
+                Individual
+                </span>
+              </label>
+              <div className="correct"></div>
+            </div>
+          </div>
+        {/* <div className="flex p-4"> */}
+          {/* <button type="button" className={`mr-2 ${customerData.vendor ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('vendor')}>Vendor</button>
+          <button type="button" className={`mr-2 ${customerData.storeUser ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('storeUser')}>Store User</button>
+          <button type="button" className={`${isIndividual ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('individual')}>Individual</button> */}
+        </div>
+
         {/* Identification Numbers */}
         <div className="w-full p-4">
+        <div className="flex items-center justify-between mb-4">
           <label className="block w-full mb-2 text-white">Identification Numbers</label>
+          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addIdentificationNumber}>Add</button>
+          </div>
+          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+          {(identificationNumbers.length===0)&&<p>No Identification Number added</p>}
           {identificationNumbers?.map((identification, index) => (
             <div key={index} className="flex mb-2">
               <input
@@ -533,12 +594,17 @@ const renderSuggestion = (suggestion) => (
               <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={() => removeIdentificationNumber(index)}>Remove</button>
             </div>
           ))}
-          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addIdentificationNumber}>Add Identification Number</button>
+          </div>
         </div>
 
         {/* Bank Details */}
         <div className="w-full p-4">
+        <div className="flex items-center justify-between mb-4">
           <label className="block w-full mb-2 text-white">Bank Details</label>
+          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addBankDetail}>Add</button>
+        </div>
+        <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+        {(bankDetails.length===0)&&<p>No Bank Details added</p>}
           {bankDetails?.map((bank, index) => (
             <div key={index} className="flex mb-2">
               <input
@@ -592,51 +658,10 @@ const renderSuggestion = (suggestion) => (
               <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={() => removeBankDetail(index)}>Remove</button>
             </div>
           ))}
-          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addBankDetail}>Add Bank Detail</button>
-        </div>
+         </div>
+         </div>
 
-        {/* Toggle Buttons */}
-        <div className="flex flex-wrap">
-          <div className="w-full sm:w-1/2 p-4">
-            {" "}
-            {/* col-sm-6 */}
-            <div className="mb-4">
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" value="" className="sr-only peer" name="storeUser"
-                id="storeUser"
-                checked={isStoreUser}
-                onChange={() => handleToggle('storeUser')} />
-                <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-                <span className="ms-3 text-md font-medium text-white dark:text-white">
-                Store User
-                </span>
-              </label>
-              <div className="correct"></div>
-            </div>
-          </div>
-
-          <div className="w-full sm:w-1/2 p-4">
-            {" "}
-            {/* col-sm-6 */}
-            <div className="mb-4">
-            <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" value="" className="sr-only peer" name="individual"
-                id="individual"
-                checked={isIndividual}
-                onChange={() => handleToggle('individual')} />
-                <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-                <span className="ms-3 text-md font-medium text-white dark:text-white">
-                Individual
-                </span>
-              </label>
-              <div className="correct"></div>
-            </div>
-          </div>
-        {/* <div className="flex p-4"> */}
-          {/* <button type="button" className={`mr-2 ${customerData.vendor ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('vendor')}>Vendor</button>
-          <button type="button" className={`mr-2 ${customerData.storeUser ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('storeUser')}>Store User</button>
-          <button type="button" className={`${isIndividual ? 'bg-blue-500' : 'bg-gray-500'}`} onClick={() => handleToggle('individual')}>Individual</button> */}
-        </div>
+        
 
         <div className="flex flex-wrap justify-end p-4">
           <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">

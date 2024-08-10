@@ -70,12 +70,22 @@ function VendorTable() {
     );
   };
 
+  // Log vendorData to check its structure
+  console.log("vendorData:", vendorData);
+
   if (isLoading) {
     return <LoadingScreen />;
   }
 
   if (error) {
     return <div>Error loading data</div>;
+  }
+
+  // Check if vendorData exists and is an array
+  const vendorsArray = Array.isArray(vendorData) ? vendorData : vendorData?.customers;
+
+  if (!vendorsArray) {
+    return <div>No vendors available</div>;
   }
 
   return (
@@ -87,28 +97,29 @@ function VendorTable() {
           <Table.HeadCell className="border-gray-700 bg-black text-white">Category</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">State</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Location</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Number of Contacts</Table.HeadCell>
+          {/* <Table.HeadCell className="border-gray-700 bg-black text-white">Number of Contacts</Table.HeadCell> */}
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {vendorData && vendorData.customers.map((vendor, index) => (
+          {vendorsArray.map((vendor, index) => (
             <Table.Row key={index} className="border-gray-700 bg-zinc-950">
               <Table.Cell className="whitespace-nowrap font-medium text-white">{vendor.name}</Table.Cell>
               <Table.Cell className="text-gray-300">{vendor.country}</Table.Cell>
-              <Table.Cell className="text-gray-300">{vendor.category}</Table.Cell>
+              <Table.Cell className="text-gray-300">{vendor.category.categoryName}</Table.Cell>
               <Table.Cell className="text-gray-300">{vendor.state}</Table.Cell>
               <Table.Cell className="text-gray-300">{vendor.location}</Table.Cell>
-              <Table.Cell className="text-gray-300">{vendor.identificationNumbers ? vendor.identificationNumbers.length : 0}</Table.Cell>
+              {/* <Table.Cell className="text-gray-300 text-center">{vendor.identificationNumbers ? vendor.identificationNumbers.length : 0}</Table.Cell> */}
+              <Table.Cell className={`whitespace-nowrap ${vendor.active ? "text-green-500" : "text-red-500"}`}>
+                {vendor.active ? "Active" : "Inactive"}
+              </Table.Cell>
               <Table.Cell className="text-gray-300">
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
                   <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/vendor/edit`, { state: { vendor } })}>
                     Edit vendor
                   </Dropdown.Item>
-                  {/* <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/deletevendor/${vendor.vendorUserId}`, { state: { vendor } })}>
-                    Delete Vendor
-                  </Dropdown.Item> */}
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/addContacts/${vendor.vendorUserId}`, { state: { vendor } })}>
-                    Add Contacts
+                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/contact/addContact`, { state: { vendor } })}>
+                  Edit Contacts
                   </Dropdown.Item>
                   {vendor.active ? (
                     <Dropdown.Item
