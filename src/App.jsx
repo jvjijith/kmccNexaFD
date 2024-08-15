@@ -26,6 +26,16 @@ import AddVarient from "./pages/product/addVarients";
 import Product from "./pages/product/productLIst";
 import AddPrice from "./pages/price/addPrice";
 import ListPrice from "./pages/price/priceList";
+import CustomerContact from "./pages/contact/customerContacts";
+import CategoriesList from "./pages/categories/categoriesList";
+import AddCategories from "./pages/categories/addCategory";
+import CustomerProfile from "./pages/customer/customerProfile";
+import CustomerContacts from "./layout/ui/profile/customerProfile/contact";
+import CustomerDetails from "./layout/ui/profile/customerProfile/details";
+import Varient from "./pages/product/varientList";
+import ProductProfile from "./pages/product/productProfile";
+import ProductDetails from "./layout/ui/profile/productProfile/productDetails";
+import VariantDetails from "./layout/ui/profile/productProfile/variantDetails";
 
 const App = () => {
   return (
@@ -44,9 +54,9 @@ const App = () => {
       <Route exact path="vendor/add" element={<AddVendor></AddVendor>}></Route>
       <Route exact path="vendor/edit" element={<EditVendor></EditVendor>}></Route>
       <Route exact path="group" element={<Group></Group>}></Route>      
-      <Route exact path="customer/addContact" element={<AddContact></AddContact>}></Route> 
+      <Route exact path="/customer/editContact" element={<CustomerContact></CustomerContact>}></Route> 
       <Route exact path="contact/addContact" element={<AddContact></AddContact>}></Route>      
-      <Route exact path="vendor/addContact" element={<AddContact></AddContact>}></Route>      
+      <Route exact path="/vendor/editContact" element={<CustomerContact></CustomerContact>}></Route>      
       <Route exact path="addContact" element={<AddContact></AddContact>}></Route>
       <Route exact path="loading" element={<Loading></Loading>}></Route>
       <Route path="customer/add" element={<AddCustomer />} />
@@ -54,10 +64,23 @@ const App = () => {
       <Route path="admin/edituser" element={<AddUser />} />
       <Route path="product/add" element={<AddProduct />} />
       <Route path="product/list" element={<Product />} />
+      <Route path="variant/list" element={<Varient />} />
       <Route path="variant/add" element={<AddVarient />} />
       <Route path="product/prices" element={<ListPrice />} />
       <Route path="customer/edit" element={<EditCustomer />} />
+      <Route path="customer/category" element={<CategoriesList />} />
+      <Route path="vendor/category" element={<CategoriesList />} />
+      <Route path="product/category" element={<CategoriesList />} />
+      <Route path="/addcategory" element={<AddCategories />} />
       <Route path="/profile/:userId/details" element={<Profile />} />
+            <Route path="/profile/:id" element={<CustomerProfile />}>
+                <Route path="customerdetails" element={<CustomerDetails />} />
+                <Route path="contacts" element={<CustomerContacts />} />
+            </Route>
+            <Route path="/product/profile/:id" element={<ProductProfile />}>
+                <Route path="productdetails" element={<ProductDetails />} />
+                <Route path="variants" element={<VariantDetails />} />
+            </Route>
       </Route>
 
       <Route element={<PublicRoute></PublicRoute>}>

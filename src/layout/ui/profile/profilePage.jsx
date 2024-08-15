@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import { useGetData } from '../../../common/api';
 import Image from '../image/image';
+import LoadingScreen from '../loading/loading';
 
 function ProfilePage() {
     const { userId } = useParams();
@@ -17,6 +18,10 @@ function ProfilePage() {
     if (employeeError || memployeeError) {
         return <div className="text-center text-red-500 py-5">Error loading data</div>;
     }
+
+    if (isEmployeePending || isMemployeePending) {
+        return <LoadingScreen />;
+      }
 
     return (
         <div className="flex w-full h-screen">

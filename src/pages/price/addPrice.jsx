@@ -5,14 +5,14 @@ import { useLocation } from "react-router";
 
 function AddPrice() {
   const location = useLocation();
-  const product = location.state?.product || null;
+  const price = location.state?.price || null;
 
   return (
     <Container>
-      <ProductCard title={product ? "Edit Price" : "Add Price"}>
+      <ProductCard title={price ? "Edit Price" : "Add Price"}>
         <PriceForm
-          typeData={product ? "update" : ""}
-          productId={product ? product._id : null}
+          // typeData={product ? "update" : ""}
+          priceId={price ? price._id : null}
         />
       </ProductCard>
     </Container>

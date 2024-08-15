@@ -13,8 +13,8 @@ function PriceTable() {
   const [isApiLoading, setApiLoading] = useState(false);
 
   const { data, isLoading, error, refetch } = useGetData("pricing", "/pricing/", {});
-  const { mutate: deactivatePrice } = usePutData("deactivatePrice", `/pricing/deactivate/${selectedPrice?.PriceId}`);
-  const { mutate: activatePrice } = usePutData("activatePrice", `/pricing/activate/${selectedPrice?.PriceId}`);
+  const { mutate: deactivatePrice } = usePutData("deactivatePrice", `/pricing/deactivate/${selectedPrice?._id}`);
+  const { mutate: activatePrice } = usePutData("activatePrice", `/pricing/activate/${selectedPrice?._id}`);
 
   const navigate = useNavigate();
 
@@ -36,13 +36,13 @@ function PriceTable() {
       {
         onSuccess: () => {
           refetch();
-          toast.success(`Price ${Price?.productId?.name} deactivated successfully!`, { toastId: `deactivate-${Price.PriceId}` });
+          toast.success(`Price deactivated successfully!`, { toastId: `deactivate-${Price._id}` });
           setApiLoading(false);
           closeModal();
         },
         onError: (error) => {
           console.error("Error deactivating Price:", error);
-          toast.error(`Error deactivating Price ${Price?.productId?.name}`, { toastId: `deactivate-${Price.PriceId}` });
+          toast.error(`Error deactivating Price `, { toastId: `deactivate-${Price._id}` });
           setApiLoading(false);
           closeModal();
         },
@@ -58,13 +58,13 @@ function PriceTable() {
       {
         onSuccess: () => {
           refetch();
-          toast.success(`Price ${Price?.productId?.name} activated successfully!`, { toastId: `activate-${Price.PriceId}` });
+          toast.success(`Price  activated successfully!`, { toastId: `activate-${Price._id}` });
           setApiLoading(false);
           closeModal();
         },
         onError: (error) => {
           console.error("Error activating Price:", error);
-          toast.error(`Error activating Price ${Price?.productId?.name}`, { toastId: `activate-${Price.PriceId}` });
+          toast.error(`Error activating Price `, { toastId: `activate-${Price._id}` });
           setApiLoading(false);
           closeModal();
         },
@@ -144,7 +144,7 @@ function PriceTable() {
       </Table>
 
       <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Edit Price"}>
-        <PriceForm id={selectedPrice?._id} productId={selectedPrice?.productId?._id} variantId={selectedPrice?.variantId?._id} closeModal={closeModal} />
+        <PriceForm priceId={selectedPrice?._id} closeModal={closeModal} />
       </PopUpModal>
 
       {isApiLoading && <LoadingScreen />}

@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useGetData, usePostData, usePutData } from "../../common/api";
 import Select from 'react-select';
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
+import LoadingScreen from "../ui/loading/loading";
 
 function ContactForm({ typeData, customerId }) {
+  
+  const navigate = useNavigate();
+
   console.log("customerId", customerId);
   console.log("typeData", typeData);
   const [contactData, setContactData] = useState({
@@ -25,12 +30,13 @@ function ContactForm({ typeData, customerId }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [contactId, setContactId] = useState(null);
 
-  const { data: contactDetail, refetch: refetchContactDetail } = useGetData('contactDetail',
+  const { data: contactDetail, refetch: refetchContactDetail, load } = useGetData('contactDetail',
     typeData === "contacts" ? `contact/${customerId}` : `contact/customer/${customerId}`
   );
-  const { data: vendorData, isLoading, error } = useGetData("VendorData", "/vendor", {});
-  const { mutate: addContact } = usePostData("addContact", "/contact/add");
-  const { mutate: updateContact } = usePutData("updateContact", `/contact/update/${contactId}`);
+  const { data: vendorData, isLoading: vendorLoading, error: vendorError } = useGetData("VendorData", "/vendor", {});
+const { data: customerData, isLoading: customerLoading, error: customerError } = useGetData("customerData", "/customer", {});
+  const { mutate: addContact, isLoading, isError } = usePostData("addContact", "/contact/add");
+  const { mutate: updateContact, loading, error } = usePutData("updateContact", `/contact/update/${contactId}`);
 
   useEffect(() => {
     if (customerId) {
@@ -54,6 +60,16 @@ function ContactForm({ typeData, customerId }) {
   }, [contactDetail, currentPage]);
 
   const vendorsArray = Array.isArray(vendorData) ? vendorData : vendorData?.customers;
+  const customersArray = Array.isArray(customerData) ? customerData : customerData?.customers;
+
+  // Combine both vendors and customers into one array
+const combinedArray = [...(vendorsArray || []), ...(customersArray || [])];
+
+const options = combinedArray.map(item => ({
+  value: item._id,
+  label: item.name,
+  type: item.vendor ? 'Vendor' : 'Customer', // Identify whether the option is a Vendor or Customer
+}));
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -86,10 +102,24 @@ function ContactForm({ typeData, customerId }) {
     mutate(payload, {
       onSuccess: () => {
         toast.success(`Contact ${contactId ? 'updated' : 'added'} successfully!`);
+        if (typeData==="vendor") {
+          navigate("/vendor/list");
+        }
+        if (typeData==="customer") {
+          navigate("/customer");
+        }
+        
       },
       onError: (error) => {
         console.error(`Error ${contactId ? 'updating' : 'adding'} contact:`, error);
         toast.error(`Error ${contactId ? 'updating' : 'adding'} contact`);
+        if (typeData==="vendor") {
+          navigate("/vendor/list");
+        }
+        if (typeData==="customer") {
+          navigate("/customer");
+        }
+        
       },
     });
 
@@ -109,6 +139,9 @@ function ContactForm({ typeData, customerId }) {
         designation: '',
         decisionMaker: false,
       });
+
+
+
     }
   };
 
@@ -127,6 +160,10 @@ function ContactForm({ typeData, customerId }) {
     return <div>No contacts available</div>;
   }
 
+  if (vendorLoading || customerLoading || isLoading || loading || load) {
+    return <LoadingScreen />;
+  }
+
   console.log(contactDetail);
 
   return (
@@ -142,7 +179,7 @@ function ContactForm({ typeData, customerId }) {
                 value={contactData.name}
                 onChange={handleChange}
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
-                placeholder="Enter Your Customer Name"
+                placeholder="Enter Your Contact Name"
               />
             </div>
           </div>
@@ -155,7 +192,7 @@ function ContactForm({ typeData, customerId }) {
                 value={contactData.email}
                 onChange={handleChange}
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
-                placeholder="Enter Customer Email"
+                placeholder="Enter Email"
               />
             </div>
           </div>
@@ -265,52 +302,52 @@ function ContactForm({ typeData, customerId }) {
             </div>
           </div>
         
-{!(customerId)&&
-        <div className="w-full sm:w-1/2 p-4">
-  <div className="mb-4">
-    <label className="block w-full mb-2 text-white">Customer *</label>
-    <Select
-      options={vendorsArray?.map(vendor => ({ value: vendor._id, label: vendor.name })) || []}
-      value={vendorsArray?.find(option => option._id === contactData.customer) || null}
-      onChange={(selectedOption) => setContactData(prevState => ({ ...prevState, customer: selectedOption.value }))}
-      styles={{
-        control: (provided, state) => ({
-          ...provided,
-          backgroundColor: 'black',
-          borderColor: state.isFocused ? 'white' : '#D3D3D3',
-          borderBottomWidth: '2px',
-          borderRadius: '0px',
-          height: '40px',
-          paddingLeft: '8px',
-          paddingRight: '8px',
-          color: 'white'
-        }),
-        singleValue: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        placeholder: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        menu: (provided) => ({
-          ...provided,
-          backgroundColor: 'black',
-          color: 'white',
-        }),
-        option: (provided, state) => ({
-          ...provided,
-          backgroundColor: state.isSelected ? '#007bff' : 'black',
-          color: state.isSelected ? 'black' : 'white',
-          cursor: 'pointer'
-        })
-      }}
-      isLoading={isLoading}
-      isDisabled={isLoading || error}
-    />
-  </div>
-</div>
-}
+          {!(customerId) && (
+    <div className="w-full sm:w-1/2 p-4">
+      <div className="mb-4">
+        <label className="block w-full mb-2 text-white">Customer/Vendor *</label>
+        <Select
+          options={options}
+          value={options.find(option => option.value === contactData.customer) || null}
+          onChange={(selectedOption) => setContactData(prevState => ({ ...prevState, customer: selectedOption.value }))}
+          styles={{
+            control: (provided, state) => ({
+              ...provided,
+              backgroundColor: 'black',
+              borderColor: state.isFocused ? 'white' : '#D3D3D3',
+              borderBottomWidth: '2px',
+              borderRadius: '0px',
+              height: '40px',
+              paddingLeft: '8px',
+              paddingRight: '8px',
+              color: 'white'
+            }),
+            singleValue: (provided) => ({
+              ...provided,
+              color: 'white',
+            }),
+            placeholder: (provided) => ({
+              ...provided,
+              color: 'white',
+            }),
+            menu: (provided) => ({
+              ...provided,
+              backgroundColor: 'black',
+              color: 'white',
+            }),
+            option: (provided, state) => ({
+              ...provided,
+              backgroundColor: state.isSelected ? '#007bff' : 'black',
+              color: state.isSelected ? 'black' : 'white',
+              cursor: 'pointer'
+            })
+          }}
+          isLoading={vendorLoading || customerLoading}
+          isDisabled={vendorLoading || customerLoading || vendorError || customerError}
+        />
+      </div>
+    </div>
+  )}
 </div>
 
         <div className="flex flex-wrap">
@@ -373,7 +410,7 @@ function ContactForm({ typeData, customerId }) {
       </form>
 
       {/* {contactDetail && contactDetail.contacts.length > 1 && ( */}
-       {(contactDetail?.contacts?.length < 1) && <div className="flex justify-center items-center mt-4">
+       {(contactDetail?.contacts?.length < 0) && <div className="flex justify-center items-center mt-4">
           <button
             onClick={handlePreviousPage}
             // disabled={currentPage === 0}

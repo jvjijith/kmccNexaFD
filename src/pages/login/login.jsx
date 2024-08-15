@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { useEffect } from "react";
+import LoadingScreen from "../../layout/ui/loading/loading";
 
 function Login() {
   const email = useFormInput("");
@@ -15,6 +16,7 @@ function Login() {
   const auth = getAuth(appFirebase);
   const navigate = useNavigate();
   const [userObj, setUserObj] = useLocalStorage("user", null);
+  const [loading, setLoading] = useLocalStorage(false);
 
   useEffect(() => {
     if (location.state?.toastMessage) {
@@ -53,7 +55,7 @@ function Login() {
 
   async function signInWEAP(event) {
     event.preventDefault();
-
+    setLoading(true);
     const employeeData = await fetchEmployeeData(email.value);
     if (!employeeData) {
       toast.error("Not authorized", {
@@ -93,6 +95,7 @@ function Login() {
         };
         setUserObj(authObj);
         navigate("/");
+        setLoading(false);
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -107,7 +110,12 @@ function Login() {
           theme: "dark",
           transition: Bounce,
         });
+        setLoading(false);
       });
+  }
+
+  if (loading) {
+    return <LoadingScreen />;
   }
 
   return (

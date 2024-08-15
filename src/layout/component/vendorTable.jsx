@@ -48,6 +48,11 @@ function VendorTable() {
     );
   };
 
+  const handleViewDetails = (vendor) => {
+    navigate(`/profile/${vendor._id}/customerdetails`, { state: { vendor } });
+    console.log(vendor._id);
+  };
+
   const handleActivateVendor = (vendor) => {
     setSelectedVendor(vendor);
     setApiLoading(true);
@@ -115,10 +120,16 @@ function VendorTable() {
               </Table.Cell>
               <Table.Cell className="text-gray-300">
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
+                <Dropdown.Item
+                      className="text-gray-300 hover:!bg-orange-600"
+                      onClick={() => handleViewDetails(vendor)}
+                    >
+                      Details
+                    </Dropdown.Item>
                   <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/vendor/edit`, { state: { vendor } })}>
                     Edit vendor
                   </Dropdown.Item>
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/contact/addContact`, { state: { vendor } })}>
+                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/vendor/editContact`, { state: { vendor } })}>
                   Edit Contacts
                   </Dropdown.Item>
                   {vendor.active ? (

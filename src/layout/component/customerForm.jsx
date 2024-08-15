@@ -4,15 +4,12 @@ import { customerDefault, stateCountryCurrencyMapping, languages } from '../../c
 import Select from 'react-select';
 import Autosuggest from 'react-autosuggest';
 import LoadingScreen from '../ui/loading/loading';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 const states = Object.keys(stateCountryCurrencyMapping);
 
 function CustomerForm({ typeData, customerId }) {
-  // const {id} = useParams();
-  // const typeData =id?'update':'add';
-  console.log('customerId', customerId);
-  console.log('typeData', typeData);
+  const navigate = useNavigate();
   const [languageValue, setLanguageValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [customerData, setCustomerData] = useState(customerDefault);
@@ -21,24 +18,24 @@ function CustomerForm({ typeData, customerId }) {
   const [identificationNumbers, setIdentificationNumbers] = useState([]);
   const [bankDetails, setBankDetails] = useState([]);
   const [categories, setCategories] = useState([]);
-  
+  const [changeCategories, setChangeCategories] = useState(false);
+  const [changeIdentificationNumbers, setChangeIdentificationNumbers] = useState(false);
+  const [changeBankDetails, setChangeBankDetails] = useState(false);
   const [stateSuggestions, setStateSuggestions] = useState([]);
   const [stateValue, setStateValue] = useState('');
 
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
-  const api_url = typeData === 'update' ? '/customer/update' : '/customer/add';
+  const api_url = typeData === 'update' ? `/customer/update/${customerId}` : '/customer/add';
   const api_key = typeData === 'update' ? 'updateCustomer' : 'addCustomer';
   const { mutate: saveCustomer, isLoading, isError } = mutationHook(api_key, api_url);
   const { data: customerDetail, isLoading: customerDetailLoading, refetch: refetchCustomerDetail } = useGetData("Customer", `/customer/customer/${customerId}`);
   const { data: categoryData, refetch: refetchCategories } = useGetData("categories", "/category");
   const { mutate: signup, isPending: isSigningUp, error: signupError } = usePostData("signup", "/auth/signup");
 
-
   useEffect(() => {
     refetchCategories();
     refetchCustomerDetail();
-  }, [ refetchCategories, refetchCustomerDetail]);
-
+  }, [refetchCategories, refetchCustomerDetail]);
 
   useEffect(() => {
     if (categoryData) {
@@ -54,11 +51,21 @@ function CustomerForm({ typeData, customerId }) {
       setStateValue(customerDetail.state);
       const selectedLanguage = languages.find(lang => lang.code === customerDetail.language);
       setLanguageValue(selectedLanguage.name);
-      // const value=categories.find(option => option._id === customerDetail.category);
-      // setCategories(value.categoryName);
     }
-   
-  }, [categoryData,customerDetail]);
+  }, [categoryData, customerDetail]);
+
+  // Reset state when navigating back using browser's back button
+  useEffect(() => {
+    const handlePopState = () => {
+      resetForm();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   const handleSuggestionsFetchRequested = ({ value }) => {
     setSuggestions(getSuggestions(value));
@@ -88,7 +95,6 @@ function CustomerForm({ typeData, customerId }) {
     }
   };
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCustomerData(prevState => ({
@@ -115,11 +121,10 @@ function CustomerForm({ typeData, customerId }) {
   const categoryOptions = categoryData?.categories?.map(category => ({
     value: category._id, 
     label: category.categoryName
-    // value: employee.metadataId,
-    // label: employee.name,
   }));
   
-
+  const selectedCategoryOption = categoryOptions?.find(option => option.value === (customerId ? changeCategories ? customerData.category : customerData.category?._id : customerData.category));
+  
   const handleStateSuggestionsFetchRequested = ({ value }) => {
     setStateSuggestions(getStateSuggestion(value));
   };
@@ -146,11 +151,11 @@ function CustomerForm({ typeData, customerId }) {
 
   const getSuggestionValue = (suggestion) => suggestion.name;
 
-const renderSuggestion = (suggestion) => (
-  <div>
-    {suggestion.name}
-  </div>
-);
+  const renderSuggestion = (suggestion) => (
+    <div>
+      {suggestion.name}
+    </div>
+  );
 
   const onStateChange = (event, { newValue }) => {
     setStateValue(newValue);
@@ -165,12 +170,14 @@ const renderSuggestion = (suggestion) => (
     const newIdentificationNumbers = [...identificationNumbers];
     newIdentificationNumbers[index][field] = value;
     setIdentificationNumbers(newIdentificationNumbers);
+    setChangeIdentificationNumbers(true);
   };
 
   const handleBankDetailChange = (index, field, value) => {
     const newBankDetails = [...bankDetails];
     newBankDetails[index][field] = value;
     setBankDetails(newBankDetails);
+    setChangeBankDetails(true);
   };
 
   const addIdentificationNumber = () => {
@@ -203,62 +210,84 @@ const renderSuggestion = (suggestion) => (
   const handleSubmit = async (e) => {
     e.preventDefault();
     let customerUserId = null;
-    if (isIndividual) {
+
+    if (isIndividual && !customerId) {
       const signupRequestBody = {
         email: customerData.email,
         password: customerData.password,
       };
+
       signup(signupRequestBody, {
         onSuccess: (signupResponse) => {
           customerUserId = signupResponse.uid;
-
-          const payload = {
-            ...customerData,
-            storeUser: isStoreUser,
-            individual: isIndividual,
-            active: true,
-            customerUserId,
-            identificationNumbers,
-            bankDetails,
-          };
-          saveCustomer(payload);
-          setCustomerData(customerDefault);
+          prepareAndSaveCustomer(customerUserId);
         },
         onError: (error) => {
           console.error("Error signing up:", error);
           toast.error('Error signing up.');
+          if (customerId) navigate("/customer");
         },
       });
     } else {
-      const payload = {
-        ...customerData,
-        storeUser: isStoreUser,
-        individual: isIndividual,
-        active: true,
-        customerUserId,
-        identificationNumbers,
-        bankDetails,
-      };
-      saveCustomer(payload);
-      setCustomerData(customerDefault);
+      prepareAndSaveCustomer(customerUserId);
     }
   };
 
+  const prepareAndSaveCustomer = (customerUserId) => {
+    const cleanedIdentificationNumbers = 
+      customerData.identificationNumbers.map(item => {
+        const { _id, ...rest } = item;
+        return rest;
+      });
 
-  if (isLoading) {
+    const cleanedBankDetails =  
+      customerData.bankDetails.map(item => {
+        const { _id, ...rest } = item;
+        return rest;
+      });
+
+    const { _id, __v, ...cleanedData } = customerData;
+
+    const payload = customerId ? {
+      ...cleanedData,
+      category: changeCategories ? customerData.category : customerData.category._id,
+      storeUser: isStoreUser,
+      individual: isIndividual,
+      active: true,
+      customerUserId,
+      identificationNumbers: cleanedIdentificationNumbers,
+      bankDetails: cleanedBankDetails,
+    } : {
+      ...customerData,
+      storeUser: isStoreUser,
+      individual: isIndividual,
+      active: true,
+      customerUserId,
+      identificationNumbers,
+      bankDetails,
+    };
+
+    saveCustomer(payload);
+    resetForm();
+  };
+
+  const resetForm = () => {
+    setCustomerData(customerDefault);
+    setStateValue('');
+    setLanguageValue('');
+    setStoreUser(false);
+    setIsIndividual(false);
+    setIdentificationNumbers([]);
+    setBankDetails([]);
+    setCategories([]);
+    if (customerId) {
+      navigate("/customer");
+    }
+  };
+
+  if (isLoading || isSigningUp || (customerDetailLoading && customerId)) {
     return <LoadingScreen />;
   }
-
-  // const inputProps = {
-  //   placeholder: 'Enter Language',
-  //   value: languageValue,
-  //   onChange: onLanguageChange,
-  //   className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white',
-  //   autoComplete: 'off'
-  // };
-
-  console.log('customerId', customerId);
-  console.log('typeData', typeData);
 
   return (
     <div>
@@ -463,9 +492,15 @@ const renderSuggestion = (suggestion) => (
   <div className="mb-4">
     <label className="block w-full mb-2 text-white">Category *</label>
     <Select
-      options={categories?.map(category => ({ value: category._id, label: category.categoryName }))}
-      value={categoryOptions?.find(option => option._id === customerData.category)}
-      onChange={(selectedOption) => setCustomerData(prevState => ({ ...prevState, category: selectedOption.value }))}
+      options={categoryOptions}
+      value={selectedCategoryOption || null} // Make sure to pass the whole object or null
+      onChange={(selectedOption) => {
+        setCustomerData(prevState => ({
+          ...prevState,
+          category: selectedOption.value // Store the value (ID) directly in customerData
+        }));
+        setChangeCategories(true);
+      }}
       styles={{
         control: (provided, state) => ({
           ...provided,
@@ -667,8 +702,8 @@ const renderSuggestion = (suggestion) => (
           <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
             {isLoading || isSigningUp ? 'Saving...' : 'Save'}
           </button>
-          {isError && <p className="text-red-500 mt-2">Error occurred while saving the customer.</p>}
-          {signupError && <p className="text-red-500 mt-2">Error occurred while signing up the individual customer.</p>}
+          {/* {isError && <p className="text-red-500 mt-2">Error occurred while saving the customer.</p>}
+          {signupError && <p className="text-red-500 mt-2">Error occurred while signing up the individual customer.</p>} */}
         </div>
       </form>
     </div>

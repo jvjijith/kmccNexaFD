@@ -16,6 +16,10 @@ Modal.setAppElement('#root');
 
 function ProductForm({ typeData, productId }) {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isSubrand, setSubrand] = useState(false);
+  const [isBrand, setbrand] = useState(false);
+  const [isCategorie, setCategorie] = useState(false);
+  const [isSubCategories, setSubCategorie] = useState(false);
   const [isSubModalOpen, setSubModalOpen] = useState(false);
   const [productData, setProductData] = useState(productDefault);
   const [images, setImages] = useState([]);
@@ -26,18 +30,43 @@ function ProductForm({ typeData, productId }) {
   const [brands, setBrands] = useState([]);
   const [subBrands, setSubBrands] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
+  const [uploadedImages, setUploadedImages] = useState([]);
   const navigate = useNavigate();
 
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
-  const api_url = typeData === 'update' ? '/product/update' : '/product/add';
+  const api_url = typeData === 'update' ? `/product/update/${productId}` : '/product/add';
   const api_key = typeData === 'update' ? 'updateProduct' : 'addProduct';
   const { data: brandData, refetch: refetchBrand } = useGetData('brand', '/brands');
   const { data: subBrandData, refetch: refetchSubBrand } = useGetData('subBrand', '/subbrands');
   const { mutate: saveProduct, isLoading } = mutationHook(api_key, api_url);
   const { data: categoryData, refetch: refetchCategories } = useGetData('categories', '/category');
   const { data: subCategoryData, refetch: refetchSubCategories } = useGetData('subCategories', '/subcategories');
-  const { mutate: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
-  const { mutate: updateMediaStatus } = usePutData('signedUrl', '/media/update');
+  const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
+  const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', '/media/updateMediaStatus');
+  const { data: productsData, refetch: refetchProduct } = useGetData('product', `/product/product/${productId}`);
+  
+  useEffect(() => {
+    if (typeData === 'update' && productsData) {
+      setProductData({
+        ...productData,
+        name: productsData.name || '',
+        description: productsData.description || '',
+        HSN: productsData.HSN || '',
+        model: productsData.model || '',
+        productCode: productsData.productCode || '',
+        stock: productsData.stock || '',
+        subCategory: productsData.subCategory || '',
+        category: productsData.category?._id || '',
+        brand: productsData.brand?._id || '',
+        subBrand: productsData.subBrand?._id || '',
+        // Populate other fields as necessary
+      });
+      setImages(productsData.images || []);
+      setNotes(productsData.notes || []);
+      setRFQ(productsData.RFQ || false);
+      setUploadedImages(productsData.images || []);
+    }
+  }, [typeData, productsData]);
 
   useEffect(() => {
     refetchCategories();
@@ -47,36 +76,20 @@ function ProductForm({ typeData, productId }) {
   }, [refetchCategories, refetchBrand, refetchSubBrand, refetchSubCategories]);
 
   useEffect(() => {
-    if (categoryData) {
-      setCategories(categoryData.categories);
-    }
-    if (subCategoryData) {
-      setSubCategories(subCategoryData.subCategories);
-    }
-    if (brandData) {
-      setBrands(brandData.brands || []);
-    }
-    if (subBrandData) {
-      setSubBrands(subBrandData.subBrands || []);
-    }
+    if (categoryData) setCategories(categoryData.categories);
+    if (subCategoryData) setSubCategories(subCategoryData.subCategories);
+    if (brandData) setBrands(brandData.brands || []);
+    if (subBrandData) setSubBrands(subBrandData.subBrands || []);
   }, [categoryData, brandData, subBrandData]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProductData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const categoryOptions = categoryData?.categories?.map(category => ({
-    value: category._id, 
-    label: category.categoryName
-  }));
 
   const subCategoryOptions = subCategoryData?.subCategories?.map(subcategory => ({
     value: subcategory._id, 
     label: subcategory.subCategoryName
+  }));
+
+  const categoryOptions = categoryData?.categories?.map(category => ({
+    value: category._id, 
+    label: category.categoryName
   }));
 
   const brandOptions = brandData?.brands?.map(brand => ({
@@ -86,7 +99,8 @@ function ProductForm({ typeData, productId }) {
 
   const subBrandOptions = subBrandData?.subBrands?.map(subBrand => ({
     value: subBrand._id, 
-    label: subBrand.name
+    label: subBrand.subBrandName
+
   }));
 
   const openModal = () => setModalOpen(true);
@@ -94,8 +108,12 @@ function ProductForm({ typeData, productId }) {
   const openSubModal = () => setSubModalOpen(true);
   const closeSubModal = () => setSubModalOpen(false);
 
-  const handleImagesChange = (acceptedFiles) => {
-    setImages(acceptedFiles.map(file => Object.assign(file, { preview: URL.createObjectURL(file) })));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProductData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
   const handleNotesChange = (index, field, value) => {
@@ -112,83 +130,132 @@ function ProductForm({ typeData, productId }) {
   };
 
   const handleToggle = (field) => {
-    if (field === 'RFQ') {
-      setRFQ(!isRFQ);
+    if (field === 'RFQ') setRFQ(!isRFQ);
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      setImages([...images, ...acceptedFiles]);
     }
+  });
+
+  const handleRemoveImage = (index) => {
+    setImages(images.filter((_, i) => i !== index));
   };
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop: handleImagesChange });
+  const handleUploadImages = async (event) => {
+    event.preventDefault();  // Prevent form submission
+  
+    try {
+        for (const image of images) {
+            console.log(`Generating signed URL for ${image.name}`);
+  
+            // Generate a signed URL
+            const signedUrlResponse = await generateSignedUrl({
+                title: image.name,
+                mediaType: "image",
+                active: true,
+                uploadStatus: "progressing",
+                uploadProgress: 0,
+            });
+  
+            console.log('Signed URL Response:', signedUrlResponse);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    const uploadedImages = await Promise.all(
-      images.map(async (image) => {
-        if (!image.url) {
-          // Upload new images
-          const signedUrlResponse = await generateSignedUrl({
-            title: image.name,
-            mediaType: 'image',
-            active: true,
-            uploadStatus: 'progressing',
-            uploadProgress: 0,
-          }, {
-            headers: {
-              'Content-Type': image.type,
-              'Content-Length': image.size,
-            },
-          });
-  
-          const { signedUrl, media } = signedUrlResponse.data;
-  
-          await axios.put(signedUrl, image, {
-            headers: {
-              'Content-Type': image.type,
-              'Content-Length': image.size,
-            },
-            onUploadProgress: (progressEvent) => {
-              const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-              setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
-            },
-          });
-  
-          await updateMedia({
-            _id: media._id,
-            mediaType: media.mediaType,
-            title: media.title,
-            active: media.active,
-            uploadStatus: 'completed',
-            uploadProgress: 100,
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-  
-          return { ...media, preview: URL.createObjectURL(image) };
-        } else {
-          // Use existing images
-          return image;
+            if (!signedUrlResponse) {
+                throw new Error('Signed URL data is undefined');
+            }
+
+            const signedUrlData = signedUrlResponse;
+            const signedUrl = signedUrlData.signedUrl;
+            const mediaId = signedUrlData.media._id;
+
+            console.log("API Data:" ,signedUrlData);
+            console.log("Signed URL generated:" ,signedUrl);
+            console.log("Media ID generated:" ,mediaId);
+
+            // Proceed with uploading the image to the signed URL
+            const formData = new FormData();
+            formData.append('file', image);
+
+            await axios.put(signedUrl, image, {
+                headers: {
+                    'Content-Type': image.type
+                },
+                onUploadProgress: (progressEvent) => {
+                    const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
+
+                    // Update media status
+                    updateMediaStatus({
+                        media: {
+                            _id: mediaId,
+                            mediaType: "image",
+                            title: image.name,
+                            active: true,
+                            uploadStatus: progress === 100 ? "completed" : "progressing",
+                            uploadProgress: progress,
+                        }
+                    });
+                }
+            });
+
+            // Add the uploaded image's URL to the list
+            setUploadedImages(prev => [
+                ...prev,
+                {
+                    url: signedUrl.split("?")[0], // Extract the base URL for the image
+                    altText: image.name
+                }
+            ]);
         }
-      })
-    );
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('An error occurred while uploading the image. Please try again.');
+    }
+};
   
-    const productDataWithImages = { ...productData, images: uploadedImages, notes, RFQ: isRFQ };
   
-    saveProduct(productDataWithImages, {
-      onSuccess: (data) => {
-        console.log(data);
-        setProdId(data);
-      },
-      onError: (error) => {
-        console.error('Error saving product:', error);
-      },
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    const cleanedUploadedImages = productsData?.images.map((item) => {
+      const { _id, ...rest } = item;
+      return rest;
     });
+
+    const cleanedNotes = productsData?.notes.map((item) => {
+      const { _id, ...rest } = item;
+      return rest;
+    });
+
+    const { _id, __v, updated_at, created_at, ...cleanedData } = productData;
+
+    const payload = productId ? {
+      ...cleanedData,
+      // category: isCategorie ? productData.category : productData.category._id,
+      // subBrand: isSubrand ? productData.subBrand : productData.subBrand._id,
+      // brand: isBrand ? productData.brand : productData.brand._id,
+      // subCategory: isSubCategories ? productData.subCategory : productData.subCategory._id,
+      images: cleanedUploadedImages,
+      RFQ: isRFQ,
+      notes: cleanedNotes,
+      // identificationNumbers: cleanedIdentificationNumbers,
+      // bankDetails: cleanedBankDetails,
+    } : {
+      ...productData,
+      images: uploadedImages,
+      RFQ: isRFQ,
+      notes,
+    };
+
+    saveProduct(
+      payload
+    );
+    navigate('/product/list');
   };
 
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
+  if (isLoading) return <LoadingScreen />;
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -210,7 +277,7 @@ function ProductForm({ typeData, productId }) {
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">Product Description *</label>
-              <input
+              <textarea
                 type="text"
                 name="description"
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
@@ -231,8 +298,8 @@ function ProductForm({ typeData, productId }) {
           <div style={{ width: '90%' }}>
             <Select
               options={brands?.map(brand => ({ value: brand._id, label: brand.name }))}
-              value={brandOptions?.find(option => option._id === productData.brand)}
-              onChange={(selectedOption) => setProductData(prevState => ({ ...prevState, brand: selectedOption.value }))}
+              value={brandOptions?.find(option => option._id === (productId?isBrand?productData.brand:productData.brand._id:productData.brand))}
+              onChange={(selectedOption) => {setProductData(prevState => ({ ...prevState, brand: selectedOption.value }));setbrand(true);}}
               styles={{
                 control: (provided, state) => ({
                   ...provided,
@@ -285,8 +352,8 @@ function ProductForm({ typeData, productId }) {
           <div style={{ width: '90%' }}>
             <Select
               options={subBrands?.map(subBrand => ({ value: subBrand._id, label: subBrand.subBrandName }))}
-              value={subBrandOptions?.find(option => option._id === productData.subBrand)}
-              onChange={(selectedOption) => setProductData(prevState => ({ ...prevState, subBrand: selectedOption.value }))}
+              value={subBrandOptions?.find(option => option._id === (productId? isSubrand? productData.subBrand : productData.subBrand._id : productData.subBrand) )}
+              onChange={(selectedOption) => {setProductData(prevState => ({ ...prevState, subBrand: selectedOption.value }));setSubrand(true);}}
               styles={{
                 control: (provided, state) => ({
                   ...provided,
@@ -410,8 +477,8 @@ function ProductForm({ typeData, productId }) {
     <label className="block w-full mb-2 text-white">Category *</label>
     <Select
       options={categories?.map(category => ({ value: category._id, label: category.categoryName }))}
-      value={categoryOptions?.find(option => option._id === productData.category)}
-      onChange={(selectedOption) => setProductData(prevState => ({ ...prevState, category: selectedOption.value }))}
+      value={categoryOptions?.find(option => option._id === (productId?isCategorie?productData.category:productData.category._id:productData.category))}
+      onChange={(selectedOption) => {setProductData(prevState => ({ ...prevState, category: selectedOption.value }));setCategorie(true);}}
       styles={{
         control: (provided, state) => ({
           ...provided,
@@ -452,9 +519,9 @@ function ProductForm({ typeData, productId }) {
   <div className="mb-4">
     <label className="block w-full mb-2 text-white">Sub Category </label>
     <Select
-      options={subCategories?.map(subCategory => ({ value: subCategory._id, label: subCategory.subCategoryName }))}
-      value={subCategoryOptions?.find(option => option._id === productData.subCategory)}
-      onChange={(selectedOption) => setProductData(prevState => ({ ...prevState, category: selectedOption.value }))}
+      options={subCategoryOptions}
+      value={subCategoryOptions?.find(option => option.value === (productId?isCategorie?productData.subCategory:productData.subCategory:productData.subCategory))}
+      onChange={(selectedOption) => {setProductData(prevState => ({ ...prevState, subCategory: selectedOption.value }));setSubCategorie(true);}}
       styles={{
         control: (provided, state) => ({
           ...provided,
@@ -516,22 +583,22 @@ function ProductForm({ typeData, productId }) {
         </div>
 
         <div className="w-full p-4">
-        <label className="block w-full mb-2 text-white">Images</label>
-        <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-4">
-          <input {...getInputProps()} />
-          <p>Drag & drop images here, or click to select files</p>
-          <div className="w-full p-4">
+      <label className="block w-full mb-2 text-white">Images</label>
+      <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-4">
+        <input {...getInputProps()} />
+        <p>Drag & drop images here, or click to select files</p>
+        <div className="w-full p-4">
           {images.map((file, index) => (
-            <div key={index} className="relative inline-block mr-4 mb-4">
-              <img src={file.preview} alt="Preview" className="w-20 h-20 object-cover border-2 border-gray-600 rounded" />
-              <button type="button" className="absolute top-0 right-0 p-1 bg-gray-800 text-white text-xs rounded-full" onClick={() => setImages(images.filter((_, i) => i !== index))}>x</button>
-              <div className="absolute bottom-0 left-0 bg-gray-800 text-white text-xs p-1 rounded">{uploadProgress[file.name] || 0}%</div>
+            <div key={index} className="flex items-center justify-between mb-2">
+              <span>{file.name}</span>
+              <progress value={uploadProgress[file.name] || 0} max="100">{uploadProgress[file.name] || 0}%</progress>
+              <button className="ml-2 text-red-500" onClick={() => handleRemoveImage(index)}>X</button>
             </div>
           ))}
         </div>
-        </div>
-        
-        </div>
+        <button className="mt-4 bg-blue-500 text-white p-2 rounded" onClick={handleUploadImages}>Upload</button>
+      </div>
+      </div>
 
         {/* Bank Details */}
         <div className="w-full p-4">
@@ -572,77 +639,6 @@ function ProductForm({ typeData, productId }) {
           <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
             {isLoading  ? 'Saving...' : 'Save'}
           </button>
-        {/* </div>
-        <div className="flex flex-wrap justify-end p-4"> */}
-          {/* <button type="button" onClick={() => handleAddVariant()} className="bg-nexa-orange text-white px-6 py-2 rounded ml-2">
-            {isLoading  ? 'Adding...' : 'Add Variants'}
-          </button> */}
-
-
-          {/* <div className="w-full p-4 mt-7">
-          <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="variants">
-        {(provided) => (
-          <Table theme={{ dark: true }} ref={provided.innerRef} {...provided.droppableProps}>
-            <Table.Head className="border-gray-700 bg-black text-white">
-              <Table.HeadCell className="border-gray-700 bg-black text-white">Team Name</Table.HeadCell>
-              <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-              <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
-            </Table.Head>
-            <Table.Body className="divide-y">
-              {variants.map((variant, index) => (
-                <Draggable key={variant._id} draggableId={variant._id} index={index}>
-                  {(provided) => (
-                    <Table.Row
-                      className="border-gray-700 bg-zinc-950"
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <Table.Cell className="whitespace-nowrap font-medium text-white">
-                        {variant.name}
-                      </Table.Cell>
-                      <Table.Cell className={`whitespace-nowrap ${variant.active ? "text-green-500" : "text-red-500"}`}>
-                        {variant.active ? "Active" : "Inactive"}
-                      </Table.Cell>
-                      <Table.Cell className="text-gray-300">
-                        <Dropdown label="Actions" inline className="bg-black text-white border-black">
-                          <Dropdown.Item
-                            className="text-gray-300 hover:!bg-orange-600"
-                            onClick={() => handleEditVariant(variant)}
-                          >
-                            Edit Variant
-                          </Dropdown.Item>
-                          {variant.active ? (
-                            <Dropdown.Item
-                              className="text-gray-300 hover:!bg-orange-600"
-                              onClick={() => handleDeactivateTeam(variant)}
-                            >
-                              Deactivate Team
-                            </Dropdown.Item>
-                          ) : (
-                            <Dropdown.Item
-                              className="text-gray-300 hover:!bg-orange-600"
-                              onClick={() => handleActivateTeam(variant)}
-                            >
-                              Activate Team
-                            </Dropdown.Item>
-                          )}
-                        </Dropdown>
-                      </Table.Cell>
-                    </Table.Row>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </Table.Body>
-          </Table>
-        )}
-      </Droppable>
-    </DragDropContext>
-  
-      </div>
-           */}
         </div>
       </form>
 

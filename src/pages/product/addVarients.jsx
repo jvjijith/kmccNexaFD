@@ -5,14 +5,23 @@ import { useLocation } from "react-router";
 
 function AddVarient() {
   const location = useLocation();
+  const variant = location.state?.variant || null;
+  const product = location.state?.product || null;
+  const productId = location.state?.productId || null;
   
-  // Extract the productId from the URL query parameters or state
-  const productId = new URLSearchParams(location.search).get("productId");
+  console.log("product",product);
+  
+  console.log("variant",variant);
+
+  console.log("productId",productId);
 
   return (
     <Container>
       <ProductCard title={"Add Variant"}>
-        <VarientForm productId={productId} />
+        <VarientForm 
+        variantId={variant?variant._id:null}
+        productId={product?product._id:productId?productId:null}
+         />
       </ProductCard>
     </Container>
   );
