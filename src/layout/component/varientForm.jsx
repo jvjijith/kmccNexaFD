@@ -1,58 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { useGetData, usePostData, usePutData } from '../../common/api';
-import { Table } from "flowbite-react";
-import { varientDefault } from '../../constant';
-import Select from 'react-select';
-import LoadingScreen from '../ui/loading/loading';
-import Modal from 'react-modal';
+import { usePostData, usePutData, useGetData } from '../../common/api';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
-import B2 from 'backblaze-b2';
-import BrandForm from './brandForm';
-import PopUpModal from '../ui/modal/modal';
-import SubBrandForm from './subBrandForm';
-
-Modal.setAppElement('#root');
+import LoadingScreen from '../ui/loading/loading';
+import { useNavigate } from 'react-router';
 
 function VarientForm({ typeData, productId, variantId }) {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isSubModalOpen, setSubModalOpen] = useState(false);
-  const [productData, setProductData] = useState(varientDefault);
+  
+  const navigate = useNavigate();
+  const [productData, setProductData] = useState({
+    name: "",
+    color: "",
+    size: "",
+    productId: "",
+    images: [],
+    notes: [],
+    model: "",
+    RFQ: false,
+    HSN: "",
+    productCode: "",
+    active: true
+});
   const [images, setImages] = useState([]);
   const [notes, setNotes] = useState([]);
   const [isRFQ, setRFQ] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [subBrands, setSubBrands] = useState([]);
-  const [modalType, setModalType] = useState('');
-  const [newBrand, setNewBrand] = useState({ name: '', category: '', active: true });
-  const [newSubBrand, setNewSubBrand] = useState({ subBrandName: '', brandId: '', active: true });
+  const [uploadProgress, setUploadProgress] = useState({});
+  const [uploadedImages, setUploadedImages] = useState([]);
 
-  const mutationHook = typeData === 'update' ? usePutData : usePostData;
-  const api_url = typeData === 'update' ? '/product/update' : '/variant/add';
-  const api_key = typeData === 'update' ? 'updateProduct' : 'addProduct';
-  const { data: brandData, refetch: refetchBrand } = useGetData('brand', '/brands');
-  const { data: subBrandData, refetch: refetchSubBrand } = useGetData('subBrand', '/subbrands');
-  const { mutate: saveProduct, isLoading } = mutationHook(api_key, api_url);
-  const { data: categoryData, refetch: refetchCategories } = useGetData('categories', '/category');
+  const mutationHook = variantId ? usePutData : usePostData;
+  const api_url = variantId ? `/variant/update/${variantId}` : '/variant/add';
+  const api_key = variantId ? 'updateProduct' : 'addProduct';
+  const { mutate: saveProduct, isLoading: isSaving } = mutationHook(api_key, api_url);
+  const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
+  const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', '/media/updateMediaStatus');
+  
+  // Fetch variant data if variantId is provided
+  const { data: variantData, refetch: refetchVariant } = useGetData('variant', `/variant/${variantId}`);
 
   useEffect(() => {
-    refetchCategories();
-    refetchBrand();
-    refetchSubBrand();
-  }, [refetchCategories, refetchBrand, refetchSubBrand]);
-
-  useEffect(() => {
-    if (categoryData) {
-      setCategories(categoryData.categories);
+    if (variantId && variantData) {
+      // Pre-fill the form with the fetched variant data
+      setProductData(variantData);
+      setUploadedImages(variantData.images || []);
+      setNotes(variantData.notes || []);
+      setRFQ(variantData.RFQ || false);
     }
-    if (brandData) {
-      setBrands(brandData.brands || []);
-    }
-    if (subBrandData) {
-      setSubBrands(subBrandData.subBrands || []);
-    }
-  }, [categoryData, brandData, subBrandData]);
+  }, [variantId, variantData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,35 +55,47 @@ function VarientForm({ typeData, productId, variantId }) {
     }));
   };
 
-  const categoryOptions = categoryData?.categories?.map(category => ({
-    value: category._id, 
-    label: category.categoryName
-  }));
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const brandOptions = brandData?.brands?.map(brand => ({
-    value: brand._id, 
-    label: brand.name
-  }));
+    const cleanedUploadedImages = variantData?.images.map((item) => {
+      const { _id, ...rest } = item;
+      return rest;
+    });
 
-  const subBrandOptions = subBrandData?.subBrands?.map(subBrand => ({
-    value: subBrand._id, 
-    label: subBrand.name
-  }));
+    const cleanedNotes = variantData?.notes.map((item) => {
+      const { _id, ...rest } = item;
+      return rest;
+    });
 
-  const openModal = () => {
-    setModalOpen(true);
-  };
+    const { _id, __v, updated_at, created_at, ...cleanedData } = productData;
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+    const variantPayload = variantId?{
+      ...cleanedData,
+      images: cleanedUploadedImages,
+      notes: cleanedNotes,
+      RFQ: isRFQ
+    }:{
+      ...productData,
+      images: uploadedImages,
+      notes: notes,
+      RFQ: isRFQ,
+      productId: productId
+    };
 
-  const openSubModal = () => {
-    setSubModalOpen(true);
-  };
-
-  const closeSubModal = () => {
-    setSubModalOpen(false);
+    try {
+      await saveProduct(variantPayload);
+      // alert('Variant saved successfully!');
+      
+        navigate(`/variant/list`, { state: { productId } });
+     
+    } catch (error) {
+      console.error('Error saving variant:', error);
+      // alert('An error occurred while saving the variant. Please try again.');
+      
+        navigate(`/product/list`);
+      
+    }
   };
 
   const handleImagesChange = (acceptedFiles) => {
@@ -118,74 +123,94 @@ function VarientForm({ typeData, productId, variantId }) {
     }
   };
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop: handleImagesChange });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      setImages([...images, ...acceptedFiles]);
+    }
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleRemoveImage = (index) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
+
+  const handleUploadImages = async (event) => {
+    event.preventDefault(); // Prevent form submission
 
     try {
-    //   const response = await axios.post('https://api.backblazeb2.com/b2api/v2/b2_authorize_account', null, {
-    //     auth: {
-    //       username: 'c0645d92636f',
-    //       password: '0055b8264f72e8cbc18f4d25b66b9475892416b1e0'
-    //     }
-    //   });
+      for (const image of images) {
+        console.log(`Generating signed URL for ${image.name}`);
 
-    //   const { authorizationToken, apiUrl, downloadUrl, allowed } = response.data;
-    //   const bucketId = allowed.bucketId;
+        // Generate a signed URL
+        const signedUrlResponse = await generateSignedUrl({
+          title: image.name,
+          mediaType: "image",
+          active: true,
+          uploadStatus: "progressing",
+          uploadProgress: 0,
+        });
 
-    //   const getUploadUrlResponse = await axios.post(`${apiUrl}/b2api/v2/b2_get_upload_url`, {
-    //     bucketId
-    //   }, {
-    //     headers: {
-    //       Authorization: authorizationToken
-    //     }
-    //   });
+        console.log('Signed URL Response:', signedUrlResponse);
 
-    //   const { uploadUrl, authorizationToken: uploadAuthToken } = getUploadUrlResponse.data;
+        if (!signedUrlResponse) {
+          throw new Error('Signed URL data is undefined');
+        }
 
-    //   const uploadImage = async (file) => {
-    //     const formData = new FormData();
-    //     formData.append('file', file);
+        const signedUrlData = signedUrlResponse;
+        const signedUrl = signedUrlData.signedUrl;
+        const mediaId = signedUrlData.media._id;
 
-    //     const response = await axios.post(uploadUrl, formData, {
-    //       headers: {
-    //         Authorization: uploadAuthToken,
-    //         'X-Bz-File-Name': encodeURIComponent(file.name),
-    //         'Content-Type': 'b2/x-auto',
-    //         'X-Bz-Content-Sha1': 'do_not_verify'
-    //       }
-    //     });
+        console.log("API Data:", signedUrlData);
+        console.log("Signed URL generated:", signedUrl);
+        console.log("Media ID generated:", mediaId);
 
-    //     const uploadedUrl = `${downloadUrl}/file/trailBucket/${response.data.fileName}`;
-    //     return uploadedUrl;
-    //   };
+        // Proceed with uploading the image to the signed URL
+        const formData = new FormData();
+        formData.append('file', image);
 
-    //   const uploadedImages = await Promise.all(images.map(uploadImage));
+        await axios.put(signedUrl, image, {
+          headers: {
+            'Content-Type': image.type
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
 
-      const productDataWithImages = { ...productData, 
-        // images: uploadedImages, 
-        images: [
-          {
-             "url": "https://example.com/image1.jpg",
-            "altText": "Image 1"
+            // Update media status
+            updateMediaStatus({
+              media: {
+                _id: mediaId,
+                mediaType: "image",
+                title: image.name,
+                active: true,
+                uploadStatus: progress === 100 ? "completed" : "progressing",
+                uploadProgress: progress,
+              }
+            });
           }
-        ], 
-        notes, 
-        RFQ:isRFQ,
-        productId:productId };
+        });
 
-      saveProduct(productDataWithImages);
+        // Add the uploaded image's URL to the list
+        setUploadedImages(prev => [
+          ...prev,
+          {
+            url: signedUrl.split("?")[0], // Extract the base URL for the image
+            altText: image.name
+          }
+        ]);
+      }
     } catch (error) {
-      console.error('Error uploading images:', error);
+      console.error('Error uploading image:', error);
+      // alert('An error occurred while uploading the image. Please try again.');
     }
   };
 
-  if (isLoading) {
+  if (isSaving || (variantId && !variantData)) {
     return <LoadingScreen />;
   }
 
   console.log(productId);
+  console.log(productData);
+  console.log(uploadedImages);
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -287,48 +312,8 @@ function VarientForm({ typeData, productId, variantId }) {
     
         </div>
 
-        <label className="block w-full mb-2 text-white">Images</label>
-        <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-black text-white border-2 border-nexa-gray rounded mb-4">
-          <input {...getInputProps()} />
-          <p>Drag & drop images here, or click to select files</p>
-        </div>
-        <div className="w-full p-4">
-          
-          {images.map((file, index) => (
-            <div key={index} className="flex mb-2">
-              <img src={file.preview} alt="Preview" className="w-20 h-20 mr-2" />
-              <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={() => setImages(images.filter((_, i) => i !== index))}>Remove</button>
-            </div>
-          ))}
-        </div>
-
-        {/* Bank Details */}
-        <div className="w-full p-4">
-          <label className="block w-full mb-2 text-white">Notes</label>
-          {notes.map((note, index) => (
-            <div key={index} className="flex flex-wrap mb-4">
-              <input
-                type="text"
-                placeholder="Note Name"
-                value={note.name}
-                onChange={(e) => handleNotesChange(index, 'name', e.target.value)}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-              />
-              <input
-                type="text"
-                placeholder="Note Description"
-                value={note.description}
-                onChange={(e) => handleNotesChange(index, 'description', e.target.value)}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
-              />
-              <button type="button" className="bg-black text-white px-4 py-2 rounded ml-2" onClick={() => removeNotes(index)}>Remove</button>
-            </div>
-          ))}
-          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addNotes}>Add Notes</button>
-        </div>
-
         {/* Toggle Buttons */}
-        <div className="flex flex-wrap">
+      <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             {" "}
             {/* col-sm-6 */}
@@ -346,24 +331,69 @@ function VarientForm({ typeData, productId, variantId }) {
               <div className="correct"></div>
             </div>
           </div>
-
-          
         </div>
+
+        <div className="w-full p-4">
+      <label className="block w-full mb-2 text-white">Images</label>
+      <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-4">
+        <input {...getInputProps()} />
+        <p>Drag & drop images here, or click to select files</p>
+        <div className="w-full p-4">
+          {images.map((file, index) => (
+            <div key={index} className="flex items-center justify-between mb-2">
+              <span>{file.name}</span>
+              <progress value={uploadProgress[file.name] || 0} max="100">{uploadProgress[file.name] || 0}%</progress>
+              <button className="ml-2 text-red-500" onClick={() => handleRemoveImage(index)}>X</button>
+            </div>
+          ))}
+        </div>
+        <button className="mt-4 bg-blue-500 text-white p-2 rounded" onClick={handleUploadImages}>Upload</button>
+      </div>
+      </div>
+
+      
+
+        {/* Bank Details */}
+        <div className="w-full p-4">
+        <div className="flex items-center justify-between mb-4">
+          <label className="block w-full mb-2 text-white">Notes</label>
+          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addNotes}>Add</button>
+          </div>
+          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+            {(notes.length===0)&&<p>No notes added</p>}
+          {notes.map((note, index) => (
+            <div key={index} className="flex flex-wrap items-center mb-4 p-2  rounded-lg">
+              <input
+                type="text"
+                placeholder="Note Name"
+                value={note.name}
+                onChange={(e) => handleNotesChange(index, 'name', e.target.value)}
+                className="block w-2/5 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              />
+              <textarea
+                type="text"
+                placeholder="Note Description"
+                value={note.description}
+                onChange={(e) => handleNotesChange(index, 'description', e.target.value)}
+                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
+              />
+              <button type="button" className="bg-black text-white px-4 py-2 rounded ml-2" onClick={() => removeNotes(index)}>Remove</button>
+            </div>
+          ))}
+          </div>
+        </div>
+
+        
 
         <div className="flex flex-wrap justify-end p-4">
           <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
-            {isLoading  ? 'Saving...' : 'Save'}
+            {isSaving  ? 'Saving...' : 'Save'}
           </button>
         </div>
 
       </form>
 
-      <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Brand"}>
-        <BrandForm closeModal={closeModal} />
-      </PopUpModal>
-      <PopUpModal isOpen={isSubModalOpen} onClose={closeSubModal} title={"Add SubBrand"}>
-        <SubBrandForm closeModal={closeSubModal} />
-      </PopUpModal>
+      
 
     </div>
   );

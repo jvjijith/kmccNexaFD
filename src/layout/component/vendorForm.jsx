@@ -4,10 +4,14 @@ import { vendorDefault, stateCountryCurrencyMapping, languages } from '../../con
 import Select from 'react-select';
 import Autosuggest from 'react-autosuggest';
 import LoadingScreen from '../ui/loading/loading';
+import { useNavigate } from 'react-router';
 
 const states = Object.keys(stateCountryCurrencyMapping);
 
 function VendorForm({ typeData, vendorId }) {
+  
+  const navigate = useNavigate();
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [customerData, setCustomerData] = useState(vendorDefault);
   const [isIndividual, setIsIndividual] = useState(false);
@@ -19,9 +23,10 @@ function VendorForm({ typeData, vendorId }) {
   const [suggestions, setSuggestions] = useState([]); 
   const [stateSuggestions, setStateSuggestions] = useState([]);
   const [stateValue, setStateValue] = useState('');
+  const [changeCategories, setChangeCategories] = useState(false);
   
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
-  const api_url = typeData === 'update' ? '/vendor/update' : '/vendor/add';
+  const api_url = typeData === 'update' ? `/vendor/update/${vendorId}` : '/vendor/add';
   const api_key = typeData === 'update' ? 'updateVendor' : 'addVendor';
   const { mutate: saveCustomer, isLoading, isError } = mutationHook(api_key, api_url);
   const { data: vendorDetail, isLoading: vendorDetailLoading, refetch: refetchVendorDetail } = useGetData("Vendor", `/vendor/vendor/${vendorId}`);
@@ -86,10 +91,10 @@ function VendorForm({ typeData, vendorId }) {
   const categoryOptions = categoryData?.categories?.map(category => ({
     value: category._id, 
     label: category.categoryName
-    // value: employee.metadataId,
-    // label: employee.name,
   }));
   
+  const selectedCategoryOption = categoryOptions?.find(option => option.value === (vendorId ? changeCategories ? customerData.category : customerData.category?._id : customerData.category));
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -198,49 +203,64 @@ const renderSuggestion = (suggestion) => (
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let customerUserId = null;
-    if (isIndividual) {
-      const signupRequestBody = {
-        email: customerData.email,
-        password: customerData.password,
-      };
-    signup(signupRequestBody, {
-      onSuccess: (signupResponse) => {
-        const customerUserId = signupResponse.uid;
-
-        const payload = {
-          ...customerData,
-          storeUser: isStoreUser,
-          individual: isIndividual,
-          active: true,
-          customerUserId,
-          identificationNumbers,
-          bankDetails,
-        };
-        saveCustomer(payload);
-        setCustomerData(vendorDefault);
-  },
-  onError: (error) => {
-    console.error("Error signing up:", error);
-    toast.error('Error signing up.');
-  },})
-}
-else{
-    const payload = {
-      ...customerData,
+  
+    const cleanedIdentificationNumbers = customerData.identificationNumbers.map((item) => {
+      const { _id, ...rest } = item;
+      return rest;
+    });
+  
+    const cleanedBankDetails = customerData.bankDetails.map((item) => {
+      const { _id, ...rest } = item;
+      return rest;
+    });
+  
+    const { _id, __v, ...cleanedData } = customerData;
+  
+    const payload = vendorId ? {
+      ...cleanedData, // Spread the cleaned customer data
+      category: changeCategories ? customerData.category : customerData.category._id,
       storeUser: isStoreUser,
       individual: isIndividual,
       active: true,
-      customerUserId,
+      customerUserId: null, // Set to null as signup is not needed
+      identificationNumbers: cleanedIdentificationNumbers,
+      bankDetails: cleanedBankDetails,
+    }:{
+      ...cleanedData, // Spread the cleaned customer data
+      category: changeCategories ? customerData.category : customerData.category._id,
+      storeUser: isStoreUser,
+      individual: isIndividual,
+      active: true,
+      customerUserId: null, // Set to null as signup is not needed
       identificationNumbers,
       bankDetails,
     };
-    saveCustomer(payload);
-    setCustomerData(vendorDefault);
-  }
+  
+    try {
+      await saveCustomer(payload);
+      resetForm();
+      toast.success('Customer saved successfully!');
+    } catch (error) {
+      console.error("Error saving customer:", error);
+      toast.error('Error saving customer.');
+    }
   };
 
-  if (isLoading) {
+  const resetForm = () => {
+    setCustomerData(vendorDefault);
+    setStateValue('');
+    setLanguageValue('');
+    setStoreUser(false);
+    setIsIndividual(false);
+    setIdentificationNumbers([]);
+    setBankDetails([]);
+    setCategories([]);
+    if (vendorId) {
+      navigate("/vendor/list");
+    }
+  };
+
+  if (isLoading || isSigningUp) {
     return <LoadingScreen />;
   }
 
@@ -269,7 +289,7 @@ else{
                 type="email"
                 name="email"
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                placeholder="Enter Customer Email"
+                placeholder="Enter Vendor Email"
                 autoComplete="off"
                 value={customerData.email}
                 onChange={handleChange}
@@ -300,7 +320,7 @@ else{
                 type="text"
                 name="website"
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                placeholder="Enter Customer Website"
+                placeholder="Enter Vendor Website"
                 autoComplete="off"
                 value={customerData.website}
                 onChange={handleChange}
@@ -445,9 +465,15 @@ else{
   <div className="mb-4">
     <label className="block w-full mb-2 text-white">Category *</label>
     <Select
-      options={categoryOptions}
-      value={categoryOptions?.find(option => option._id === customerData.category)}
-      onChange={(selectedOption) => setCustomerData(prevState => ({ ...prevState, category: selectedOption.value }))}
+     options={categoryOptions}
+     value={selectedCategoryOption || null} // Make sure to pass the whole object or null
+     onChange={(selectedOption) => {
+       setCustomerData(prevState => ({
+         ...prevState,
+         category: selectedOption.value // Store the value (ID) directly in customerData
+       }));
+       setChangeCategories(true);
+     }}
       styles={{
         control: (provided, state) => ({
           ...provided,
@@ -648,8 +674,8 @@ else{
           <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
             {isLoading || isSigningUp ? 'Saving...' : 'Save'}
           </button>
-          {isError && <p className="text-red-500 mt-2">Error occurred while saving the customer.</p>}
-          {signupError && <p className="text-red-500 mt-2">Error occurred while signing up the individual customer.</p>}
+          {/* {isError && <p className="text-red-500 mt-2">Error occurred while saving the customer.</p>}
+          {signupError && <p className="text-red-500 mt-2">Error occurred while signing up the individual customer.</p>} */}
         </div>
       </form>
     </div>

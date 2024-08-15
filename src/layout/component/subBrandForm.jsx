@@ -84,7 +84,7 @@ function SubBrandForm({ id, closeModal }) {
               </label>
               <Select
               options={brands.map(brand => ({ value: brand._id, label: brand.name }))}
-              value={brands.find(option => option._id === subBrandData.brandId)}
+              value={brands.find(option => option.value === subBrandData.brandId)}
               onChange={(selectedOption) => setSubBrandData(prevState => ({ ...prevState, brandId: selectedOption.value }))}
               styles={{
                 control: (provided, state) => ({

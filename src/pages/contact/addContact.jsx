@@ -24,7 +24,7 @@ function AddContact() {
             
           <ContactForm
           
-          typeData={contact ? "contacts" : ""}
+          typeData={contact ? "contacts" : customer? "customer" : vendor? "vendor" : ""}
           customerId={customer ? customer._id : vendor ? vendor._id : contact ? contact._id : null}
           ></ContactForm>
           </ContactCard>

@@ -12,7 +12,7 @@ const ProductTable = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isApiLoading, setIsApiLoading] = useState(false);
 
-  const { data: productData, refetch: refetchProducts } = useGetData("products", "/product");
+  const { data: productData, refetch: refetchProducts, isLoading } = useGetData("products", "/product");
 
 
 
@@ -51,13 +51,23 @@ const ProductTable = () => {
     activateProduct();
   };
 
-  const handleAddVariants = (productId) => {
-    navigate(`/variant/add`, { state: { productId } });
+  const handleAddVariants = (product) => {
+    navigate(`/variant/add`, { state: { product } });
+    console.log(product);
   };
 
-  const handleShowVariants = (productId) => {
-    navigate(`/variant/list`, { state: { productId } });
+  const handleShowVariants = (product) => {
+    navigate(`/variant/list`, { state: { product } });
   };
+
+  const handleViewDetails = (product) => {
+    navigate(`/product/profile/${product._id}/productdetails`, { state: { product } });
+    console.log(product._id);
+  };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="overflow-x-auto min-h-96">
@@ -100,10 +110,16 @@ const ProductTable = () => {
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
                   <Dropdown.Item
                     className="text-gray-300 hover:!bg-orange-600"
-                    onClick={() => openModal(product)}
+                      onClick={() => navigate(`/product/add`, { state: { product }})}
                   >
                     Edit Product
                   </Dropdown.Item>
+                  <Dropdown.Item
+                      className="text-gray-300 hover:!bg-orange-600"
+                      onClick={() => handleViewDetails(product)}
+                    >
+                      Details
+                    </Dropdown.Item>
                   {product.active ? (
                     <Dropdown.Item
                       className="text-gray-300 hover:!bg-orange-600"
@@ -121,13 +137,13 @@ const ProductTable = () => {
                   )}
                   <Dropdown.Item
                     className="text-gray-300 hover:!bg-orange-600"
-                    onClick={() => handleShowVariants(product._id)}
+                    onClick={() => handleShowVariants(product)}
                   >
                     Show Variants
                   </Dropdown.Item>
                   <Dropdown.Item
                     className="text-gray-300 hover:!bg-orange-600"
-                    onClick={() => handleAddVariants(product._id)}
+                    onClick={() => handleAddVariants(product)}
                   >
                     Add Variants
                   </Dropdown.Item>

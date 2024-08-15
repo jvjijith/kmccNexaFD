@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useGetData, usePostData } from '../../common/api';
+import React, { useState, useEffect } from 'react';
+import { useGetData, usePostData, usePutData } from '../../common/api';
 import Select from 'react-select';
 import LoadingScreen from '../ui/loading/loading';
 import Modal from 'react-modal';
@@ -9,7 +9,7 @@ import SubBrandForm from './subBrandForm';
 
 Modal.setAppElement('#root');
 
-function PriceForm({ typeData, productId, variantId }) {
+function PriceForm({ priceId }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isSubModalOpen, setSubModalOpen] = useState(false);
   const [priceData, setPriceData] = useState({
@@ -22,9 +22,23 @@ function PriceForm({ typeData, productId, variantId }) {
     }]
   });
 
+  const mutationHook = priceId ? usePutData : usePostData;
+  const api_url = priceId ? `/pricing/update/${priceId}` : '/pricing/add';
+  const api_key = priceId ? 'updatePrice' : 'addPrice';
   const { data: variantData } = useGetData('variant', '/variant/');
   const { data: productData } = useGetData('product', '/product');
-  const { mutate: saveProduct, isLoading } = usePostData('pricing', '/pricing/add');
+  const { mutate: saveProduct, isLoading } = mutationHook(api_key, api_url);
+  const { data: pricesData, loading } = useGetData('price', `/pricing/${priceId}`);
+
+  useEffect(() => {
+    if (pricesData) {
+      setPriceData({
+        productId: pricesData.productId || '',
+        variantId: pricesData.variantId || '',
+        pricing: pricesData.pricing || [{ amount: '', currency: '', discount: '' }]
+      });
+    }
+  }, [pricesData]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -57,28 +71,28 @@ function PriceForm({ typeData, productId, variantId }) {
       pricing: priceData.pricing.map(item => ({
         amount: parseFloat(item.amount),
         currency: item.currency,
-        discount: parseFloat(item.discount) || 0
+        discount: parseFloat(item.discount) || 0,
+        rules:[]
       }))
     };
     saveProduct(payload);
   };
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <LoadingScreen />;
   }
 
-  const productOptions = Array.isArray(productData) 
-    ? productData.map(product => ({ value: product._id, label: product.name }))
+  const productOptions = Array.isArray(productData?.products) 
+    ? productData.products.map(product => ({ value: product._id, label: product.name }))
     : [];
 
-  const variantOptions = Array.isArray(variantData) 
-    ? variantData.map(variant => ({ value: variant._id, label: variant.color }))
+  const variantOptions = Array.isArray(variantData?.variants) 
+    ? variantData.variants.map(variant => ({ value: variant._id, label: variant.color }))
     : [];
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-wrap">
+      <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
               <label className="block w-full mb-2 text-white">Product *</label>
@@ -223,7 +237,7 @@ function PriceForm({ typeData, productId, variantId }) {
         <BrandForm closeModal={closeModal} />
       </PopUpModal>
       <PopUpModal isOpen={isSubModalOpen} onClose={closeSubModal} title={"Add SubBrand"}>
-        <SubBrandForm closeModal={closeSubModal} />
+        <SubBrandForm closeSubModal={closeSubModal} />
       </PopUpModal>
     </div>
   );

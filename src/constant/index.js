@@ -1112,12 +1112,7 @@ export const productDefault = {
   "HSN": "",
   "model": "",
   "productCode": "",
-  "notes": [
-    {
-      "name": "",
-      "description": ""
-    }
-  ],
+  "notes": [],
   "variants": [],
   "active": true
 }

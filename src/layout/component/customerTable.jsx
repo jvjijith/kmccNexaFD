@@ -26,6 +26,11 @@ function CustomerTable() {
     setModalOpen(false);
   };
 
+  const handleViewDetails = (customer) => {
+    navigate(`/profile/${customer._id}/customerdetails`, { state: { customer } });
+    console.log(customer._id);
+  };
+
   const handleDeactivateCustomer = (customer) => {
     setSelectedCustomer(customer);
     setApiLoading(true);
@@ -107,10 +112,16 @@ function CustomerTable() {
               </Table.Cell>
       <Table.Cell className="text-gray-300">
         <Dropdown label="Actions" inline className="bg-black text-white border-black">
+        <Dropdown.Item
+                      className="text-gray-300 hover:!bg-orange-600"
+                      onClick={() => handleViewDetails(customer)}
+                    >
+                      Details
+                    </Dropdown.Item>
           <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/edit`, { state: { customer }})}>
             Edit Customer
           </Dropdown.Item>
-          <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/addContact`, { state: { customer } })}>
+          <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/editContact`, { state: { customer } })}>
           Edit Contacts
           </Dropdown.Item>
           {customer.active ? (
