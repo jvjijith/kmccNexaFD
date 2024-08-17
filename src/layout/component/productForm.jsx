@@ -31,6 +31,8 @@ function ProductForm({ typeData, productId }) {
   const [subBrands, setSubBrands] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [mediaId, setMediaId] = useState([]);
+
   const navigate = useNavigate();
 
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
@@ -42,8 +44,8 @@ function ProductForm({ typeData, productId }) {
   const { data: categoryData, refetch: refetchCategories } = useGetData('categories', '/category');
   const { data: subCategoryData, refetch: refetchSubCategories } = useGetData('subCategories', '/subcategories');
   const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
-  const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', '/media/updateMediaStatus');
-  const { data: productsData, refetch: refetchProduct } = useGetData('product', `/product/product/${productId}`);
+  const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
+  const { data: productsData, refetch: refetchProduct } = useGetData('product', `/product/product/${productId}`,);
   
   useEffect(() => {
     if (typeData === 'update' && productsData) {
@@ -99,8 +101,8 @@ function ProductForm({ typeData, productId }) {
 
   const subBrandOptions = subBrandData?.subBrands?.map(subBrand => ({
     value: subBrand._id, 
-    label: subBrand.subBrandName
-
+    label: subBrand.subBrandName,
+    brandId: subBrand.brandId._id
   }));
 
   const openModal = () => setModalOpen(true);
@@ -143,76 +145,74 @@ function ProductForm({ typeData, productId }) {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  const handleUploadImages = async (event) => {
-    event.preventDefault();  // Prevent form submission
-  
+  const handleUploadImages = async (index) => {
     try {
-        for (const image of images) {
-            console.log(`Generating signed URL for ${image.name}`);
-  
-            // Generate a signed URL
-            const signedUrlResponse = await generateSignedUrl({
-                title: image.name,
-                mediaType: "image",
-                active: true,
-                uploadStatus: "progressing",
-                uploadProgress: 0,
-            });
-  
-            console.log('Signed URL Response:', signedUrlResponse);
+        const image = images[index];
+        console.log(`Generating signed URL for ${image.name}`);
 
-            if (!signedUrlResponse) {
-                throw new Error('Signed URL data is undefined');
-            }
+        // Generate a signed URL 
+        const signedUrlResponse = await generateSignedUrl({
+            title: image.name,
+            mediaType: "image",
+            active: true,
+            uploadStatus: "progressing",
+            uploadProgress: 0,
+        });
 
-            const signedUrlData = signedUrlResponse;
-            const signedUrl = signedUrlData.signedUrl;
-            const mediaId = signedUrlData.media._id;
+        console.log('Signed URL Response:', signedUrlResponse);
 
-            console.log("API Data:" ,signedUrlData);
-            console.log("Signed URL generated:" ,signedUrl);
-            console.log("Media ID generated:" ,mediaId);
-
-            // Proceed with uploading the image to the signed URL
-            const formData = new FormData();
-            formData.append('file', image);
-
-            await axios.put(signedUrl, image, {
-                headers: {
-                    'Content-Type': image.type
-                },
-                onUploadProgress: (progressEvent) => {
-                    const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                    setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
-
-                    // Update media status
-                    updateMediaStatus({
-                        media: {
-                            _id: mediaId,
-                            mediaType: "image",
-                            title: image.name,
-                            active: true,
-                            uploadStatus: progress === 100 ? "completed" : "progressing",
-                            uploadProgress: progress,
-                        }
-                    });
-                }
-            });
-
-            // Add the uploaded image's URL to the list
-            setUploadedImages(prev => [
-                ...prev,
-                {
-                    url: signedUrl.split("?")[0], // Extract the base URL for the image
-                    altText: image.name
-                }
-            ]);
+        if (!signedUrlResponse) {
+            thrownewError('Signed URL data is undefined');
         }
+
+        const signedUrlData = signedUrlResponse;
+        const signedUrl = signedUrlData.signedUrl;
+        const mediaId = signedUrlData.media._id;
+
+        console.log("API Data:", signedUrlData);
+        console.log("Signed URL generated:", signedUrl);
+        console.log("Media ID generated:", mediaId);
+
+        setMediaId(mediaId);
+
+        // Proceed with uploading the image to the signed URL
+        await axios.put(signedUrl, image, {
+            headers: {
+                'Content-Type': image.type
+            },
+            onUploadProgress: (progressEvent) => {
+                const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
+
+                // Update media status
+                if(progress === 100  )
+                updateMediaStatus({
+                    // media: {
+                        // _id: mediaId,
+                        mediaType: "image",
+                        title: image.name,
+                        active: true,
+                        uploadStatus: "completed",
+                        uploadProgress: 100,
+                    // }
+                });
+            }
+        });
+
+        // Add the uploaded image's URL to the list 
+        setUploadedImages(prev => [
+            ...prev,
+            {
+                url: signedUrl.split("?")[0], // Extract the base URL for the imagealtText: image.name
+            }
+        ]);
+
     } catch (error) {
         console.error('Error uploading image:', error);
         alert('An error occurred while uploading the image. Please try again.');
     }
 };
+
   
   
   const handleSubmit = (event) => {
@@ -351,9 +351,16 @@ function ProductForm({ typeData, productId }) {
         <div className="flex items-center" style={{ width: '100%' }}>
           <div style={{ width: '90%' }}>
             <Select
-              options={subBrands?.map(subBrand => ({ value: subBrand._id, label: subBrand.subBrandName }))}
+              options={subBrands
+                ?.filter(subBrand => subBrand.brandId._id === productData.brand)
+                .map(subBrand => ({
+                  value: subBrand._id,
+                  label: subBrand.subBrandName
+                }))
+              }
               value={subBrandOptions?.find(option => option._id === (productId? isSubrand? productData.subBrand : productData.subBrand._id : productData.subBrand) )}
               onChange={(selectedOption) => {setProductData(prevState => ({ ...prevState, subBrand: selectedOption.value }));setSubrand(true);}}
+              isDisabled={!isBrand}
               styles={{
                 control: (provided, state) => ({
                   ...provided,
@@ -583,22 +590,48 @@ function ProductForm({ typeData, productId }) {
         </div>
 
         <div className="w-full p-4">
-      <label className="block w-full mb-2 text-white">Images</label>
-      <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-4">
-        <input {...getInputProps()} />
-        <p>Drag & drop images here, or click to select files</p>
-        <div className="w-full p-4">
-          {images.map((file, index) => (
-            <div key={index} className="flex items-center justify-between mb-2">
-              <span>{file.name}</span>
-              <progress value={uploadProgress[file.name] || 0} max="100">{uploadProgress[file.name] || 0}%</progress>
-              <button className="ml-2 text-red-500" onClick={() => handleRemoveImage(index)}>X</button>
-            </div>
-          ))}
+  <label className="block w-full mb-2 text-white">Images</label><div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-4">
+    <input {...getInputProps()} />
+    <p>Drag & drop images here, or click to select files</p>
+    <div className="w-full p-4">
+      {images.map((file, index) => (
+        <div key={index} className="flex items-center justify-between mb-2">
+          {/* Image preview */}
+          <img
+            src={URL.createObjectURL(file)}
+            alt={file.name}
+            className="w-16 h-16 object-cover mr-4"
+          />
+          <span>{file.name}</span>
+          <progress value={uploadProgress[file.name] || 0} max="100" className="flex-1 mx-2">
+            {uploadProgress[file.name] || 0}%
+          </progress>
+          <button
+            className="ml-2 text-blue-500"
+            onClick={(e) => {
+              e.stopPropagation();  // Prevent the event from bubbling up
+              e.preventDefault(); 
+              handleUploadImages(index);  // Upload only this image
+            }}
+          >
+            Upload
+          </button>
+          <button
+            className="ml-2 text-red-500"
+            onClick={(e) => {
+              e.stopPropagation();  // Prevent the event from bubbling up
+              handleRemoveImage(index);
+            }}
+          >
+            X
+          </button>
         </div>
-        <button className="mt-4 bg-blue-500 text-white p-2 rounded" onClick={handleUploadImages}>Upload</button>
-      </div>
-      </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+
 
         {/* Bank Details */}
         <div className="w-full p-4">

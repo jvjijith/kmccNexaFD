@@ -6,7 +6,7 @@ import { B2 } from 'backblaze-b2';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const baseURL = 'https://dev.nexalogics.com.au/api';
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 // Configure Axios instance with base URL
 const api = axios.create({
@@ -53,7 +53,7 @@ const useApiQuery = (key, url, options = {}) => {
     queryKey: [key],
     queryFn: async () => {
       const { data } = await api.get(url, options);
-      console.log(data);
+      // console.log(data);
       return data;
     },
   });

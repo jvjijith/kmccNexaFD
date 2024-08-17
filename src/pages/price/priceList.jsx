@@ -9,7 +9,7 @@ function ListPrice() {
 
   return (
     <Container>
-      <ProductCard title={"Pricing"}>
+      <ProductCard title={"Pricing"}  type={"price"}>
         <PriceTable/>
       </ProductCard>
     </Container>

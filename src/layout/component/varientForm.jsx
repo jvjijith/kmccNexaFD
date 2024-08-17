@@ -26,13 +26,14 @@ function VarientForm({ typeData, productId, variantId }) {
   const [isRFQ, setRFQ] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({});
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [mediaId, setMediaId] = useState([]);
 
   const mutationHook = variantId ? usePutData : usePostData;
   const api_url = variantId ? `/variant/update/${variantId}` : '/variant/add';
   const api_key = variantId ? 'updateProduct' : 'addProduct';
   const { mutate: saveProduct, isLoading: isSaving } = mutationHook(api_key, api_url);
   const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
-  const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', '/media/updateMediaStatus');
+  const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
   
   // Fetch variant data if variantId is provided
   const { data: variantData, refetch: refetchVariant } = useGetData('variant', `/variant/${variantId}`);
@@ -133,26 +134,24 @@ function VarientForm({ typeData, productId, variantId }) {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  const handleUploadImages = async (event) => {
-    event.preventDefault(); // Prevent form submission
-
+  const handleUploadImages = async (index) => {
     try {
-      for (const image of images) {
+        const image = images[index];
         console.log(`Generating signed URL for ${image.name}`);
 
-        // Generate a signed URL
+        // Generate a signed URL 
         const signedUrlResponse = await generateSignedUrl({
-          title: image.name,
-          mediaType: "image",
-          active: true,
-          uploadStatus: "progressing",
-          uploadProgress: 0,
+            title: image.name,
+            mediaType: "image",
+            active: true,
+            uploadStatus: "progressing",
+            uploadProgress: 0,
         });
 
         console.log('Signed URL Response:', signedUrlResponse);
 
         if (!signedUrlResponse) {
-          throw new Error('Signed URL data is undefined');
+            thrownewError('Signed URL data is undefined');
         }
 
         const signedUrlData = signedUrlResponse;
@@ -163,46 +162,45 @@ function VarientForm({ typeData, productId, variantId }) {
         console.log("Signed URL generated:", signedUrl);
         console.log("Media ID generated:", mediaId);
 
+        setMediaId(mediaId);
+
         // Proceed with uploading the image to the signed URL
-        const formData = new FormData();
-        formData.append('file', image);
-
         await axios.put(signedUrl, image, {
-          headers: {
-            'Content-Type': image.type
-          },
-          onUploadProgress: (progressEvent) => {
-            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-            setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
+            headers: {
+                'Content-Type': image.type
+            },
+            onUploadProgress: (progressEvent) => {
+                const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
 
-            // Update media status
-            updateMediaStatus({
-              media: {
-                _id: mediaId,
-                mediaType: "image",
-                title: image.name,
-                active: true,
-                uploadStatus: progress === 100 ? "completed" : "progressing",
-                uploadProgress: progress,
-              }
-            });
-          }
+                // Update media status
+                if(progress === 100  )
+                updateMediaStatus({
+                    // media: {
+                        // _id: mediaId,
+                        mediaType: "image",
+                        title: image.name,
+                        active: true,
+                        uploadStatus: "completed",
+                        uploadProgress: 100,
+                    // }
+                });
+            }
         });
 
-        // Add the uploaded image's URL to the list
+        // Add the uploaded image's URL to the list 
         setUploadedImages(prev => [
-          ...prev,
-          {
-            url: signedUrl.split("?")[0], // Extract the base URL for the image
-            altText: image.name
-          }
+            ...prev,
+            {
+                url: signedUrl.split("?")[0], // Extract the base URL for the imagealtText: image.name
+            }
         ]);
-      }
+
     } catch (error) {
-      console.error('Error uploading image:', error);
-      // alert('An error occurred while uploading the image. Please try again.');
+        console.error('Error uploading image:', error);
+        alert('An error occurred while uploading the image. Please try again.');
     }
-  };
+};
 
   if (isSaving || (variantId && !variantData)) {
     return <LoadingScreen />;
@@ -334,22 +332,46 @@ function VarientForm({ typeData, productId, variantId }) {
         </div>
 
         <div className="w-full p-4">
-      <label className="block w-full mb-2 text-white">Images</label>
-      <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-4">
-        <input {...getInputProps()} />
-        <p>Drag & drop images here, or click to select files</p>
-        <div className="w-full p-4">
-          {images.map((file, index) => (
-            <div key={index} className="flex items-center justify-between mb-2">
-              <span>{file.name}</span>
-              <progress value={uploadProgress[file.name] || 0} max="100">{uploadProgress[file.name] || 0}%</progress>
-              <button className="ml-2 text-red-500" onClick={() => handleRemoveImage(index)}>X</button>
-            </div>
-          ))}
+  <label className="block w-full mb-2 text-white">Images</label><div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-4">
+    <input {...getInputProps()} />
+    <p>Drag & drop images here, or click to select files</p>
+    <div className="w-full p-4">
+      {images.map((file, index) => (
+        <div key={index} className="flex items-center justify-between mb-2">
+          {/* Image preview */}
+          <img
+            src={URL.createObjectURL(file)}
+            alt={file.name}
+            className="w-16 h-16 object-cover mr-4"
+          />
+          <span>{file.name}</span>
+          <progress value={uploadProgress[file.name] || 0} max="100" className="flex-1 mx-2">
+            {uploadProgress[file.name] || 0}%
+          </progress>
+          <button
+            className="ml-2 text-blue-500"
+            onClick={(e) => {
+              e.stopPropagation();  // Prevent the event from bubbling up
+              e.preventDefault(); 
+              handleUploadImages(index);  // Upload only this image
+            }}
+          >
+            Upload
+          </button>
+          <button
+            className="ml-2 text-red-500"
+            onClick={(e) => {
+              e.stopPropagation();  // Prevent the event from bubbling up
+              handleRemoveImage(index);
+            }}
+          >
+            X
+          </button>
         </div>
-        <button className="mt-4 bg-blue-500 text-white p-2 rounded" onClick={handleUploadImages}>Upload</button>
-      </div>
-      </div>
+      ))}
+    </div>
+  </div>
+</div>
 
       
 

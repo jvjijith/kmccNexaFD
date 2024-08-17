@@ -5,10 +5,11 @@ import { useGetData, usePutData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
 import PopUpModal from "../ui/modal/modal";
 import { ToastContainer } from "react-toastify";
+import PriceForm from "./priceForm";
 
 const ProductTable = () => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isApiLoading, setIsApiLoading] = useState(false);
 
@@ -32,13 +33,13 @@ const ProductTable = () => {
   );
 
   const openModal = (product) => {
+    
     setSelectedProduct(product);
-    setIsModalOpen(true);
+    setModalOpen(true);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedProduct(null);
+    setModalOpen(false);
   };
 
   const handleDeactivateProduct = (product) => {
@@ -108,18 +109,19 @@ const ProductTable = () => {
               </Table.Cell>
               <Table.Cell className="text-gray-300">
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
-                  <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
-                      onClick={() => navigate(`/product/add`, { state: { product }})}
-                  >
-                    Edit Product
-                  </Dropdown.Item>
+                  
                   <Dropdown.Item
                       className="text-gray-300 hover:!bg-orange-600"
                       onClick={() => handleViewDetails(product)}
                     >
                       Details
                     </Dropdown.Item>
+                    <Dropdown.Item
+                    className="text-gray-300 hover:!bg-orange-600"
+                      onClick={() => navigate(`/product/add`, { state: { product }})}
+                  >
+                    Edit Product
+                  </Dropdown.Item>
                   {product.active ? (
                     <Dropdown.Item
                       className="text-gray-300 hover:!bg-orange-600"
@@ -143,6 +145,12 @@ const ProductTable = () => {
                   </Dropdown.Item>
                   <Dropdown.Item
                     className="text-gray-300 hover:!bg-orange-600"
+                    onClick={() => openModal(product)}
+                  >
+                    Add Price
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className="text-gray-300 hover:!bg-orange-600"
                     onClick={() => handleAddVariants(product)}
                   >
                     Add Variants
@@ -154,8 +162,8 @@ const ProductTable = () => {
         </Table.Body>
       </Table>
 
-      <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Edit product"}>
-        <productForm id={selectedProduct?.productId} name={selectedProduct?.name} closeModal={closeModal} />
+      <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Price"}>
+        <PriceForm closeModal={closeModal}  productId={selectedProduct?._id}/>
       </PopUpModal>
 
       {isApiLoading && <LoadingScreen />}
