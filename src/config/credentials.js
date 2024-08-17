@@ -1,9 +1,9 @@
 export const firebaseConfig = {
-    apiKey: "AIzaSyBsCwcyeCdU1Knkxy8A9FTE9zyThqkVvQ4",
-    authDomain: "nexa-372db.firebaseapp.com",
-    projectId: "nexa-372db",
-    storageBucket: "nexa-372db.appspot.com",
-    messagingSenderId: "181752991244",
-    appId: "1:181752991244:web:ca9c58181ea33a82522829"
+    apiKey: import.meta.env.VITE_FB_API_KEY,
+    authDomain: import.meta.env.VITE_FB_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FB_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FB_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FB_MESSAGING_CENTER_ID,
+    appId: import.meta.env.VITE_FB_APP_ID
   };
   

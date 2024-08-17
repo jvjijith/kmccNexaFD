@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Icon from '../ui/icon/icon';
 import IconButton from '../ui/icon/iconButton';
 import Card from '../ui/card/card';
 import { useSidebar } from '../../context/sidebar.context';
+import PopUpModal from '../ui/modal/modal';
+import PriceForm from './priceForm';
 
-function ProductCard({children,title}) {
+function ProductCard({children,title,type}) {
   const {toggleSidebar} = useSidebar();
+
+  
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
     return (
         <div className="flex w-full">
               <div className="w-full h-screen hidden sm:block sm:w-20 xl:w-60 flex-shrink-0">
@@ -51,11 +65,18 @@ function ProductCard({children,title}) {
           </div>
 
           
-           <Card title={title}>
+           <Card title={title}
+           component={type==="price"?
+            <button className="bg-black text-white px-4 py-2 rounded" onClick={() => openModal()}>
+              Add
+            </button>:null
+          }>
                {children}
             </Card>
             </div>
-
+            <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Price"}>
+        <PriceForm closeModal={closeModal} />
+      </PopUpModal>
         </div>
     );
 }

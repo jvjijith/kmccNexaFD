@@ -36,7 +36,7 @@ function ProfilePage() {
                         </div>
                         <div className="flex items-center mb-5">
                             <div className="w-24 h-24 rounded-full overflow-hidden mr-5">
-                                <Image path="mock_faces_8" className="w-full h-full object-cover" />
+                                <Image  className="w-full h-full object-cover" />
                             </div>
                             <div>
                                 <h1 className="text-3xl font-bold">{employee.name}</h1>

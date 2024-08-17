@@ -36,6 +36,7 @@ import Varient from "./pages/product/varientList";
 import ProductProfile from "./pages/product/productProfile";
 import ProductDetails from "./layout/ui/profile/productProfile/productDetails";
 import VariantDetails from "./layout/ui/profile/productProfile/variantDetails";
+import PriceDetails from "./layout/ui/profile/productProfile/priceDetails";
 
 const App = () => {
   return (
@@ -80,6 +81,7 @@ const App = () => {
             <Route path="/product/profile/:id" element={<ProductProfile />}>
                 <Route path="productdetails" element={<ProductDetails />} />
                 <Route path="variants" element={<VariantDetails />} />
+                <Route path="price" element={<PriceDetails />} />
             </Route>
       </Route>
 

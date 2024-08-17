@@ -8,17 +8,19 @@ function ProfilePage() {
     const { id } = useParams();
     const { data: product, isPending: isProductPending, error: productError } = useGetData('product', `/product/product/${id}`);
     const { data: variant, isPending: isVariantPending, error: variantError } = useGetData('variant', `/variant/product/${id}`);
+    const { data: price, isPending: isPricePending, error: priceError } = useGetData('price', `/pricing/product/${id}`);
 
-    if (isProductPending || isVariantPending) {
+    if (isProductPending || isVariantPending || isPricePending) {
         return <LoadingScreen />;
     }
 
-    if (productError || variantError) {
+    if (productError || variantError || priceError) {
         return <div className="text-center text-red-500 py-5">Error loading data</div>;
     }
 
     console.log("product",product);
     console.log("variant",variant);
+    console.log("price",price);
     return (
         <div className="flex w-full h-screen">
             <div className="hidden sm:block sm:w-20 xl:w-60 flex-shrink-0">
@@ -32,7 +34,7 @@ function ProfilePage() {
                         </div>
                         <div className="flex items-center mb-5">
                             <div className="w-24 h-24 rounded-full overflow-hidden mr-5">
-                                <Image path="mock_faces_8" className="w-full h-full object-cover" />
+                                <Image path="/placeholder.png" className="w-full h-full object-cover" />
                             </div>
                             <div>
                                 <h1 className="text-3xl font-bold">{product.name}</h1>
@@ -65,11 +67,23 @@ function ProfilePage() {
                                         variants
                                     </NavLink>
                                 </li>
+                                <li className="mr-5">
+                                    <NavLink 
+                                        to={`/product/profile/${id}/price`}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
+                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                        }
+                                    >
+                                        Price
+                                    </NavLink>
+                                </li>
                             </ul>
                         </nav>
 
                         <div className="flex-grow overflow-y-auto">
-                            <Outlet context={{ product, variant }} />
+                            <Outlet context={{ product, variant, price }} />
                         </div>
                     </div>
                 </div>
