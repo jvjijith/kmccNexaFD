@@ -2,6 +2,7 @@ import { useState } from "react";
 import SidebarIcons from "../ui/icon/sidebarIcons";
 import clsx from "clsx";
 import { useLocation, useNavigate } from "react-router";
+import LoadingScreen from "../ui/loading/loading";
 
 export default function MenuItem({ item }) {
   const { id, title, notifications, route, parent, dropdownItems } = item;
@@ -15,6 +16,8 @@ export default function MenuItem({ item }) {
       setIsDropdownOpen(!isDropdownOpen);
     } else {
       navigate(route);
+      sessionStorage.setItem('hasReloaded', '');
+      // return<LoadingScreen/>
     }
   };
 

@@ -39,6 +39,15 @@ function VarientForm({ typeData, productId, variantId }) {
   const { data: variantData, refetch: refetchVariant } = useGetData('variant', `/variant/${variantId}`);
 
   useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
     if (variantId && variantData) {
       // Pre-fill the form with the fetched variant data
       setProductData(variantData);

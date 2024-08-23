@@ -58,6 +58,8 @@ function Login() {
     setLoading(true);
     const employeeData = await fetchEmployeeData(email.value);
     if (!employeeData) {
+      
+      setLoading(false);
       toast.error("Not authorized", {
         position: "top-right",
         autoClose: 5000,
@@ -69,7 +71,7 @@ function Login() {
         theme: "dark",
         transition: Bounce,
       });
-      return;
+      
     }
 
     await signInWithEmailAndPassword(auth, email.value, password.value)

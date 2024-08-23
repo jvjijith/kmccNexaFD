@@ -38,6 +38,15 @@ function CustomerForm({ typeData, customerId }) {
   }, [refetchCategories, refetchCustomerDetail]);
 
   useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
     if (categoryData) {
       setCategories(categoryData.categories);
     }

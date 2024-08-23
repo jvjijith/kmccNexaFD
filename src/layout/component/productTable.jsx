@@ -118,7 +118,7 @@ const ProductTable = () => {
                     </Dropdown.Item>
                     <Dropdown.Item
                     className="text-gray-300 hover:!bg-orange-600"
-                      onClick={() => navigate(`/product/add`, { state: { product }})}
+                      onClick={() => navigate(`/product/edit`, { state: { product }})}
                   >
                     Edit Product
                   </Dropdown.Item>

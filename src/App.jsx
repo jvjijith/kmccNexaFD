@@ -37,6 +37,8 @@ import ProductProfile from "./pages/product/productProfile";
 import ProductDetails from "./layout/ui/profile/productProfile/productDetails";
 import VariantDetails from "./layout/ui/profile/productProfile/variantDetails";
 import PriceDetails from "./layout/ui/profile/productProfile/priceDetails";
+import ComingSoonPage from "./pages/comingSoon/comingSoon";
+import SubCategoriesList from "./pages/categories/subCategories";
 
 const App = () => {
   return (
@@ -64,6 +66,7 @@ const App = () => {
       <Route path="admin/adduser" element={<AddUser />} />
       <Route path="admin/edituser" element={<AddUser />} />
       <Route path="product/add" element={<AddProduct />} />
+      <Route path="product/edit" element={<AddProduct />} />
       <Route path="product/list" element={<Product />} />
       <Route path="variant/list" element={<Varient />} />
       <Route path="variant/add" element={<AddVarient />} />
@@ -72,8 +75,49 @@ const App = () => {
       <Route path="customer/category" element={<CategoriesList />} />
       <Route path="vendor/category" element={<CategoriesList />} />
       <Route path="product/category" element={<CategoriesList />} />
-      <Route path="/addcategory" element={<AddCategories />} />
-      <Route path="/profile/:userId/details" element={<Profile />} />
+      <Route path="category/subcategory" element={<SubCategoriesList />} />
+      <Route path="addcategory" element={<AddCategories />} />
+      <Route path="product/inventory" element={<ComingSoonPage />} />
+      <Route path="services/category" element={<ComingSoonPage />} />
+      <Route path="services/add" element={<ComingSoonPage />} />
+      <Route path="services/list" element={<ComingSoonPage />} />
+      <Route path="services/prices" element={<ComingSoonPage />} />
+      <Route path="presales/quotes/add" element={<ComingSoonPage />} />
+      <Route path="presales/quotes/view" element={<ComingSoonPage />} />
+      <Route path="presales/enquiry/add" element={<ComingSoonPage />} />
+      <Route path="presales/enquiry/list" element={<ComingSoonPage />} />
+      <Route path="presales/purchaseorder/add" element={<ComingSoonPage />} />
+      <Route path="presales/purchaseorder/list" element={<ComingSoonPage />} />
+      <Route path="presales/deliverynote/add" element={<ComingSoonPage />} />
+      <Route path="presales/deliverynote/list" element={<ComingSoonPage />} />
+      <Route path="delivery/shippingcarrier" element={<ComingSoonPage />} />
+      <Route path="delivery/logisticmanagement" element={<ComingSoonPage />} />
+      <Route path="delivery/byowner" element={<ComingSoonPage />} />
+      <Route path="delivery/tracking" element={<ComingSoonPage />} />
+      <Route path="store/ordermanagement/add" element={<ComingSoonPage />} />
+      <Route path="store/ordermanagement/list" element={<ComingSoonPage />} />
+      <Route path="store/ordermanagement/cancel" element={<ComingSoonPage />} />
+      <Route path="store/ordermanagement/refund" element={<ComingSoonPage />} />
+      <Route path="store/rfq/add" element={<ComingSoonPage />} />
+      <Route path="store/rfq/view" element={<ComingSoonPage />} />
+      <Route path="store/rfq/cancel" element={<ComingSoonPage />} />
+      <Route path="store/rfq/send" element={<ComingSoonPage />} />
+      <Route path="store/appmanagement/geoblocking" element={<ComingSoonPage />} />
+      <Route path="store/appmanagement/layout" element={<ComingSoonPage />} />
+      <Route path="store/appmanagement/menu" element={<ComingSoonPage />} />
+      <Route path="store/appmanagement/paymentconfig" element={<ComingSoonPage />} />
+      <Route path="store/appmanagement/mailtemplate" element={<ComingSoonPage />} />
+      <Route path="store/appmanagement/branding" element={<ComingSoonPage />} />
+      <Route path="store/payment/list" element={<ComingSoonPage />} />
+      <Route path="store/payment/cancel" element={<ComingSoonPage />} />
+      <Route path="store/payment/refund" element={<ComingSoonPage />} />
+      <Route path="reporting/reports" element={<ComingSoonPage />} />
+      <Route path="reporting/analytics" element={<ComingSoonPage />} />
+      <Route path="admin/organization" element={<ComingSoonPage />} />
+      <Route path="admin/userpermission" element={<ComingSoonPage />} />
+      <Route path="admin/logininfo" element={<ComingSoonPage />} />
+      <Route path="admin/logs" element={<ComingSoonPage />} />
+      <Route path="profile/:userId/details" element={<Profile />} />
             <Route path="/profile/:id" element={<CustomerProfile />}>
                 <Route path="customerdetails" element={<CustomerDetails />} />
                 <Route path="contacts" element={<CustomerContacts />} />

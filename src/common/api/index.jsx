@@ -52,9 +52,15 @@ const useApiQuery = (key, url, options = {}) => {
  return useQuery({
     queryKey: [key],
     queryFn: async () => {
+      try {
       const { data } = await api.get(url, options);
       // console.log(data);
       return data;
+      }catch (error) {
+        console.error('Error in API Call:', error);
+        throw error;
+      }
+        
     },
   });
   // return useQuery({key, async ()  {

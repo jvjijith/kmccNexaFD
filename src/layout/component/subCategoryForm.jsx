@@ -1,17 +1,18 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { AutoComplete } from "@react-md/autocomplete";
-import { categoryDefault, industries } from "../../constant";
-import { usePostData, usePutData } from "../../common/api";
+import { subCategoryDefault, industries } from "../../constant";
+import { useGetData, usePostData, usePutData } from "../../common/api";
 
-function CategoryForm({ id, name, industry, closeModal }) {
+function SubCategoryForm({ id, name, industry, closeModal, category }) {
   // Set initial state with props if editing, otherwise use the default
   const [categoryData, setCategoryData] = useState({
-    categoryName: name || categoryDefault.categoryName,
-    categoryType: industry || categoryDefault.categoryType,
+    subCategoryName: name || subCategoryDefault.subCategoryName,
+    subCategoryType: industry || subCategoryDefault.subCategoryType,
+    category: category
   });
 
-  const { mutate: addCategory, isPending, error } = usePostData("addCategory", "/category/add");
-  const { mutate: editCategory, isPending: isEditing, error: editError } = usePutData("editCategory", `/category/update/${id}`);
+  const { mutate: addSubCategory, isPending, error } = usePostData("addSubCategory", "/subcategories/add");
+  const { mutate: editSubCategory, isPending: isEditing, error: editError } = usePutData("editSubCategory", `/subcategories/update/${id}`);
 
   useEffect(() => {
     const hasReloaded = sessionStorage.getItem('hasReloaded');
@@ -24,24 +25,20 @@ function CategoryForm({ id, name, industry, closeModal }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCategoryData((prevState) => ({
+    setCategoryData(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
-  };
+  }
 
-  const onAutoComplete = useCallback(({ dataIndex }) => {
-    setCategoryData((prevState) => ({
-      ...prevState,
-      categoryType: industries[dataIndex],
-    }));
-  }, []);
+  
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (id) {
-      // If editing, call the editCategory mutation
-      editCategory(categoryData, {
+      // If editing, call the editSubCategory mutation
+      editSubCategory(categoryData, {
         onSuccess: () => {
           closeModal();
         },
@@ -50,8 +47,8 @@ function CategoryForm({ id, name, industry, closeModal }) {
         },
       });
     } else {
-      // If adding, call the addCategory mutation
-      addCategory(categoryData, {
+      // If adding, call the addSubCategory mutation
+      addSubCategory(categoryData, {
         onSuccess: () => {
           closeModal();
         },
@@ -60,8 +57,11 @@ function CategoryForm({ id, name, industry, closeModal }) {
         },
       });
     }
-    setCategoryData(categoryDefault);
+    setCategoryData(subCategoryDefault);
   };
+
+  
+  console.log(category);
 
   return (
     <div>
@@ -70,16 +70,16 @@ function CategoryForm({ id, name, industry, closeModal }) {
           <div className="w-full">
             <div className="mb-4">
               <label className="float-left inline-block mb-2 text-white">
-                &nbsp;Category Name *&nbsp;
+                &nbsp;Sub Category Name *&nbsp;
               </label>
               <input
                 type="text"
-                name="categoryName"
+                name="subCategoryName"
                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-                placeholder="Enter Your Category Name"
+                placeholder="Enter Your Sub Category Name"
                 autoComplete="off"
                 style={{ textAlign: "initial" }}
-                value={categoryData.categoryName}
+                value={categoryData.subCategoryName}
                 onChange={handleChange}
               />
               <div className="correct"></div>
@@ -89,21 +89,21 @@ function CategoryForm({ id, name, industry, closeModal }) {
           <div className="w-full">
             <div className="mb-4">
               <label className="float-left block mb-2 text-white">
-                &nbsp;Industry *&nbsp;
+                &nbsp;Sub Category Type *&nbsp;
               </label>
-              <AutoComplete
-                id="search-industries"
-                name="categoryType"
-                placeholder="Enter an Industry..."
-                data={industries}
-                highlight
-                theme="none"
-                defaultValue={categoryData.categoryType}
-                onAutoComplete={onAutoComplete}
+              <input
+                type="text"
+                name="subCategoryType"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                placeholder="Enter Sub Category Type..."
+                autoComplete="off"
+                style={{ textAlign: "initial" }}
+                value={categoryData.subCategoryType}
+                onChange={handleChange}
               />
-              <div className="correct"></div>
             </div>
           </div>
+
 
           <div className="flex flex-wrap justify-end p-4">
             <button type="submit" className="bg-nexa-orange hover:bg-green-400 text-white px-4 py-2 rounded">
@@ -116,4 +116,4 @@ function CategoryForm({ id, name, industry, closeModal }) {
   );
 }
 
-export default CategoryForm;
+export default SubCategoryForm;

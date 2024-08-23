@@ -36,6 +36,15 @@ function PriceForm({ priceId , productId }) {
   const { data: pricesData, loading } = useGetData('price', `/pricing/${priceId}`);
 
   useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
     if (pricesData) {
       setPriceData({
         productId: pricesData.productId || '',
