@@ -14,6 +14,15 @@ function UserForm() {
   const [emergencyContacts, setEmergencyContacts] = useState([]);
 
   useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
     refetchTeam();
     refetchEmployee();
   }, [refetchTeam, refetchEmployee]);

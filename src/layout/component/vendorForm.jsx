@@ -34,6 +34,15 @@ function VendorForm({ typeData, vendorId }) {
   const { mutate: signup, isPending: isSigningUp, error: signupError } = usePostData("signup", "/auth/signup");
 
   useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
     refetchCategories();
     refetchVendorDetail();
   }, [ refetchCategories, refetchVendorDetail]);

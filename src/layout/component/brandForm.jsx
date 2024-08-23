@@ -12,6 +12,15 @@ function BrandForm({ id, closeModal }) {
   const { data: categoryData, refetch: refetchCategories } = useGetData('categories', '/category');
 
   useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
     if (categoryData) {
       setCategories(categoryData.categories);
     }

@@ -14,6 +14,15 @@ function SubBrandForm({ id, closeModal }) {
   const { data: brandData, refetch: refetchBrand } = useGetData('brand', '/brands');
 
   useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
     if (categoryData) {
       setCategories(categoryData.categories);
     }

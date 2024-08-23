@@ -1090,8 +1090,16 @@ export const stateCountryCurrencyMapping = {
 };
 
 
+export const subCategoryDefault = {
+  subCategoryName: "",
+  subCategoryType: "",
+  category: ""
+}
+
 export const categoryDefault = {
-  
+    categoryName: "",
+    categoryType: "",
+    category: ""
 }
 
 export const productDefault = {

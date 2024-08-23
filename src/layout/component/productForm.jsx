@@ -46,6 +46,15 @@ function ProductForm({ typeData, productId }) {
   const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
   const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
   const { data: productsData, refetch: refetchProduct } = useGetData('product', `/product/product/${productId}`,);
+
+  useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
   
   useEffect(() => {
     if (typeData === 'update' && productsData) {

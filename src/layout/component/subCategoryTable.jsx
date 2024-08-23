@@ -5,20 +5,16 @@ import LoadingScreen from "../ui/loading/loading";
 import { ToastContainer, toast } from 'react-toastify';
 import CategoryForm from "./categoryForm";
 import PopUpModal from "../ui/modal/modal";
-import { useNavigate } from "react-router";
 import SubCategoryForm from "./subCategoryForm";
 
-function CategoryTable() {
-  
-  const navigate = useNavigate();
+function SubCategoryTable() {
 
   const [isModalOpen, setModalOpen] = useState(false);
-  const [isSubModalOpen, setSubModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
 
 
-  const { data, isLoading, error, refetch } = useGetData("categoryData", "/category", {});
+  const { data, isLoading, error, refetch } = useGetData("categoryData", "/subcategories", {});
 
   const openModal = (team) => {
     setSelectedTeam(team);
@@ -30,16 +26,6 @@ function CategoryTable() {
     setModalOpen(false);
   };
 
-  const openSubModal = (team) => {
-    setSelectedTeam(team);
-    setSubModalOpen(true);
-  };
-
-  const closeSubModal = () => {
-    setSelectedTeam(null);
-    setSubModalOpen(false);
-  };
-
   if (isLoading) {
     return <LoadingScreen />;
   }
@@ -47,6 +33,8 @@ function CategoryTable() {
   if (error) {
     return <div>Error loading data</div>;
   }
+
+  console.log('subCategory',data);
 
   return (
     <div className="overflow-x-auto min-h-96">
@@ -57,13 +45,13 @@ function CategoryTable() {
           <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {data?.categories?.map((category) => (
+          {data?.subCategories?.map((category) => (
             <Table.Row key={category._id} className="border-gray-700 bg-zinc-950">
               <Table.Cell className="whitespace-nowrap font-medium text-white">
-                {category.categoryName}
+                {category.subCategoryName}
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap text-white">
-                {category.categoryType}
+                {category.subCategoryType}
               </Table.Cell>
               <Table.Cell className="text-gray-300">
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
@@ -73,18 +61,12 @@ function CategoryTable() {
                   >
                     Edit Category
                   </Dropdown.Item>
-                  <Dropdown.Item
+                  {/* <Dropdown.Item
                     className="text-gray-300 hover:!bg-orange-600"
-                    onClick={() => navigate(`/category/subcategory`)}
+                    onClick={() => handleDeleteCategory(category)}
                   >
-                    Show Sub-Category
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
-                    onClick={() => openSubModal(category)}
-                  >
-                    Add Sub-Category
-                  </Dropdown.Item>
+                    Delete Category
+                  </Dropdown.Item> */}
                 </Dropdown>
               </Table.Cell>
             </Table.Row>
@@ -92,12 +74,8 @@ function CategoryTable() {
         </Table.Body>
       </Table>
 
-      <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Edit Team"}>
-        <CategoryForm id={selectedTeam?._id} name={selectedTeam?.categoryName} industry={selectedTeam?.categoryType} closeModal={closeModal} />
-      </PopUpModal>
-
-      <PopUpModal isOpen={isSubModalOpen} onClose={closeSubModal} title={"Edit Sub Category"}>
-        <SubCategoryForm  category={selectedTeam?._id} closeModal={closeSubModal} />
+      <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Edit Sub Category"}>
+        <SubCategoryForm id={selectedTeam?._id} name={selectedTeam?.subCategoryName} industry={selectedTeam?.subCategoryType} category={selectedTeam?.category?._id} closeModal={closeModal} />
       </PopUpModal>
 
       <ToastContainer />
@@ -105,4 +83,4 @@ function CategoryTable() {
   );
 }
 
-export default CategoryTable;
+export default SubCategoryTable;

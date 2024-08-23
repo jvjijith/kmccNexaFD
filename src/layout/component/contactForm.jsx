@@ -39,6 +39,15 @@ const { data: customerData, isLoading: customerLoading, error: customerError } =
   const { mutate: updateContact, loading, error } = usePutData("updateContact", `/contact/update/${contactId}`);
 
   useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
     if (customerId) {
       refetchContactDetail();
     }

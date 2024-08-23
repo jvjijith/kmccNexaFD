@@ -15,6 +15,15 @@ function UserForm({ userId }) {
   const { mutate: editEmployee, isPending: isAdding, error: addError } = usePutData("editEmployee", `/employee/update/user/${userId}`);
 
   useEffect(() => {
+    const hasReloaded = sessionStorage.getItem('hasReloaded');
+
+    if (!hasReloaded) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
     refetchTeam();
     refetchEmployee();
     refetchEmployeeDetail();
