@@ -14,14 +14,14 @@ function SubCategoryForm({ id, name, industry, closeModal, category }) {
   const { mutate: addSubCategory, isPending, error } = usePostData("addSubCategory", "/subcategories/add");
   const { mutate: editSubCategory, isPending: isEditing, error: editError } = usePutData("editSubCategory", `/subcategories/update/${id}`);
 
-  useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
+  // useEffect(() => {
+  //   const hasReloaded = sessionStorage.getItem('hasReloaded');
 
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
-  }, []);
+  //   if (!hasReloaded) {
+  //     sessionStorage.setItem('hasReloaded', 'true');
+  //     window.location.reload();
+  //   }
+  // }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

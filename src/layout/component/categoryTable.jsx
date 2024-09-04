@@ -75,7 +75,7 @@ function CategoryTable() {
                   </Dropdown.Item>
                   <Dropdown.Item
                     className="text-gray-300 hover:!bg-orange-600"
-                    onClick={() => navigate(`/category/subcategory`)}
+                    onClick={() => navigate(`/category/subcategory`, { state: { category } })}
                   >
                     Show Sub-Category
                   </Dropdown.Item>

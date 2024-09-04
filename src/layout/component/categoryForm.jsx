@@ -1,26 +1,18 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { AutoComplete } from "@react-md/autocomplete";
+import React, { useState, useCallback } from "react";
+import Autosuggest from 'react-autosuggest';
 import { categoryDefault, industries } from "../../constant";
 import { usePostData, usePutData } from "../../common/api";
 
-function CategoryForm({ id, name, industry, closeModal }) {
-  // Set initial state with props if editing, otherwise use the default
+function CategoryForm({ id, name, industry }) {
   const [categoryData, setCategoryData] = useState({
     categoryName: name || categoryDefault.categoryName,
     categoryType: industry || categoryDefault.categoryType,
   });
 
+  const [suggestions, setSuggestions] = useState([]);
+
   const { mutate: addCategory, isPending, error } = usePostData("addCategory", "/category/add");
   const { mutate: editCategory, isPending: isEditing, error: editError } = usePutData("editCategory", `/category/update/${id}`);
-
-  useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
-
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,34 +22,50 @@ function CategoryForm({ id, name, industry, closeModal }) {
     }));
   };
 
-  const onAutoComplete = useCallback(({ dataIndex }) => {
+  // Autosuggest functions
+  const onSuggestionsFetchRequested = ({ value }) => {
+    setSuggestions(getSuggestions(value));
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
+  const getSuggestionValue = (suggestion) => suggestion;
+
+  const renderSuggestion = (suggestion) => (
+    <div>
+      {suggestion}
+    </div>
+  );
+
+  const getSuggestions = (value) => {
+    const inputValue = value.trim().toLowerCase();
+    const inputLength = inputValue.length;
+
+    return inputLength === 0 ? [] : industries.filter(
+      (industry) => industry.toLowerCase().slice(0, inputLength) === inputValue
+    );
+  };
+
+  const onCategoryTypeChange = (event, { newValue }) => {
     setCategoryData((prevState) => ({
       ...prevState,
-      categoryType: industries[dataIndex],
+      categoryType: newValue,
     }));
-  }, []);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (id) {
-      // If editing, call the editCategory mutation
       editCategory(categoryData, {
-        onSuccess: () => {
-          closeModal();
-        },
-        onError: (error) => {
-          closeModal();
-        },
+        onSuccess: () => {},
+        onError: (error) => {},
       });
     } else {
-      // If adding, call the addCategory mutation
       addCategory(categoryData, {
-        onSuccess: () => {
-          closeModal();
-        },
-        onError: (error) => {
-          closeModal();
-        },
+        onSuccess: () => {},
+        onError: (error) => {},
       });
     }
     setCategoryData(categoryDefault);
@@ -91,17 +99,20 @@ function CategoryForm({ id, name, industry, closeModal }) {
               <label className="float-left block mb-2 text-white">
                 &nbsp;Industry *&nbsp;
               </label>
-              <AutoComplete
-                id="search-industries"
-                name="categoryType"
-                placeholder="Enter an Industry..."
-                data={industries}
-                highlight
-                theme="none"
-                defaultValue={categoryData.categoryType}
-                onAutoComplete={onAutoComplete}
+              <Autosuggest
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={onSuggestionsClearRequested}
+                getSuggestionValue={getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                inputProps={{
+                  placeholder: "Enter Industry",
+                  value: categoryData.categoryType,
+                  onChange: onCategoryTypeChange,
+                  className:
+                    "block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white",
+                }}
               />
-              <div className="correct"></div>
             </div>
           </div>
 
