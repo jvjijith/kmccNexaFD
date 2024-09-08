@@ -7,14 +7,14 @@ import CategoryForm from "./categoryForm";
 import PopUpModal from "../ui/modal/modal";
 import SubCategoryForm from "./subCategoryForm";
 
-function SubCategoryTable() {
+function SubCategoryTable({categoryId}) {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
 
 
-  const { data, isLoading, error, refetch } = useGetData("categoryData", "/subcategories", {});
+  const { data, isLoading, error, refetch } = useGetData("categoryData", `/subcategories/bycategory/${categoryId}`, {});
 
   const openModal = (team) => {
     setSelectedTeam(team);
@@ -33,6 +33,10 @@ function SubCategoryTable() {
   if (error) {
     return <div>Error loading data</div>;
   }
+  
+  if (!data) {
+    return <div>No Sub-Category</div>;
+  }
 
   console.log('subCategory',data);
 
@@ -45,7 +49,7 @@ function SubCategoryTable() {
           <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {data?.subCategories?.map((category) => (
+          {data?.map((category) => (
             <Table.Row key={category._id} className="border-gray-700 bg-zinc-950">
               <Table.Cell className="whitespace-nowrap font-medium text-white">
                 {category.subCategoryName}

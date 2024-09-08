@@ -37,14 +37,7 @@ function CustomerForm({ typeData, customerId }) {
     refetchCustomerDetail();
   }, [refetchCategories, refetchCustomerDetail]);
 
-  useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
-
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
-  }, []);
+ 
 
   useEffect(() => {
     if (categoryData) {
