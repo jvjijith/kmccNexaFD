@@ -23,6 +23,7 @@ function VendorForm({ typeData, vendorId }) {
   const [suggestions, setSuggestions] = useState([]); 
   const [stateSuggestions, setStateSuggestions] = useState([]);
   const [stateValue, setStateValue] = useState('');
+  const [loading, setLoading] = useState(true); // Loading state
   const [changeCategories, setChangeCategories] = useState(false);
   
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
@@ -32,6 +33,15 @@ function VendorForm({ typeData, vendorId }) {
   const { data: vendorDetail, isLoading: vendorDetailLoading, refetch: refetchVendorDetail } = useGetData("Vendor", `/vendor/vendor/${vendorId}`);
   const { data: categoryData, isPending: isCategories, refetch: refetchCategories } = useGetData("categories", "/category");
   const { mutate: signup, isPending: isSigningUp, error: signupError } = usePostData("signup", "/auth/signup");
+
+  // Simulate loading for 10 seconds before showing content
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 10 seconds delay
+
+    return () => clearTimeout(timer); // Cleanup timeout on unmount
+  }, []);
 
   useEffect(() => {
     const hasReloaded = sessionStorage.getItem('hasReloaded');
@@ -269,7 +279,7 @@ const renderSuggestion = (suggestion) => (
     }
   };
 
-  if (isLoading || isSigningUp) {
+  if (isLoading || loading || isSigningUp) {
     return <LoadingScreen />;
   }
 

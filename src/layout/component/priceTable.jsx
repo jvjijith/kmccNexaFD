@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Table } from "flowbite-react";
 import { useNavigate } from "react-router";
 import { useGetData, usePutData } from "../../common/api";
@@ -11,12 +11,22 @@ function PriceTable() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const { data, isLoading, error, refetch } = useGetData("pricing", "/pricing/", {});
   const { mutate: deactivatePrice } = usePutData("deactivatePrice", `/pricing/deactivate/${selectedPrice?._id}`);
   const { mutate: activatePrice } = usePutData("activatePrice", `/pricing/activate/${selectedPrice?._id}`);
 
   const navigate = useNavigate();
+
+    // Simulate loading for 10 seconds before showing content
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 3000); // 10 seconds delay
+  
+      return () => clearTimeout(timer); // Cleanup timeout on unmount
+    }, []);
 
   const openModal = (Price) => {
     setSelectedPrice(Price);
@@ -72,7 +82,7 @@ function PriceTable() {
     );
   };
 
-  if (isLoading) {
+  if ( isLoading || loading ) {
     return <LoadingScreen />;
   }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dropdown, Table } from "flowbite-react";
 import { useGetData, usePutData } from "../../common/api";
@@ -12,10 +12,18 @@ const ProductTable = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isApiLoading, setIsApiLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const { data: productData, refetch: refetchProducts, isLoading } = useGetData("products", "/product");
 
+  // Simulate loading for 10 seconds before showing content
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 10 seconds delay
 
+    return () => clearTimeout(timer); // Cleanup timeout on unmount
+  }, []);
 
   const { mutate: deactivateProduct } = usePutData(
     "deactivateProduct",
@@ -66,7 +74,7 @@ const ProductTable = () => {
     console.log(product._id);
   };
 
-  if (isLoading) {
+  if ( isLoading || loading ) {
     return <LoadingScreen />;
   }
 

@@ -39,6 +39,9 @@ import VariantDetails from "./layout/ui/profile/productProfile/variantDetails";
 import PriceDetails from "./layout/ui/profile/productProfile/priceDetails";
 import ComingSoonPage from "./pages/comingSoon/comingSoon";
 import SubCategoriesList from "./pages/categories/subCategories";
+import CatalogPage from "./pages/catalog/catalogPage";
+import CatalogList from "./pages/catalog/catalogList";
+import EditProduct from "./pages/product/editProduct";
 
 const App = () => {
   return (
@@ -66,7 +69,7 @@ const App = () => {
       <Route path="admin/adduser" element={<AddUser />} />
       <Route path="admin/edituser" element={<AddUser />} />
       <Route path="product/add" element={<AddProduct />} />
-      <Route path="product/edit" element={<AddProduct />} />
+      <Route path="product/edit" element={<EditProduct />} />
       <Route path="product/list" element={<Product />} />
       <Route path="variant/list" element={<Varient />} />
       <Route path="variant/add" element={<AddVarient />} />
@@ -77,6 +80,7 @@ const App = () => {
       <Route path="product/category" element={<CategoriesList />} />
       <Route path="category/subcategory" element={<SubCategoriesList />} />
       <Route path="addcategory" element={<AddCategories />} />
+      <Route path="product/catalog" element={<CatalogList />} />
       <Route path="product/inventory" element={<ComingSoonPage />} />
       <Route path="services/category" element={<ComingSoonPage />} />
       <Route path="services/add" element={<ComingSoonPage />} />
@@ -117,6 +121,7 @@ const App = () => {
       <Route path="admin/userpermission" element={<ComingSoonPage />} />
       <Route path="admin/logininfo" element={<ComingSoonPage />} />
       <Route path="admin/logs" element={<ComingSoonPage />} />
+      <Route path="catalog" element={<CatalogPage />} />
       <Route path="profile/:userId/details" element={<Profile />} />
             <Route path="/profile/:id" element={<CustomerProfile />}>
                 <Route path="customerdetails" element={<CustomerDetails />} />

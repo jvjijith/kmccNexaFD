@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dropdown, Table } from "flowbite-react";
 import { useNavigate } from "react-router";
 import { useGetData, usePutData } from "../../common/api";
@@ -9,12 +9,22 @@ function VendorTable() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const { data: vendorData, isLoading, error, refetch } = useGetData("VendorData", "/vendor", {});
   const { mutate: deactivateVendor } = usePutData("deactivateVendor", `/vendor/deactivate/${selectedVendor?._id}`);
   const { mutate: activateVendor } = usePutData("activateVendor", `/vendor/activate/${selectedVendor?._id}`);
 
   const navigate = useNavigate();
+
+    // Simulate loading for 10 seconds before showing content
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 3000); // 10 seconds delay
+  
+      return () => clearTimeout(timer); // Cleanup timeout on unmount
+    }, []);
 
   const openModal = (vendor) => {
     setSelectedVendor(vendor);
@@ -78,7 +88,7 @@ function VendorTable() {
   // Log vendorData to check its structure
   console.log("vendorData:", vendorData);
 
-  if (isLoading) {
+  if ( isLoading || loading ) {
     return <LoadingScreen />;
   }
 

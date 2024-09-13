@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dropdown, Table } from "flowbite-react";
 import { useNavigate } from "react-router";
 import { useGetData, usePutData } from "../../common/api";
@@ -9,12 +9,22 @@ function CustomerTable() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const { data: customerData, isLoading, error, refetch } = useGetData("CustomerData", "/customer", {});
   const { mutate: deactivateCustomer } = usePutData("deactivateCustomer", `/customer/deactivate/${selectedCustomer?._id}`);
   const { mutate: activateCustomer } = usePutData("activateCustomer", `/customer/activate/${selectedCustomer?._id}`);
 
   const navigate = useNavigate();
+
+  // Simulate loading for 10 seconds before showing content
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 10 seconds delay
+
+    return () => clearTimeout(timer); // Cleanup timeout on unmount
+  }, []);
 
   const openModal = (customer) => {
     setSelectedCustomer(customer);
@@ -75,7 +85,7 @@ function CustomerTable() {
     );
   };
 
-  if (isLoading) {
+  if ( isLoading|| loading ) {
     return <LoadingScreen />;
   }
 

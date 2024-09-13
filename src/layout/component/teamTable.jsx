@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Table } from "flowbite-react";
 import { useNavigate } from "react-router";
 import { useGetData, usePutData } from "../../common/api";
@@ -11,12 +11,22 @@ function TeamTable() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const { data, isLoading, error, refetch } = useGetData("teamData", "/team", {});
   const { mutate: deactivateTeam } = usePutData("deactivateTeam", `/team/deactivate/${selectedTeam?.teamId}`);
   const { mutate: activateTeam } = usePutData("activateTeam", `/team/activate/${selectedTeam?.teamId}`);
 
   const navigate = useNavigate();
+
+    // Simulate loading for 10 seconds before showing content
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 3000); // 10 seconds delay
+  
+      return () => clearTimeout(timer); // Cleanup timeout on unmount
+    }, []);
 
   const openModal = (team) => {
     setSelectedTeam(team);
@@ -72,7 +82,7 @@ function TeamTable() {
     );
   };
 
-  if (isLoading) {
+  if ( isLoading || loading ) {
     return <LoadingScreen />;
   }
 
@@ -89,7 +99,7 @@ function TeamTable() {
           <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {data.teams.map((team) => (
+          {data?.teams?.map((team) => (
             <Table.Row key={team.teamId} className="border-gray-700 bg-zinc-950">
               <Table.Cell className="whitespace-nowrap font-medium text-white">
                 {team.name}

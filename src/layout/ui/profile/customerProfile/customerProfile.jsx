@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, NavLink, Outlet } from 'react-router-dom';
 import { useGetData } from '../../../../common/api';
 import Image from '../../image/image';
 import LoadingScreen from '../../loading/loading';
 
 function ProfilePage() {
+    
+    const [loading, setLoading] = useState(true); // Loading state
+
     const { id } = useParams();
     const { data: customer, isPending: isCustomerPending, error: customerError } = useGetData('Customer', `/customer/customer/${id}`);
     const { data: contact, isPending: isContactPending, error: contactError } = useGetData('Contact', `/contact/customer/${id}`, { enabled: !!id });
 
-    if (isCustomerPending || isContactPending) {
+      // Simulate loading for 10 seconds before showing content
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 10 seconds delay
+
+    return () => clearTimeout(timer); // Cleanup timeout on unmount
+  }, []);
+
+    if ( isCustomerPending || isContactPending || loading ) {
         return <LoadingScreen />;
     }
 
