@@ -22,6 +22,7 @@ function CustomerForm({ typeData, customerId }) {
   const [changeIdentificationNumbers, setChangeIdentificationNumbers] = useState(false);
   const [changeBankDetails, setChangeBankDetails] = useState(false);
   const [stateSuggestions, setStateSuggestions] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
   const [stateValue, setStateValue] = useState('');
 
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
@@ -38,6 +39,14 @@ function CustomerForm({ typeData, customerId }) {
   }, [refetchCategories, refetchCustomerDetail]);
 
  
+        // Simulate loading for 10 seconds before showing content
+        useEffect(() => {
+          const timer = setTimeout(() => {
+            setLoading(false);
+          }, 3000); // 10 seconds delay
+      
+          return () => clearTimeout(timer); // Cleanup timeout on unmount
+        }, []);
 
   useEffect(() => {
     if (categoryData) {
@@ -287,7 +296,7 @@ function CustomerForm({ typeData, customerId }) {
     }
   };
 
-  if (isLoading || isSigningUp || (customerDetailLoading && customerId)) {
+  if (isLoading || isSigningUp || loading || (customerDetailLoading && customerId)) {
     return <LoadingScreen />;
   }
 

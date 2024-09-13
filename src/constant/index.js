@@ -69,6 +69,7 @@ export const employeeData = [
           { id: '3-1', title: "Add Products", route: "/product/add" },
           { id: '3-2', title: "List Products", route: "/product/list" },
           { id: '3-3', title: "Product Category", route: "/product/category" },
+          { id: '3-4', title: "Catalog", route: "/product/catalog" },
           { id: '3-4', title: "Prices", route: "/product/prices" },
           { id: '3-5', title: "Inventory", route: "/product/inventory" }
         ]

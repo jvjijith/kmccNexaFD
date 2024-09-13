@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Table } from "flowbite-react";
 import { useGetData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
@@ -16,9 +16,19 @@ function CategoryTable() {
   const [isSubModalOpen, setSubModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
 
 
   const { data, isLoading, error, refetch } = useGetData("categoryData", "/category", {});
+
+    // Simulate loading for 10 seconds before showing content
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 3000); // 10 seconds delay
+  
+      return () => clearTimeout(timer); // Cleanup timeout on unmount
+    }, []);
 
   const openModal = (team) => {
     setSelectedTeam(team);
@@ -40,7 +50,7 @@ function CategoryTable() {
     setSubModalOpen(false);
   };
 
-  if (isLoading) {
+  if ( isLoading|| loading ) {
     return <LoadingScreen />;
   }
 

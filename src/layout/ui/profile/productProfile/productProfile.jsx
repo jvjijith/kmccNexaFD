@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, NavLink, Outlet } from 'react-router-dom';
 import { useGetData } from '../../../../common/api';
 import Image from '../../image/image';
@@ -6,11 +6,23 @@ import LoadingScreen from '../../loading/loading';
 
 function ProfilePage() {
     const { id } = useParams();
+
+  const [loading, setLoading] = useState(true); // Loading state
+
     const { data: product, isPending: isProductPending, error: productError } = useGetData('product', `/product/product/${id}`);
     const { data: variant, isPending: isVariantPending, error: variantError } = useGetData('variant', `/variant/product/${id}`);
     const { data: price, isPending: isPricePending, error: priceError } = useGetData('price', `/pricing/product/${id}`);
 
-    if (isProductPending || isVariantPending || isPricePending) {
+    // Simulate loading for 10 seconds before showing content
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 10 seconds delay
+
+    return () => clearTimeout(timer); // Cleanup timeout on unmount
+  }, []);
+
+    if ( isProductPending || isVariantPending || isPricePending || loading ) {
         return <LoadingScreen />;
     }
 

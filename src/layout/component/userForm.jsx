@@ -7,6 +7,9 @@ import LoadingScreen from "../ui/loading/loading";
 
 function UserForm() {
   const [employeeData, setEmployeeData] = useState(employeeDefault);
+  const [loading, setLoading] = useState(true); // Loading state
+
+
   const { data: teamData, isLoading: teamLoading, error: teamError, refetch: refetchTeam } = useGetData("teamData", "/team/active", {});
   const { data: employeeDatas, isLoading: employeeLoading, error: employeeError, refetch: refetchEmployee } = useGetData("employeeData", "/employee/active", {});
   const { mutate: signup, isPending: isSigningUp, error: signupError } = usePostData("signup", "/auth/signup");
@@ -26,6 +29,15 @@ function UserForm() {
     refetchTeam();
     refetchEmployee();
   }, [refetchTeam, refetchEmployee]);
+
+    // Simulate loading for 10 seconds before showing content
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 3000); // 10 seconds delay
+  
+      return () => clearTimeout(timer); // Cleanup timeout on unmount
+    }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -164,7 +176,7 @@ function UserForm() {
   }));
 
  
-  if (employeeLoading || teamLoading) {
+  if ( employeeLoading || teamLoading || loading ) {
     return <LoadingScreen />;
   }
 

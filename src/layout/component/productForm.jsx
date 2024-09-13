@@ -32,6 +32,7 @@ function ProductForm({ typeData, productId }) {
   const [uploadProgress, setUploadProgress] = useState({});
   const [uploadedImages, setUploadedImages] = useState([]);
   const [mediaId, setMediaId] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const navigate = useNavigate();
 
@@ -46,6 +47,15 @@ function ProductForm({ typeData, productId }) {
   const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
   const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
   const { data: productsData, refetch: refetchProduct } = useGetData('product', `/product/product/${productId}`,);
+
+      // Simulate loading for 10 seconds before showing content
+      useEffect(() => {
+        const timer = setTimeout(() => {
+          setLoading(false);
+        }, 3000); // 10 seconds delay
+    
+        return () => clearTimeout(timer); // Cleanup timeout on unmount
+      }, []);
 
   useEffect(() => {
     const hasReloaded = sessionStorage.getItem('hasReloaded');
@@ -72,7 +82,7 @@ function ProductForm({ typeData, productId }) {
         subBrand: productsData.subBrand?._id || '',
         // Populate other fields as necessary
       });
-      setImages(productsData.images || []);
+      setImages([]);
       setNotes(productsData.notes || []);
       setRFQ(productsData.RFQ || false);
       setUploadedImages(productsData.images || []);
@@ -263,7 +273,7 @@ function ProductForm({ typeData, productId }) {
     navigate('/product/list');
   };
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading||loading) return <LoadingScreen />;
 
   return (
     <div>

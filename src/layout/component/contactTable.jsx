@@ -2,16 +2,26 @@ import { Dropdown, Table } from "flowbite-react";
 import { useNavigate } from "react-router";
 import { FaWhatsapp } from "react-icons/fa";
 import { useGetData } from "../../common/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingScreen from "../ui/loading/loading";
 
 function ContactTable() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const { data, isLoading, error, refetch } = useGetData("contactData", "/contact", {});
   const navigate = useNavigate();
+
+    // Simulate loading for 10 seconds before showing content
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 3000); // 10 seconds delay
+  
+      return () => clearTimeout(timer); // Cleanup timeout on unmount
+    }, []);
 
   const openModal = (team) => {
     setSelectedContact(team);
@@ -23,7 +33,7 @@ function ContactTable() {
     setModalOpen(false);
   };
 
-  if (isLoading) {
+  if ( isLoading|| loading ) {
     return <LoadingScreen />;
   }
 

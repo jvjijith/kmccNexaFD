@@ -14,6 +14,7 @@ function UserTable() {
   const [isApiLoading, setApiLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [superiors, setSuperiors] = useState({});
+  const [loading, setLoading] = useState(true); // Loading state
 
   const { data: employeeData, isLoading, error, refetch } = useGetData("EmployeeData", "/employee", {});
   const { mutate: deactivateEmployee } = usePutData("deactivateEmployee", `/employee/deactivate/${selectedEmployee?.userId}`);
@@ -35,6 +36,15 @@ function UserTable() {
       setSuperiors(superiorNames);
     }
   }, [employeeData]);
+
+    // Simulate loading for 10 seconds before showing content
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 3000); // 10 seconds delay
+  
+      return () => clearTimeout(timer); // Cleanup timeout on unmount
+    }, []);
 
   const openModal = (user) => {
     setSelectedUser(user);
@@ -99,7 +109,7 @@ function UserTable() {
     );
   };
 
-  if (isLoading) {
+  if ( isLoading || loading ) {
     return <LoadingScreen />;
   }
 
