@@ -122,6 +122,11 @@ export const employeeData = [
           },
           {
             id: '7-3', title: "App Management", route: "/store/appmanagement", dropdownItems: [
+              { id: '7-3-1', title: "App Setting", route: "/store/appmanagement/appsetting", dropdownItems: [
+                  { id: '1-1', title: "Add Setting", route: "/store/appmanagement/appsetting/add" },
+                  { id: '1-2', title: "List Settings", route: "/store/appmanagement/appsetting/list" },
+                ]
+              },
               { id: '7-3-1', title: "Geo-Blocking", route: "/store/appmanagement/geoblocking" },
               { id: '7-3-2', title: "Layout", route: "/store/appmanagement/layout" },
               { id: '7-3-3', title: "Menu", route: "/store/appmanagement/menu" },
@@ -1183,6 +1188,17 @@ export const employeeDefault = {
     activeUser: "",
     emergencyContact: [{ name: '', phone: '', relationship: '' }]
   
+}
+
+export const appDefault = {
+  appType: '',
+  title: '',
+  active: true,
+  settings: {
+    geo: [],
+    domain: [],
+    language: []
+  }
 }
 
 

@@ -6,7 +6,7 @@ function Customer() {
     
     return (
        <Container>
-        <CustomerCard  title ={"Customer"}>
+        <CustomerCard  title ={"Customer"} button={true}>
             <CustomerTable></CustomerTable>
         </CustomerCard>
        </Container>

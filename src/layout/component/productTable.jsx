@@ -12,17 +12,18 @@ const ProductTable = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isApiLoading, setIsApiLoading] = useState(false);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // Adjust as per your API response limit
+  
+  const { data: productData, refetch: refetchProducts, isLoading } = useGetData("products", `/product?page=${currentPage}&limit=${itemsPerPage}`);
 
-  const { data: productData, refetch: refetchProducts, isLoading } = useGetData("products", "/product");
-
-  // Simulate loading for 10 seconds before showing content
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000); // 10 seconds delay
+    }, 3000);
 
-    return () => clearTimeout(timer); // Cleanup timeout on unmount
+    return () => clearTimeout(timer);
   }, []);
 
   const { mutate: deactivateProduct } = usePutData(
@@ -32,6 +33,7 @@ const ProductTable = () => {
       onSuccess: () => refetchProducts(),
     }
   );
+  
   const { mutate: activateProduct } = usePutData(
     "activateProduct",
     `/product/activate/${selectedProduct?._id}`,
@@ -41,7 +43,6 @@ const ProductTable = () => {
   );
 
   const openModal = (product) => {
-    
     setSelectedProduct(product);
     setModalOpen(true);
   };
@@ -62,7 +63,6 @@ const ProductTable = () => {
 
   const handleAddVariants = (product) => {
     navigate(`/variant/add`, { state: { product } });
-    console.log(product);
   };
 
   const handleShowVariants = (product) => {
@@ -71,12 +71,25 @@ const ProductTable = () => {
 
   const handleViewDetails = (product) => {
     navigate(`/product/profile/${product._id}/productdetails`, { state: { product } });
-    console.log(product._id);
   };
 
-  if ( isLoading || loading ) {
+   // Pagination handler
+   const handlePageChange = (page) => {
+    setCurrentPage(page);  // Update the current page state
+  };
+
+  // Fetch new data when currentPage changes
+  useEffect(() => {
+    refetchProducts();  // Refetch data after currentPage is updated
+  }, [currentPage, refetchProducts]);  // Refetch when currentPage changes
+
+
+  if (isLoading || loading) {
     return <LoadingScreen />;
   }
+
+  const totalProducts = productData?.pagination?.totalCount || 0;
+  const totalPages = Math.ceil(totalProducts / itemsPerPage);
 
   return (
     <div className="overflow-x-auto min-h-96">
@@ -84,7 +97,6 @@ const ProductTable = () => {
         <Table.Head className="border-gray-700 bg-black text-white">
           <Table.HeadCell className="border-gray-700 bg-black text-white">Name</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Category</Table.HeadCell>
-          {/* <Table.HeadCell className="border-gray-700 bg-black text-white">Sub Category</Table.HeadCell> */}
           <Table.HeadCell className="border-gray-700 bg-black text-white">Brand</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Stock</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Sub Brand</Table.HeadCell>
@@ -100,9 +112,6 @@ const ProductTable = () => {
               <Table.Cell className="whitespace-nowrap text-white">
                 {product.category?.categoryName}
               </Table.Cell>
-              {/* <Table.Cell className="whitespace-nowrap text-white">
-                {product.category?.categoryType}
-              </Table.Cell> */}
               <Table.Cell className="whitespace-nowrap text-white">
                 {product.brand?.name}
               </Table.Cell>
@@ -117,16 +126,15 @@ const ProductTable = () => {
               </Table.Cell>
               <Table.Cell className="text-gray-300">
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
-                  
                   <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
-                      onClick={() => handleViewDetails(product)}
-                    >
-                      Details
-                    </Dropdown.Item>
-                    <Dropdown.Item
                     className="text-gray-300 hover:!bg-orange-600"
-                      onClick={() => navigate(`/product/edit`, { state: { product }})}
+                    onClick={() => handleViewDetails(product)}
+                  >
+                    Details
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className="text-gray-300 hover:!bg-orange-600"
+                    onClick={() => navigate(`/product/edit`, { state: { product } })}
                   >
                     Edit Product
                   </Dropdown.Item>
@@ -170,8 +178,21 @@ const ProductTable = () => {
         </Table.Body>
       </Table>
 
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+
       <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Price"}>
-        <PriceForm closeModal={closeModal}  productId={selectedProduct?._id}/>
+        <PriceForm closeModal={closeModal} productId={selectedProduct?._id} />
       </PopUpModal>
 
       {isApiLoading && <LoadingScreen />}

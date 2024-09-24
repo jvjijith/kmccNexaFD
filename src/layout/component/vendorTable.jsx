@@ -10,21 +10,36 @@ function VendorTable() {
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
   const [loading, setLoading] = useState(true); // Loading state
+  const [currentPage, setCurrentPage] = useState(1); // Pagination: current page
+  const [limit] = useState(10); // Pagination: items per page
 
-  const { data: vendorData, isLoading, error, refetch } = useGetData("VendorData", "/vendor", {});
-  const { mutate: deactivateVendor } = usePutData("deactivateVendor", `/vendor/deactivate/${selectedVendor?._id}`);
-  const { mutate: activateVendor } = usePutData("activateVendor", `/vendor/activate/${selectedVendor?._id}`);
+  const { data: vendorData, isLoading, error, refetch } = useGetData(
+    "VendorData",
+    `/vendor?page=${currentPage}&limit=${limit}`,
+    {}
+  );
+
+  const { mutate: deactivateVendor } = usePutData(
+    "deactivateVendor", 
+    `/vendor/deactivate/${selectedVendor?._id}`
+  );
+  
+  const { mutate: activateVendor } = usePutData(
+    "activateVendor", 
+    `/vendor/activate/${selectedVendor?._id}`
+  );
+
 
   const navigate = useNavigate();
 
-    // Simulate loading for 10 seconds before showing content
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 3000); // 10 seconds delay
-  
-      return () => clearTimeout(timer); // Cleanup timeout on unmount
-    }, []);
+  // Simulate loading for 10 seconds before showing content
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 3 seconds delay
+
+    return () => clearTimeout(timer); // Cleanup timeout on unmount
+  }, []);
 
   const openModal = (vendor) => {
     setSelectedVendor(vendor);
@@ -85,10 +100,18 @@ function VendorTable() {
     );
   };
 
-  // Log vendorData to check its structure
-  console.log("vendorData:", vendorData);
+   // Pagination handler
+   const handlePageChange = (page) => {
+    setCurrentPage(page);  // Update the current page state
+  };
 
-  if ( isLoading || loading ) {
+  // Fetch new data when currentPage changes
+  useEffect(() => {
+    refetch();  // Refetch data after currentPage is updated
+  }, [currentPage, refetch]);  // Refetch when currentPage changes
+
+
+  if (isLoading || loading) {
     return <LoadingScreen />;
   }
 
@@ -97,11 +120,13 @@ function VendorTable() {
   }
 
   // Check if vendorData exists and is an array
-  const vendorsArray = Array.isArray(vendorData) ? vendorData : vendorData?.customers;
+  const vendorsArray = Array.isArray(vendorData?.customers) ? vendorData.customers : [];
 
-  if (!vendorsArray) {
+  if (!vendorsArray.length) {
     return <div>No vendors available</div>;
   }
+
+  const totalPages = Math.ceil(vendorData.pagination.totalCount / limit); // Calculate total pages
 
   return (
     <div className="overflow-x-auto min-h-96">
@@ -112,7 +137,6 @@ function VendorTable() {
           <Table.HeadCell className="border-gray-700 bg-black text-white">Category</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">State</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Location</Table.HeadCell>
-          {/* <Table.HeadCell className="border-gray-700 bg-black text-white">Number of Contacts</Table.HeadCell> */}
           <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
         </Table.Head>
@@ -124,23 +148,28 @@ function VendorTable() {
               <Table.Cell className="text-gray-300">{vendor.category.categoryName}</Table.Cell>
               <Table.Cell className="text-gray-300">{vendor.state}</Table.Cell>
               <Table.Cell className="text-gray-300">{vendor.location}</Table.Cell>
-              {/* <Table.Cell className="text-gray-300 text-center">{vendor.identificationNumbers ? vendor.identificationNumbers.length : 0}</Table.Cell> */}
               <Table.Cell className={`whitespace-nowrap ${vendor.active ? "text-green-500" : "text-red-500"}`}>
                 {vendor.active ? "Active" : "Inactive"}
               </Table.Cell>
               <Table.Cell className="text-gray-300">
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
-                <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
-                      onClick={() => handleViewDetails(vendor)}
-                    >
-                      Details
-                    </Dropdown.Item>
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/vendor/edit`, { state: { vendor } })}>
+                  <Dropdown.Item
+                    className="text-gray-300 hover:!bg-orange-600"
+                    onClick={() => handleViewDetails(vendor)}
+                  >
+                    Details
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className="text-gray-300 hover:!bg-orange-600"
+                    onClick={() => navigate(`/vendor/edit`, { state: { vendor } })}
+                  >
                     Edit vendor
                   </Dropdown.Item>
-                  <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/vendor/editContact`, { state: { vendor } })}>
-                  Edit Contacts
+                  <Dropdown.Item
+                    className="text-gray-300 hover:!bg-orange-600"
+                    onClick={() => navigate(`/vendor/editContact`, { state: { vendor } })}
+                  >
+                    Edit Contacts
                   </Dropdown.Item>
                   {vendor.active ? (
                     <Dropdown.Item
@@ -163,6 +192,19 @@ function VendorTable() {
           ))}
         </Table.Body>
       </Table>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
