@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { FaSignOutAlt, FaList, FaPlay, FaSearch, FaPlusSquare, FaTimes, FaCheck } from "react-icons/fa"; // Icons for UI
+import React, { useState, useEffect, useRef } from "react";
 import { useGetData, usePutData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
 import { useNavigate } from "react-router";
+import { FaSignOutAlt, FaList, FaPlay, FaSearch, FaPlusSquare, FaTimes, FaCheck, FaPencilAlt } from "react-icons/fa"; // Icons for UI
 
 function Catalog({ catalogId }) {
   const navigate = useNavigate();
-
   const [search, setSearch] = useState("");
   const [catalogName, setCatalogName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
-  
+  const [isEditingTitle, setIsEditingTitle] = useState(false); // New state to toggle title edit mode
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 6; // Adjust the number of products per page here
+  const productsPerPage = 6;
 
-  // Fetch product and catalog data
+  const titleInputRef = useRef(null);
+
+  useEffect(() => {
+    if (isEditingTitle && titleInputRef.current) {
+      titleInputRef.current.focus(); // Automatically focus the input field when editing
+    }
+  }, [isEditingTitle]);
+
   const { data: productData, refetch: refetchProducts, isLoading: productLoading } = useGetData("products", "/product", {
-    params: { page: currentPage, limit: productsPerPage }, // Pass pagination params here
+    params: { page: currentPage, limit: productsPerPage },
   });
   
   const { data: catalogData, refetch: refetchCatalog, isLoading: catalogLoading } = useGetData("catalog", `/catalogues/${catalogId}`);
-
-  // Edit catalog mutation
   const { mutate: editCatalog, isPending: isEditing, error: editError } = usePutData("editCatalog", `/catalogues/update/${catalogId}`);
 
   useEffect(() => {
@@ -33,7 +37,6 @@ function Catalog({ catalogId }) {
     }
   }, [catalogData]);
 
-  // Handle adding/removing products to/from catalog
   const handleAddProduct = (productId) => {
     if (!selectedProducts.includes(productId)) {
       setSelectedProducts([...selectedProducts, productId]);
@@ -44,7 +47,6 @@ function Catalog({ catalogId }) {
     setSelectedProducts(selectedProducts.filter((id) => id !== productId));
   };
 
-  // Save catalog details
   const handleSaveCatalog = () => {
     editCatalog({
       name: catalogName,
@@ -53,8 +55,7 @@ function Catalog({ catalogId }) {
       productIds: selectedProducts,
       customParams: [],
     }, {
-      onSuccess: (response) => {
-        console.log('Catalog updated successfully:', response);
+      onSuccess: () => {
         navigate(`/product/catalog`);
       },
       onError: (error) => {
@@ -67,11 +68,7 @@ function Catalog({ catalogId }) {
     return <LoadingScreen />;
   }
 
-  // Pagination data from the API response
-  const { limit, totalCount } = productData?.pagination || { limit: 6, totalCount: 0 };
-  const totalPages = Math.ceil(totalCount / limit);
-
-  // Render products for the current page
+  const totalPages = Math.ceil((productData?.pagination?.totalCount || 0) / productsPerPage);
   const currentProducts = productData?.products || [];
 
   const handlePageChange = (newPage) => {
@@ -80,45 +77,49 @@ function Catalog({ catalogId }) {
     }
   };
 
+  const handleEditTitle = () => {
+    setIsEditingTitle(!isEditingTitle); // Toggle edit mode
+  };
+
   return (
     <div className="flex min-h-screen text-white">
       <div className="flex-1 p-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <input
-            type="text"
-            className="text-3xl font-bold bg-transparent border-none focus:ring-0"
-            value={catalogName}
-            onChange={(e) => setCatalogName(e.target.value)}
-            placeholder="Catalog Name"
-          />
+          <div className="relative flex items-center">
+            {isEditingTitle ? (
+              <input
+                ref={titleInputRef} // Attach the ref to the input field
+                type="text"
+                className="text-3xl bg-transparent border-none focus:ring-0 focus:outline-none pr-8 w-full max-w-xs italic"
+                value={catalogName}
+                onChange={(e) => setCatalogName(e.target.value)}
+              />
+            ) : (
+              <p className="text-3xl font-bold pr-8">{catalogName}</p>
+            )}
+            <FaPencilAlt
+              className="absolute top-0 right-0 transform -translate-y-1/2 text-gray-400 cursor-pointer hover:text-gray-600"
+              onClick={handleEditTitle}
+            />
+          </div>
+
           <button className="bg-nexa-orange text-white px-4 py-2 rounded flex items-center" onClick={handleSaveCatalog}>
-            <FaPlusSquare className="mr-2" />
+            {/* <FaPlusSquare className="mr-2" /> */}
             Save Catalog
           </button>
         </div>
 
         {/* Description */}
+        <label className="float-left inline-block mb-2 text-white">
+          &nbsp;Catalog Description &nbsp;
+        </label>
         <textarea
           className="w-full p-2 mb-4 bg-black border-none rounded focus:ring-2 focus:ring-green-400 text-white"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Catalog Description"
         />
-
-        {/* Search and Tabs */}
-        <div className="flex items-center mb-4">
-          <div className="relative flex-1">
-            <FaSearch className="absolute top-2 left-2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full pl-10 pr-4 py-2 rounded border-b border-nexa-gray bg-black border-none focus:ring-2 focus:ring-green-400 text-white"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        </div>
 
         {/* Content Area */}
         <div className="flex space-x-8">
@@ -130,7 +131,15 @@ function Catalog({ catalogId }) {
                 const product = productData?.products.find((p) => p._id === productId);
                 return (
                   <li key={productId} className="flex items-center justify-between p-2 bg-sidebar-card-top rounded">
-                    <div>
+                     {/* Image Section on the Left */}
+                      <div className="w-1/3 mr-2">
+                        <img
+                          src={product.images?.[0]?.url || `/placeholder.png`} // Display product image or placeholder
+                          alt={product.name}
+                          className="w-8 h-10 object-cover rounded"
+                        />
+                      </div>
+                    <div className="justify-start">
                       <p className="font-semibold">{product?.name}</p>
                       <p className="text-sm text-gray-400">{product?.description}</p>
                     </div>
@@ -148,26 +157,59 @@ function Catalog({ catalogId }) {
             <div className="flex justify-between mb-4">
               <h2 className="text-xl font-bold">Product</h2>
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              {currentProducts.map((product) => (
-                <div key={product._id} className="p-4 bg-sidebar-card-top rounded">
-                  <p className="font-semibold">{product.name}</p>
-                  <p className="text-sm text-gray-400">{product.description}</p>
-                  {selectedProducts.includes(product._id) ? (
-                    <button className="mt-2 text-white px-4 py-2 rounded flex items-center bg-gray-500" disabled>
-                      <FaCheck className="mr-2" /> Added
-                    </button>
-                  ) : (
-                    <button
-                      className="mt-2 bg-nexa-orange text-white px-4 py-2 rounded flex items-center"
-                      onClick={() => handleAddProduct(product._id)}
-                    >
-                      <FaPlusSquare className="mr-2" /> Add
-                    </button>
-                  )}
-                </div>
-              ))}
+
+            {/* Search and Tabs */}
+            <div className="flex items-center mb-4">
+              <div className="relative flex-1">
+                <FaSearch className="absolute top-2 left-2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-full pl-10 pr-4 py-2 rounded border-b border-nexa-gray bg-black border-none focus:ring-2 focus:ring-green-400 text-white"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
             </div>
+
+            {/* Products with Image Holders */}
+            <div className="grid grid-cols-3 gap-4">
+  {currentProducts.map((product) => (
+    <div key={product._id} className="p-4 bg-sidebar-card-top rounded flex items-start">
+      {/* Image Section on the Left */}
+      <div className="w-1/3 mr-4">
+        <img
+          src={product.images?.[0]?.url || '/placeholder.png'} // Display product image or placeholder
+          alt={product.name}
+          className="w-full h-10 object-cover rounded"
+        />
+      </div>
+      
+      {/* Product Details on the Right */}
+      <div className="w-2/3">
+        <p className="font-semibold">{product.name}</p>
+        <p className="text-sm text-gray-400">{product.description}</p>
+        {selectedProducts.includes(product._id) ? (
+          <div className="flex flex-wrap justify-end">
+          <button className="mt-2 text-white px-4 py-2 rounded flex items-center bg-gray-500" disabled>
+            <FaCheck />
+          </button>
+          </div>
+        ) : (
+          <div className="flex flex-wrap justify-end">
+          <button
+            className="mt-2 bg-nexa-orange text-white px-4 py-2 rounded flex items-center"
+            onClick={() => handleAddProduct(product._id)}
+          >
+            <FaPlusSquare />
+          </button>
+          </div>
+        )}
+      </div>
+    </div>
+  ))}
+</div>
+
 
             {/* Pagination */}
             <div className="flex justify-center mt-4">

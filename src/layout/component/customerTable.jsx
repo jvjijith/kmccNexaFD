@@ -10,20 +10,34 @@ function CustomerTable() {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
   const [loading, setLoading] = useState(true); // Loading state
+  const [currentPage, setCurrentPage] = useState(1); // Pagination: current page
+  const limit = 10; // Limit: items per page
+  
+  // Fetch customer data with pagination
+  const { data: customerData, isLoading, error, refetch } = useGetData(
+    "CustomerData", 
+    `/customer?page=${currentPage}&limit=${limit}`, 
+    {}
+  );
 
-  const { data: customerData, isLoading, error, refetch } = useGetData("CustomerData", "/customer", {});
-  const { mutate: deactivateCustomer } = usePutData("deactivateCustomer", `/customer/deactivate/${selectedCustomer?._id}`);
-  const { mutate: activateCustomer } = usePutData("activateCustomer", `/customer/activate/${selectedCustomer?._id}`);
+  const { mutate: deactivateCustomer } = usePutData(
+    "deactivateCustomer", 
+    `/customer/deactivate/${selectedCustomer?._id}`
+  );
+  
+  const { mutate: activateCustomer } = usePutData(
+    "activateCustomer", 
+    `/customer/activate/${selectedCustomer?._id}`
+  );
 
   const navigate = useNavigate();
 
-  // Simulate loading for 10 seconds before showing content
+  // Simulate loading for 3 seconds before showing content
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000); // 10 seconds delay
-
-    return () => clearTimeout(timer); // Cleanup timeout on unmount
+    }, 3000);
+    return () => clearTimeout(timer);
   }, []);
 
   const openModal = (customer) => {
@@ -38,7 +52,6 @@ function CustomerTable() {
 
   const handleViewDetails = (customer) => {
     navigate(`/profile/${customer._id}/customerdetails`, { state: { customer } });
-    console.log(customer._id);
   };
 
   const handleDeactivateCustomer = (customer) => {
@@ -49,13 +62,13 @@ function CustomerTable() {
       {
         onSuccess: () => {
           refetch();
-          toast.success(`Customer ${customer.name} deactivated successfully!`, { toastId: `deactivate-${customer._id}` });
+          toast.success(`Customer ${customer.name} deactivated successfully!`);
           setApiLoading(false);
           closeModal();
         },
         onError: (error) => {
           console.error("Error deactivating customer:", error);
-          toast.error(`Error deactivating customer ${customer.name}`, { toastId: `deactivate-${customer._id}` });
+          toast.error(`Error deactivating customer ${customer.name}`);
           setApiLoading(false);
           closeModal();
         },
@@ -71,13 +84,13 @@ function CustomerTable() {
       {
         onSuccess: () => {
           refetch();
-          toast.success(`Customer ${customer.name} activated successfully!`, { toastId: `activate-${customer._id}` });
+          toast.success(`Customer ${customer.name} activated successfully!`);
           setApiLoading(false);
           closeModal();
         },
         onError: (error) => {
           console.error("Error activating customer:", error);
-          toast.error(`Error activating customer ${customer.name}`, { toastId: `activate-${customer._id}` });
+          toast.error(`Error activating customer ${customer.name}`);
           setApiLoading(false);
           closeModal();
         },
@@ -85,13 +98,27 @@ function CustomerTable() {
     );
   };
 
-  if ( isLoading|| loading ) {
+  // Pagination handler
+  const handlePageChange = (page) => {
+    setCurrentPage(page);  // Update the current page state
+  };
+
+  // Fetch new data when currentPage changes
+  useEffect(() => {
+    refetch();  // Refetch data after currentPage is updated
+  }, [currentPage, refetch]);  // Refetch when currentPage changes
+
+  if (isLoading || loading) {
     return <LoadingScreen />;
   }
 
   if (error) {
     return <div>Error loading data</div>;
   }
+
+  const totalPages = Math.ceil(customerData.pagination.totalCount / limit); // Calculate total pages
+
+  console.log(customerData);
 
   return (
     <div className="overflow-x-auto min-h-96">
@@ -102,60 +129,49 @@ function CustomerTable() {
           <Table.HeadCell className="border-gray-700 bg-black text-white">Category</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">State</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Location</Table.HeadCell>
-          {/* <Table.HeadCell className="border-gray-700 bg-black text-white">Number of Contacts</Table.HeadCell> */}
           <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-  {customerData && customerData.customers.map((customer, index) => (
-    <Table.Row key={index} className="border-gray-700 bg-zinc-950">
-      <Table.Cell className="whitespace-nowrap font-medium text-white">{customer.name}</Table.Cell>
-      <Table.Cell className="text-gray-300">{customer.country}</Table.Cell>
-      <Table.Cell className="text-gray-300">
-        {customer.category?.categoryName || "N/A"}
-      </Table.Cell>
-      <Table.Cell className="text-gray-300">{customer.state}</Table.Cell>
-      <Table.Cell className="text-gray-300">{customer.location}</Table.Cell>
-      {/* <Table.Cell className="text-gray-300">{customer.identificationNumbers ? customer.identificationNumbers.length : 0}</Table.Cell> */}
-      <Table.Cell className={`whitespace-nowrap ${customer.active ? "text-green-500" : "text-red-500"}`}>
+          {customerData?.customers.map((customer, index) => (
+            <Table.Row key={index} className="border-gray-700 bg-zinc-950">
+              <Table.Cell className="whitespace-nowrap font-medium text-white">{customer.name}</Table.Cell>
+              <Table.Cell className="text-gray-300">{customer.country}</Table.Cell>
+              <Table.Cell className="text-gray-300">{customer.category?.categoryName || "N/A"}</Table.Cell>
+              <Table.Cell className="text-gray-300">{customer.state}</Table.Cell>
+              <Table.Cell className="text-gray-300">{customer.location}</Table.Cell>
+              <Table.Cell className={`whitespace-nowrap ${customer.active ? "text-green-500" : "text-red-500"}`}>
                 {customer.active ? "Active" : "Inactive"}
               </Table.Cell>
-      <Table.Cell className="text-gray-300">
-        <Dropdown label="Actions" inline className="bg-black text-white border-black">
-        <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
-                      onClick={() => handleViewDetails(customer)}
-                    >
-                      Details
-                    </Dropdown.Item>
-          <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/edit`, { state: { customer }})}>
-            Edit Customer
-          </Dropdown.Item>
-          <Dropdown.Item className="text-gray-300 hover:!bg-orange-600" onClick={() => navigate(`/customer/editContact`, { state: { customer } })}>
-          Edit Contacts
-          </Dropdown.Item>
-          {customer.active ? (
-            <Dropdown.Item
-              className="text-gray-300 hover:!bg-orange-600"
-              onClick={() => handleDeactivateCustomer(customer)}
-            >
-              Deactivate Customer
-            </Dropdown.Item>
-          ) : (
-            <Dropdown.Item
-              className="text-gray-300 hover:!bg-orange-600"
-              onClick={() => handleActivateCustomer(customer)}
-            >
-              Activate Customer
-            </Dropdown.Item>
-          )}
-        </Dropdown>
-      </Table.Cell>
-    </Table.Row>
-  ))}
-</Table.Body>
-
+              <Table.Cell className="text-gray-300">
+                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+                  <Dropdown.Item onClick={() => handleViewDetails(customer)}>Details</Dropdown.Item>
+                  <Dropdown.Item onClick={() => navigate(`/customer/edit`, { state: { customer } })}>Edit Customer</Dropdown.Item>
+                  <Dropdown.Item onClick={() => navigate(`/customer/editContact`, { state: { customer } })}>Edit Contacts</Dropdown.Item>
+                  {customer.active ? (
+                    <Dropdown.Item onClick={() => handleDeactivateCustomer(customer)}>Deactivate Customer</Dropdown.Item>
+                  ) : (
+                    <Dropdown.Item onClick={() => handleActivateCustomer(customer)}>Activate Customer</Dropdown.Item>
+                  )}
+                </Dropdown>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
       </Table>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

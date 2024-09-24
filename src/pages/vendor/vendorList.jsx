@@ -6,7 +6,7 @@ function Vendor() {
     
     return (
        <Container>
-        <VendorCard  title ={"Vendor"}>
+        <VendorCard  title ={"Vendor"} button={true}>
             <VendorTable></VendorTable>
         </VendorCard>
        </Container>

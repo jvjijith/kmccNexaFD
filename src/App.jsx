@@ -42,6 +42,8 @@ import SubCategoriesList from "./pages/categories/subCategories";
 import CatalogPage from "./pages/catalog/catalogPage";
 import CatalogList from "./pages/catalog/catalogList";
 import EditProduct from "./pages/product/editProduct";
+import AddApp from "./pages/app/addApp";
+import ListApp from "./pages/app/appList";
 
 const App = () => {
   return (
@@ -106,6 +108,8 @@ const App = () => {
       <Route path="store/rfq/view" element={<ComingSoonPage />} />
       <Route path="store/rfq/cancel" element={<ComingSoonPage />} />
       <Route path="store/rfq/send" element={<ComingSoonPage />} />
+      <Route path="store/appmanagement/appsetting/add" element={<AddApp />} />
+      <Route path="store/appmanagement/appsetting/list" element={<ListApp />} />
       <Route path="store/appmanagement/geoblocking" element={<ComingSoonPage />} />
       <Route path="store/appmanagement/layout" element={<ComingSoonPage />} />
       <Route path="store/appmanagement/menu" element={<ComingSoonPage />} />

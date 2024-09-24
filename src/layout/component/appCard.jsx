@@ -5,7 +5,7 @@ import Card from '../ui/card/card';
 import { useSidebar } from '../../context/sidebar.context';
 import { useNavigate } from 'react-router';
 
-function VendorCard({children,title,button}) {
+function AppCard({children,title,button}) {
   
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ function VendorCard({children,title,button}) {
             <div className="sm:flex-grow flex justify-between">
               <div className="">
                 <div className="flex items-center">
-                  <div className="text-3xl font-bold text-white">Vendor</div>
+                  <div className="text-3xl font-bold text-white">App</div>
                   
                 </div>
              {/*    <div className="flex items-center">
@@ -59,7 +59,7 @@ function VendorCard({children,title,button}) {
            component={button?
             (<button
               className="bg-black text-white px-4 py-2 rounded"
-              onClick={() => navigate(`/vendor/add`)}
+              onClick={() => navigate(`/store/appmanagement/appsetting/add`)}
             >
               Add
             </button>):null
@@ -72,4 +72,4 @@ function VendorCard({children,title,button}) {
     );
 }
 
-export default VendorCard;
+export default AppCard;

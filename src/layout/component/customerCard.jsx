@@ -3,8 +3,12 @@ import Icon from '../ui/icon/icon';
 import IconButton from '../ui/icon/iconButton';
 import Card from '../ui/card/card';
 import { useSidebar } from '../../context/sidebar.context';
+import { useNavigate } from 'react-router';
 
-function CustomerCard({children,title}) {
+function CustomerCard({children,title,button}) {
+  
+  const navigate = useNavigate();
+
   const {toggleSidebar} = useSidebar();
     return (
         <div className="flex w-full">
@@ -51,8 +55,16 @@ function CustomerCard({children,title}) {
           </div>
 
           
-           <Card title={title}>
-               {children}
+           <Card title={title}
+           component={button?
+            (<button
+              className="bg-black text-white px-4 py-2 rounded"
+              onClick={() => navigate(`/customer/add`)}
+            >
+              Add
+            </button>):null
+          }>
+          {children}
             </Card>
             </div>
 
