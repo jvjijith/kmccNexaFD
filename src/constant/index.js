@@ -141,6 +141,13 @@ export const employeeData = [
               { id: '7-4-2', title: "Cancel Payments", route: "/store/payment/cancel" },
               { id: '7-4-3', title: "Refund", route: "/store/payment/refund" }
             ]
+          },
+          {
+            id: '7-4', title: "Color Scheme", route: "/store/color", dropdownItems: [
+              { id: '7-4-1', title: "Add Color Scheme", route: "/store/color/add" },
+              { id: '7-4-2', title: "List Color Scheme", route: "/store/color/list" }
+              
+            ]
           }
         ]
       },
@@ -572,6 +579,70 @@ export const vendorDefault = {
   "language": "",
   "currency": ""
 }
+
+export const colorDefault = {
+  appId: '',
+  mode: '',
+  theme: {
+    palette: {
+      primary: {
+        light: '',
+        main: '',
+        dark: '',
+        contrastText: ''
+      },
+      secondary: {
+        light: '',
+        main: '',
+        dark: '',
+        contrastText: ''
+      },
+      error: {
+        light: '',
+        main: '',
+        dark: '',
+        contrastText: ''
+      },
+      warning: {
+        light: '',
+        main: '',
+        dark: '',
+        contrastText: ''
+      },
+      info: {
+        light: '',
+        main: '',
+        dark: '',
+        contrastText: ''
+      },
+      success: {
+        light: '',
+        main: '',
+        dark: '',
+        contrastText: ''
+      },
+      text: {
+        primary: "",
+        secondary: "",
+        disabled: ""
+      },
+      background: {
+        default: "",
+        paper: ""
+      },
+      action: {
+        active: "",
+        hover: "",
+        selected: "",
+        disabled: "",
+        disabledBackground: "",
+        focus: ""
+      },
+      divider: ''
+    }
+  }
+};
+
 
 export const languages = [
   { name: 'Afrikaans', code: 'af' },

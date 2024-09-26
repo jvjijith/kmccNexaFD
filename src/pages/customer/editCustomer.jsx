@@ -15,7 +15,7 @@ function EditCustomer(props) {
       <CustomerCard title={customer ? "Edit Customer" : "Add Customer"}>
         <CustomerForm
           typeData={customer ? "update" : ""}
-          customerId={customer ? customer._id : null}
+          customer={customer ? customer : null}
         />
       </CustomerCard>
     </Container>

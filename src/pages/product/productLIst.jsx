@@ -6,7 +6,7 @@ function Product() {
     
     return (
        <Container>
-        <ProductCard  title ={"Product"}>
+        <ProductCard  title ={"Product"} button={true} >
             <ProductTable></ProductTable>
         </ProductCard>
        </Container>

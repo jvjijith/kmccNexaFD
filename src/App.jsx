@@ -44,6 +44,10 @@ import CatalogList from "./pages/catalog/catalogList";
 import EditProduct from "./pages/product/editProduct";
 import AddApp from "./pages/app/addApp";
 import ListApp from "./pages/app/appList";
+import AddColor from "./pages/colors/addColor";
+import EditApp from "./pages/app/editApp";
+import Color from "./pages/colors/colorList";
+import EditColor from "./pages/colors/editColor ";
 
 const App = () => {
   return (
@@ -68,6 +72,7 @@ const App = () => {
       <Route exact path="addContact" element={<AddContact></AddContact>}></Route>
       <Route exact path="loading" element={<Loading></Loading>}></Route>
       <Route path="customer/add" element={<AddCustomer />} />
+      <Route path="customer/edit" element={<EditCustomer />} />
       <Route path="admin/adduser" element={<AddUser />} />
       <Route path="admin/edituser" element={<AddUser />} />
       <Route path="product/add" element={<AddProduct />} />
@@ -76,7 +81,6 @@ const App = () => {
       <Route path="variant/list" element={<Varient />} />
       <Route path="variant/add" element={<AddVarient />} />
       <Route path="product/prices" element={<ListPrice />} />
-      <Route path="customer/edit" element={<EditCustomer />} />
       <Route path="customer/category" element={<CategoriesList />} />
       <Route path="vendor/category" element={<CategoriesList />} />
       <Route path="product/category" element={<CategoriesList />} />
@@ -109,6 +113,7 @@ const App = () => {
       <Route path="store/rfq/cancel" element={<ComingSoonPage />} />
       <Route path="store/rfq/send" element={<ComingSoonPage />} />
       <Route path="store/appmanagement/appsetting/add" element={<AddApp />} />
+      <Route path="store/appmanagement/appsetting/edit" element={<EditApp />} />
       <Route path="store/appmanagement/appsetting/list" element={<ListApp />} />
       <Route path="store/appmanagement/geoblocking" element={<ComingSoonPage />} />
       <Route path="store/appmanagement/layout" element={<ComingSoonPage />} />
@@ -119,6 +124,9 @@ const App = () => {
       <Route path="store/payment/list" element={<ComingSoonPage />} />
       <Route path="store/payment/cancel" element={<ComingSoonPage />} />
       <Route path="store/payment/refund" element={<ComingSoonPage />} />
+      <Route path="store/color/add" element={<AddColor />} />
+      <Route path="store/color/edit" element={<EditColor />} />
+      <Route path="store/color/list" element={<Color />} />
       <Route path="reporting/reports" element={<ComingSoonPage />} />
       <Route path="reporting/analytics" element={<ComingSoonPage />} />
       <Route path="admin/organization" element={<ComingSoonPage />} />

@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router';
 
 Modal.setAppElement('#root');
 
-function ProductForm({ typeData, productId }) {
+function ProductForm({ typeData, product }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isSubrand, setSubrand] = useState(false);
   const [isBrand, setbrand] = useState(false);
@@ -37,7 +37,7 @@ function ProductForm({ typeData, productId }) {
   const navigate = useNavigate();
 
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
-  const api_url = typeData === 'update' ? `/product/update/${productId}` : '/product/add';
+  const api_url = typeData === 'update' ? `/product/update/${product?._id}` : '/product/add';
   const api_key = typeData === 'update' ? 'updateProduct' : 'addProduct';
   const { data: brandData, refetch: refetchBrand } = useGetData('brand', '/brands');
   const { data: subBrandData, refetch: refetchSubBrand } = useGetData('subBrand', '/subbrands');
@@ -46,7 +46,6 @@ function ProductForm({ typeData, productId }) {
   const { data: subCategoryData, refetch: refetchSubCategories } = useGetData('subCategories', '/subcategories');
   const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
   const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
-  const { data: productsData, refetch: refetchProduct } = useGetData('product', `/product/product/${productId}`,);
 
       // Simulate loading for 10 seconds before showing content
       useEffect(() => {
@@ -56,38 +55,29 @@ function ProductForm({ typeData, productId }) {
     
         return () => clearTimeout(timer); // Cleanup timeout on unmount
       }, []);
-
-  useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
-
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
-  }, []);
   
   useEffect(() => {
-    if (typeData === 'update' && productsData) {
+    if (typeData === 'update' && product) {
       setProductData({
         ...productData,
-        name: productsData.name || '',
-        description: productsData.description || '',
-        HSN: productsData.HSN || '',
-        model: productsData.model || '',
-        productCode: productsData.productCode || '',
-        stock: productsData.stock || '',
-        subCategory: productsData.subCategory || '',
-        category: productsData.category?._id || '',
-        brand: productsData.brand?._id || '',
-        subBrand: productsData.subBrand?._id || '',
+        name: product.name || '',
+        description: product.description || '',
+        HSN: product.HSN || '',
+        model: product.model || '',
+        productCode: product.productCode || '',
+        stock: product.stock || '',
+        subCategory: product.subCategory || '',
+        category: product.category?._id || '',
+        brand: product.brand?._id || '',
+        subBrand: product.subBrand?._id || '',
         // Populate other fields as necessary
       });
       setImages([]);
-      setNotes(productsData.notes || []);
-      setRFQ(productsData.RFQ || false);
-      setUploadedImages(productsData.images || []);
+      setNotes(product.notes || []);
+      setRFQ(product.RFQ || false);
+      setUploadedImages(product.images || []);
     }
-  }, [typeData, productsData]);
+  }, [typeData, product]);
 
   useEffect(() => {
     refetchCategories();
@@ -237,19 +227,19 @@ function ProductForm({ typeData, productId }) {
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission
 
-    const cleanedUploadedImages = productsData?.images.map((item) => {
+    const cleanedUploadedImages = product?.images.map((item) => {
       const { _id, ...rest } = item;
       return rest;
     });
 
-    const cleanedNotes = productsData?.notes.map((item) => {
+    const cleanedNotes = product?.notes.map((item) => {
       const { _id, ...rest } = item;
       return rest;
     });
 
     const { _id, __v, updated_at, created_at, ...cleanedData } = productData;
 
-    const payload = productId ? {
+    const payload = product ? {
       ...cleanedData,
       // category: isCategorie ? productData.category : productData.category._id,
       // subBrand: isSubrand ? productData.subBrand : productData.subBrand._id,
@@ -317,7 +307,7 @@ function ProductForm({ typeData, productId }) {
           <div style={{ width: '90%' }}>
             <Select
               options={brands?.map(brand => ({ value: brand._id, label: brand.name }))}
-              value={brandOptions?.find(option => option._id === (productId?isBrand?productData.brand:productData.brand._id:productData.brand))}
+              value={brandOptions?.find(option => option._id === (product?isBrand?productData.brand:productData.brand._id:productData.brand))}
               onChange={(selectedOption) => {setProductData(prevState => ({ ...prevState, brand: selectedOption.value }));setbrand(true);}}
               styles={{
                 control: (provided, state) => ({
@@ -377,7 +367,7 @@ function ProductForm({ typeData, productId }) {
                   label: subBrand.subBrandName
                 }))
               }
-              value={subBrandOptions?.find(option => option._id === (productId? isSubrand? productData.subBrand : productData.subBrand._id : productData.subBrand) )}
+              value={subBrandOptions?.find(option => option._id === (product? isSubrand? productData.subBrand : productData.subBrand._id : productData.subBrand) )}
               onChange={(selectedOption) => {setProductData(prevState => ({ ...prevState, subBrand: selectedOption.value }));setSubrand(true);}}
               isDisabled={!isBrand}
               styles={{
@@ -503,7 +493,7 @@ function ProductForm({ typeData, productId }) {
     <label className="block w-full mb-2 text-white">Category *</label>
     <Select
       options={categories?.map(category => ({ value: category._id, label: category.categoryName }))}
-      value={categoryOptions?.find(option => option._id === (productId?isCategorie?productData.category:productData.category._id:productData.category))}
+      value={categoryOptions?.find(option => option._id === (product?isCategorie?productData.category:productData.category._id:productData.category))}
       onChange={(selectedOption) => {setProductData(prevState => ({ ...prevState, category: selectedOption.value }));setCategorie(true);}}
       styles={{
         control: (provided, state) => ({
@@ -546,7 +536,7 @@ function ProductForm({ typeData, productId }) {
     <label className="block w-full mb-2 text-white">Sub Category </label>
     <Select
       options={subCategoryOptions}
-      value={subCategoryOptions?.find(option => option.value === (productId?isCategorie?productData.subCategory:productData.subCategory:productData.subCategory))}
+      value={subCategoryOptions?.find(option => option.value === (product?isCategorie?productData.subCategory:productData.subCategory:productData.subCategory))}
       onChange={(selectedOption) => {setProductData(prevState => ({ ...prevState, subCategory: selectedOption.value }));setSubCategorie(true);}}
       styles={{
         control: (provided, state) => ({

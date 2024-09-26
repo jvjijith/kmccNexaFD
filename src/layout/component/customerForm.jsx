@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router';
 
 const states = Object.keys(stateCountryCurrencyMapping);
 
-function CustomerForm({ typeData, customerId }) {
+function CustomerForm({ typeData, customer }) {
   const navigate = useNavigate();
   const [languageValue, setLanguageValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -26,17 +26,15 @@ function CustomerForm({ typeData, customerId }) {
   const [stateValue, setStateValue] = useState('');
 
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
-  const api_url = typeData === 'update' ? `/customer/update/${customerId}` : '/customer/add';
+  const api_url = typeData === 'update' ? `/customer/update/${customer?._id}` : '/customer/add';
   const api_key = typeData === 'update' ? 'updateCustomer' : 'addCustomer';
   const { mutate: saveCustomer, isLoading, isError } = mutationHook(api_key, api_url);
-  const { data: customerDetail, isLoading: customerDetailLoading, refetch: refetchCustomerDetail } = useGetData("Customer", `/customer/customer/${customerId}`);
   const { data: categoryData, refetch: refetchCategories } = useGetData("categories", "/category");
   const { mutate: signup, isPending: isSigningUp, error: signupError } = usePostData("signup", "/auth/signup");
 
   useEffect(() => {
     refetchCategories();
-    refetchCustomerDetail();
-  }, [refetchCategories, refetchCustomerDetail]);
+  }, [refetchCategories]);
 
  
         // Simulate loading for 10 seconds before showing content
@@ -53,30 +51,18 @@ function CustomerForm({ typeData, customerId }) {
       setCategories(categoryData.categories);
     }
 
-    if (customerDetail) {
-      setCustomerData(customerDetail);
-      setIdentificationNumbers(customerDetail.identificationNumbers || [{ type: '', number: '' }]);
-      setBankDetails(customerDetail.bankDetails || [{ accountNumber: '', bankName: '', location: '', IBAN: '', swiftCode: '', IFSC: '' }]);
-      setIsIndividual(customerDetail.individual);
-      setStoreUser(customerDetail.storeUser);
-      setStateValue(customerDetail.state);
-      const selectedLanguage = languages.find(lang => lang.code === customerDetail.language);
+    if (customer) {
+      setCustomerData(customer);
+      setIdentificationNumbers(customer.identificationNumbers || [{ type: '', number: '' }]);
+      setBankDetails(customer.bankDetails || [{ accountNumber: '', bankName: '', location: '', IBAN: '', swiftCode: '', IFSC: '' }]);
+      setIsIndividual(customer.individual);
+      setStoreUser(customer.storeUser);
+      setStateValue(customer.state);
+      const selectedLanguage = languages.find(lang => lang.code === customer.language);
       setLanguageValue(selectedLanguage.name);
     }
-  }, [categoryData, customerDetail]);
+  }, [categoryData, customer]);
 
-  // Reset state when navigating back using browser's back button
-  useEffect(() => {
-    const handlePopState = () => {
-      resetForm();
-    };
-
-    window.addEventListener('popstate', handlePopState);
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, []);
 
   const handleSuggestionsFetchRequested = ({ value }) => {
     setSuggestions(getSuggestions(value));
@@ -134,7 +120,7 @@ function CustomerForm({ typeData, customerId }) {
     label: category.categoryName
   }));
   
-  const selectedCategoryOption = categoryOptions?.find(option => option.value === (customerId ? changeCategories ? customerData.category : customerData.category?._id : customerData.category));
+  const selectedCategoryOption = categoryOptions?.find(option => option.value === (customer ? changeCategories ? customerData.category : customerData.category?._id : customerData.category));
   
   const handleStateSuggestionsFetchRequested = ({ value }) => {
     setStateSuggestions(getStateSuggestion(value));
@@ -222,7 +208,7 @@ function CustomerForm({ typeData, customerId }) {
     e.preventDefault();
     let customerUserId = null;
 
-    if (isIndividual && !customerId) {
+    if (isIndividual && !customer) {
       const signupRequestBody = {
         email: customerData.email,
         password: customerData.password,
@@ -236,7 +222,7 @@ function CustomerForm({ typeData, customerId }) {
         onError: (error) => {
           console.error("Error signing up:", error);
           toast.error('Error signing up.');
-          if (customerId) navigate("/customer");
+          if (customer) navigate("/customer");
         },
       });
     } else {
@@ -245,6 +231,7 @@ function CustomerForm({ typeData, customerId }) {
   };
 
   const prepareAndSaveCustomer = (customerUserId) => {
+    
     const cleanedIdentificationNumbers = 
       customerData.identificationNumbers.map(item => {
         const { _id, ...rest } = item;
@@ -259,7 +246,7 @@ function CustomerForm({ typeData, customerId }) {
 
     const { _id, __v, ...cleanedData } = customerData;
 
-    const payload = customerId ? {
+    const payload = customer ? {
       ...cleanedData,
       category: changeCategories ? customerData.category : customerData.category._id,
       storeUser: isStoreUser,
@@ -291,12 +278,12 @@ function CustomerForm({ typeData, customerId }) {
     setIdentificationNumbers([]);
     setBankDetails([]);
     setCategories([]);
-    if (customerId) {
+    if (customer) {
       navigate("/customer");
     }
   };
 
-  if (isLoading || isSigningUp || loading || (customerDetailLoading && customerId)) {
+  if (isLoading || isSigningUp || loading ) {
     return <LoadingScreen />;
   }
 

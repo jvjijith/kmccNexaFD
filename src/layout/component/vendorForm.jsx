@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router';
 
 const states = Object.keys(stateCountryCurrencyMapping);
 
-function VendorForm({ typeData, vendorId }) {
+function VendorForm({ typeData, vendor }) {
   
   const navigate = useNavigate();
 
@@ -27,10 +27,9 @@ function VendorForm({ typeData, vendorId }) {
   const [changeCategories, setChangeCategories] = useState(false);
   
   const mutationHook = typeData === 'update' ? usePutData : usePostData;
-  const api_url = typeData === 'update' ? `/vendor/update/${vendorId}` : '/vendor/add';
+  const api_url = typeData === 'update' ? `/vendor/update/${vendor?._id}` : '/vendor/add';
   const api_key = typeData === 'update' ? 'updateVendor' : 'addVendor';
   const { mutate: saveCustomer, isLoading, isError } = mutationHook(api_key, api_url);
-  const { data: vendorDetail, isLoading: vendorDetailLoading, refetch: refetchVendorDetail } = useGetData("Vendor", `/vendor/vendor/${vendorId}`);
   const { data: categoryData, isPending: isCategories, refetch: refetchCategories } = useGetData("categories", "/category");
   const { mutate: signup, isPending: isSigningUp, error: signupError } = usePostData("signup", "/auth/signup");
 
@@ -43,19 +42,10 @@ function VendorForm({ typeData, vendorId }) {
     return () => clearTimeout(timer); // Cleanup timeout on unmount
   }, []);
 
-  useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
-
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
-  }, []);
 
   useEffect(() => {
     refetchCategories();
-    refetchVendorDetail();
-  }, [ refetchCategories, refetchVendorDetail]);
+  }, [ refetchCategories]);
 
 
   useEffect(() => {
@@ -63,20 +53,20 @@ function VendorForm({ typeData, vendorId }) {
       setCategories(categoryData.categories);
     }
 
-    if (vendorDetail) {
-      setCustomerData(vendorDetail);
-      setIdentificationNumbers(vendorDetail.identificationNumbers || [{ type: '', number: '' }]);
-      setBankDetails(vendorDetail.bankDetails || [{ accountNumber: '', bankName: '', location: '', IBAN: '', swiftCode: '', IFSC: '' }]);
-      setIsIndividual(vendorDetail.individual);
-      setStoreUser(vendorDetail.storeUser);
-      setStateValue(vendorDetail.state);
-      const selectedLanguage = languages?.find(lang => lang.code === vendorDetail.language);
+    if (vendor) {
+      setCustomerData(vendor);
+      setIdentificationNumbers(vendor.identificationNumbers || [{ type: '', number: '' }]);
+      setBankDetails(vendor.bankDetails || [{ accountNumber: '', bankName: '', location: '', IBAN: '', swiftCode: '', IFSC: '' }]);
+      setIsIndividual(vendor.individual);
+      setStoreUser(vendor.storeUser);
+      setStateValue(vendor.state);
+      const selectedLanguage = languages?.find(lang => lang.code === vendor.language);
       setLanguageValue(selectedLanguage.name);
       // const value=categories.find(option => option._id === customerDetail.category);
       // setCategories(value.categoryName);
     }
     
-  }, [categoryData,vendorDetail]);
+  }, [categoryData,vendor]);
   const handleSuggestionsFetchRequested = ({ value }) => {
     setSuggestions(getSuggestions(value));
   };
@@ -112,7 +102,7 @@ function VendorForm({ typeData, vendorId }) {
     label: category.categoryName
   }));
   
-  const selectedCategoryOption = categoryOptions?.find(option => option.value === (vendorId ? changeCategories ? customerData.category : customerData.category?._id : customerData.category));
+  const selectedCategoryOption = categoryOptions?.find(option => option.value === (vendor ? changeCategories ? customerData.category : customerData.category?._id : customerData.category));
 
 
   const handleChange = (e) => {
@@ -235,7 +225,7 @@ const renderSuggestion = (suggestion) => (
   
     const { _id, __v, ...cleanedData } = customerData;
   
-    const payload = vendorId ? {
+    const payload = vendor ? {
       ...cleanedData, // Spread the cleaned customer data
       category: changeCategories ? customerData.category : customerData.category._id,
       storeUser: isStoreUser,
@@ -274,7 +264,7 @@ const renderSuggestion = (suggestion) => (
     setIdentificationNumbers([]);
     setBankDetails([]);
     setCategories([]);
-    if (vendorId) {
+    if (vendor) {
       navigate("/vendor/list");
     }
   };
