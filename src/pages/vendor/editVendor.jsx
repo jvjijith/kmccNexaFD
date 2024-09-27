@@ -12,7 +12,7 @@ function EditVendor() {
       <VendorCard title={vendor ? "Edit Vendor" : "Add Vendor"}>
         <VendorForm
           typeData={vendor ? "update" : ""}
-          vendorId={vendor ? vendor._id : null}
+          vendor={vendor ? vendor : null}
         />
       </VendorCard>
     </Container>

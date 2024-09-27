@@ -7,7 +7,7 @@ import PopUpModal from '../ui/modal/modal';
 import PriceForm from './priceForm';
 import { useNavigate } from 'react-router';
 
-function ProductCard({children,title,button}) {
+function ColorCard({children,title,button}) {
   
   const navigate = useNavigate();
   const {toggleSidebar} = useSidebar();
@@ -33,7 +33,7 @@ function ProductCard({children,title,button}) {
             <div className="sm:flex-grow flex justify-between">
               <div className="">
                 <div className="flex items-center">
-                  <div className="text-3xl font-bold text-white">Product</div>
+                  <div className="text-3xl font-bold text-white">Color</div>
                   
                 </div>
              {/*    <div className="flex items-center">
@@ -70,7 +70,7 @@ function ProductCard({children,title,button}) {
           
            <Card title={title}
            component={button?
-            <button className="bg-black text-white px-4 py-2 rounded" onClick={() => navigate(`/product/add`)}>
+            <button className="bg-black text-white px-4 py-2 rounded" onClick={() => navigate(`/color/add`)}>
               Add
             </button>:null
           }>
@@ -84,4 +84,4 @@ function ProductCard({children,title,button}) {
     );
 }
 
-export default ProductCard;
+export default ColorCard;

@@ -141,7 +141,7 @@ function AppTable() {
               </Table.Cell>
               <Table.Cell className="text-gray-300">
                 <Dropdown label="Actions" inline className="bg-black text-white border-black">
-                  <Dropdown.Item onClick={() => navigate(`/store/appmanagement/appsetting/add`, { state: { app } })}>Edit App</Dropdown.Item>
+                  <Dropdown.Item onClick={() => navigate(`/store/appmanagement/appsetting/edit`, { state: { app } })}>Edit App</Dropdown.Item>
                   {app.active ? (
                     <Dropdown.Item onClick={() => handleDeactivateApp(app)}>Deactivate App</Dropdown.Item>
                   ) : (

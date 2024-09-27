@@ -12,7 +12,7 @@ function EditProduct() {
       <ProductCard title={product ? "Edit Product" : "Add Product"}>
         <ProductForm
           typeData={product ? "update" : ""}
-          productId={product ? product._id : null}
+          product={product ? product : null}
         />
       </ProductCard>
     </Container>

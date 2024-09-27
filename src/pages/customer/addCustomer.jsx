@@ -6,14 +6,6 @@ import CustomerForm from "../../layout/component/customerForm";
 
 function AddCustomer() {
   
-  useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
-
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
-  }, []);
 
   return (
     <Container>

@@ -6,7 +6,7 @@ function ListApp() {
     
     return (
        <Container>
-        <AppCard title={"App Settings"} button={true}>
+        <AppCard title={"Apps"} button={true}>
             <AppTable></AppTable>
         </AppCard>
        </Container>
