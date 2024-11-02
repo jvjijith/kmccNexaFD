@@ -1272,4 +1272,29 @@ export const appDefault = {
   }
 }
 
+export const layoutDefault = {
+  appId: "",
+  font: [{
+    fontFamily: "",
+    subset: "",
+    weights: [],
+    styles: [],
+    type: "",
+    lanCode: ""
+  }],
+  logos: [
+    {
+      type: "",
+      imageUrl: ""
+    }
+  ],
+  fontSize: {
+    base: "",
+    xs: "",
+    sm: "",
+    md: "",
+    lg: ""
+  }
+}
+
 

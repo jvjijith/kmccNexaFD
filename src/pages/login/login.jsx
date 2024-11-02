@@ -18,6 +18,8 @@ function Login() {
   const [userObj, setUserObj] = useLocalStorage("user", null);
   const [loading, setLoading] = useLocalStorage(false);
 
+  const baseURL = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     if (location.state?.toastMessage) {
       toast.error(location.state.toastMessage); // Show the toast message
@@ -26,7 +28,7 @@ function Login() {
 
   const fetchEmployeeData = async (email) => {
     try {
-      const response = await fetch(`https://dev.nexalogics.com.au/api/employee/user/email/${email}`, { // Replace with your API server URL
+      const response = await fetch(`${baseURL}/employee/user/email/${email}`, { // Replace with your API server URL
         headers: {
           'Content-Type': 'application/json'
         }

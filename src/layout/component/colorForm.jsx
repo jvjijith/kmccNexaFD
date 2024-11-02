@@ -61,7 +61,7 @@ function ColorForm({ colorDatas, data }) {
   };
 
 // Extract existing appIds from colorDatas
-const existingAppIds = data?.colorSchemes?.map(data => data.appId._id).filter(id => id !== colorDatas.appId._id);;
+const existingAppIds = data?.colorSchemes?.map(data => data.appId._id).filter(id => id !== colorDatas.appId._id);
 
 // Filter out app options that already exist in colorDatas
 const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.includes(app._id)).map(app => ({

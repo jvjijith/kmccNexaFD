@@ -48,6 +48,14 @@ import AddColor from "./pages/colors/addColor";
 import EditApp from "./pages/app/editApp";
 import Color from "./pages/colors/colorList";
 import EditColor from "./pages/colors/editColor ";
+import AddLayout from "./pages/layout/addLayout";
+import Layout from "./pages/layout/layout";
+import AddElement from "./pages/elements/addElement";
+import Element from "./pages/elements/element";
+import EditElement from "./pages/elements/editElement";
+import AddContainer from "./pages/container/addContainer";
+import AddPage from "./pages/page/addPage";
+import AddOrganization from "./pages/organization/addOrganization";
 
 const App = () => {
   return (
@@ -133,6 +141,14 @@ const App = () => {
       <Route path="admin/userpermission" element={<ComingSoonPage />} />
       <Route path="admin/logininfo" element={<ComingSoonPage />} />
       <Route path="admin/logs" element={<ComingSoonPage />} />
+      <Route path="layout/add" element={<AddLayout />} />
+      <Route path="layout" element={<Layout />} />
+      <Route path="element/add" element={<AddElement />} />
+      <Route path="element/edit" element={<EditElement />} />
+      <Route path="element" element={<Element />} />
+      <Route path="container/add" element={<AddContainer />} />
+      <Route path="page/add" element={<AddPage />} />
+      <Route path="organization/add" element={<AddOrganization />} />
       <Route path="catalog" element={<CatalogPage />} />
       <Route path="profile/:userId/details" element={<Profile />} />
             <Route path="/profile/:id" element={<CustomerProfile />}>

@@ -1,0 +1,104 @@
+import { useEffect, useState } from "react";
+import { Dropdown, Table } from "flowbite-react";
+import { useNavigate } from "react-router";
+import { useGetData, usePutData } from "../../common/api";
+import { toast } from "react-toastify";
+import LoadingScreen from "../ui/loading/loading";
+
+function LayoutTable() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true); 
+  const [currentPage, setCurrentPage] = useState(1); 
+  const limit = 10; 
+
+  const { data: layoutData, isLoading, error, refetch } = useGetData(
+    "LayoutData",
+    `/layout?page=${currentPage}&limit=${limit}`,
+    {}
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);  
+  };
+
+  useEffect(() => {
+    refetch();  
+  }, [currentPage, refetch]);  
+
+  if (isLoading || loading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return <div>Error loading data</div>;
+  }
+
+  const totalPages = Math.ceil(layoutData.pagination.totalCount / limit); 
+
+  return (
+    <div className="overflow-x-auto min-h-96">
+      <Table theme={{ dark: true }}>
+        <Table.Head className="border-gray-700 bg-black text-white">
+          <Table.HeadCell className="border-gray-700 bg-black text-white">App ID</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Font Family</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Font Type</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Font Size (Base)</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Logo (Dark)</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+        </Table.Head>
+        <Table.Body className="divide-y">
+          {layoutData?.layoutSettings.map((setting, index) => (
+            <Table.Row key={index} className="border-gray-700 bg-zinc-950">
+              <Table.Cell className="whitespace-nowrap font-medium text-white">
+                {setting.appId}
+              </Table.Cell>
+              <Table.Cell className="text-gray-300">
+                {setting.font.fontFamily}
+              </Table.Cell>
+              <Table.Cell className="text-gray-300">
+                {setting.font.type}
+              </Table.Cell>
+              <Table.Cell className="text-gray-300">
+                {setting.fontSize.base}
+              </Table.Cell>
+              <Table.Cell className="text-gray-300">
+                {setting.logos.length > 0 ? (
+                  <img src={setting.logos[0].imageUrl} alt="Logo" className="h-10" />
+                ) : (
+                  "No Logo"
+                )}
+              </Table.Cell>
+              <Table.Cell className="text-gray-300">
+                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+                  <Dropdown.Item onClick={() => navigate(`/store/layout/edit`, { state: { setting, layoutData } })}>Edit Layout</Dropdown.Item>
+                </Dropdown>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default LayoutTable;
