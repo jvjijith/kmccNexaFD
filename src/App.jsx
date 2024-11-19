@@ -56,6 +56,18 @@ import EditElement from "./pages/elements/editElement";
 import AddContainer from "./pages/container/addContainer";
 import AddPage from "./pages/page/addPage";
 import AddOrganization from "./pages/organization/addOrganization";
+import AddQuote from "./pages/quote/addQuote";
+import Containers from "./pages/container/container";
+import EditContainer from "./pages/container/editContainer";
+import AddEnquiry from "./pages/enquiry/addEnquiry";
+import Enquiry from "./pages/enquiry/enquiry";
+import EditEnquiry from "./pages/enquiry/editEnquiry";
+import EditLayout from "./pages/layout/editLayout";
+import Quote from "./pages/quote/quote";
+import EditQuote from "./pages/quote/editQuote";
+import Organization from "./pages/organization/organization";
+import EditOrganization from "./pages/organization/editOrganization";
+import Page from "./pages/page/page";
 
 const App = () => {
   return (
@@ -142,13 +154,25 @@ const App = () => {
       <Route path="admin/logininfo" element={<ComingSoonPage />} />
       <Route path="admin/logs" element={<ComingSoonPage />} />
       <Route path="layout/add" element={<AddLayout />} />
+      <Route path="layout/edit" element={<EditLayout />} />
       <Route path="layout" element={<Layout />} />
       <Route path="element/add" element={<AddElement />} />
       <Route path="element/edit" element={<EditElement />} />
       <Route path="element" element={<Element />} />
+      <Route path="container" element={<Containers />} />
       <Route path="container/add" element={<AddContainer />} />
+      <Route path="container/edit" element={<EditContainer />} />
       <Route path="page/add" element={<AddPage />} />
+      <Route path="page" element={<Page />} />
+      <Route path="enquiry/add" element={<AddEnquiry />} />
+      <Route path="enquiry/edit" element={<EditEnquiry />} />
+      <Route path="enquiry" element={<Enquiry />} />
       <Route path="organization/add" element={<AddOrganization />} />
+      <Route path="organization/edit" element={<EditOrganization />} />
+      <Route path="organization" element={<Organization />} />
+      <Route path="quote/add" element={<AddQuote />} />
+      <Route path="quote/edit" element={<EditQuote />} />
+      <Route path="quote" element={<Quote />} />
       <Route path="catalog" element={<CatalogPage />} />
       <Route path="profile/:userId/details" element={<Profile />} />
             <Route path="/profile/:id" element={<CustomerProfile />}>

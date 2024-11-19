@@ -25,7 +25,7 @@ const getWeightLabel = (weight) => {
 
 function LayoutForm({ layoutDatas }) {
   const navigate = useNavigate();
-  const [layoutData, setLayoutData] = useState(layoutDatas ? layoutDatas : layoutDefault);
+  const [layoutData, setLayoutData] = useState(layoutDefault);
   const [loading, setLoading] = useState(true);
   const [changeAppId, setChangeAppId] = useState(false); // Manage app ID change
   const [images, setImages] = useState([]);
@@ -48,6 +48,20 @@ function LayoutForm({ layoutDatas }) {
     {}
   );
 
+  const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
+    if (Array.isArray(data)) {
+      return data.map((item) => removeUnwantedFields(item, fields));
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.keys(data).reduce((acc, key) => {
+        if (!fields.includes(key)) {
+          acc[key] = removeUnwantedFields(data[key], fields);
+        }
+        return acc;
+      }, {});
+    }
+    return data;
+  };
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
       setImages([...images, ...acceptedFiles]);
@@ -61,16 +75,76 @@ function LayoutForm({ layoutDatas }) {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (layoutDatas) {
+        // Remove unwanted fields
+        const cleanedContainer = removeUnwantedFields(layoutDatas);
+
+        // Transform items to only include itemType and itemId
+        // const transformedItems = elementsDatas.items?.map(item => ({
+        //     itemType: item.itemType,
+        //     itemId: item.itemId?._id,
+        // }));
+
+        // Transform availability to only include appId as a string
+        // const transformedAppId = elementsDatas.availability?.map(avail => ({
+        //     appId: avail.appId?._id,
+        // }));
+
+        const appId = layoutDatas?.appId?._id;
+
+        // Set the transformed data
+        setLayoutData({
+          appId: appId,
+          font: cleanedContainer.font,
+          logos: cleanedContainer.logos,
+          fontSize:cleanedContainer.fontSize
+        });
+    }
+    setLoading(false);
+}, [layoutDatas]);
+
+
   // Extract existing appIds from colorDatas
 const existingAppIds = colorData?.colorSchemes?.map(data => data.appId._id).filter(id => id !== layoutDatas.appId._id);
 
 // Filter out app options that already exist in colorDatas
-const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.includes(app._id)).map(app => ({
+const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.includes(app._id))?.map(app => ({
   value: app._id,
   label: app.title
 }));
 
-  const handleSettingsChange = (section, key, value) => {
+const handleFontChange = (index, key, value) => {
+  const updatedFonts = [...layoutData.font];
+  updatedFonts[index] = { ...updatedFonts[index], [key]: value };
+  setLayoutData({ ...layoutData, font: updatedFonts });
+};
+
+const addFont = () => {
+  setLayoutData({
+    ...layoutData,
+    font: [
+      ...(layoutData?.font || []), // Fallback to an empty array if layoutData.font is undefined
+      {
+        fontFamily: "",
+        subset: "latin",
+        weights: [],
+        styles: [],
+        type: "",
+        lanCode: "",
+      },
+    ],
+  });
+};
+
+
+const removeFont = (index) => {
+  const updatedFonts = layoutData.font.filter((_, i) => i !== index);
+  setLayoutData({ ...layoutData, font: updatedFonts });
+};
+
+
+  const handleSettingChange = (section, key, value) => {
     const updatedData = { ...layoutData };
     updatedData[section][key] = value;
     setLayoutData(updatedData);
@@ -85,14 +159,16 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
       const image = images[index];
       console.log(`Generating signed URL for ${image.name}`);
 
-      // Generate signed URL for the image upload
-      const signedUrlResponse = await generateSignedUrl({
-        title: image.name,
-        mediaType: "image",
-        active: true,
-        uploadStatus: "progressing",
-        uploadProgress: 0,
-      });
+// Generate signed URL for the image upload
+const signedUrlResponse = await generateSignedUrl({
+  title: image.name,
+  mediaType: "image",
+  ext: image.name.split('.').pop(), // Extract the file extension
+  active: true,
+  uploadStatus: "progressing",
+  uploadProgress: 0,
+});
+
 
       if (!signedUrlResponse) {
         throw new Error('Signed URL data is undefined');
@@ -120,6 +196,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
             updateMediaStatus({
               mediaType: "image",
               title: image.name,
+              ext: image.name.split('.').pop(), // Extract the file extension
               active: true,
               uploadStatus: "completed",
               uploadProgress: 100,
@@ -131,9 +208,9 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
       // Add the uploaded image's URL to the list
       setUploadedImages(prev => [
         ...prev,
-        {
-          url: signedUrl.split("?")[0], // Extract the base URL
-          altText: image.name
+        { 
+          type: "dark",
+          imageUrl: signedUrl.split("?")[0]// Extract the base URL
         }
       ]);
 
@@ -146,17 +223,16 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
-      _id: layoutData._id,
       appId: layoutData.appId._id || layoutData.appId,
       font: layoutData.font,
-      logos: layoutData.logos.concat(uploadedImages), // Append uploaded images to logos
+      logos: uploadedImages, // Append uploaded images to logos
       fontSize: layoutData.fontSize
     };
 
     saveLayout(payload, {
       onSuccess: () => {
         toast.success('Layout saved successfully!');
-        navigate('/layouts');
+        navigate('/layout');
       },
       onError: (error) => {
         toast.error('Failed to save layout.');
@@ -169,6 +245,11 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
     return <LoadingScreen />;
   }
 
+  console.log(layoutData);
+  console.log("layoutDatas",layoutDatas);
+  console.log("images",images);
+  console.log(uploadedImages);
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -177,7 +258,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
               <label className="block w-full mb-2 text-white">App ID *</label>
               <Select
             options={filteredAppOptions}
-            value={filteredAppOptions?.find(option => option.value === (layoutDatas ? changeAppId ? (layoutData?.appId) : (layoutData?.appId?._id) : (layoutData?.appId))) || null}
+            value={filteredAppOptions?.find(option => option.value === layoutData?.appId) || null}
             onChange={(selectedOption) => {
               setLayoutData(prevState => ({
                 ...prevState,
@@ -224,7 +305,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
             <input {...getInputProps()} />
             <p>Drag & drop images here, or click to select files</p>
             <div className="w-full p-4">
-              {images.map((file, index) => (
+              {images?.map((file, index) => (
                 <div key={index} className="flex items-center justify-between mb-2">
                   {/* Image preview */}
                   <img
@@ -237,6 +318,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
                     {uploadProgress[file.name] || 0}%
                   </progress>
                   <button
+                  type="button"
                     className="ml-2 text-blue-500"
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent the event from bubbling up
@@ -247,6 +329,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
                     Upload
                   </button>
                   <button
+                  type="button"
                     className="ml-2 text-red-500"
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent the event from bubbling up
@@ -262,194 +345,253 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
         </div>
 
 
-        {/* Font Settings */}
+ {/* Font Settings */}
+ <div className="p-4">
+          <div className="flex items-center justify-between mb-4">
+            <label className="block w-full mb-2 text-white">Font Settings</label>
+            <button
+              type="button"
+              className="bg-black text-white px-4 py-2 rounded"
+              onClick={addFont}
+            >
+              Add
+            </button>
+          </div>
 
-<div className="p-4">
-  <label className="block w-full mb-2 text-white">Font Settings</label>
-
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-    <div className="flex flex-wrap">
-      <div className="w-full sm:w-1/2 p-4">
-        <div className="mb-4">
-          <input
-            type="text"
-            className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-            placeholder="Enter font family"
-            value={layoutData.font.fontFamily}
-            onChange={(e) => handleSettingsChange('font', 'fontFamily', e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="w-full sm:w-1/2 p-4">
-        <div className="mb-4">
-          <input
-            type="text"
-            className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-            placeholder="Enter subset"
-            value={layoutData.font.subset}
-            onChange={(e) => handleSettingsChange('font', 'subset', e.target.value)}
-          />
-        </div>
-      </div>
-    </div>
-
-    {/* Dropdown for Weights */}
-    <div className="flex flex-wrap">
-      <div className="w-full sm:w-1/2 p-4">
-        <div className="mb-4">
-          <label className="block mb-2 text-white">Select Weights</label>
-          <Select
-            isMulti
-            options={[
-              { value: '100', label: '100 (Thin)' },
-              { value: '200', label: '200 (Extra Light)' },
-              { value: '300', label: '300 (Light)' },
-              { value: '400', label: '400 (Regular)' },
-              { value: '500', label: '500 (Medium)' },
-              { value: '600', label: '600 (Semi Bold)' },
-              { value: '700', label: '700 (Bold)' },
-              { value: '800', label: '800 (Extra Bold)' },
-              { value: '900', label: '900 (Black)' }
-            ]}
-            value={layoutData.font.weights.map(weight => ({
-              value: weight,
-              label: `${weight} (${getWeightLabel(weight)})`
-            }))}
-            onChange={(selectedOptions) =>
-              handleSettingsChange('font', 'weights', selectedOptions.map(option => option.value))
-            }
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Dropdown for Styles */}
-      <div className="w-full sm:w-1/2 p-4">
-        <div className="mb-4">
-          <label className="block mb-2 text-white">Select Styles</label>
-          <Select
-            isMulti
-            options={[
-              { value: 'normal', label: 'Normal' },
-              { value: 'italic', label: 'Italic' }
-            ]}
-            value={layoutData.font.styles.map(style => ({
-              value: style,
-              label: style
-            }))}
-            onChange={(selectedOptions) =>
-              handleSettingsChange('font', 'styles', selectedOptions.map(option => option.value))
-            }
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
-          />
-        </div>
-      </div>
-    </div>
-
-    <div className="flex flex-wrap">
-      <div className="w-full sm:w-1/2 p-4">
-        <div className="mb-4">
-          <input
-            type="text"
-            className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-            placeholder="Enter lanCode"
-            value={layoutData.font.lanCode}
-            onChange={(e) => handleSettingsChange('font', 'lanCode', e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="w-full sm:w-1/2 p-4">
-        <div className="mb-4">
-          <input
-            type="text"
-            className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
-            placeholder="Enter type"
-            value={layoutData.font.type}
-            onChange={(e) => handleSettingsChange('font', 'type', e.target.value)}
-          />
-        </div>
-      </div>
-    </div>
-  </div>
+          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+            {layoutData?.font?.length === 0 && <p>No fonts added</p>}
+            {layoutData?.font?.map((font, index) => (
+              <div key={index} className="mb-4">
+                <div className="flex flex-wrap">
+                <div className="w-full sm:w-1/2 p-4">
+                <label className="block mb-2 text-white">Font Family</label>
+                  <input
+                    type="text"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white mr-2"
+                    placeholder="Font Family"
+                    value={font.fontFamily}
+                    onChange={(e) =>
+                      handleFontChange(index, "fontFamily", e.target.value)
+                    }
+                  />
+                </div>
+                
+                <div className="w-full sm:w-1/2 p-4">
+                <label className="block mb-2 text-white">Subset</label>
+                  <input
+                    type="text"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white mr-2"
+                    placeholder="Subset"
+                    value={font.subset}
+                    onChange={(e) =>
+                      handleFontChange(index, "subset", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="w-full sm:w-1/2 p-4">
+                <label className="block mb-2 text-white">Font Weight</label>
+                  <Select
+                    isMulti
+                    options={[
+                      { value: "100", label: "Thin" },
+                      { value: "200", label: "Extra Light" },
+                      { value: "300", label: "Light" },
+                      { value: "400", label: "Regular" },
+                      { value: "500", label: "Medium" },
+                      { value: "600", label: "Semi Bold" },
+                      { value: "700", label: "Bold" },
+                      { value: "800", label: "Extra Bold" },
+                      { value: "900", label: "Black" },
+                    ]}
+                    value={font.weights.map((weight) => ({
+                      value: weight,
+                      label: getWeightLabel(weight),
+                    }))}
+                    onChange={(selectedOptions) =>
+                      handleFontChange(
+                        index,
+                        "weights",
+                        selectedOptions.map((option) => option.value)
+                      )
+                    }
+                    className="w-full mr-2"
+                    styles={{
+                      control: (provided, state) => ({
+                        ...provided,
+                        backgroundColor: 'black',
+                        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                        borderBottomWidth: '2px',
+                        borderRadius: '0px',
+                        height: '40px',
+                        color: 'white',
+                      }),
+                      singleValue: (provided) => ({
+                        ...provided,
+                        color: 'white',
+                      }),
+                      menu: (provided) => ({
+                        ...provided,
+                        backgroundColor: 'black',
+                        color: 'white',
+                      }),
+                      option: (provided, state) => ({
+                        ...provided,
+                        backgroundColor: state.isSelected ? '#007bff' : 'black',
+                        color: state.isSelected ? 'black' : 'white',
+                        cursor: 'pointer',
+                      }),
+                    }}
+                  />
+                </div>
+                
+                <div className="w-full sm:w-1/2 p-4">
+                <label className="block mb-2 text-white">Font Style</label>
+                  <Select
+                    isMulti
+                    options={[
+                      { value: "normal", label: "Normal" },
+                      { value: "italic", label: "Italic" },
+                    ]}
+                    value={font.styles.map((style) => ({
+                      value: style,
+                      label: style,
+                    }))}
+                    onChange={(selectedOptions) =>
+                      handleFontChange(
+                        index,
+                        "styles",
+                        selectedOptions.map((option) => option.value)
+                      )
+                    }
+                    className="w-full mr-2"
+                    styles={{
+                      control: (provided, state) => ({
+                        ...provided,
+                        backgroundColor: 'black',
+                        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                        borderBottomWidth: '2px',
+                        borderRadius: '0px',
+                        height: '40px',
+                        color: 'white',
+                      }),
+                      singleValue: (provided) => ({
+                        ...provided,
+                        color: 'white',
+                      }),
+                      menu: (provided) => ({
+                        ...provided,
+                        backgroundColor: 'black',
+                        color: 'white',
+                      }),
+                      option: (provided, state) => ({
+                        ...provided,
+                        backgroundColor: state.isSelected ? '#007bff' : 'black',
+                        color: state.isSelected ? 'black' : 'white',
+                        cursor: 'pointer',
+                      }),
+                    }}
+                  />
+                  
+                </div>
+                </div>
+                <div className="flex flex-wrap mt-2">
+                  
+                <div className="w-full sm:w-1/2 p-4">
+                <label className="block mb-2 text-white">Language</label>
+                  <input
+                    type="text"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white mr-2"
+                    placeholder="Language Code"
+                    value={font.lanCode}
+                    onChange={(e) =>
+                      handleFontChange(index, "lanCode", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="w-full sm:w-1/2 p-4">
+  <label className="block mb-2 text-white">Select Type</label>
+  <Select
+    options={[
+      { value: "body", label: "Body" },
+      { value: "header", label: "Header" },
+      { value: "small", label: "Small" },
+    ]}
+    value={
+      font.type
+        ? { value: font.type, label: font.type.charAt(0).toUpperCase() + font.type.slice(1) }
+        : null
+    }
+    onChange={(selectedOption) =>
+      handleFontChange(index, "type", selectedOption?.value || "")
+    }
+    className="w-full"
+    styles={{
+      control: (provided, state) => ({
+        ...provided,
+        backgroundColor: 'black',
+        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+        borderBottomWidth: '2px',
+        borderRadius: '0px',
+        height: '40px',
+        color: 'white',
+      }),
+      singleValue: (provided) => ({
+        ...provided,
+        color: 'white',
+      }),
+      menu: (provided) => ({
+        ...provided,
+        backgroundColor: 'black',
+        color: 'white',
+      }),
+      option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? '#007bff' : 'black',
+        color: state.isSelected ? 'black' : 'white',
+        cursor: 'pointer',
+      }),
+    }}
+  />
 </div>
 
+                </div>
+                <div className="flex flex-wrap justify-end p-4">
+                  <button
+                    type="button"
+                    className="bg-black text-white px-4 py-2 rounded "
+                    onClick={() => removeFont(index)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        {/* Font Size Settings */}
-        <div className="p-4">
-          <label className="block w-full mb-2 text-white">Font Size</label>
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-                    <div className="flex flex-wrap">
-          {Object.keys(layoutData.fontSize).map((size) => (
-            <div key={size} className="w-full sm:w-1/2 p-4">
-                            <div className="mb-4 flex items-center">
+
+
+       {/* Font Size Settings */}
+<div className="p-4">
+  <label className="block w-full mb-2 text-white">Font Size</label>
+  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+    <div className="flex flex-wrap">
+      {['base', 'xs', 'sm', 'md', 'lg'].map((size) => (
+        <div key={size} className="w-full sm:w-1/2 p-4">
+          <div className="mb-4 flex items-center">
             <input
-              key={size}
               type="text"
               className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
               placeholder={`Enter ${size} size`}
-              value={layoutData.fontSize[size]}
-              onChange={(e) => handleSettingsChange('fontSize', size, e.target.value)}
+              value={layoutData?.fontSize?.[size] || ''} // Use optional chaining and fallback to an empty string
+              onChange={(e) => handleSettingChange('fontSize', size, e.target.value)}
             />
-            </div>
-            </div>
-          ))}
           </div>
         </div>
-        </div>
+      ))}
+    </div>
+  </div>
+</div>
 
         <div className="flex flex-wrap justify-end p-4">
           <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">

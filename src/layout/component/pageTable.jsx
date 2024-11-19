@@ -4,15 +4,15 @@ import { useNavigate } from "react-router";
 import { useGetData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
 
-function LayoutTable() {
+function PageTable() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
-  const { data: layoutData, isLoading, error, refetch } = useGetData(
-    "LayoutData",
-    `/layout?page=${currentPage}&limit=${limit}`,
+  const { data: pageData, isLoading, error, refetch } = useGetData(
+    "PageData",
+    `/pages?page=${currentPage}&limit=${limit}`,
     {}
   );
 
@@ -39,57 +39,39 @@ function LayoutTable() {
     return <div>Error loading data</div>;
   }
 
-  const totalPages = Math.ceil(layoutData.pagination.totalCount / limit);
+  const totalPages = pageData.pagination.totalPages;
 
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}>
         <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">App ID</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Font Family</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Font Type</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Font Size (Base)</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Logo (Dark)</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Slug</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Reference Name</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Type</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Internal Type</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Created At</Table.HeadCell>
           <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {layoutData?.layoutSettings.map((setting) => (
-            <Table.Row key={setting._id} className="border-gray-700 bg-zinc-950">
+          {pageData.pages.map((page) => (
+            <Table.Row key={page._id} className="border-gray-700 bg-zinc-950">
               <Table.Cell className="whitespace-nowrap font-medium text-white">
-                {setting.appId.title}
+                {page.slug}
+              </Table.Cell>
+              <Table.Cell className="text-gray-300">{page.referenceName}</Table.Cell>
+              <Table.Cell className="text-gray-300">{page.type}</Table.Cell>
+              <Table.Cell className="text-gray-300">{page.internalType}</Table.Cell>
+              <Table.Cell className="text-gray-300">
+                {new Date(page.created_at).toLocaleString()}
               </Table.Cell>
               <Table.Cell className="text-gray-300">
-                {setting.font[0]?.fontFamily || "N/A"}
-              </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                {setting.font[0]?.type || "N/A"}
-              </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                {setting.fontSize?.base || "N/A"}
-              </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                {setting.logos.length > 0 ? (
-                  <img
-                    src={setting.logos[0]?.imageUrl}
-                    alt="Logo"
-                    className="h-10"
-                  />
-                ) : (
-                  "No Logo"
-                )}
-              </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown
-                  label="Actions"
-                  inline
-                  className="bg-black text-white border-black"
-                >
+                <Dropdown label="Actions" inline className="bg-black text-white border-black">
                   <Dropdown.Item
                     onClick={() =>
-                      navigate(`/layout/edit`, { state: {  setting } })
+                      navigate(`/page/edit`, { state: { page } })
                     }
                   >
-                    Edit Layout
+                    Edit Page
                   </Dropdown.Item>
                 </Dropdown>
               </Table.Cell>
@@ -116,4 +98,4 @@ function LayoutTable() {
   );
 }
 
-export default LayoutTable;
+export default PageTable;

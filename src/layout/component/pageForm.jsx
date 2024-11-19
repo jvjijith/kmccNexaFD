@@ -5,7 +5,7 @@ import Select from 'react-select';
 import LoadingScreen from "../ui/loading/loading";
 import { useNavigate } from 'react-router';
 import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
-import { DndContext } from '@dnd-kit/core';
+import { closestCenter, DndContext } from '@dnd-kit/core';
 import Autosuggest from 'react-autosuggest';
 import { languages } from '../../constant';
 
@@ -31,7 +31,7 @@ function SortableItem({ id, item, handleRemove }) {
       }}
     >
       <div>
-        <span>{item.label}</span>
+        <span>{item}</span>
         <div className="text-sm text-gray-400">{item.description}</div>
       </div>
       <button onClick={() => handleRemove(id)} className="text-red-500">
@@ -59,7 +59,6 @@ function PageForm({ pageDatas }) {
     title: [{ lanCode: "", title: "" }],
     metaDescription: [{ lanCode: "", description: "" }],
     keywords: [""],
-    canonicalUrl: "",
     ogTitle: [{ lanCode: "", title: "" }],
     ogDescription: [{ lanCode: "", description: "" }],
     ogImage: "",
@@ -98,6 +97,7 @@ function PageForm({ pageDatas }) {
     e.preventDefault();
     saveLayout(pageData, {
       onSuccess: (response) => {
+        console.log("response",response);
         setPageData(response.data);
         toast.success('Layout saved successfully!');
       },
@@ -128,9 +128,16 @@ function PageForm({ pageDatas }) {
   };
 
   const handleAvailableChange = (selectedOptions) => {
-    const selectedAppIds = selectedOptions.map(option => option.value);
-    setPageData(prevData => ({ ...prevData, available: selectedAppIds }));
+    // Map selected options to an array of objects with appId as a string
+    const selectedAppIds = selectedOptions.map(option => ({ appId: option.value }));
+    
+    // Update the available field in the page data
+    setPageData(prevData => ({
+      ...prevData,
+      available: selectedAppIds,
+    }));
   };
+  
 
 
   const addTitle = () => {
@@ -215,15 +222,30 @@ function PageForm({ pageDatas }) {
   };
 
   const handleAddItem = (selectedOption) => {
-    const selectedContainer = containerData?.containers.find(container => container._id === selectedOption.value);
-    setPageData((prevData) => ({
-      ...prevData,
-      items: [...prevData.items, { 
-        ...selectedOption, 
-        description: selectedContainer?.description 
-      }],
-    }));
+    // Extract the selected container by matching its _id
+    const selectedContainer = containerData?.containers.find(
+      (container) => container._id === selectedOption.value
+    );
+  
+    if (!selectedContainer) {
+      console.error("Container not found");
+      return;
+    }
+  
+    setPageData((prevData) => {
+      // Prevent duplicate addition of the same ObjectId
+      if (prevData.items.includes(selectedContainer._id)) {
+        console.warn("Item already added");
+        return prevData;
+      }
+  
+      return {
+        ...prevData,
+        items: [...prevData.items, selectedContainer._id], // Add only the ObjectId
+      };
+    });
   };
+  
 
   const handleRemoveItem = (index) => {
     setPageData((prevData) => ({
@@ -318,8 +340,9 @@ function PageForm({ pageDatas }) {
   }
 
   
-  console.log(appData);
-  console.log(containerData);
+  console.log("appData",appData);
+  console.log("containerData",containerData);
+  console.log("pageData",pageData);
 
   return (
     <div>

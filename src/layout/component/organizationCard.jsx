@@ -59,7 +59,7 @@ function OrganizationCard({children,title,button}) {
            component={button?
             (<button
               className="bg-black text-white px-4 py-2 rounded"
-              onClick={() => navigate(`/element/add`)}
+              onClick={() => navigate(`/organization/add`)}
             >
               Add
             </button>):null

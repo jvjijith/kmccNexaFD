@@ -52,6 +52,20 @@ function OrganizationForm({ organizationDatas }) {
   const api_key = organizationDatas ? 'updateOrganization' : 'addOrganization';
   const { mutate: saveOrganization, isLoading, isError } = mutationHook(api_key, api_url);
 
+  const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v', 'createdAt', 'updatedAt' ]) => {
+    if (Array.isArray(data)) {
+      return data.map((item) => removeUnwantedFields(item, fields));
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.keys(data).reduce((acc, key) => {
+        if (!fields.includes(key)) {
+          acc[key] = removeUnwantedFields(data[key], fields);
+        }
+        return acc;
+      }, {});
+    }
+    return data;
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -59,13 +73,46 @@ function OrganizationForm({ organizationDatas }) {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (organizationDatas) {
+        // Remove unwanted fields
+        const cleanedContainer = removeUnwantedFields(organizationDatas);
+
+        // Transform items to only include itemType and itemId
+        // const transformedItems = elementsDatas.items?.map(item => ({
+        //     itemType: item.itemType,
+        //     itemId: item.itemId?._id,
+        // }));
+
+        // Transform availability to only include appId as a string
+        // const transformedAppId = elementsDatas.availability?.map(avail => ({
+        //     appId: avail.appId?._id,
+        // }));
+
+        // const appId = layoutDatas?.appId?._id;
+
+        // Set the transformed data
+        setFormData({
+          name: organizationDatas?.name,
+          logo: organizationDatas?.logo,
+          identificationDetails: cleanedContainer?.identificationDetails,
+          bankAccounts: cleanedContainer?.bankAccounts,
+          addresses: cleanedContainer?.addresses,
+          quoteTemplates: cleanedContainer?.quoteTemplates,
+          taxSettings: cleanedContainer?.taxSettings,
+          currency: organizationDatas?.currency
+        });
+    }
+    // setLoading(false);
+}, [organizationDatas]);
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     saveOrganization(formData, {
       onSuccess: () => {
         toast.success('Organization saved successfully!');
-        // navigate('/organizations');
+        navigate('/organization');
       },
       onError: (error) => {
         toast.error('Failed to save organization.');
@@ -344,7 +391,8 @@ function OrganizationForm({ organizationDatas }) {
     return <LoadingScreen />;
   }
 
-  console.log(formData);
+  console.log("formData",formData);
+  console.log("organizationDatas",organizationDatas);
   return (
     <div>
       <form onSubmit={handleSubmit}>

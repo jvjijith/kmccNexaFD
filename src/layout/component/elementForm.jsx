@@ -11,20 +11,7 @@ import Autosuggest from 'react-autosuggest';
 
 function ElementForm({ elementsDatas }) {
   const navigate = useNavigate();
-  const [elementsData, setElementsData] = useState(() => {
-    if (elementsDatas) {
-      // Clean up `itemId` inside `items` array
-      const cleanedItems = elementsDatas.items.map((item) => ({
-        ...item,
-        itemId: item.itemId._id // Take only the `_id` field from `itemId`
-      }));
-
-      return {
-        ...elementsDatas,
-        items: cleanedItems,
-      };
-    }
-    return {
+  const [elementsData, setElementsData] = useState({
       componentType: "",
       referenceName: "",
       items: [],
@@ -59,7 +46,6 @@ function ElementForm({ elementsDatas }) {
         cardAspectRatio: ""
       },
       hoverEffect: "none"
-    };
   });
   const [loading, setLoading] = useState(true);
   const [changeComponentType, setChangeComponentType] = useState(false);
@@ -86,10 +72,65 @@ function ElementForm({ elementsDatas }) {
   // Fetch app data
   const { data: appData, isLoading: isAppLoading } = useGetData("data", "/app", {});
 
+  const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
+    if (Array.isArray(data)) {
+      return data.map((item) => removeUnwantedFields(item, fields));
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.keys(data).reduce((acc, key) => {
+        if (!fields.includes(key)) {
+          acc[key] = removeUnwantedFields(data[key], fields);
+        }
+        return acc;
+      }, {});
+    }
+    return data;
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (elementsDatas) {
+        // Remove unwanted fields
+        const cleanedContainer = removeUnwantedFields(elementsDatas);
+
+        // Transform items to only include itemType and itemId
+        const transformedItems = elementsDatas.items?.map(item => ({
+            itemType: item.itemType,
+            itemId: item.itemId?._id,
+        }));
+
+        // Transform availability to only include appId as a string
+        const transformedAvailability = elementsDatas.availability?.map(avail => ({
+            appId: avail.appId?._id,
+        }));
+
+        // Set the transformed data
+        setElementsData({
+            componentType: cleanedContainer.componentType,
+            referenceName: cleanedContainer.referenceName,
+            items: transformedItems || [],
+            availability: transformedAvailability || [],
+            numberItems: cleanedContainer.numberItems,
+            title: cleanedContainer.title,
+            description: cleanedContainer.description,
+            draft: cleanedContainer.draft,
+            publish: cleanedContainer.publish,
+            withText: cleanedContainer.withText,
+            withDescription: cleanedContainer.withDescription,
+            viewText: cleanedContainer.viewText,
+            viewAll: cleanedContainer.viewAll,
+            swiperOptions: cleanedContainer.swiperOptions,
+            imageUrl: cleanedContainer.imageUrl,
+            cardOptions: cleanedContainer.cardOptions,
+            hoverEffect: cleanedContainer.hoverEffect,
+        });
+    }
+    setLoading(false);
+}, [elementsDatas]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

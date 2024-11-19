@@ -1,0 +1,91 @@
+import { useEffect, useState } from "react";
+import { Dropdown, Table } from "flowbite-react";
+import { useNavigate } from "react-router";
+import { useGetData, usePutData } from "../../common/api";
+import { toast } from "react-toastify";
+import LoadingScreen from "../ui/loading/loading";
+
+function ContainerTable() {
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
+
+  const { data: containerData, isLoading, error, refetch } = useGetData(
+    "ContainerData",
+    `/containers?page=${currentPage}&limit=${limit}`,
+    {}
+  );
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage, refetch]);
+
+  if (isLoading || loading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return <div>Error loading data</div>;
+  }
+
+  const totalPages = Math.ceil(containerData.pagination.totalCount / limit);
+
+  return (
+    <div className="overflow-x-auto min-h-96">
+      <Table theme={{ dark: true }}>
+        <Table.Head className="border-gray-700 bg-black text-white">
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Reference Name</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Description</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Layout Type</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Publish Status</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+        </Table.Head>
+        <Table.Body className="divide-y">
+          {containerData?.containers.map((container, index) => (
+            <Table.Row key={index} className="border-gray-700 bg-zinc-950">
+              <Table.Cell className="whitespace-nowrap font-medium text-white">{container.referenceName}</Table.Cell>
+              <Table.Cell className="text-gray-300">{container.description}</Table.Cell>
+              <Table.Cell className="text-gray-300">{container.layoutOptions?.layout || "N/A"}</Table.Cell>
+              <Table.Cell className={`whitespace-nowrap ${container.publish ? "text-green-500" : "text-red-500"}`}>
+                {container.publish ? "Published" : "Draft"}
+              </Table.Cell>
+              <Table.Cell className="text-gray-300">
+                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+                  <Dropdown.Item onClick={() => navigate(`/container/edit`, { state: { container } })}>Edit Container</Dropdown.Item>
+                </Dropdown>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+
+      <div className="flex justify-center mt-4">
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default ContainerTable;

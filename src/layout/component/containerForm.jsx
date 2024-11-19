@@ -20,7 +20,7 @@ function SortableItem({ id, index, handleRemove, item }) {
       <input
         type="text"
         className="block w-full px-3 py-2 text-white bg-black border rounded"
-        value={item.elements}
+        value={item.element}
         disabled
       />
       <button type="button" className="bg-red-500 text-white px-4 py-2 rounded ml-2" onClick={() => handleRemove(index)}>
@@ -113,7 +113,7 @@ function ContainerForm({ container }) {
   const { data: elementData, isLoading: isElementLoading } = useGetData("elementdata", "/elements", {});
   const { data: appData, isLoading: isAppLoading } = useGetData("appdata", "/app", {});
 
-  const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v']) => {
+  const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
     if (Array.isArray(data)) {
       return data.map((item) => removeUnwantedFields(item, fields));
     } else if (typeof data === 'object' && data !== null) {
@@ -130,13 +130,24 @@ function ContainerForm({ container }) {
   useEffect(() => {
     if (container) {
       const cleanedContainer = removeUnwantedFields(container);
+
+       // Transform items to only include itemType and itemId
+       const transformedItems = container.items?.map(item => ({
+        element: item.element?._id,
+    }));
+
+    // Transform availability to only include appId as a string
+    const transformedAvailability = container.available?.map(avail => ({
+        appId: avail.appId?._id,
+    }));
+
       setElementsData({
         referenceName: cleanedContainer.referenceName || '',
         description: cleanedContainer.description || '',
         layoutOptions: cleanedContainer.layoutOptions || {},
-        items: cleanedContainer.items || [],
+        items: transformedItems || [],
         style: cleanedContainer.style || {},
-        available: cleanedContainer.available || [],
+        available: transformedAvailability || [],
         draft: cleanedContainer.draft || false,
         publish: cleanedContainer.publish || false,
       });
@@ -178,7 +189,7 @@ function ContainerForm({ container }) {
     if (selectedOption) {
       setElementsData((prevState) => ({
         ...prevState,
-        items: [...prevState.items, { elements: selectedOption.value }],
+        items: [...prevState.items, { element: selectedOption.value }],
       }));
     }
   };
@@ -239,8 +250,9 @@ function ContainerForm({ container }) {
   };
 
   const handlePublishSubmit = async () => {
+    const cleanedContainer = removeUnwantedFields(elementsData);
     try {
-      handleApiMutation({ ...elementsData, draft: true, publish: true }, {
+      handleApiMutation({ ...cleanedContainer, draft: true, publish: true }, {
         onSuccess: (response) => {
           setElementsData(response.data);
           toast.success('Published successfully!');
