@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import LoadingScreen from '../ui/loading/loading';
 import { useNavigate } from 'react-router';
+import Select from 'react-select';
 
 function VarientForm({ typeData, productId, variantId }) {
   
@@ -27,6 +28,7 @@ function VarientForm({ typeData, productId, variantId }) {
   const [uploadProgress, setUploadProgress] = useState({});
   const [uploadedImages, setUploadedImages] = useState([]);
   const [mediaId, setMediaId] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const mutationHook = variantId ? usePutData : usePostData;
   const api_url = variantId ? `/variant/update/${variantId}` : '/variant/add';
@@ -34,17 +36,14 @@ function VarientForm({ typeData, productId, variantId }) {
   const { mutate: saveProduct, isLoading: isSaving } = mutationHook(api_key, api_url);
   const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
   const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
+  const { data: productDatas, isLoading: isProductLoading } = useGetData('product', '/product', {});
   
   // Fetch variant data if variantId is provided
   const { data: variantData, refetch: refetchVariant } = useGetData('variant', `/variant/${variantId}`);
 
   useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
-
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
+    const timer = setTimeout(() => setLoading(false), 3000);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -64,6 +63,20 @@ function VarientForm({ typeData, productId, variantId }) {
       [name]: value
     }));
   };
+
+  const handleSelectChange = (field) => (selectedOption) => {
+    console.log(selectedOption);
+    setProductData((prevData) => ({
+      ...prevData,
+      [field]: selectedOption.value,
+    }));
+  };
+
+  const productOptions = productDatas?.products?.map((product) => ({
+    value: product._id,
+    label: product.name || product._id,
+  }));
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -96,7 +109,7 @@ function VarientForm({ typeData, productId, variantId }) {
     try {
       await saveProduct(variantPayload);
       // alert('Variant saved successfully!');
-      
+      setLoading(true);
         navigate(`/variant/list`, { state: { productId } });
      
     } catch (error) {
@@ -211,7 +224,7 @@ function VarientForm({ typeData, productId, variantId }) {
     }
 };
 
-  if (isSaving || (variantId && !variantData)) {
+  if (isSaving || (variantId && !variantData) || loading) {
     return <LoadingScreen />;
   }
 
@@ -316,6 +329,53 @@ function VarientForm({ typeData, productId, variantId }) {
               />
             </div>
           </div>
+
+          <div className="w-full sm:w-1/2 p-4">
+            <div className="mb-4">
+              <label className="block mb-2 text-white">Product *</label>
+          <Select
+                  options={productOptions}
+                  placeholder="Select Product"
+                  value={productOptions.find((opt) => opt.value === productData.productId)}
+                  
+            onChange={handleSelectChange('productId')}
+                  className="w-full"
+                 
+                  styles={{
+                    control: (provided, state) => ({
+                      ...provided,
+                      backgroundColor: "black",
+                      borderColor: state.isFocused ? "white" : "#D3D3D3",
+                      borderBottomWidth: "2px",
+                      borderRadius: "0px",
+                      height: "40px",
+                      paddingLeft: "8px",
+                      paddingRight: "8px",
+                      color: "white",
+                    }),
+                    singleValue: (provided) => ({
+                      ...provided,
+                      color: "white",
+                    }),
+                    placeholder: (provided) => ({
+                      ...provided,
+                      color: "white",
+                    }),
+                    menu: (provided) => ({
+                      ...provided,
+                      backgroundColor: "black",
+                      color: "white",
+                    }),
+                    option: (provided, state) => ({
+                      ...provided,
+                      backgroundColor: state.isSelected ? "#007bff" : "black",
+                      color: state.isSelected ? "black" : "white",
+                      cursor: "pointer",
+                    }),
+                  }}
+                />
+        </div>
+        </div>
     
         </div>
 

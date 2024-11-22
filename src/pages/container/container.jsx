@@ -6,7 +6,7 @@ function Containers() {
     
     return (
         <Container>
-          <ContainerCard title={"Containers"}>
+          <ContainerCard title={"Containers"} button={true}>
             <ContainerTable></ContainerTable>
         </ContainerCard>
        </Container>
