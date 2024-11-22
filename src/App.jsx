@@ -113,9 +113,9 @@ const App = () => {
       <Route path="services/list" element={<ComingSoonPage />} />
       <Route path="services/prices" element={<ComingSoonPage />} />
       <Route path="presales/quotes/add" element={<ComingSoonPage />} />
-      <Route path="presales/quotes/view" element={<ComingSoonPage />} />
+      <Route path="presales/quotes/view" element={<Quote />} />
       <Route path="presales/enquiry/add" element={<ComingSoonPage />} />
-      <Route path="presales/enquiry/list" element={<ComingSoonPage />} />
+      <Route path="presales/enquiry/list" element={<Enquiry />} />
       <Route path="presales/purchaseorder/add" element={<ComingSoonPage />} />
       <Route path="presales/purchaseorder/list" element={<ComingSoonPage />} />
       <Route path="presales/deliverynote/add" element={<ComingSoonPage />} />
@@ -135,8 +135,11 @@ const App = () => {
       <Route path="store/appmanagement/appsetting/add" element={<AddApp />} />
       <Route path="store/appmanagement/appsetting/edit" element={<EditApp />} />
       <Route path="store/appmanagement/appsetting/list" element={<ListApp />} />
+      <Route path="store/appmanagement/page" element={<Page />} />
       <Route path="store/appmanagement/geoblocking" element={<ComingSoonPage />} />
-      <Route path="store/appmanagement/layout" element={<ComingSoonPage />} />
+      <Route path="store/appmanagement/layout" element={<Layout />} />
+      <Route path="store/appmanagement/element" element={<Element />} />
+      <Route path="store/appmanagement/container" element={<Containers />} />
       <Route path="store/appmanagement/menu" element={<ComingSoonPage />} />
       <Route path="store/appmanagement/paymentconfig" element={<ComingSoonPage />} />
       <Route path="store/appmanagement/mailtemplate" element={<ComingSoonPage />} />
@@ -149,7 +152,7 @@ const App = () => {
       <Route path="store/color/list" element={<Color />} />
       <Route path="reporting/reports" element={<ComingSoonPage />} />
       <Route path="reporting/analytics" element={<ComingSoonPage />} />
-      <Route path="admin/organization" element={<ComingSoonPage />} />
+      <Route path="admin/organization" element={<Organization />} />
       <Route path="admin/userpermission" element={<ComingSoonPage />} />
       <Route path="admin/logininfo" element={<ComingSoonPage />} />
       <Route path="admin/logs" element={<ComingSoonPage />} />

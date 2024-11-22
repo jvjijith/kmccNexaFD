@@ -84,9 +84,9 @@ export const employeeData = [
       },
       {
         id: '5', title: 'Pre-Sales', notifications: false, route: "/presales", parent: "/presales", dropdownItems: [
-          { id: '5-1', title: "Add Quotes", route: "/presales/quotes/add" },
+          // { id: '5-1', title: "Add Quotes", route: "/presales/quotes/add" },
           { id: '5-2', title: "View Quotes", route: "/presales/quotes/view" },
-          { id: '5-3', title: "Add Enquiry", route: "/presales/enquiry/add" },
+          // { id: '5-3', title: "Add Enquiry", route: "/presales/enquiry/add" },
           { id: '5-4', title: "List Enquiry", route: "/presales/enquiry/list" },
           { id: '5-5', title: "Add Purchase Order", route: "/presales/purchaseorder/add" },
           { id: '5-6', title: "List Purchase Order", route: "/presales/purchaseorder/list" },
@@ -127,7 +127,9 @@ export const employeeData = [
                   { id: '1-2', title: "List Settings", route: "/store/appmanagement/appsetting/list" },
                 ]
               },
-              { id: '7-3-1', title: "Geo-Blocking", route: "/store/appmanagement/geoblocking" },
+              { id: '7-3-1', title: "Page", route: "/store/appmanagement/element" },
+              { id: '7-3-1', title: "Element", route: "/store/appmanagement/container" },
+              { id: '7-3-1', title: "Container", route: "/store/appmanagement/page" },
               { id: '7-3-2', title: "Layout", route: "/store/appmanagement/layout" },
               { id: '7-3-3', title: "Menu", route: "/store/appmanagement/menu" },
               { id: '7-3-4', title: "Payment Configuration", route: "/store/appmanagement/paymentconfig" },
