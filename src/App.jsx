@@ -48,6 +48,26 @@ import AddColor from "./pages/colors/addColor";
 import EditApp from "./pages/app/editApp";
 import Color from "./pages/colors/colorList";
 import EditColor from "./pages/colors/editColor ";
+import AddLayout from "./pages/layout/addLayout";
+import Layout from "./pages/layout/layout";
+import AddElement from "./pages/elements/addElement";
+import Element from "./pages/elements/element";
+import EditElement from "./pages/elements/editElement";
+import AddContainer from "./pages/container/addContainer";
+import AddPage from "./pages/page/addPage";
+import AddOrganization from "./pages/organization/addOrganization";
+import AddQuote from "./pages/quote/addQuote";
+import Containers from "./pages/container/container";
+import EditContainer from "./pages/container/editContainer";
+import AddEnquiry from "./pages/enquiry/addEnquiry";
+import Enquiry from "./pages/enquiry/enquiry";
+import EditEnquiry from "./pages/enquiry/editEnquiry";
+import EditLayout from "./pages/layout/editLayout";
+import Quote from "./pages/quote/quote";
+import EditQuote from "./pages/quote/editQuote";
+import Organization from "./pages/organization/organization";
+import EditOrganization from "./pages/organization/editOrganization";
+import Page from "./pages/page/page";
 
 const App = () => {
   return (
@@ -93,9 +113,9 @@ const App = () => {
       <Route path="services/list" element={<ComingSoonPage />} />
       <Route path="services/prices" element={<ComingSoonPage />} />
       <Route path="presales/quotes/add" element={<ComingSoonPage />} />
-      <Route path="presales/quotes/view" element={<ComingSoonPage />} />
+      <Route path="presales/quotes/view" element={<Quote />} />
       <Route path="presales/enquiry/add" element={<ComingSoonPage />} />
-      <Route path="presales/enquiry/list" element={<ComingSoonPage />} />
+      <Route path="presales/enquiry/list" element={<Enquiry />} />
       <Route path="presales/purchaseorder/add" element={<ComingSoonPage />} />
       <Route path="presales/purchaseorder/list" element={<ComingSoonPage />} />
       <Route path="presales/deliverynote/add" element={<ComingSoonPage />} />
@@ -115,8 +135,11 @@ const App = () => {
       <Route path="store/appmanagement/appsetting/add" element={<AddApp />} />
       <Route path="store/appmanagement/appsetting/edit" element={<EditApp />} />
       <Route path="store/appmanagement/appsetting/list" element={<ListApp />} />
+      <Route path="store/appmanagement/page" element={<Page />} />
       <Route path="store/appmanagement/geoblocking" element={<ComingSoonPage />} />
-      <Route path="store/appmanagement/layout" element={<ComingSoonPage />} />
+      <Route path="store/appmanagement/layout" element={<Layout />} />
+      <Route path="store/appmanagement/element" element={<Element />} />
+      <Route path="store/appmanagement/container" element={<Containers />} />
       <Route path="store/appmanagement/menu" element={<ComingSoonPage />} />
       <Route path="store/appmanagement/paymentconfig" element={<ComingSoonPage />} />
       <Route path="store/appmanagement/mailtemplate" element={<ComingSoonPage />} />
@@ -129,10 +152,30 @@ const App = () => {
       <Route path="store/color/list" element={<Color />} />
       <Route path="reporting/reports" element={<ComingSoonPage />} />
       <Route path="reporting/analytics" element={<ComingSoonPage />} />
-      <Route path="admin/organization" element={<ComingSoonPage />} />
+      <Route path="admin/organization" element={<Organization />} />
       <Route path="admin/userpermission" element={<ComingSoonPage />} />
       <Route path="admin/logininfo" element={<ComingSoonPage />} />
       <Route path="admin/logs" element={<ComingSoonPage />} />
+      <Route path="layout/add" element={<AddLayout />} />
+      <Route path="layout/edit" element={<EditLayout />} />
+      <Route path="layout" element={<Layout />} />
+      <Route path="element/add" element={<AddElement />} />
+      <Route path="element/edit" element={<EditElement />} />
+      <Route path="element" element={<Element />} />
+      <Route path="container" element={<Containers />} />
+      <Route path="container/add" element={<AddContainer />} />
+      <Route path="container/edit" element={<EditContainer />} />
+      <Route path="page/add" element={<AddPage />} />
+      <Route path="page" element={<Page />} />
+      <Route path="enquiry/add" element={<AddEnquiry />} />
+      <Route path="enquiry/edit" element={<EditEnquiry />} />
+      <Route path="enquiry" element={<Enquiry />} />
+      <Route path="organization/add" element={<AddOrganization />} />
+      <Route path="organization/edit" element={<EditOrganization />} />
+      <Route path="organization" element={<Organization />} />
+      <Route path="quote/add" element={<AddQuote />} />
+      <Route path="quote/edit" element={<EditQuote />} />
+      <Route path="quote" element={<Quote />} />
       <Route path="catalog" element={<CatalogPage />} />
       <Route path="profile/:userId/details" element={<Profile />} />
             <Route path="/profile/:id" element={<CustomerProfile />}>
