@@ -12,6 +12,7 @@ function QuoteForm({ quotes }) {
   const [customerOptions, setCustomerOptions] = useState([]);
   const [employeeOptions, setEmployeeOptions] = useState([]);
   const [editedByOptions, setEditedByOptions] = useState([]);
+  const [enquiryOptions, setEnquiryOptions] = useState([]);
 
 
   const mutationHook = quotes ? usePutData : usePostData;
@@ -42,7 +43,13 @@ function QuoteForm({ quotes }) {
     "varientData",
     `/variant/`,
     {}
+  ); 
+  const { data: enquiryData, enquiryLoading, enquiryError, enquiryRefetch } = useGetData(
+    "enquiryData",
+    `/enquiry`,
+    {}
   );
+
 
   const [formData, setFormData] = useState({
     quoteTemplate: '',
@@ -116,10 +123,11 @@ function QuoteForm({ quotes }) {
       // const appId = layoutDatas?.appId?._id;
 
       // Set the transformed data
+      
       setFormData({
         quoteTemplate: quotes?.quoteTemplate,
         quoteStatus: quotes?.quoteStatus,
-        enquiryId: quotes?.enquiryId._id,
+        enquiryId: quotes?.enquiryId?._id,
         salesman: quotes?.salesman._id,
         customer: quotes?.customer._id,
         quoteNotes: quotes?.quoteNotes,
@@ -153,6 +161,14 @@ function QuoteForm({ quotes }) {
     setCustomerOptions(options);
   }
 
+  if (enquiryData?.enquiries) {
+    const options = enquiryData.enquiries.map((enquiry) => ({
+      value: enquiry._id,
+      label: `${enquiry.enquiryNumber} - ${enquiry.customer.name} (${enquiry.customer.email})`,
+    }));
+    setEnquiryOptions(options);
+  }
+
   if (salseManData?.employees) {
     const options = salseManData.employees.map((employee) => ({
       value: employee._id,
@@ -161,7 +177,7 @@ function QuoteForm({ quotes }) {
     setEmployeeOptions(options);
     setEditedByOptions(options);
   }
-  }, [organizationData, customerData, salseManData, quotes]);
+  }, [organizationData, customerData, salseManData, enquiryData, quotes]);
 
 
   const handleChange = (e) => {
@@ -176,6 +192,13 @@ function QuoteForm({ quotes }) {
     setFormData((prevData) => ({
       ...prevData,
       editedBy: selectedOption.value,
+    }));
+  };
+
+  const handleEnquiryChange = (selectedOption) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      enquiryId: selectedOption.value,
     }));
   };
 
@@ -450,16 +473,45 @@ const removeTerm = (index) => {
             />
           </div>
 
-          <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Enquiry ID</label>
-            <input
-              type="text"
-              name="enquiryId"
-              value={formData.enquiryId}
-              onChange={handleChange}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
-            />
-          </div>
+          {/* Enquiry Dropdown */}
+        <div className="w-full sm:w-1/2 p-4">
+          <label className="block w-full mb-2 text-white">Enquiry ID</label>
+          <Select
+            options={enquiryOptions}
+            value={enquiryOptions.find((option) => option.value === formData.enquiryId)}
+            onChange={handleEnquiryChange}
+            placeholder="Select Enquiry ID"
+            styles={{
+              control: (provided, state) => ({
+                ...provided,
+                backgroundColor: 'black',
+                borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                borderBottomWidth: '2px',
+                borderRadius: '0px',
+                height: '40px',
+                paddingLeft: '8px',
+                paddingRight: '8px',
+                color: 'white',
+              }),
+              singleValue: (provided) => ({
+                ...provided,
+                color: 'white',
+              }),
+              menu: (provided) => ({
+                ...provided,
+                backgroundColor: 'black',
+                color: 'white',
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                backgroundColor: state.isSelected ? '#007bff' : 'black',
+                color: state.isSelected ? 'black' : 'white',
+                cursor: 'pointer',
+              }),
+            }}
+          />
+        </div>
+
 
           <div className="w-full sm:w-1/2 p-4">
           <label className="block w-full mb-2 text-white">Salesman</label>

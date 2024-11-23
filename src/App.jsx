@@ -68,6 +68,8 @@ import EditQuote from "./pages/quote/editQuote";
 import Organization from "./pages/organization/organization";
 import EditOrganization from "./pages/organization/editOrganization";
 import Page from "./pages/page/page";
+import EditPage from "./pages/page/editPage";
+import QuotesProfile from "./pages/quote/profile";
 
 const App = () => {
   return (
@@ -166,6 +168,7 @@ const App = () => {
       <Route path="container/add" element={<AddContainer />} />
       <Route path="container/edit" element={<EditContainer />} />
       <Route path="page/add" element={<AddPage />} />
+      <Route path="page/edit" element={<EditPage />} />
       <Route path="page" element={<Page />} />
       <Route path="enquiry/add" element={<AddEnquiry />} />
       <Route path="enquiry/edit" element={<EditEnquiry />} />
@@ -186,6 +189,10 @@ const App = () => {
                 <Route path="productdetails" element={<ProductDetails />} />
                 <Route path="variants" element={<VariantDetails />} />
                 <Route path="price" element={<PriceDetails />} />
+            </Route>
+            <Route path="/quote/:id" element={<QuotesProfile />}>
+            <Route path="details" element={<QuotesProfile />} />
+            <Route path="products" element={<ComingSoonPage />} />
             </Route>
       </Route>
 

@@ -420,6 +420,12 @@ function QuoteTable() {
                     }
                   >
                     Edit Quote
+                  </Dropdown.Item><Dropdown.Item
+                    onClick={() =>
+                      navigate(`/quote/${quote._id}/details`, { state: { quote } })
+                    }
+                  >
+                    Profile
                   </Dropdown.Item>
                   <Dropdown.Item>
                     <BlobProvider document={<QuotePDF quote={quote} organization={organizationData} />}>
