@@ -21,15 +21,29 @@ function EnquiryForm({ quotes }) {
 
 
   const [formData, setFormData] = useState({
-    enquiryMode: quotes?.enquiryMode || '',
-    enquiryModeDetails: quotes?.enquiryModeDetails || '',
-    enquiryNotes: quotes?.enquiryNotes || '',
-    products: quotes?.products || [
+    enquiryMode: '',
+    enquiryModeDetails: '',
+    enquiryNotes: '',
+    products: [
       { productId: '', VariantId: '', quantity: 1 },
     ],
-    customerNotes: quotes?.customerNotes || '',
-    customer: quotes?.customer?._id || ''
+    customerNotes: '',
+    customer: ''
   });
+
+  const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
+    if (Array.isArray(data)) {
+      return data.map((item) => removeUnwantedFields(item, fields));
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.keys(data).reduce((acc, key) => {
+        if (!fields.includes(key)) {
+          acc[key] = removeUnwantedFields(data[key], fields);
+        }
+        return acc;
+      }, {});
+    }
+    return data;
+  };
 
   const enquiryModeOptions = [
     { value: 'Website', label: 'Website' },
@@ -47,6 +61,43 @@ function EnquiryForm({ quotes }) {
     const timer = setTimeout(() => setLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => { 
+    if (quotes) {
+    // Remove unwanted fields
+    const cleanedContainer = removeUnwantedFields(quotes);
+
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return date.toISOString().split('T')[0];
+    };
+
+    // Transform items to only include itemType and itemId
+    const transformedProducts = quotes.products?.map(item => ({
+      productId: item.productId?._id,
+      VariantId: item.VariantId?._id,
+      quantity: item.quantity,
+    }));
+
+    // Transform availability to only include appId as a string
+    // const transformedAppId = elementsDatas.availability?.map(avail => ({
+    //     appId: avail.appId?._id,
+    // }));
+
+    // const appId = layoutDatas?.appId?._id;
+
+    // Set the transformed data
+    
+    setFormData({
+      enquiryMode: quotes?.enquiryMode,
+      enquiryModeDetails: quotes?.enquiryModeDetails,
+      enquiryNotes: quotes?.enquiryNotes,
+      products: transformedProducts,
+      customerNotes: quotes?.customerNotes ,
+      customer: quotes?.customer?._id
+    });
+}
+  }, [quotes]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -126,6 +177,7 @@ function EnquiryForm({ quotes }) {
       onError: (error) => {
         toast.error('Failed to save Enquiry.');
         console.error(error);
+        navigate(`/enquiry`);
       },
     });
   };

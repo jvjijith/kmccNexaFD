@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router';
 import { ToastContainer, toast } from 'react-toastify';
 
 
-function SortableItem({ id, index, handleRemove, item }) {
+function SortableItem({ id, index, handleRemove, item, element }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -20,7 +20,12 @@ function SortableItem({ id, index, handleRemove, item }) {
       <input
         type="text"
         className="block w-full px-3 py-2 text-white bg-black border rounded"
-        value={item.element}
+        value={
+          element?.elements?.find(
+            (el) => el._id === item.element
+          )?.referenceName || "Unknown"
+        }
+        
         disabled
       />
       <button type="button" className="bg-red-500 text-white px-4 py-2 rounded ml-2" onClick={() => handleRemove(index)}>
@@ -305,7 +310,9 @@ function ContainerForm({ container }) {
     return <LoadingScreen />;
   }
 
-  console.log(elementsData);
+  console.log("elementsData",elementsData);
+  console.log("container",container);
+  console.log("elementData",elementData);
 
   return (
     <div>
@@ -1130,6 +1137,7 @@ function ContainerForm({ container }) {
                   id={index}
                   index={index}
                   item={item}
+                  element={elementData}
                   handleRemove={handleRemoveItem}
                 />
               ))}

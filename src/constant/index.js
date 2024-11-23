@@ -127,9 +127,9 @@ export const employeeData = [
                   { id: '1-2', title: "List Settings", route: "/store/appmanagement/appsetting/list" },
                 ]
               },
-              { id: '7-3-1', title: "Page", route: "/store/appmanagement/element" },
-              { id: '7-3-1', title: "Element", route: "/store/appmanagement/container" },
-              { id: '7-3-1', title: "Container", route: "/store/appmanagement/page" },
+              { id: '7-3-1', title: "Element", route: "/store/appmanagement/element" },
+              { id: '7-3-1', title: "Container", route: "/store/appmanagement/container" },
+              { id: '7-3-1', title: "Page", route: "/store/appmanagement/page" },
               { id: '7-3-2', title: "Layout", route: "/store/appmanagement/layout" },
               { id: '7-3-3', title: "Menu", route: "/store/appmanagement/menu" },
               { id: '7-3-4', title: "Payment Configuration", route: "/store/appmanagement/paymentconfig" },

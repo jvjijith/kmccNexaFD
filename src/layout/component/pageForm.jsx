@@ -80,6 +80,20 @@ function PageForm({ pageDatas }) {
   // Fetch container data
   const { data: containerData, isLoading: isContainerLoading } = useGetData("containerdata", "/containers", {});
 
+  const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
+    if (Array.isArray(data)) {
+      return data.map((item) => removeUnwantedFields(item, fields));
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.keys(data).reduce((acc, key) => {
+        if (!fields.includes(key)) {
+          acc[key] = removeUnwantedFields(data[key], fields);
+        }
+        return acc;
+      }, {});
+    }
+    return data;
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -89,7 +103,41 @@ function PageForm({ pageDatas }) {
 
   useEffect(() => {
     if (pageDatas) {
-      setPageData(pageDatas);
+
+      // Remove unwanted fields
+      const cleanedContainer = removeUnwantedFields(pageDatas);
+
+       // Transform availability to only include appId as a string
+      const transformedAppId = pageDatas.available?.map(avail => ({
+          appId: avail.appId?._id,
+      }));
+
+      // Transform availability to only include appId as a string
+      const transformedItems = pageDatas.items?.map((avail) => avail._id).filter(Boolean);
+
+      setPageData({
+        slug: pageDatas.slug,
+        referenceName: pageDatas.referenceName,
+        items: transformedItems,
+        type: pageDatas.type,
+        internalType: pageDatas.internalType,
+        externalUrl: pageDatas.externalUrl,
+        bannerImage: pageDatas.bannerImage,
+        portraitImage: pageDatas.portraitImage,
+        landscapeImage: pageDatas.landscapeImage,
+        available: transformedAppId,
+        numberItems: pageDatas.numberItems,
+        title: cleanedContainer.title,
+        metaDescription: cleanedContainer.metaDescription,
+        keywords: cleanedContainer.keywords,
+        ogTitle: cleanedContainer.ogTitle,
+        ogDescription: cleanedContainer.ogDescription,
+        ogImage: pageDatas.ogImage,
+        twitterCard: pageDatas.twitterCard,
+        twitterCreator: pageDatas.twitterCreator,
+        publish: pageDatas.publish,
+        draft: pageDatas.draft,
+      });
     }
   }, [pageDatas]);
 
@@ -508,10 +556,10 @@ function PageForm({ pageDatas }) {
               label: app.title,
             })) || []}
             onChange={handleAvailableChange}
-            value={pageData.available.map((id) => ({
-              value: id,
-              label: appData?.apps?.find((app) => app._id === id)?.title,
-            }))}
+            value={pageData.available.map((item) => ({
+              value: item.appId,
+              label: appData?.apps?.find((app) => app._id === item.appId)?.title || "Unknown",
+          }))}
             isLoading={isAppLoading}
             styles={{
               control: (provided, state) => ({
@@ -946,7 +994,10 @@ function PageForm({ pageDatas }) {
                     <SortableItem
                       key={index}
                       id={index}
-                      item={item}
+                      item={
+                        containerData?.containers?.find((container) => container._id === item)?.referenceName || "Unknown"
+                      }
+                      
                       handleRemove={handleRemoveItem}
                     />
                   ))}

@@ -51,6 +51,10 @@ function ElementForm({ elementsDatas }) {
   const [changeComponentType, setChangeComponentType] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [value, setValue] = useState("");
+  const items = [
+    { itemType: 'Catalogue' },
+    { itemType: 'Page' },
+  ];
 
   const componentTypeOptions = [
     { value: 'swimlane', label: 'Slider' },
@@ -1170,42 +1174,47 @@ console.log("elementsData",elementsData);
       {elementsData.items.map((item, index) => (
         <div key={index} className="flex gap-4 mb-2">
           <Select
-            options={[
-              { value: 'Catalogue', label: 'Catalogue' },
-              { value: 'Page', label: 'Page' },
-            ]}
-            value={{ value: item.itemType, label: item.itemType.charAt(0).toUpperCase() + item.itemType.slice(1) }}
-            onChange={(selectedOption) => handleNestedChange('items', index, 'itemType', selectedOption.value)}
-            className="block w-1/2"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer'
-              })
-            }}
-          />
+  options={[
+    { value: 'Catalogue', label: 'Catalogue' },
+    { value: 'Page', label: 'Page' },
+  ].filter((option) => {
+    // Filter out 'Catalogue' if it's already added
+    const isCatalogueAdded = elementsData?.items.some((existingItem) => existingItem.itemType === 'Catalogue');
+    return !(isCatalogueAdded && option.value === 'Catalogue');
+  })}
+  value={{ value: item.itemType, label: item.itemType.charAt(0).toUpperCase() + item.itemType.slice(1) }}
+  onChange={(selectedOption) => handleNestedChange('items', index, 'itemType', selectedOption.value)}
+  className="block w-1/2"
+  styles={{
+    control: (provided, state) => ({
+      ...provided,
+      backgroundColor: 'black',
+      borderColor: state.isFocused ? 'white' : '#D3D3D3',
+      borderBottomWidth: '2px',
+      borderRadius: '0px',
+      height: '40px',
+      paddingLeft: '8px',
+      paddingRight: '8px',
+      color: 'white',
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: 'white',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: 'black',
+      color: 'white',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#007bff' : 'black',
+      color: state.isSelected ? 'black' : 'white',
+      cursor: 'pointer',
+    }),
+  }}
+/>
+
           <Select
             options={getItemOptions(item.itemType)}
             value={getItemOptions(item.itemType)?.find(option => option.value === item.itemId)}
