@@ -70,6 +70,9 @@ import EditOrganization from "./pages/organization/editOrganization";
 import Page from "./pages/page/page";
 import EditPage from "./pages/page/editPage";
 import QuotesProfile from "./pages/quote/profile";
+import AddPurchaseOrder from "./pages/purchaseOrder/addPurchaseOrder";
+import AddSalesInvoice from "./pages/salesInvoice/addSalesInvoice";
+import AddVendorQuoteRequest from "./pages/vendorQuoteRequest/addVendorQuoteRequest";
 
 const App = () => {
   return (
@@ -174,6 +177,9 @@ const App = () => {
       <Route path="enquiry/edit" element={<EditEnquiry />} />
       <Route path="enquiry" element={<Enquiry />} />
       <Route path="organization/add" element={<AddOrganization />} />
+      <Route path="purchaseorder/add" element={<AddPurchaseOrder />} />
+      <Route path="salesinvoice/add" element={<AddSalesInvoice />} />
+      <Route path="quoterequest/add" element={<AddVendorQuoteRequest />} />
       <Route path="organization/edit" element={<EditOrganization />} />
       <Route path="organization" element={<Organization />} />
       <Route path="quote/add" element={<AddQuote />} />
