@@ -17,14 +17,7 @@ function TeamForm({ id, name, closeModal }) {
   const { mutate: addTeam, isPending: isAdding, error: addError } = usePostData("addTeam", "/team/add");
   const { mutate: editTeam, isPending: isEditing, error: editError } = usePutData("editTeam", `/team/update/${id}`);
 
-  useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
 
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

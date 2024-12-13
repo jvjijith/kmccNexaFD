@@ -9,7 +9,6 @@ function SalesInvoiceForm({ invoiceData }) {
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     invoiceTemplate: '',
-    invoiceNumber: '',
     invoiceStatus: 'Draft',
     quoteId: '',
     salesman: '',
@@ -116,25 +115,27 @@ function SalesInvoiceForm({ invoiceData }) {
         const cleanedInvoiceData = removeUnwantedFields(invoiceData);
       
         setFormValues({
-          invoiceTemplate: cleanedInvoiceData?.invoiceTemplate || '',
-          invoiceNumber: cleanedInvoiceData?.invoiceNumber || '',
-          invoiceStatus: cleanedInvoiceData?.invoiceStatus || 'Draft',
-          quoteId: cleanedInvoiceData?.quoteId || '',
-          salesman: cleanedInvoiceData?.salesman || '',
-          customer: cleanedInvoiceData?.customer || '',
-          invoiceNotes: cleanedInvoiceData?.invoiceNotes || '',
+          invoiceTemplate: invoiceData?.invoiceTemplate || '',
+          invoiceStatus: invoiceData?.invoiceStatus || 'Draft',
+          quoteId: invoiceData?.quoteId?._id || '',
+          salesman: invoiceData?.salesman?._id || '',
+          customer: invoiceData?.customer?._id || '',
+          invoiceNotes: invoiceData?.invoiceNotes || '',
           products: cleanedInvoiceData?.products || [],
-          totalAmount: cleanedInvoiceData?.totalAmount || 0,
-          totalDiscount: cleanedInvoiceData?.totalDiscount || 0,
-          finalAmount: cleanedInvoiceData?.finalAmount || 0,
-          dueDate: cleanedInvoiceData?.dueDate ? formatDate(cleanedInvoiceData.dueDate) : '',
-          paymentTerms: cleanedInvoiceData?.paymentTerms || '',
-          paymentHistory: cleanedInvoiceData?.paymentHistory || [],
-          paymentStatus: cleanedInvoiceData?.paymentStatus || '',
+          totalAmount: invoiceData?.totalAmount || 0,
+          totalDiscount: invoiceData?.totalDiscount || 0,
+          finalAmount: invoiceData?.finalAmount || 0,
+          dueDate: invoiceData?.dueDate ? formatDate(invoiceData.dueDate) : '',
+          paymentTerms: invoiceData?.paymentTerms || '',
+          paymentHistory: cleanedInvoiceData?.paymentHistory.map((payment) => ({
+            ...payment,
+            paymentDate: formatDate(payment.paymentDate), // Format paymentDate
+          })) || [],
+          paymentStatus: invoiceData?.paymentStatus || '',
           termsAndConditions: cleanedInvoiceData?.termsAndConditions || [],
-          createdBy: cleanedInvoiceData?.createdBy || '',
-          editedBy: cleanedInvoiceData?.editedBy || '',
-          editedNotes: cleanedInvoiceData?.editedNotes || []
+          createdBy: invoiceData?.createdBy?._id || '',
+          editedBy: invoiceData?.editedBy?._id || '',
+          editedNotes: invoiceData?.editedNotes || []
         });
       }
       
@@ -185,6 +186,14 @@ function SalesInvoiceForm({ invoiceData }) {
 //     setFormValues((prev) => ({ ...prev, totalAmount, totalDiscount, finalAmount }));
 //   }, [formValues.items]);
 
+const quoteTemplateOptions = organizationData?.organizations?.[0]?.quoteTemplates.map(template => ({
+  value: template._id,
+  label: template.name,
+}));
+
+const handleQuoteTemplateChange = (selectedOption) => {
+  handleInputChange('invoiceTemplate', selectedOption.value);
+};
 
 const handleEditedNoteChange = (index, value) => {
     setFormValues((prev) => {
@@ -290,14 +299,14 @@ const handleTermChange = (index, field, value) => {
       (parseFloat(item.unitPrice || 0) * parseFloat(item.quantity || 0) * (parseFloat(item.discount || 0) / 100)),
     0
   );
-  const finalAmount = updatedItems.reduce(
-    (sum, item) => (parseFloat(sum + item.totalPrice || 0)).toFixed(2)
-  );
+  const finalAmount = totalAmount - totalDiscount;
   
     // Update formValues state
     setFormValues((prevValues) => ({
       ...prevValues,
-      items: updatedItems,
+      products: updatedItems,
+      totalAmount: totalAmount,
+      totalDiscount: totalDiscount,
       finalAmount: parseFloat(finalAmount), // Ensure 2 decimal places
     }));
   };
@@ -349,7 +358,7 @@ const handleTermChange = (index, field, value) => {
     try {
       await savePurchaseOrder(formValues);
       toast.success('Purchase Order saved successfully');
-      navigate('/invoiceDatas');
+      navigate('/salesInvoice');
     } catch (error) {
       toast.error('Failed to save Purchase Order');
     }
@@ -360,6 +369,7 @@ const handleTermChange = (index, field, value) => {
   }
 
   console.log("formValues",formValues);
+  console.log("varient",varientData);
 
   return (
     <div>
@@ -404,16 +414,44 @@ const handleTermChange = (index, field, value) => {
           </div>
 
           {/* Invoice Template */}
-  <div className="w-full sm:w-1/2 p-4">
-    <label className="block w-full mb-2 text-white">Invoice Template</label>
-    <input
-      type="text"
-      name="invoiceTemplate"
-      value={formValues.invoiceTemplate}
-      onChange={(e) => handleInputChange('invoiceTemplate', e.target.value)}
-      className="block w-full px-3 py-2 text-white bg-black border rounded"
-    />
-  </div>
+          <div className="w-full sm:w-1/2 p-4">
+  <label className="block w-full mb-2 text-white">Template</label>
+  <Select
+    options={quoteTemplateOptions}
+    value={quoteTemplateOptions?.find(option => option.value === formValues.invoiceTemplate)}
+    onChange={handleQuoteTemplateChange}
+    placeholder="Select Quote Template"
+    styles={{
+      control: (provided, state) => ({
+        ...provided,
+        backgroundColor: 'black',
+        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+        borderBottomWidth: '2px',
+        borderRadius: '0px',
+        height: '40px',
+        paddingLeft: '8px',
+        paddingRight: '8px',
+        color: 'white',
+      }),
+      singleValue: (provided) => ({
+        ...provided,
+        color: 'white',
+      }),
+      menu: (provided) => ({
+        ...provided,
+        backgroundColor: 'black',
+        color: 'white',
+      }),
+      option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? '#007bff' : 'black',
+        color: state.isSelected ? 'black' : 'white',
+        cursor: 'pointer',
+      }),
+    }}
+  />
+</div>
+
 
           {/* Organization Dropdown */}
           {/* <div className="w-full sm:w-1/2 p-4">
@@ -540,7 +578,7 @@ const handleTermChange = (index, field, value) => {
           <div className="w-full sm:w-1/2 p-4">
           <label className="block w-full mb-2 text-white">salesman</label>
           <Select
-            name="purchaser"
+            name="salesman"
             options={employeeOptions}
             value={employeeOptions.find((option) => option.value === formValues.salesman)}
             onChange={handlePurchaser}
@@ -988,7 +1026,7 @@ const handleTermChange = (index, field, value) => {
               <label className="block text-white">Product</label>
               <Select
                 options={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
-                value={productData?.products?.find((p) => p._id === product.productId)}
+                value={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
                 onChange={(selectedOption) => handleProductChange(index, 'productId', selectedOption.value)}
                 className="w-full"
                 styles={{
@@ -1029,7 +1067,9 @@ const handleTermChange = (index, field, value) => {
                 options={varientData?.variants
                   ?.filter((v) => v.productId === product.productId)
                   ?.map((v) => ({ value: v._id, label: v.name }))}
-                value={varientData?.variants?.find((v) => v._id === product.variantId)}
+                value={varientData?.variants
+                  ?.filter((v) => v.productId === product.productId)
+                  ?.map((v) => ({ value: v._id, label: v.name }))}
                 onChange={(selectedOption) => handleProductChange(index, 'variantId', selectedOption.value)}
                 isDisabled={!product.productId}
                 className="w-full"

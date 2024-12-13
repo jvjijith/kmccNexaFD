@@ -163,6 +163,7 @@ function ProductForm({ typeData, product }) {
         const signedUrlResponse = await generateSignedUrl({
             title: image.name,
             mediaType: "image",
+            ext: image.name.split('.').pop() || "",
             active: true,
             uploadStatus: "progressing",
             uploadProgress: 0,
@@ -200,6 +201,7 @@ function ProductForm({ typeData, product }) {
                         // _id: mediaId,
                         mediaType: "image",
                         title: image.name,
+                        ext: image.name.split('.').pop() || "",
                         active: true,
                         uploadStatus: "completed",
                         uploadProgress: 100,

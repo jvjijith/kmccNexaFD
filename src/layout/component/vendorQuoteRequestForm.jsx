@@ -5,6 +5,7 @@ import LoadingScreen from '../ui/loading/loading';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 
 function VendorQuoteRequestForm({ vendorRequest }) {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ function VendorQuoteRequestForm({ vendorRequest }) {
   const [vendorOptions, setVendorOptions] = useState([]); 
   const [uploadProgress, setUploadProgress] = useState({});
   const [files, setFiles] = useState([]);
+  const [mediaId, setMediaId] = useState([]);
 
 
   const mutationHook = vendorRequest ? usePutData : usePostData;
@@ -75,7 +77,7 @@ function VendorQuoteRequestForm({ vendorRequest }) {
   ); 
 
   const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
-  const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', '/media/update');
+  const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
 
   const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
     if (Array.isArray(data)) {
@@ -106,7 +108,7 @@ function VendorQuoteRequestForm({ vendorRequest }) {
         };
     
         // Transform products to include only necessary fields
-        const transformedProducts = vendorRequest?.items?.map(item => ({
+        const transformedProducts = vendorRequest?.products?.map(item => ({
             productName: item?.productName,
             description: item?.description,
             quantity: item?.quantity,
@@ -127,15 +129,15 @@ function VendorQuoteRequestForm({ vendorRequest }) {
         // Set the transformed data
         setFormValues({
             vendorQuoteRequestStatus: vendorRequest?.vendorQuoteRequestStatus || 'Draft',
-            vendor: vendorRequest?.vendor,
-            requestedBy: vendorRequest?.requestedBy,
+            vendor: vendorRequest?.vendor?._id,
+            requestedBy: vendorRequest?.requestedBy?._id,
             requestNotes: vendorRequest?.requestNotes,
             products: transformedProducts || [],
             requiredDeliveryDate: formatDate(vendorRequest?.requiredDeliveryDate),
             termsAndConditions: transformedTerms || [],
             attachments: transformedAttachments || [],
-            createdBy: vendorRequest?.createdBy,
-            editedBy: vendorRequest?.editedBy,
+            createdBy: vendorRequest?.createdBy?._id,
+            editedBy: vendorRequest?.editedBy?._id,
             editedNotes: vendorRequest?.editedNotes || []
         });
     }
@@ -179,59 +181,75 @@ function VendorQuoteRequestForm({ vendorRequest }) {
 //   }, [formValues.items]);
 
 const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      setFiles([...files, ...acceptedFiles]);
-    },
-  });
+  onDrop: (acceptedFiles) => {
+    setFiles([...files, ...acceptedFiles]);
+  }
+});
 
-  const handleRemoveAttachment = (index) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      attachments: prevValues.attachments.filter((_, i) => i !== index),
-    }));
-  };
+const handleRemoveAttachment = (index) => {
+  setFiles(files.filter((_, i) => i !== index));
+};
 
-  const handleUploadAttachment = async (file, index) => {
-    try {
-      const response = await generateSignedUrl({
-        title: file.name,
-        mediaType: 'file',
-        ext: file.name.split('.').pop() || "",
-        active: true,
-        uploadStatus: 'progressing',
-        uploadProgress: 0,
-      });
+const handleUploadAttachment = async (file, index) => {
+  try {
+    console.log(`Generating signed URL for ${file.name}`);
 
-      const { signedUrl, media } = response;
+    const signedUrlResponse = await generateSignedUrl({
+      title: file.name,
+      mediaType: "doc",
+      ext: file.name.split('.').pop() || "",
+      active: true,
+      uploadStatus: "progressing",
+      uploadProgress: 0,
+    });
 
-      await axios.put(signedUrl, file, {
-        headers: { 'Content-Type': file.type },
-        onUploadProgress: (progressEvent) => {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          setUploadProgress((prev) => ({ ...prev, [file.name]: progress }));
-
-          if (progress === 100) {
-            updateMediaStatus({
-              mediaId: media._id,
-              uploadStatus: 'completed',
-              uploadProgress: 100,
-            });
-          }
-        },
-      });
-
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        attachments: [
-          ...prevValues.attachments,
-          { fileName: file.name, fileUrl: signedUrl.split('?')[0] },
-        ],
-      }));
-    } catch (error) {
-      console.error('Attachment upload failed:', error);
-      toast.error('Failed to upload attachment.');
+    if (!signedUrlResponse || !signedUrlResponse.signedUrl) {
+      throw new Error('Invalid signed URL response');
     }
-  };
+
+    const { signedUrl, media } = signedUrlResponse;
+    const mediaId = media._id;
+
+    setMediaId(mediaId);
+
+    console.log("Signed URL:", signedUrl, "Media ID:", mediaId);
+    console.log("signedUrlResponse:", signedUrlResponse);
+    console.log("Media:", media);
+
+    // Perform the file upload
+    await axios.put(signedUrl, file, {
+      headers: { 'Content-Type': file.type },
+      onUploadProgress: (progressEvent) => {
+        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        setUploadProgress(prev => ({ ...prev, [file.name]: progress }));
+
+        if (progress === 100) {
+          updateMediaStatus({
+            mediaType: "doc",
+            title: file.name,
+            ext: file.name.split('.').pop() || "",
+            active: true,
+            uploadStatus: "completed",
+            uploadProgress: 100,
+          });
+        }
+      },
+    });
+
+    // Add the uploaded file to form values
+    setFormValues(prevValues => ({
+      ...prevValues,
+      attachments: [
+        ...prevValues.attachments,
+        { fileName: file.name, fileUrl: `${import.meta.env.VITE_MEDIA_BASE_URL}${mediaId}.${file.name.split('.').pop()}` },
+      ],
+    }));
+  } catch (error) {
+    console.error("Upload error:", error);
+    toast.error('Failed to upload attachment. Please try again.');
+  }
+};
+
 
 const handleProductChange = (index, field, value) => {
     const updatedProducts = [...formValues.products];
@@ -367,7 +385,7 @@ const handleTermChange = (index, field, value) => {
     try {
       await savePurchaseOrder(formValues);
       toast.success('Purchase Order saved successfully');
-      navigate('/vendorRequests');
+      navigate('/quoterequest');
     } catch (error) {
       toast.error('Failed to save Purchase Order');
     }
@@ -378,6 +396,7 @@ const handleTermChange = (index, field, value) => {
   }
 
   console.log("formValues",formValues);
+  console.log("vendorRequest",vendorRequest);
 
   return (
     <div>
@@ -808,7 +827,7 @@ const handleTermChange = (index, field, value) => {
 </div>
 
 
-{/* <div className="w-full p-4">
+<div className="w-full p-4">
   <label className="block w-full mb-4 text-white">Attachments</label>
   <div
     {...getRootProps({ className: "dropzone" })}
@@ -818,19 +837,19 @@ const handleTermChange = (index, field, value) => {
     <p>Drag & drop files here, or click to select files</p>
     <div className="w-full p-4">
       {files.map((file, index) => (
-        <div key={index} className="flex items-center justify-between mb-2"> */}
+        <div key={index} className="flex items-center justify-between mb-2">
           {/* File name */}
-          {/* <span>{file.name}</span> */}
+          <span>{file.name}</span>
           {/* Progress bar */}
-          {/* <progress
+          <progress
             value={uploadProgress[file.name] || 0}
             max="100"
             className="flex-1 mx-2"
           >
             {uploadProgress[file.name] || 0}%
-          </progress> */}
+          </progress>
           {/* Upload button */}
-          {/* <button
+          <button
             className="ml-2 text-blue-500"
             onClick={(e) => {
               e.stopPropagation();
@@ -839,9 +858,9 @@ const handleTermChange = (index, field, value) => {
             }}
           >
             Upload
-          </button> */}
+          </button>
           {/* Remove button */}
-          {/* <button
+          <button
             className="ml-2 text-red-500"
             onClick={(e) => {
               e.stopPropagation();
@@ -856,18 +875,18 @@ const handleTermChange = (index, field, value) => {
   </div>
   <div className="w-full p-4">
     {formValues.attachments.map((attachment, index) => (
-      <div key={index} className="flex items-center justify-between mb-2"> */}
+      <div key={index} className="flex items-center justify-between mb-2">
         {/* File link */}
-        {/* <a
+        <a
           href={attachment.fileUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-400"
         >
           {attachment.fileName}
-        </a> */}
+        </a>
         {/* Remove button */}
-        {/* <button
+        <button
           className="ml-2 text-red-500"
           onClick={(e) => {
             e.stopPropagation();
@@ -879,7 +898,7 @@ const handleTermChange = (index, field, value) => {
       </div>
     ))}
   </div>
-</div> */}
+</div>
 
 
 
@@ -1046,6 +1065,41 @@ const handleTermChange = (index, field, value) => {
             value={product.productName}
             onChange={(e) => handleProductChange(index, 'productName', e.target.value)}
           />
+          {/* <Select
+                options={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
+                value={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
+                onChange={(selectedOption) => handleProductChange(index, 'productName', selectedOption.value)}
+                className="w-1/4"
+                placeholder="Select Product"
+                styles={{
+                    control: (provided, state) => ({
+                      ...provided,
+                      backgroundColor: 'black',
+                      borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                      borderBottomWidth: '2px',
+                      borderRadius: '0px',
+                      height: '40px',
+                      paddingLeft: '8px',
+                      paddingRight: '8px',
+                      color: 'white',
+                    }),
+                    singleValue: (provided) => ({
+                      ...provided,
+                      color: 'white',
+                    }),
+                    menu: (provided) => ({
+                      ...provided,
+                      backgroundColor: 'black',
+                      color: 'white',
+                    }),
+                    option: (provided, state) => ({
+                      ...provided,
+                      backgroundColor: state.isSelected ? '#007bff' : 'black',
+                      color: state.isSelected ? 'black' : 'white',
+                      cursor: 'pointer',
+                    }),
+                  }}
+              /> */}
           <input
             type="text"
             name={`description-${index}`}

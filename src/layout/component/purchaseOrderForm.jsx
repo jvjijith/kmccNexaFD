@@ -9,6 +9,7 @@ function PurchaseOrderForm({ purchaseOrder }) {
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     poTemplate: '',
+    poStatus: "Draft",
     quoteId: '',
     quoteType: '',
     purchaser: '',
@@ -125,10 +126,11 @@ function PurchaseOrderForm({ purchaseOrder }) {
         
         setFormValues({
             poTemplate: purchaseOrder?.poTemplate,
+            poStatus: purchaseOrder?.poStatus,
             quoteId: purchaseOrder?.quoteId,
             quoteType: purchaseOrder?.quoteType,
-            purchaser: purchaseOrder?.purchaser,
-            vendor: purchaseOrder?.vendor,
+            purchaser: purchaseOrder?.purchaser?._id,
+            vendor: purchaseOrder?.vendor?._id,
             poNotes: purchaseOrder?.poNotes,
             items: cleanedContainer?.items,
             totalAmount: purchaseOrder?.totalAmount,
@@ -139,10 +141,13 @@ function PurchaseOrderForm({ purchaseOrder }) {
             billingAddress: purchaseOrder?.billingAddress,
             paymentTerms: purchaseOrder?.paymentTerms,
             termsAndConditions: cleanedContainer?.termsAndConditions,
-            paymentHistory: cleanedContainer?.paymentHistory,
+            paymentHistory: cleanedContainer?.paymentHistory.map((payment) => ({
+              ...payment,
+              paymentDate: formatDate(payment.paymentDate), // Format paymentDate
+            })) || [],
             paymentStatus: purchaseOrder?.paymentStatus,
-            createdBy: purchaseOrder?.createdBy,
-            editedBy:purchaseOrder?.editedBy,
+            createdBy: purchaseOrder?.createdBy?._id,
+            editedBy:purchaseOrder?.editedBy?._id,
             editedNotes:purchaseOrder?.editedNotes
         });
     }
@@ -183,6 +188,16 @@ function PurchaseOrderForm({ purchaseOrder }) {
 
 //     setFormValues((prev) => ({ ...prev, totalAmount, totalDiscount, finalAmount }));
 //   }, [formValues.items]);
+
+const quoteTemplateOptions = organizationData?.organizations?.[0]?.quoteTemplates.map(template => ({
+  value: template._id,
+  label: template.name,
+}));
+
+const handleQuoteTemplateChange = (selectedOption) => {
+  handleInputChange('poTemplate', selectedOption.value);
+};
+
 
 const handleEditedNoteChange = (index, value) => {
     setFormValues((prev) => {
@@ -288,14 +303,14 @@ const handleTermChange = (index, field, value) => {
       (parseFloat(item.unitPrice || 0) * parseFloat(item.quantity || 0) * (parseFloat(item.discount || 0) / 100)),
     0
   );
-  const finalAmount = updatedItems.reduce(
-    (sum, item) => (parseFloat(sum + item.totalPrice || 0)).toFixed(2)
-  );
+  const finalAmount = totalAmount - totalDiscount;
   
     // Update formValues state
     setFormValues((prevValues) => ({
       ...prevValues,
       items: updatedItems,
+      totalAmount: totalAmount,
+      totalDiscount: totalDiscount,
       finalAmount: parseFloat(finalAmount), // Ensure 2 decimal places
     }));
   };
@@ -347,7 +362,7 @@ const handleTermChange = (index, field, value) => {
     try {
       await savePurchaseOrder(formValues);
       toast.success('Purchase Order saved successfully');
-      navigate('/purchaseOrders');
+      navigate('/purchaseorder');
     } catch (error) {
       toast.error('Failed to save Purchase Order');
     }
@@ -358,6 +373,7 @@ const handleTermChange = (index, field, value) => {
   }
 
   console.log("formValues",formValues);
+  console.log("purchaseOrder",purchaseOrder);
 
   return (
     <div>
@@ -402,19 +418,47 @@ const handleTermChange = (index, field, value) => {
           </div>
 
           {/* PO Template */}
-  <div className="w-full sm:w-1/2 p-4">
-    <label className="block w-full mb-2 text-white">PO Template</label>
-    <input
-      type="text"
-      name="poTemplate"
-      value={formValues.poTemplate}
-      onChange={(e) => handleInputChange('poTemplate', e.target.value)}
-      className="block w-full px-3 py-2 text-white bg-black border rounded"
-    />
-  </div>
+          <div className="w-full sm:w-1/2 p-4">
+  <label className="block w-full mb-2 text-white">Template</label>
+  <Select
+    options={quoteTemplateOptions}
+    value={quoteTemplateOptions?.find(option => option.value === formValues.poTemplate)}
+    onChange={handleQuoteTemplateChange}
+    placeholder="Select Quote Template"
+    styles={{
+      control: (provided, state) => ({
+        ...provided,
+        backgroundColor: 'black',
+        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+        borderBottomWidth: '2px',
+        borderRadius: '0px',
+        height: '40px',
+        paddingLeft: '8px',
+        paddingRight: '8px',
+        color: 'white',
+      }),
+      singleValue: (provided) => ({
+        ...provided,
+        color: 'white',
+      }),
+      menu: (provided) => ({
+        ...provided,
+        backgroundColor: 'black',
+        color: 'white',
+      }),
+      option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? '#007bff' : 'black',
+        color: state.isSelected ? 'black' : 'white',
+        cursor: 'pointer',
+      }),
+    }}
+  />
+</div>
+
 
           {/* Organization Dropdown */}
-          <div className="w-full sm:w-1/2 p-4">
+          {/* <div className="w-full sm:w-1/2 p-4">
             <label className="block w-full mb-2 text-white">Organization</label>
             <Select
               options={organizationOptions}
@@ -450,7 +494,7 @@ const handleTermChange = (index, field, value) => {
                 }),
               }}
             />
-          </div>
+          </div> */}
 
           {/* Quote Status Dropdown */}
           <div className="w-full sm:w-1/2 p-4">
@@ -947,7 +991,7 @@ const handleTermChange = (index, field, value) => {
               <label className="block text-white">Product</label>
               <Select
                 options={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
-                value={productData?.products?.find((p) => p._id === product.productId)}
+                value={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
                 onChange={(selectedOption) => handleProductChange(index, 'productId', selectedOption.value)}
                 className="w-full"
                 styles={{
@@ -988,7 +1032,9 @@ const handleTermChange = (index, field, value) => {
                 options={varientData?.variants
                   ?.filter((v) => v.productId === product.productId)
                   ?.map((v) => ({ value: v._id, label: v.name }))}
-                value={varientData?.variants?.find((v) => v._id === product.variantId)}
+                value={varientData?.variants
+                  ?.filter((v) => v.productId === product.productId)
+                  ?.map((v) => ({ value: v._id, label: v.name }))}
                 onChange={(selectedOption) => handleProductChange(index, 'variantId', selectedOption.value)}
                 isDisabled={!product.productId}
                 className="w-full"

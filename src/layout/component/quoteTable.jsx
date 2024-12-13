@@ -146,34 +146,34 @@ function Header({ organization }) {
         <Page size="A4" style={styles.page}>
           {/* Header */}
           <Header organization={organization.organizations[0]} />
-  
+  <View style={{ marginTop: 30 }}>
           {/* Table and Content */}
-          <Text style={styles.section}>
   {/* Billing and Shipping Details */}
   <View style={{ flexDirection: "row", alignItems: "flex-start", paddingHorizontal: 10 }}>
   {/* Billing To */}
   <View style={{ flex: 1, marginRight: 10 }}>
-    <Text style={styles.textBold}>{"\n"}{"\n"}Billing To:{"\n"}{"\n"}{"\n"}</Text>
-    <Text>{customer.name}{"\n"}</Text>
-    <Text>{customer.location},{"\n"} {customer.country}{"\n"}</Text>
-    <Text>{"\n"}Attn: {customer.name}{"\n"}</Text>
-    <Text>{customer.email}{"\n"}</Text>
-    <Text>{customer.phone}{"\n"}</Text>
+    <Text style={styles.textBold}>Billing To:{"\n"}{"\n"}</Text>
+    <Text>{customer.name}</Text>
+    <Text>{customer.location}, {customer.country}</Text>
+    <Text>{"\n"}Attn: {customer.name}</Text>
+    <Text>{customer.email}</Text>
+    <Text>{customer.phone}</Text>
   </View>
 
   {/* Shipping To */}
   <View style={{ flex: 1, marginLeft: 10 }}>
-    <Text style={styles.textBold}>{"\n"}{"\n"}Shipping To:{"\n"}{"\n"}{"\n"}</Text>
-    <Text>{customer.name}{"\n"}</Text>
-    <Text>{customer.location},{"\n"} {customer.country}{"\n"}</Text>
-    <Text>{"\n"}Attn: {customer.name}{"\n"}</Text>
-    <Text>{customer.email}{"\n"}</Text>
-    <Text>{customer.phone}{"\n"}</Text>
+    <Text style={styles.textBold}>Shipping To:{"\n"}{"\n"}</Text>
+    <Text>{customer.name}</Text>
+    <Text>{customer.location}, {customer.country}</Text>
+    <Text>{"\n"}Attn: {customer.name}</Text>
+    <Text>{customer.email}</Text>
+    <Text>{customer.phone}</Text>
   </View>
 </View>
-
+</View>
 
   {/* Quote Details */}
+<Text style={styles.section}>
   <Text>
   {"\n"}{"\n"}{"\n"}
     Quote #: {quote.quoteNumber}

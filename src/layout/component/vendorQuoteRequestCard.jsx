@@ -70,7 +70,7 @@ function VendorQuoteRequestCard({children,title,button}) {
           
            <Card title={title}
            component={button?
-            <button className="bg-black text-white px-4 py-2 rounded" onClick={() => navigate(`/quote/add`)}>
+            <button className="bg-black text-white px-4 py-2 rounded" onClick={() => navigate(`/quoterequest/add`)}>
               Add
             </button>:null
           }>

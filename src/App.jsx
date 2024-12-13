@@ -73,6 +73,12 @@ import QuotesProfile from "./pages/quote/profile";
 import AddPurchaseOrder from "./pages/purchaseOrder/addPurchaseOrder";
 import AddSalesInvoice from "./pages/salesInvoice/addSalesInvoice";
 import AddVendorQuoteRequest from "./pages/vendorQuoteRequest/addVendorQuoteRequest";
+import SalesInvoice from "./pages/salesInvoice/salesInvoice";
+import EditSalesInvoice from "./pages/salesInvoice/editSalesInvoice";
+import PurchaseOrder from "./pages/purchaseOrder/purchaseOrder";
+import EditPurchaseOrder from "./pages/purchaseOrder/editPurchaseOrder";
+import VendorQuoteRequest from "./pages/vendorQuoteRequest/vendorQuoteRequest";
+import EditVendorQuoteRequest from "./pages/vendorQuoteRequest/editVendorQuoteRequest";
 
 const App = () => {
   return (
@@ -178,8 +184,14 @@ const App = () => {
       <Route path="enquiry" element={<Enquiry />} />
       <Route path="organization/add" element={<AddOrganization />} />
       <Route path="purchaseorder/add" element={<AddPurchaseOrder />} />
+      <Route path="purchaseorder/edit" element={<EditPurchaseOrder />} />
+      <Route path="purchaseorder" element={<PurchaseOrder />} />
       <Route path="salesinvoice/add" element={<AddSalesInvoice />} />
+      <Route path="salesinvoice/edit" element={<EditSalesInvoice />} />
+      <Route path="salesinvoice" element={<SalesInvoice />} />
       <Route path="quoterequest/add" element={<AddVendorQuoteRequest />} />
+      <Route path="quoterequest/edit" element={<EditVendorQuoteRequest />} />
+      <Route path="quoterequest" element={<VendorQuoteRequest />} />
       <Route path="organization/edit" element={<EditOrganization />} />
       <Route path="organization" element={<Organization />} />
       <Route path="quote/add" element={<AddQuote />} />
