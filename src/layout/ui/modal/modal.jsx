@@ -12,7 +12,9 @@ const PopUpModal = ({ isOpen, onClose, title, children, size }) => {
       {/* Modal Content */}
       <div
         className={`bg-black rounded-lg overflow-hidden shadow-xl transform transition-all ${
-          size ? "sm:max-w-4xl sm:w-full p-8" : "sm:max-w-lg sm:w-full p-6"
+          size
+            ? "sm:max-w-4xl sm:w-full h-full p-8"
+            : "sm:max-w-lg sm:w-full p-6"
         }`}
       >
         {/* Header */}
@@ -24,7 +26,9 @@ const PopUpModal = ({ isOpen, onClose, title, children, size }) => {
         </div>
 
         {/* Modal Body */}
-        {children}
+        <div className={`${size ? "overflow-y-auto h-[calc(100%-64px)]" : ""}`}>
+          {children}
+        </div>
       </div>
     </div>,
     document.body

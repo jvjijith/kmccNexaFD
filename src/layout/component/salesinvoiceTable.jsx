@@ -89,7 +89,7 @@ function Header({ organization }) {
   }
   
   // Quote PDF Component
-  function QuotePDF({ quote, organization }) {
+  function QuotePDF({ quote, organization, productData, varientData }) {
     const customer = quote.customer || {};
     const createdBy = quote.createdBy || {};
     const products = quote.products || [];
@@ -174,8 +174,8 @@ function Header({ organization }) {
           {/* Table Header */}
           <View style={[styles.tableRow, styles.tableHeader]} fixed>
             <Text style={[styles.tableCell, { flex: 1 }]} fixed>No</Text>
-            <Text style={[styles.tableCell, { flex: 3 }]} fixed>Description</Text>
-            <Text style={[styles.tableCell, { flex: 2 }]} fixed>Make</Text>
+            <Text style={[styles.tableCell, { flex: 3 }]} fixed>Product</Text>
+            <Text style={[styles.tableCell, { flex: 2 }]} fixed>Variant</Text>
             <Text style={[styles.tableCell, { flex: 2 }]} fixed>Model</Text>
             <Text style={[styles.tableCell, { flex: 1 }]} fixed>Qty</Text>
             <Text style={[styles.tableCell, { flex: 1 }]} fixed>{tax.name}</Text>
@@ -187,8 +187,8 @@ function Header({ organization }) {
           {products.map((product, index) => (
             <View key={index} style={styles.tableRow}>
               <Text style={[styles.tableCell, { flex: 1 }]}>{index + 1}</Text>
-              <Text style={[styles.tableCell, { flex: 3 }]}>{product.productId || "N/A"}</Text>
-              <Text style={[styles.tableCell, { flex: 2 }]}>{product.make || "N/A"}</Text>
+              <Text style={[styles.tableCell, { flex: 3 }]}>{productData?.products?.find((v) => v._id === product.productId)?.name || "N/A"}</Text>
+              <Text style={[styles.tableCell, { flex: 2 }]}>{varientData?.variants?.find((v) => v._id === product.variantId)?.name || "N/A"}</Text>
               <Text style={[styles.tableCell, { flex: 2 }]}>{product.model || "N/A"}</Text>
               <Text style={[styles.tableCell, { flex: 1 }]}>{product.quantity || 0}</Text>
               <Text style={[styles.tableCell, { flex: 1 }]}>18%</Text>
@@ -221,7 +221,11 @@ function Header({ organization }) {
 
   
          {/* Terms & Conditions */}
-                   <View style={[styles.termsTable, { marginTop: 30 }]}>
+                   <View style={[styles.termsTable,
+    { marginTop: 30, breakInside: 'avoid', breakBefore: 'auto' },
+  ]}
+  wrap={false} // Prevents wrapping across pages
+>
                      <View style={[styles.tableRow, styles.tableHeader]} fixed>
                        <Text style={[styles.tableCell, { flex: 1 }]}>Terms & Conditions</Text>
                      </View>
@@ -357,6 +361,18 @@ function SalesInvoiceTable() {
     {}
   );
 
+  const { data: productData, productLoading, productError, productRefetch } = useGetData(
+      "productData",
+      `/product`,
+      {}
+    );
+  
+  const { data: varientData, varientLoading, varientError, varientRefetch } = useGetData(
+    "varientData",
+    `/variant/`,
+    {}
+  );
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -421,12 +437,12 @@ function SalesInvoiceTable() {
                     Edit Invoice
                   </Dropdown.Item>
                     <Dropdown.Item>
-                      <BlobProvider document={<QuotePDF quote={invoice} organization={organizationData} />}>
+                      <BlobProvider document={<QuotePDF quote={invoice} organization={organizationData} productData={productData} varientData={varientData} />}>
                         {({ url, loading }) =>
                           loading ? (
                             "Generating PDF..."
                           ) : (
-                            <button onClick={() => downloadURI(url, `Quote-${invoice.invoiceNumber}.pdf`)}>
+                            <button onClick={() => downloadURI(url, `Invoice-${invoice.invoiceNumber}.pdf`)}>
                               Download PDF
                             </button>
                           )
@@ -473,7 +489,7 @@ function SalesInvoiceTable() {
           <iframe
             src={url}
             title="Invoice Preview"
-            style={{ width: "100%", height: "500px", border: "none" }}
+            style={{ width: "100%", height: "100%", border: "none" }}
           ></iframe>
         )
       }

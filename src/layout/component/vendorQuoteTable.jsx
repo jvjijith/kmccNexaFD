@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useGetData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
 import { BlobProvider, Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
+import PopUpModal from "../ui/modal/modal";
 
 // Header Component
 function Header({ organization }) {
@@ -121,21 +122,21 @@ function Header({ organization }) {
             </Text>
   
             {/* Billing & Shipping Details */}
-            <View
+            {/* <View
               style={{ flexDirection: "row", alignItems: "flex-start", paddingHorizontal: 10 }}
-            >
+            > */}
               {/* Billing To */}
-              <View style={{ flex: 1, marginRight: 10 }}>
+              {/* <View style={{ flex: 1, marginRight: 10 }}>
                 <Text style={styles.textBold}>Billing To:{"\n\n"}</Text>
                 <Text>{vendor.name}</Text>
                 <Text>{vendor.billingAddress}</Text>
                 <Text>{vendor.location}, {vendor.country}</Text>
                 <Text>Email: {vendor.email}</Text>
                 <Text>Phone: {vendor.phone}</Text>
-              </View>
+              </View> */}
   
               {/* Shipping To */}
-              <View style={{ flex: 1, marginLeft: 10 }}>
+              {/* <View style={{ flex: 1, marginLeft: 10 }}>
                 <Text style={styles.textBold}>Shipping To:{"\n\n"}</Text>
                 <Text>{vendor.name}</Text>
                 <Text>{vendor.shippingAddress}</Text>
@@ -143,7 +144,7 @@ function Header({ organization }) {
                 <Text>Email: {vendor.email}</Text>
                 <Text>Phone: {vendor.phone}</Text>
               </View>
-            </View>
+            </View> */}
           </View>
   
           {/* Product Table */}
@@ -273,6 +274,8 @@ function VendorQuoteTable() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false); // State for modal visibility
+  const [previewInvoice, setPreviewInvoice] = useState(null); // State for selected invoice preview
   const limit = 10;
 
   const { data: quoteRequestData, isLoading, error, refetch } = useGetData(
@@ -373,6 +376,14 @@ function VendorQuoteTable() {
                       }
                     </BlobProvider>
                   </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      setPreviewInvoice(request);
+                      setIsPreviewOpen(true); // Open the modal
+                    }}
+                  >
+                    Preview Invoice
+                  </Dropdown.Item>
                 </Dropdown>
               </Table.Cell>
             </Table.Row>
@@ -394,6 +405,24 @@ function VendorQuoteTable() {
           </button>
         ))}
       </div>
+      {/* Preview Modal */}
+    <PopUpModal isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)} title="Invoice Preview" size={true}>
+  {previewInvoice && (
+    <BlobProvider document={<QuotePDF quote={previewInvoice} organization={organizationData} />}>
+      {({ blob, url, loading }) =>
+        loading ? (
+          <p className="text-white">Loading preview...</p>
+        ) : (
+          <iframe
+            src={url}
+            title="Invoice Preview"
+            style={{ width: "100%", height: "100%", border: "none" }}
+          ></iframe>
+        )
+      }
+    </BlobProvider>
+  )}
+</PopUpModal>
     </div>
   );
 }

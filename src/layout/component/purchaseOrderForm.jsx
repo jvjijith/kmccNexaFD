@@ -100,85 +100,123 @@ function PurchaseOrderForm({ purchaseOrder }) {
   }, []);
 
   useEffect(() => {
+    // Helper function to transform products
+    const transformProducts = (products) =>
+      products?.map((item) => ({
+        productId: item.productId,
+        variantId: item.variantId,
+        quantity: item.quantity || 0,
+        unitPrice: item.unitPrice || 0,
+        discount: item.discount || 0,
+        totalPrice: item.totalPrice || 0,
+      })) || [];
+  
+    // If purchaseOrder is present, populate the form with its values
     if (purchaseOrder) {
-        // Remove unwanted fields
-        const cleanedContainer = removeUnwantedFields(purchaseOrder);
+      const cleanedContainer = removeUnwantedFields(purchaseOrder);
   
-        const formatDate = (dateString) => {
-          const date = new Date(dateString);
-          return date.toISOString().split('T')[0];
-        };
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toISOString().split("T")[0];
+      };
   
-        // Transform items to only include itemType and itemId
-        // const transformedItems = elementsDatas.items?.map(item => ({
-        //     itemType: item.itemType,
-        //     itemId: item.itemId?._id,
-        // }));
+      setFormValues({
+        poTemplate: purchaseOrder.poTemplate,
+        poStatus: purchaseOrder.poStatus,
+        quoteId: purchaseOrder.quoteId,
+        quoteType: purchaseOrder.quoteType,
+        purchaser: purchaseOrder.purchaser?._id,
+        vendor: purchaseOrder.vendor?._id,
+        poNotes: purchaseOrder.poNotes,
+        items: cleanedContainer?.items || [],
+        totalAmount: purchaseOrder.totalAmount,
+        totalDiscount: purchaseOrder.totalDiscount,
+        finalAmount: purchaseOrder.finalAmount,
+        expectedDeliveryDate: formatDate(purchaseOrder.expectedDeliveryDate),
+        shippingAddress: purchaseOrder.shippingAddress,
+        billingAddress: purchaseOrder.billingAddress,
+        paymentTerms: purchaseOrder.paymentTerms,
+        termsAndConditions: cleanedContainer?.termsAndConditions || [],
+        paymentHistory:
+          cleanedContainer?.paymentHistory?.map((payment) => ({
+            ...payment,
+            paymentDate: formatDate(payment.paymentDate),
+          })) || [],
+        paymentStatus: purchaseOrder.paymentStatus,
+        createdBy: purchaseOrder.createdBy?._id,
+        editedBy: purchaseOrder.editedBy?._id,
+        editedNotes: purchaseOrder.editedNotes,
+      });
+    } else if (formValues.quoteId) {
+      // If no purchaseOrder, process the selected quoteId
+      const selectedQuote = quoteData?.quotes?.find(
+        (quote) => quote._id === formValues.quoteId
+      );
   
-        // Transform availability to only include appId as a string
-        // const transformedAppId = elementsDatas.availability?.map(avail => ({
-        //     appId: avail.appId?._id,
-        // }));
-  
-        // const appId = layoutDatas?.appId?._id;
-  
-        // Set the transformed data
-        
-        setFormValues({
-            poTemplate: purchaseOrder?.poTemplate,
-            poStatus: purchaseOrder?.poStatus,
-            quoteId: purchaseOrder?.quoteId,
-            quoteType: purchaseOrder?.quoteType,
-            purchaser: purchaseOrder?.purchaser?._id,
-            vendor: purchaseOrder?.vendor?._id,
-            poNotes: purchaseOrder?.poNotes,
-            items: cleanedContainer?.items,
-            totalAmount: purchaseOrder?.totalAmount,
-            totalDiscount: purchaseOrder?.totalDiscount,
-            finalAmount: purchaseOrder?.finalAmount,
-            expectedDeliveryDate: formatDate(purchaseOrder?.expectedDeliveryDate),
-            shippingAddress: purchaseOrder?.shippingAddress,
-            billingAddress: purchaseOrder?.billingAddress,
-            paymentTerms: purchaseOrder?.paymentTerms,
-            termsAndConditions: cleanedContainer?.termsAndConditions,
-            paymentHistory: cleanedContainer?.paymentHistory.map((payment) => ({
-              ...payment,
-              paymentDate: formatDate(payment.paymentDate), // Format paymentDate
-            })) || [],
-            paymentStatus: purchaseOrder?.paymentStatus,
-            createdBy: purchaseOrder?.createdBy?._id,
-            editedBy:purchaseOrder?.editedBy?._id,
-            editedNotes:purchaseOrder?.editedNotes
-        });
-    }
-
-    if (salseManData?.employees) {
-        const options = salseManData.employees.map((employee) => ({
-          value: employee._id,
-          label: employee.name,
+      if (selectedQuote?.products?.length > 0) {
+        const transformedProducts = transformProducts(selectedQuote.products);
+      
+        // Perform calculations for totalAmount, totalDiscount, and finalAmount
+        const totalAmount = transformedProducts.reduce(
+          (sum, item) => sum + (parseFloat(item.unitPrice || 0) * parseFloat(item.quantity || 0)),
+          0
+        );
+        const totalDiscount = transformedProducts.reduce(
+          (sum, item) =>
+            sum +
+            (parseFloat(item.unitPrice || 0) * parseFloat(item.quantity || 0) * (parseFloat(item.discount || 0) / 100)),
+          0
+        );
+        const finalAmount = totalAmount - totalDiscount;
+      
+        // Update form values
+        setFormValues((prevData) => ({
+          ...prevData,
+          items: transformedProducts,
+          totalAmount: parseFloat(totalAmount.toFixed(2)), // Ensure 2 decimal places
+          totalDiscount: parseFloat(totalDiscount.toFixed(2)), // Ensure 2 decimal places
+          finalAmount: parseFloat(finalAmount.toFixed(2)), // Ensure 2 decimal places
         }));
-        setEmployeeOptions(options);
-        setEditedByOptions(options);
       }
-
+      
+    }
+  
+    // Process Salesman and Vendor options
+    if (salseManData?.employees) {
+      const options = salseManData.employees.map((employee) => ({
+        value: employee._id,
+        label: employee.name,
+      }));
+      setEmployeeOptions(options);
+      setEditedByOptions(options);
+    }
+  
     if (vendorData?.customers) {
       const options = vendorData.customers
-        .filter(customer => customer.vendor) // Ensure only vendors are included
-        .map(vendor => ({
+        .filter((customer) => customer.vendor)
+        .map((vendor) => ({
           value: vendor._id,
           label: vendor.name,
         }));
       setVendorOptions(options);
     }
-    
+  
+    // Process Quote Status options
     if (quoteData?.quotes) {
-        const options = quoteData.quotes.map((quote) => ({
-          value: quote._id,
-          label: `Quote #${quote.quoteNumber} - ${quote.quoteStatus}`,
-        }));
-        setQuoteStatusOptions(options);
-      }
-  }, [quoteData, salseManData, vendorData]);
+      const options = quoteData.quotes.map((quote) => ({
+        value: quote._id,
+        label: `Quote #${quote.quoteNumber} - ${quote.quoteStatus}`,
+      }));
+      setQuoteStatusOptions(options);
+    }
+  }, [
+    quoteData,
+    salseManData,
+    vendorData,
+    formValues.quoteId,
+    purchaseOrder,
+  ]);
+  
 
   // Calculate Derived Fields
 //   useEffect(() => {
@@ -374,6 +412,7 @@ const handleTermChange = (index, field, value) => {
 
   console.log("formValues",formValues);
   console.log("purchaseOrder",purchaseOrder);
+  console.log("quoteData",quoteData);
 
   return (
     <div>
@@ -991,7 +1030,7 @@ const handleTermChange = (index, field, value) => {
               <label className="block text-white">Product</label>
               <Select
                 options={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
-                value={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
+                value={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' })).find((option) => option.value === product.productId)}
                 onChange={(selectedOption) => handleProductChange(index, 'productId', selectedOption.value)}
                 className="w-full"
                 styles={{
@@ -1034,7 +1073,7 @@ const handleTermChange = (index, field, value) => {
                   ?.map((v) => ({ value: v._id, label: v.name }))}
                 value={varientData?.variants
                   ?.filter((v) => v.productId === product.productId)
-                  ?.map((v) => ({ value: v._id, label: v.name }))}
+                  ?.map((v) => ({ value: v._id, label: v.name })).find((option) => option.value === product.variantId)}
                 onChange={(selectedOption) => handleProductChange(index, 'variantId', selectedOption.value)}
                 isDisabled={!product.productId}
                 className="w-full"
