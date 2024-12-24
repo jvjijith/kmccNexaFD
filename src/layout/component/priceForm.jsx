@@ -35,14 +35,14 @@ function PriceForm({ priceId , productId }) {
   const { mutate: saveProduct, isLoading } = mutationHook(api_key, api_url);
   const { data: pricesData, loading } = useGetData('price', `/pricing/${priceId}`);
 
-  useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
+  // useEffect(() => {
+  //   const hasReloaded = sessionStorage.getItem('hasReloaded');
 
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
-  }, []);
+  //   if (!hasReloaded) {
+  //     sessionStorage.setItem('hasReloaded', 'true');
+  //     window.location.reload();
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (pricesData) {

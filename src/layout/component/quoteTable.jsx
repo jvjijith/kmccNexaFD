@@ -8,49 +8,55 @@ import LoadingScreen from "../ui/loading/loading";
 
 // Header Component
 function Header({ organization }) {
-    return (
+  const address = organization.addresses[0]  || {};
+  console.log("address",address);
+  console.log("organization",organization);
+  return (
+    <View
+      style={[
+        styles.headerContainer,
+        { position: "fixed", top: 0, left: 0, right: 0 },
+      ]}
+      fixed
+    >
       <View
         style={[
-          styles.headerContainer,
-          { position: "fixed", top: 0, left: 0, right: 0 }, // Fixed position
+          styles.header,
+          {
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          },
         ]}
-        fixed
       >
-        <View
-          style={[
-            styles.header,
-            {
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            },
-          ]}
-        >
-          {/* Left Side: Logo */}
-          <View style={{ width: "20%" }}>
-            <Image
-              src={organization.logo || "icon.png"}
-              style={{ width: 60, height: 60 }}
-            />
-          </View>
-  
-          {/* Right Side: Organization Details */}
-          <View style={{ width: "75%", textAlign: "right" }}>
-            <Text style={{ fontWeight: "bold" }}>
-              {organization.name || "Company Name"}
-            </Text>
-            <Text>{organization.address || "Company Address"}</Text>
-            <Text>Phone: {organization.phone || "000-000-0000"}</Text>
-            <Text>Email: {organization.email || "info@example.com"}</Text>
-            <Text>Website: {organization.website || "www.example.com"}</Text>
-          </View>
+        {/* Left Side: Logo */}
+        <View style={{ width: "20%" }}>
+          <Image
+            src={organization.logo || "icon.png"}
+            style={{ width: 60, height: 60 }}
+          />
         </View>
-  
-        {/* Line Below Header */}
-        <View style={styles.headerLine} />
+
+        {/* Right Side: Organization Details */}
+        <View style={{ width: "75%", textAlign: "right" }}>
+          <Text style={{ fontWeight: "bold" }}>
+            {organization.name || "Company Name"}
+          </Text>
+          <Text>
+            {`${address.street || ""}, ${address.city || ""}, ${address.state || ""}, ${address.country || ""}, ${address.postalCode || ""}`}
+          </Text>
+          <Text>Phone: {organization.phone || "000-000-0000"}</Text>
+          <Text>Email: {organization.email || "info@example.com"}</Text>
+          <Text>Website: {organization.website || "www.example.com"}</Text>
+        </View>
       </View>
-    );
-  }
+
+      {/* Line Below Header */}
+      <View style={styles.headerLine} />
+    </View>
+  );
+}
+
   
   // Footer Component
   function Footer({ quote }) {
@@ -87,13 +93,16 @@ function Header({ organization }) {
     const customer = quote.customer || {};
     const salesman = quote.salesman || {};
     const products = quote.products || [];
+    const tax = organization.organizations[0].taxSettings[0] || [];
+
+    console.log("tax",tax );
   
     return (
       <Document>
         {/** Page 1 */}
         <Page size="A4" style={styles.page}>
           {/* Header */}
-          <Header organization={organization} />
+          <Header organization={organization.organizations[0]} />
   
           {/* Main Content */}
           <Text style={styles.section}>
@@ -136,35 +145,35 @@ function Header({ organization }) {
         {/** Additional Pages */}
         <Page size="A4" style={styles.page}>
           {/* Header */}
-          <Header organization={organization} />
-  
+          <Header organization={organization.organizations[0]} />
+  <View style={{ marginTop: 30 }}>
           {/* Table and Content */}
-          <Text style={styles.section}>
   {/* Billing and Shipping Details */}
   <View style={{ flexDirection: "row", alignItems: "flex-start", paddingHorizontal: 10 }}>
   {/* Billing To */}
   <View style={{ flex: 1, marginRight: 10 }}>
-    <Text style={styles.textBold}>{"\n"}{"\n"}Billing To:{"\n"}{"\n"}{"\n"}</Text>
-    <Text>{customer.name}{"\n"}</Text>
-    <Text>{customer.location},{"\n"} {customer.country}{"\n"}</Text>
-    <Text>{"\n"}Attn: {customer.name}{"\n"}</Text>
-    <Text>{customer.email}{"\n"}</Text>
-    <Text>{customer.phone}{"\n"}</Text>
+    <Text style={styles.textBold}>Billing To:{"\n"}{"\n"}</Text>
+    <Text>{customer.name}</Text>
+    <Text>{customer.location}, {customer.country}</Text>
+    <Text>{"\n"}Attn: {customer.name}</Text>
+    <Text>{customer.email}</Text>
+    <Text>{customer.phone}</Text>
   </View>
 
   {/* Shipping To */}
   <View style={{ flex: 1, marginLeft: 10 }}>
-    <Text style={styles.textBold}>{"\n"}{"\n"}Shipping To:{"\n"}{"\n"}{"\n"}</Text>
-    <Text>{customer.name}{"\n"}</Text>
-    <Text>{customer.location},{"\n"} {customer.country}{"\n"}</Text>
-    <Text>{"\n"}Attn: {customer.name}{"\n"}</Text>
-    <Text>{customer.email}{"\n"}</Text>
-    <Text>{customer.phone}{"\n"}</Text>
+    <Text style={styles.textBold}>Shipping To:{"\n"}{"\n"}</Text>
+    <Text>{customer.name}</Text>
+    <Text>{customer.location}, {customer.country}</Text>
+    <Text>{"\n"}Attn: {customer.name}</Text>
+    <Text>{customer.email}</Text>
+    <Text>{customer.phone}</Text>
   </View>
 </View>
-
+</View>
 
   {/* Quote Details */}
+<Text style={styles.section}>
   <Text>
   {"\n"}{"\n"}{"\n"}
     Quote #: {quote.quoteNumber}
@@ -185,7 +194,7 @@ function Header({ organization }) {
     <Text style={[styles.tableCell, { flex: 2 }]} fixed>Make</Text>
     <Text style={[styles.tableCell, { flex: 2 }]} fixed>Model</Text>
     <Text style={[styles.tableCell, { flex: 1 }]} fixed>Qty</Text>
-    <Text style={[styles.tableCell, { flex: 1 }]} fixed>IGST</Text>
+    <Text style={[styles.tableCell, { flex: 1 }]} fixed>{tax.name}</Text>
     <Text style={[styles.tableCell, { flex: 2 }]} fixed>Unit Price</Text>
     <Text style={[styles.tableCell, { flex: 2 }]} fixed>EXT. Price</Text>
   </View>
@@ -210,7 +219,7 @@ function Header({ organization }) {
     <Text style={[styles.tableCell, { flex: 1 }]}>₹{quote.totalAmount.toFixed(2)}</Text>
   </View>
   <View style={styles.tableRow}>
-    <Text style={[styles.tableCell, { flex: 7, textAlign: "right", fontWeight: "bold" }]}>IGST @ 18%</Text>
+    <Text style={[styles.tableCell, { flex: 7, textAlign: "right", fontWeight: "bold" }]}>{tax.name} @ 18%</Text>
     <Text style={[styles.tableCell, { flex: 1 }]}>₹{(quote.totalAmount * 0.18).toFixed(2)}</Text>
   </View>
   <View style={styles.tableRow}>
@@ -425,7 +434,7 @@ function QuoteTable() {
                       navigate(`/quote/${quote._id}/details`, { state: { quote } })
                     }
                   >
-                    Profile
+                    Details
                   </Dropdown.Item>
                   <Dropdown.Item>
                     <BlobProvider document={<QuotePDF quote={quote} organization={organizationData} />}>

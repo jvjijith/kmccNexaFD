@@ -70,6 +70,18 @@ import EditOrganization from "./pages/organization/editOrganization";
 import Page from "./pages/page/page";
 import EditPage from "./pages/page/editPage";
 import QuotesProfile from "./pages/quote/profile";
+import AddPurchaseOrder from "./pages/purchaseOrder/addPurchaseOrder";
+import AddSalesInvoice from "./pages/salesInvoice/addSalesInvoice";
+import AddVendorQuoteRequest from "./pages/vendorQuoteRequest/addVendorQuoteRequest";
+import SalesInvoice from "./pages/salesInvoice/salesInvoice";
+import EditSalesInvoice from "./pages/salesInvoice/editSalesInvoice";
+import PurchaseOrder from "./pages/purchaseOrder/purchaseOrder";
+import EditPurchaseOrder from "./pages/purchaseOrder/editPurchaseOrder";
+import VendorQuoteRequest from "./pages/vendorQuoteRequest/vendorQuoteRequest";
+import EditVendorQuoteRequest from "./pages/vendorQuoteRequest/editVendorQuoteRequest";
+import AddMenu from "./pages/menu/addMenu";
+import Menu from "./pages/menu/menu";
+import EditMenu from "./pages/menu/editMenu";
 
 const App = () => {
   return (
@@ -174,11 +186,23 @@ const App = () => {
       <Route path="enquiry/edit" element={<EditEnquiry />} />
       <Route path="enquiry" element={<Enquiry />} />
       <Route path="organization/add" element={<AddOrganization />} />
+      <Route path="purchaseorder/add" element={<AddPurchaseOrder />} />
+      <Route path="purchaseorder/edit" element={<EditPurchaseOrder />} />
+      <Route path="purchaseorder" element={<PurchaseOrder />} />
+      <Route path="salesinvoice/add" element={<AddSalesInvoice />} />
+      <Route path="salesinvoice/edit" element={<EditSalesInvoice />} />
+      <Route path="salesinvoice" element={<SalesInvoice />} />
+      <Route path="quoterequest/add" element={<AddVendorQuoteRequest />} />
+      <Route path="quoterequest/edit" element={<EditVendorQuoteRequest />} />
+      <Route path="quoterequest" element={<VendorQuoteRequest />} />
       <Route path="organization/edit" element={<EditOrganization />} />
       <Route path="organization" element={<Organization />} />
       <Route path="quote/add" element={<AddQuote />} />
       <Route path="quote/edit" element={<EditQuote />} />
       <Route path="quote" element={<Quote />} />
+      <Route path="menu/add" element={<AddMenu />} />
+      <Route path="menu/edit" element={<EditMenu />} />
+      <Route path="menu" element={<Menu />} />
       <Route path="catalog" element={<CatalogPage />} />
       <Route path="profile/:userId/details" element={<Profile />} />
             <Route path="/profile/:id" element={<CustomerProfile />}>

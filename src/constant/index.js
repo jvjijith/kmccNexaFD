@@ -85,9 +85,9 @@ export const employeeData = [
       {
         id: '5', title: 'Pre-Sales', notifications: false, route: "/presales", parent: "/presales", dropdownItems: [
           // { id: '5-1', title: "Add Quotes", route: "/presales/quotes/add" },
-          { id: '5-2', title: "View Quotes", route: "/presales/quotes/view" },
+          { id: '5-2', title: "Quotes", route: "/presales/quotes/view" },
           // { id: '5-3', title: "Add Enquiry", route: "/presales/enquiry/add" },
-          { id: '5-4', title: "List Enquiry", route: "/presales/enquiry/list" },
+          { id: '5-4', title: "Enquiry", route: "/presales/enquiry/list" },
           { id: '5-5', title: "Add Purchase Order", route: "/presales/purchaseorder/add" },
           { id: '5-6', title: "List Purchase Order", route: "/presales/purchaseorder/list" },
           { id: '5-7', title: "Add Delivery Note", route: "/presales/deliverynote/add" },
@@ -122,7 +122,7 @@ export const employeeData = [
           },
           {
             id: '7-3', title: "App Management", route: "/store/appmanagement", dropdownItems: [
-              { id: '7-3-1', title: "App Setting", route: "/store/appmanagement/appsetting", dropdownItems: [
+              { id: '7-3-1', title: "View Setting", route: "/store/appmanagement/appsetting", dropdownItems: [
                   { id: '1-1', title: "Add Setting", route: "/store/appmanagement/appsetting/add" },
                   { id: '1-2', title: "List Settings", route: "/store/appmanagement/appsetting/list" },
                 ]

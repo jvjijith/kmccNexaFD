@@ -5,6 +5,8 @@ import Select from 'react-select';
 import LoadingScreen from "../ui/loading/loading";
 import Autosuggest from 'react-autosuggest';
 import { useNavigate } from 'react-router';
+import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 
 function OrganizationForm({ organizationDatas }) {
   const navigate = useNavigate();
@@ -33,6 +35,10 @@ function OrganizationForm({ organizationDatas }) {
   ];
   // Suggestions state
   const [suggestions, setSuggestions] = useState([]);
+  const [mediaId, setMediaId] = useState([]);
+  const [files, setFiles] = useState([]); 
+  const [uploadProgress, setUploadProgress] = useState({});
+  
     // Form state
   const [formData, setFormData] = useState({
       name: organizationDatas?.name || '',
@@ -51,6 +57,8 @@ function OrganizationForm({ organizationDatas }) {
   const api_url = organizationDatas ? `/organizations/${organizationDatas._id}` : '/organizations';
   const api_key = organizationDatas ? 'updateOrganization' : 'addOrganization';
   const { mutate: saveOrganization, isLoading, isError } = mutationHook(api_key, api_url);
+  const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
+  const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
 
   const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v', 'createdAt', 'updatedAt' ]) => {
     if (Array.isArray(data)) {
@@ -105,6 +113,73 @@ function OrganizationForm({ organizationDatas }) {
     }
     // setLoading(false);
 }, [organizationDatas]);
+
+const { getRootProps, getInputProps } = useDropzone({
+  onDrop: (acceptedFiles) => {
+    setFiles([...files, ...acceptedFiles]);
+  }
+});
+
+const handleRemoveAttachment = (index) => {
+  setFiles(files.filter((_, i) => i !== index));
+};
+
+const handleUploadAttachment = async (file, index) => {
+  try {
+    console.log(`Generating signed URL for ${file.name}`);
+
+    const signedUrlResponse = await generateSignedUrl({
+      title: file.name,
+      mediaType: "doc",
+      ext: file.name.split('.').pop() || "",
+      active: true,
+      uploadStatus: "progressing",
+      uploadProgress: 0,
+    });
+
+    if (!signedUrlResponse || !signedUrlResponse.signedUrl) {
+      throw new Error('Invalid signed URL response');
+    }
+
+    const { signedUrl, media } = signedUrlResponse;
+    const mediaId = media._id;
+
+    setMediaId(mediaId);
+
+    console.log("Signed URL:", signedUrl, "Media ID:", mediaId);
+    console.log("signedUrlResponse:", signedUrlResponse);
+    console.log("Media:", media);
+
+    // Perform the file upload
+    await axios.put(signedUrl, file, {
+      headers: { 'Content-Type': file.type },
+      onUploadProgress: (progressEvent) => {
+        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        setUploadProgress(prev => ({ ...prev, [file.name]: progress }));
+
+        if (progress === 100) {
+          updateMediaStatus({
+            mediaType: "doc",
+            title: file.name,
+            ext: file.name.split('.').pop() || "",
+            active: true,
+            uploadStatus: "completed",
+            uploadProgress: 100,
+          });
+        }
+      },
+    });
+
+    // Add the uploaded file to form values
+    setFormData(prevValues => ({
+      ...prevValues,
+      logo: `${import.meta.env.VITE_MEDIA_BASE_URL}${mediaId}.${file.name.split('.').pop()}`,
+    }));
+  } catch (error) {
+    console.error("Upload error:", error);
+    toast.error('Failed to upload attachment. Please try again.');
+  }
+};
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -399,7 +474,7 @@ function OrganizationForm({ organizationDatas }) {
 
        {/* Name */}
 <div className="flex flex-wrap">
-  <div className="w-full sm:w-1/2 p-4">
+  <div className="w-full p-4">
     <label className="block w-full mb-2 text-white">Name</label>
     <input
       type="text"
@@ -409,17 +484,77 @@ function OrganizationForm({ organizationDatas }) {
       className="block w-full px-3 py-2 text-white bg-black border rounded"
     />
   </div>
+  </div>
 
         {/* Logo */}
-  <div className="w-full sm:w-1/2 p-4">
-    <label className="block w-full mb-2 text-white">Logo</label>
-    <input
-      type="text"
-      name="logo"
-      value={formData.logo}
-      onChange={handleChange}
-      className="block w-full px-3 py-2 text-white bg-black border rounded"
-    />
+        <div className="w-full p-4">
+  <label className="block w-full mb-4 text-white">Attachments</label>
+  <div
+    {...getRootProps({ className: "dropzone" })}
+    className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-2"
+  >
+    <input {...getInputProps()} />
+    <p>Drag & drop files here, or click to select files</p>
+    <div className="w-full p-4">
+      {files.map((file, index) => (
+        <div key={index} className="flex items-center justify-between mb-2">
+          {/* File name */}
+          <span>{file.name}</span>
+          {/* Progress bar */}
+          <progress
+            value={uploadProgress[file.name] || 0}
+            max="100"
+            className="flex-1 mx-2"
+          >
+            {uploadProgress[file.name] || 0}%
+          </progress>
+          {/* Upload button */}
+          <button
+            className="ml-2 text-blue-500"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleUploadAttachment(file, index);
+            }}
+          >
+            Upload
+          </button>
+          {/* Remove button */}
+          <button
+            className="ml-2 text-red-500"
+            onClick={(e) => {
+              e.stopPropagation();
+              setFiles(files.filter((_, i) => i !== index));
+            }}
+          >
+            X
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+  <div className="w-full p-4">
+      <div  className="flex items-center justify-between mb-2">
+        {/* File link */}
+        <a
+          href={formData.logo}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400"
+        >
+          {formData.logo}
+        </a>
+        {/* Remove button */}
+        <button
+          className="ml-2 text-red-500"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleRemoveAttachment(index);
+          }}
+        >
+          X
+        </button>
+      </div>
   </div>
 </div>
 

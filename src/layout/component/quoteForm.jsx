@@ -100,6 +100,31 @@ function QuoteForm({ quotes }) {
 
   
   useEffect(() => {
+    
+  // Transform products from enquiries
+  const transformProducts = (products) =>
+    products?.map((item) => ({
+      productId: item.productId?._id || null,
+      variantId: item.VariantId?._id || null,
+      quantity: item.quantity || 0,
+    })) || [];
+
+  // Update products when enquiryId changes
+  if (formData.enquiryId) {
+    const selectedEnquiry = enquiryData?.enquiries?.find(
+      (enquiry) => enquiry._id === formData.enquiryId
+    );
+
+    if (selectedEnquiry?.products?.length > 0) {
+      const transformedProducts = transformProducts(selectedEnquiry.products);
+      console.log("transformedProducts",transformedProducts);
+      setFormData((prevData) => ({
+        ...prevData,
+        products: transformedProducts,
+      }));
+    }
+  }
+
     if (quotes) {
       // Remove unwanted fields
       const cleanedContainer = removeUnwantedFields(quotes);
@@ -177,7 +202,7 @@ function QuoteForm({ quotes }) {
     setEmployeeOptions(options);
     setEditedByOptions(options);
   }
-  }, [organizationData, customerData, salseManData, enquiryData, quotes]);
+  }, [organizationData, customerData, salseManData, enquiryData, quotes, formData.enquiryId]);
 
 
   const handleChange = (e) => {
@@ -379,6 +404,7 @@ const removeTerm = (index) => {
   console.log("varientData",varientData);
   console.log("formData",formData);
   console.log("quotes",quotes);
+  console.log("enquiryData",enquiryData);
 
   return (
     <div>
@@ -808,8 +834,10 @@ const removeTerm = (index) => {
                    value: p._id,
                    label: p.name || "Unnamed Product",
                  }))}
-                 value={productData?.products?.map((p) => ({ value: p._id, label: p.name }))
-                   .find((option) => option.value === product.productId)}
+                 value={productData?.products?.map((p) => ({
+                  value: p._id,
+                  label: p.name || "Unnamed Product",
+                })).find((option) => option.value === product.productId)}
                  onChange={(selectedOption) =>
                    handleProductChange(index, "productId", selectedOption.value)
                  }

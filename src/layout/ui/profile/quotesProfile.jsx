@@ -1,13 +1,20 @@
-import React from 'react';
-import { useParams, NavLink } from 'react-router-dom';
-import { useGetData } from '../../../common/api';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import LoadingScreen from '../loading/loading';
+import { useGetData } from '../../../common/api';
 
 function ProfilePage() {
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+
   const { data: quoteData, isPending, error } = useGetData('Quote', `/quotes/${id}`);
 
-  if (isPending) {
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+ 
+  if (isPending || loading) {
     return <LoadingScreen />;
   }
 
@@ -22,7 +29,6 @@ function ProfilePage() {
   const {
     quoteNumber,
     quoteStatus,
-    enquiryId,
     salesman,
     customer,
     products,
@@ -33,6 +39,8 @@ function ProfilePage() {
     updatedAt,
     editedBy,
     editedNotes,
+    validUntil,
+    termsAndConditions,
   } = quoteData;
 
   return (
@@ -44,45 +52,12 @@ function ProfilePage() {
         <div className="w-full max-w-7xl h-full flex flex-col justify-center p-4">
           <div className="flex flex-col w-full h-full bg-card text-white rounded-lg shadow-lg p-5">
             <div className="mb-5">
-              <h1 className="text-3xl font-bold">Quote Profile</h1>
+              <h1 className="text-3xl font-bold">Quote Details</h1>
             </div>
-
-            <nav className="mb-5">
-              <ul className="flex justify-center list-none p-0 m-0 bg-sidebar-card-top border-b border-gray-700">
-                <li className="mr-5">
-                  <NavLink
-                    exact
-                    to={`/quote/${id}/details`}
-                    className={({ isActive }) =>
-                      isActive
-                        ? 'no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block'
-                        : 'no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange'
-                    }
-                  >
-                    Details
-                  </NavLink>
-                </li>
-                <li className="mr-5">
-                  <NavLink
-                    exact
-                    to={`/quote/${id}/products`}
-                    className={({ isActive }) =>
-                      isActive
-                        ? 'no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block'
-                        : 'no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange'
-                    }
-                  >
-                    Products
-                  </NavLink>
-                </li>
-              </ul>
-            </nav>
-
             <div className="flex-grow overflow-y-auto">
               <section className="w-full">
-                <h2 className="text-2xl mb-5">Details</h2>
-                <div className="space-y-2 text-left">
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="space-y-4 text-left">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Quote Number</label>
                       <div className="p-2 bg-sidebar-card-top rounded">{quoteNumber}</div>
@@ -92,8 +67,7 @@ function ProfilePage() {
                       <div className="p-2 bg-sidebar-card-top rounded">{quoteStatus}</div>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Salesman</label>
                       <div className="p-2 bg-sidebar-card-top rounded">{salesman?.name || 'N/A'}</div>
@@ -103,38 +77,55 @@ function ProfilePage() {
                       <div className="p-2 bg-sidebar-card-top rounded">{customer?.name || 'N/A'}</div>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Enquiry ID</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{enquiryId?._id || 'N/A'}</div>
-                    </div>
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Total Amount</label>
                       <div className="p-2 bg-sidebar-card-top rounded">{totalAmount}</div>
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Total Discount</label>
                       <div className="p-2 bg-sidebar-card-top rounded">{totalDiscount}</div>
                     </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Final Amount</label>
                       <div className="p-2 bg-sidebar-card-top rounded">{finalAmount}</div>
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Valid Until</label>
+                      <div className="p-2 bg-sidebar-card-top rounded">
+                        {new Date(validUntil).toLocaleDateString()}
+                      </div>
+                    </div>
                   </div>
-
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Created At</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{new Date(createdAt).toLocaleDateString()}</div>
+                      <div className="p-2 bg-sidebar-card-top rounded">
+                        {new Date(createdAt).toLocaleDateString()}
+                      </div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Updated At</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{new Date(updatedAt).toLocaleDateString()}</div>
+                      <div className="p-2 bg-sidebar-card-top rounded">
+                        {new Date(updatedAt).toLocaleDateString()}
+                      </div>
                     </div>
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium mb-1">Products</label>
+                    <ul className="list-disc pl-5 bg-sidebar-card-top rounded p-3">
+                      {products?.length ? (
+                        products.map((product, index) => (
+                          <li key={index}>
+                            {product.variantId?.name} - Quantity: {product.quantity} - Unit Price: {product.unitPrice}
+                          </li>
+                        ))
+                      ) : (
+                        <li>No Products Available</li>
+                      )}
+                    </ul>
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium mb-1">Edited Notes</label>
@@ -143,6 +134,18 @@ function ProfilePage() {
                         ? editedNotes.map((note, index) => <li key={index}>{note}</li>)
                         : 'No Notes Available'}
                     </ul>
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium mb-1">Terms and Conditions</label>
+                    <ul className="list-disc pl-5 bg-sidebar-card-top rounded p-3">
+                      {termsAndConditions?.length
+                        ? termsAndConditions.map((term, index) => <li key={index}>{term.name}</li>)
+                        : 'No Terms Available'}
+                    </ul>
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium mb-1">Edited By</label>
+                    <div className="p-2 bg-sidebar-card-top rounded">{editedBy?.name || 'N/A'}</div>
                   </div>
                 </div>
               </section>
