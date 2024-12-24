@@ -79,6 +79,9 @@ import PurchaseOrder from "./pages/purchaseOrder/purchaseOrder";
 import EditPurchaseOrder from "./pages/purchaseOrder/editPurchaseOrder";
 import VendorQuoteRequest from "./pages/vendorQuoteRequest/vendorQuoteRequest";
 import EditVendorQuoteRequest from "./pages/vendorQuoteRequest/editVendorQuoteRequest";
+import AddMenu from "./pages/menu/addMenu";
+import Menu from "./pages/menu/menu";
+import EditMenu from "./pages/menu/editMenu";
 
 const App = () => {
   return (
@@ -197,6 +200,9 @@ const App = () => {
       <Route path="quote/add" element={<AddQuote />} />
       <Route path="quote/edit" element={<EditQuote />} />
       <Route path="quote" element={<Quote />} />
+      <Route path="menu/add" element={<AddMenu />} />
+      <Route path="menu/edit" element={<EditMenu />} />
+      <Route path="menu" element={<Menu />} />
       <Route path="catalog" element={<CatalogPage />} />
       <Route path="profile/:userId/details" element={<Profile />} />
             <Route path="/profile/:id" element={<CustomerProfile />}>

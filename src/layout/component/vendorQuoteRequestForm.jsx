@@ -828,29 +828,83 @@ const handleTermChange = (index, field, value) => {
 
 
 <div className="w-full p-4">
-  <label className="block w-full mb-4 text-white">Attachments</label>
+  {/* Upload File Header */}
+    <label className="block w-full mb-2 text-white">Upload file</label>
+
+  {/* Dropzone */}
   <div
-    {...getRootProps({ className: "dropzone" })}
-    className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-2"
+    {...getRootProps({
+      className: "dropzone",
+    })}
+    className="w-full p-4 border-dashed border-2 border-gray-300 rounded-lg text-center mb-4"
   >
     <input {...getInputProps()} />
-    <p>Drag & drop files here, or click to select files</p>
-    <div className="w-full p-4">
-      {files.map((file, index) => (
-        <div key={index} className="flex items-center justify-between mb-2">
-          {/* File name */}
-          <span>{file.name}</span>
-          {/* Progress bar */}
-          <progress
-            value={uploadProgress[file.name] || 0}
-            max="100"
-            className="flex-1 mx-2"
-          >
-            {uploadProgress[file.name] || 0}%
-          </progress>
-          {/* Upload button */}
+    <p className="text-gray-600">
+      <span className="font-semibold">Drop items here</span> or{" "}
+      <span className="text-black font-semibold cursor-pointer">
+        Browse files
+      </span>
+    </p>
+    <p className="text-sm text-gray-400 mt-2">
+      Up to 25 MB • File name without special characters
+    </p>
+  </div>
+
+  {/* File List */}
+  <div className="space-y-2">
+    {files.map((file, index) => (
+      <div
+        key={index}
+        className="flex items-center justify-between p-3 border rounded-md bg-sidebar-card-top"
+      >
+        {/* Image Preview and Info */}
+        <div className="flex items-center">
+          {/* Image Preview */}
+          {file.type.startsWith("image/") ? (
+            <img
+              src={URL.createObjectURL(file)}
+              alt="preview"
+              className="w-10 h-10 object-cover rounded-md mr-8"
+            />
+          ) : (
+            <div className="w-10 h-10 bg-gray-300 rounded flex items-center justify-center mr-4">
+              <svg
+                className="w-5 h-5 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M7 8h10M7 12h4m1 8h.01M5 12a7 7 0 117 7A7 7 0 015 12z"
+                ></path>
+              </svg>
+            </div>
+          )}
+
+          {/* File Info */}
+          <div>
+            <span className="block font-medium gray-300">{file.name}</span>
+            {/* {file.size > 25 * 1024 * 1024 ? (
+              <span className="text-xs text-red-500">
+                File is too large (max. 25 MB)
+              </span>
+            ) : ( */}
+              <span className="text-xs text-gray-500">
+                {Math.round(file.size / (1024 * 1024))} MB
+              </span>
+            {/* )} */}
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center">
+          {/* Upload Button */}
           <button
-            className="ml-2 text-blue-500"
+            className="mr-2 text-blue-500 hover:text-blue-700"
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
@@ -859,46 +913,35 @@ const handleTermChange = (index, field, value) => {
           >
             Upload
           </button>
-          {/* Remove button */}
+          {/* Remove Button */}
           <button
-            className="ml-2 text-red-500"
+            className="text-gray-600 hover:text-red-500"
             onClick={(e) => {
               e.stopPropagation();
               setFiles(files.filter((_, i) => i !== index));
             }}
           >
-            X
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
           </button>
         </div>
-      ))}
-    </div>
-  </div>
-  <div className="w-full p-4">
-    {formValues.attachments.map((attachment, index) => (
-      <div key={index} className="flex items-center justify-between mb-2">
-        {/* File link */}
-        <a
-          href={attachment.fileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-400"
-        >
-          {attachment.fileName}
-        </a>
-        {/* Remove button */}
-        <button
-          className="ml-2 text-red-500"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleRemoveAttachment(index);
-          }}
-        >
-          X
-        </button>
       </div>
     ))}
   </div>
 </div>
+
 
 
 
