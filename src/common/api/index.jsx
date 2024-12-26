@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider
 import { B2 } from 'backblaze-b2';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { jwtDecode } from "jwt-decode";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -16,25 +17,68 @@ const api = axios.create({
 // Create a single query client instance
 const queryClient = new QueryClient();
 
-// Add an interceptor to include the authorization token in the request headers
 api.interceptors.request.use(
-  (config) => {
-    const token = JSON.parse(localStorage.getItem('user'));
+  async (config) => {
+    try {
+      let tokenData = JSON.parse(localStorage.getItem("user"));
 
-    if (token.accessToken) {
-      config.headers['Authorization'] = `Bearer ${token.accessToken}`;
-      console.log('Authorization token included in request:', token.accessToken);
+      if (tokenData?.accessToken) {
+        // Decode the access token to check its expiration
+        const decodedAccessToken = jwtDecode(tokenData.accessToken);
+        const isAccessTokenExpired = decodedAccessToken.exp * 1000 < Date.now();
+
+        if (!isAccessTokenExpired) {
+          config.headers["Authorization"] = `Bearer ${tokenData.accessToken}`;
+          return config; // Access token is valid, proceed with the request
+        }
+      }
+
+      if (tokenData?.refreshToken) {
+        // If the newAccessToken is expired or missing, attempt to refresh it
+        const decodedRefreshToken = jwtDecode(tokenData.refreshToken);
+        const isRefreshTokenExpired = decodedRefreshToken.exp * 1000 < Date.now();
+
+        if (isRefreshTokenExpired) {
+          console.error("Refresh token has expired");
+          // Clear localStorage and redirect to login
+          localStorage.removeItem("user");
+          window.location.href = "/login"; // Replace with your login route
+          throw new Error("Refresh token expired");
+        }
+
+        // If the refresh token is valid, request a new access token
+        const refreshResponse = await axios.post(`${baseURL}/auth/refresh-token`, {
+          refreshToken: tokenData.refreshToken,
+        });
+
+        const newTokenData = {
+          ...tokenData,
+          accessToken: refreshResponse.data.accessToken,
+        };
+        localStorage.setItem("user", JSON.stringify(newTokenData));
+
+        config.headers["Authorization"] = `Bearer ${refreshResponse.data.accessToken}`;
+      } else {
+        console.log("No authorization token found in localStorage");
+      }
+    } catch (error) {
+      console.error("Error refreshing token:", error.response?.data || error.message);
+
+      // Clear localStorage and redirect if token refresh fails
+      localStorage.removeItem("user");
+      window.location.href = "/login"; // Replace with your login route
+      throw new Error("Token refresh failed");
     }
-    else
-    {
-      console.log('No authorization token found in localStorage');
-    }
+
     return config;
   },
   (error) => {
     return Promise.reject(error);
   }
 );
+
+
+
 
 // Define a function to handle invalidating and refetching queries after a mutation
 const useInvalidateQueries = () => {

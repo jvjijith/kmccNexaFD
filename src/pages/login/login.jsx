@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { useEffect } from "react";
 import LoadingScreen from "../../layout/ui/loading/loading";
+import axios from "axios";
 
 function Login() {
   const email = useFormInput("");
@@ -33,6 +34,7 @@ function Login() {
           'Content-Type': 'application/json'
         }
       });
+      
 
       console.log('Response:', response);
 
@@ -51,6 +53,41 @@ function Login() {
       return data;
     } catch (error) {
       console.error("Error fetching employee data:", error);
+      return null;
+    }
+  };
+
+  const fetchAccessData = async (accessToken) => {
+    try {
+      const response = await axios.post(
+        `${baseURL}/auth/createToken`,
+        {}, // Passing refreshToken in body
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      // const data = await response.json();
+      console.log("fetchAccessData",response.data)
+      return response.data;
+    }catch (error) {
+      console.error("Error fetching access data:", error);
+      return null;
+    }
+  };
+
+  const fetchRefreshData = async (refreshToken) => {
+    try {
+      const response = await axios.post(`${baseURL}/auth/refresh-token`, {
+        refreshToken: refreshToken,
+      });
+      // const data = await response.json();
+      console.log("fetchRefreshData",response.data)
+      return response.data;
+    }catch (error) {
+      console.error("Error fetching refresh data:", error);
       return null;
     }
   };
@@ -76,46 +113,63 @@ function Login() {
       
     }
 
-    await signInWithEmailAndPassword(auth, email.value, password.value)
-      .then((userCredential) => {
-        // Signed in
-        toast.success("Logging In", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          transition: Bounce,
-        });
-        const user = userCredential.user;
-        const authObj = {
-          accessToken: user.accessToken,
-          refreshToken: userCredential._tokenResponse.refreshToken,
-          email: user.email,
-          uid: user.uid,
-        };
-        setUserObj(authObj);
-        navigate("/");
-        setLoading(false);
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        toast.error(errorMessage, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          transition: Bounce,
-        });
-        setLoading(false);
+    try {
+      // Attempt to sign in with email and password
+      const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
+    
+      // Toast notification for successful login
+      toast.success("Logging In", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
       });
+    
+      // Extract user info
+      const user = userCredential.user;
+    
+      // Fetch access data using user's accessToken
+      const accessTokenData = await fetchAccessData(user.accessToken);
+
+      
+      const refreshTokenData = await fetchRefreshData(accessTokenData.refreshToken);
+    
+      // Prepare authentication object
+      const authObj = {
+        accessToken: refreshTokenData.accessToken,
+        refreshToken: accessTokenData.refreshToken,
+        email: user.email,
+        uid: user.uid,
+      };
+    
+      console.log("authObj",authObj);
+      // Update state and navigate
+      setUserObj(authObj);
+      navigate("/");
+    
+    } catch (error) {
+      // Handle errors and display error message via toast
+      toast.error(error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+    } finally {
+      // Ensure loading state is reset
+      setLoading(false);
+    }
+    
   }
 
   if (loading) {
