@@ -22,13 +22,13 @@ api.interceptors.request.use(
     try {
       let tokenData = JSON.parse(localStorage.getItem("user"));
 
-      if (tokenData?.newAccessToken) {
+      if (tokenData?.accessToken) {
         // Decode the access token to check its expiration
-        const decodedAccessToken = jwtDecode(tokenData.newAccessToken);
+        const decodedAccessToken = jwtDecode(tokenData.accessToken);
         const isAccessTokenExpired = decodedAccessToken.exp * 1000 < Date.now();
 
         if (!isAccessTokenExpired) {
-          config.headers["Authorization"] = `Bearer ${tokenData.newAccessToken}`;
+          config.headers["Authorization"] = `Bearer ${tokenData.accessToken}`;
           return config; // Access token is valid, proceed with the request
         }
       }
@@ -53,7 +53,7 @@ api.interceptors.request.use(
 
         const newTokenData = {
           ...tokenData,
-          newAccessToken: refreshResponse.data.accessToken,
+          accessToken: refreshResponse.data.accessToken,
         };
         localStorage.setItem("user", JSON.stringify(newTokenData));
 

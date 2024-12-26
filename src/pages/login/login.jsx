@@ -73,7 +73,21 @@ function Login() {
       console.log("fetchAccessData",response.data)
       return response.data;
     }catch (error) {
-      console.error("Error fetching employee data:", error);
+      console.error("Error fetching access data:", error);
+      return null;
+    }
+  };
+
+  const fetchRefreshData = async (refreshToken) => {
+    try {
+      const response = await axios.post(`${baseURL}/auth/refresh-token`, {
+        refreshToken: refreshToken,
+      });
+      // const data = await response.json();
+      console.log("fetchRefreshData",response.data)
+      return response.data;
+    }catch (error) {
+      console.error("Error fetching refresh data:", error);
       return null;
     }
   };
@@ -121,15 +135,19 @@ function Login() {
     
       // Fetch access data using user's accessToken
       const accessTokenData = await fetchAccessData(user.accessToken);
+
+      
+      const refreshTokenData = await fetchRefreshData(accessTokenData.refreshToken);
     
       // Prepare authentication object
       const authObj = {
-        accessToken: user.accessToken,
+        accessToken: refreshTokenData.accessToken,
         refreshToken: accessTokenData.refreshToken,
         email: user.email,
         uid: user.uid,
       };
     
+      console.log("authObj",authObj);
       // Update state and navigate
       setUserObj(authObj);
       navigate("/");
