@@ -82,6 +82,8 @@ import EditVendorQuoteRequest from "./pages/vendorQuoteRequest/editVendorQuoteRe
 import AddMenu from "./pages/menu/addMenu";
 import Menu from "./pages/menu/menu";
 import EditMenu from "./pages/menu/editMenu";
+import UserTeamPermission from "./pages/userTeamPermission/userTeamPermission";
+import AddUserTeamPermission from "./pages/userTeamPermission/addUserTeamPermission";
 
 const App = () => {
   return (
@@ -131,7 +133,8 @@ const App = () => {
       <Route path="presales/enquiry/add" element={<ComingSoonPage />} />
       <Route path="presales/enquiry/list" element={<Enquiry />} />
       <Route path="presales/purchaseorder/add" element={<ComingSoonPage />} />
-      <Route path="presales/purchaseorder/list" element={<ComingSoonPage />} />
+      <Route path="presales/purchaseorder/list" element={<PurchaseOrder />} />
+      <Route path="/presales/salesInvoice/list" element={<SalesInvoice />} />
       <Route path="presales/deliverynote/add" element={<ComingSoonPage />} />
       <Route path="presales/deliverynote/list" element={<ComingSoonPage />} />
       <Route path="delivery/shippingcarrier" element={<ComingSoonPage />} />
@@ -203,6 +206,8 @@ const App = () => {
       <Route path="menu/add" element={<AddMenu />} />
       <Route path="menu/edit" element={<EditMenu />} />
       <Route path="menu" element={<Menu />} />
+      <Route path="permission" element={<UserTeamPermission />} />
+      <Route path="permission/add" element={<AddUserTeamPermission />} />
       <Route path="catalog" element={<CatalogPage />} />
       <Route path="profile/:userId/details" element={<Profile />} />
             <Route path="/profile/:id" element={<CustomerProfile />}>
