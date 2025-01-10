@@ -7,17 +7,22 @@ import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import LoadingScreen from "../../layout/ui/loading/loading";
 import axios from "axios";
+import "./login.css"; // Assuming CSS is placed in App.css
 
-function Login() {
+const Login = () => {
+  const [isSignUp, setIsSignUp] = useState(false);
   const email = useFormInput("");
   const password = useFormInput("");
   const auth = getAuth(appFirebase);
   const navigate = useNavigate();
   const [userObj, setUserObj] = useLocalStorage("user", null);
   const [loading, setLoading] = useLocalStorage(false);
+
+  const handleSignUp = () => setIsSignUp(true);
+  const handleSignIn = () => setIsSignUp(false);
 
   const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -177,45 +182,123 @@ function Login() {
   }
 
   return (
-    <div className="box-container">
-      <div className="box">
-        <span className="box__borderline" />
-        <form className="form" onSubmit={signInWEAP}>
-          <img src="/nexa.png" className="form_img" />
-          <h3 className="form__title">NexaConnect</h3>
-          <div className="form__box">
-            <input
-              className="form__input"
+    <div className={`container ${isSignUp ? "sign-up-mode" : ""}`}>
+      <div className="forms-container">
+        <div className="signin-signup">
+          {/* Sign In Form */}
+          <form onSubmit={signInWEAP} className="sign-in-form">
+            <h2 className="title">Sign in</h2>
+            <div className="input-field">
+              <i className="fas fa-user"></i>
+              <input 
               type="email"
               required="required"
               name="email"
               {...email}
-              placeholder="Email"
-            />
-          </div>
-          <div className="form__box">
-            <input
-              className="form__input"
+              placeholder="Email"/>
+            </div>
+            <div className="input-field">
+              <i className="fas fa-lock"></i>
+              <input 
               type="password"
               required="required"
               name="password"
               {...password}
-              placeholder="Password"
-            />
-          </div>
-          <div className="form__links">
-            <Link className="form__link" to="/forgot">
-              Forgot Password
-            </Link>
-          </div>
-          <button className="form__submit" type="submit">
+              placeholder="Password" />
+            </div>
+            <button type="submit" value="Login" className="btn solid" >
             Login
-          </button>
-        </form>
+            </button>
+           
+          </form>
+
+          {/* Sign Up Form */}
+          {/* <form onSubmit={signInWEAP} className="sign-up-form">
+            <h2 className="title">Sign up</h2>
+            <div className="input-field">
+              <i className="fas fa-user"></i>
+              <input type="text" placeholder="Username" />
+            </div>
+            <div className="input-field">
+              <i className="fas fa-envelope"></i>
+              <input 
+              type="email"
+              required="required"
+              name="email"
+              {...email}
+              placeholder="Email" />
+            </div>
+            <div className="input-field">
+              <i className="fas fa-lock"></i>
+              <input 
+              type="password"
+              required="required"
+              name="password"
+              {...password}
+              placeholder="Password" />
+            </div>
+            <input type="submit" className="btn" value="Sign up" />
+            <p className="social-text">Or Sign up with social platforms</p>
+            <div className="social-media">
+              <a href="#" className="social-icon">
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-google"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+          </form> */}
+        </div>
+      </div>
+
+      <div className="panels-container">
+        {/* Left Panel */}
+        <div className="panel left-panel">
+          <div className="content">
+            <h3>New to our community?</h3>
+            <p>
+              Discover a world of possibilities! Join us and explore a vibrant
+              community where ideas flourish and connections thrive.
+            </p>
+            <button className="btn transparent">
+              Sign up
+            </button>
+          </div>
+          <img
+            src="https://i.ibb.co/6HXL6q1/Privacy-policy-rafiki.png"
+            className="image"
+            alt="Sign Up"
+          />
+        </div>
+
+        {/* Right Panel */}
+        <div className="panel right-panel">
+          <div className="content">
+            <h3>One of Our Valued Members</h3>
+            <p>
+              Thank you for being part of our community. Your presence enriches
+              our shared experiences. Let&apos;s continue this journey together!
+            </p>
+            <button className="btn transparent" onClick={handleSignIn}>
+              Sign in
+            </button>
+          </div>
+          <img
+            src="https://i.ibb.co/nP8H853/Mobile-login-rafiki.png"
+            className="image"
+            alt="Sign In"
+          />
+        </div>
       </div>
       <ToastContainer></ToastContainer>
     </div>
   );
-}
+};
 
 export default Login;

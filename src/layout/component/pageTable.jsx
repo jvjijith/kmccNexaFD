@@ -44,28 +44,28 @@ function PageTable() {
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Slug</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Reference Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Type</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Internal Type</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Created At</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Slug</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Reference Name</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Type</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Internal Type</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Created At</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {pageData.pages.map((page) => (
-            <Table.Row key={page._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={page._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
                 {page.slug}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">{page.referenceName}</Table.Cell>
-              <Table.Cell className="text-gray-300">{page.type}</Table.Cell>
-              <Table.Cell className="text-gray-300">{page.internalType}</Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="text-text-color">{page.referenceName}</Table.Cell>
+              <Table.Cell className="text-text-color">{page.type}</Table.Cell>
+              <Table.Cell className="text-text-color">{page.internalType}</Table.Cell>
+              <Table.Cell className="text-text-color">
                 {new Date(page.created_at).toLocaleString()}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="text-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>
                       navigate(`/page/edit`, { state: { page } })
@@ -87,8 +87,8 @@ function PageTable() {
             key={index}
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
-              currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"
-            } text-white`}
+              currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
+            } text-text-color`}
           >
             {index + 1}
           </button>

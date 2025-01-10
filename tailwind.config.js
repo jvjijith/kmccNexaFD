@@ -10,7 +10,15 @@ export default {
     extend: {
       colors: {
         'nexa-orange': '#ff4a17',
-         'nexa-gray':"#3f3f3f"
+         'nexa-gray':"#3f3f3f",
+         'primary':"#f8f9fa",
+         'secondary':"#ffffff",
+         'focus-color':"#000000",
+         'text-color':"#212529",
+         'primary-card':"#f8f9fa",
+         'secondary-card':"#ffffff",
+         'primary-button-color':"#ff4a17",
+         'secondary-button-color':"#3f3f3f",
       }
     },
   },

@@ -334,7 +334,7 @@ const handleAddItem = () => {
         <div className="w-full sm:w-1/2 p-4">
       {/* App ID as a Dropdown */}
       <div className="mb-4">
-          <label  className="block mb-2 text-white">App ID</label>
+          <label  className="block mb-2 text-text-color">App ID</label>
     <Select
             options={appOptions}
             value={appOptions.find((opt) => opt.value === formData.appId)}
@@ -343,7 +343,7 @@ const handleAddItem = () => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -366,8 +366,8 @@ const handleAddItem = () => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -376,14 +376,14 @@ const handleAddItem = () => {
         </div>
         <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="float-left inline-block mb-2 text-white">Menu Name</label>
-          <input type="text" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white" name="menuName" value={formData.menuName} onChange={handleInputChange} required />
+    <label className="float-left inline-block mb-2 text-text-color">Menu Name</label>
+          <input type="text" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color" name="menuName" value={formData.menuName} onChange={handleInputChange} required />
         </div>
         </div>
         <div className="w-full sm:w-1/2 p-4">
       {/* Menu Type as a Dropdown */}
       <div className="mb-4">
-          <label  className="block mb-2 text-white">Menu Type</label>
+          <label  className="block mb-2 text-text-color">Menu Type</label>
           <Select
             options={menuTypeOptions}
             value={menuTypeOptions.find((opt) => opt.value === formData.menuType)}
@@ -392,7 +392,7 @@ const handleAddItem = () => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -415,8 +415,8 @@ const handleAddItem = () => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -426,7 +426,7 @@ const handleAddItem = () => {
         <div className="w-full sm:w-1/2 p-4">
       {/* Layout Type as a Dropdown */}
       <div className="mb-4">
-          <label  className="block mb-2 text-white">Layout Type</label>
+          <label  className="block mb-2 text-text-color">Layout Type</label>
           <Select
             options={layoutTypeOptions}
             value={layoutTypeOptions.find((opt) => opt.value === formData.layoutType)}
@@ -435,7 +435,7 @@ const handleAddItem = () => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -458,8 +458,8 @@ const handleAddItem = () => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -467,7 +467,7 @@ const handleAddItem = () => {
         </div>
         </div>
         <div className="w-full sm:w-1/2 p-4">
-            <label className="block mb-2 text-white">Menu Page</label>
+            <label className="block mb-2 text-text-color">Menu Page</label>
             <Select
               options={pageOptions}
               value={pageOptions?.find((opt) => opt.value === formData.menuPage)}
@@ -476,7 +476,7 @@ const handleAddItem = () => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -499,8 +499,8 @@ const handleAddItem = () => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -509,7 +509,7 @@ const handleAddItem = () => {
 
 
           <div className="w-full p-4">
-  <label className="block w-full mb-2 text-white">Upload Image</label>
+  <label className="block w-full mb-2 text-text-color">Upload Image</label>
 
   <div
     {...getRootProps1({
@@ -530,7 +530,7 @@ const handleAddItem = () => {
   </div>
 
   {files.length > 0 && (
-    <div className="flex items-center justify-between p-3 border rounded-md bg-sidebar-card-top">
+    <div className="flex items-center justify-between p-3 border rounded-md bg-secondary-card">
       <div className="flex items-center">
         <img
           src={URL.createObjectURL(files[0])}
@@ -538,7 +538,7 @@ const handleAddItem = () => {
           className="w-10 h-10 object-cover rounded-md mr-8"
         />
         <div>
-          <span className="block font-medium text-gray-300">{files[0].name}</span>
+          <span className="block font-medium text-text-color">{files[0].name}</span>
           <span className="text-xs text-gray-500">
             {Math.round(files[0].size / (1024 * 1024))} MB
           </span>
@@ -593,8 +593,8 @@ const handleAddItem = () => {
         onChange={handleInputChange}
         className="sr-only peer"
       />
-      <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-      <span className="ml-3 text-sm font-medium text-white">Allow Image</span>
+      <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
+      <span className="ml-3 text-sm font-medium text-text-color">Allow Image</span>
     </label>
   </div>
 </div>
@@ -605,10 +605,10 @@ const handleAddItem = () => {
 {/* Menu Items Section */}
 <div className="mb-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-white">Menu Items</label>
+            <label className="block w-full mb-2 text-text-color">Menu Items</label>
             <button
               type="button"
-              className="bg-black text-white px-4 py-2 rounded"
+              className="bg-secondary-card text-text-color px-4 py-2 rounded"
               onClick={handleAddItem}
             >
               Add
@@ -617,12 +617,12 @@ const handleAddItem = () => {
           <div className="accordion-container">
             {formData.items.length === 0 && 
             <div className="mb-4 border p-4 rounded border-nexa-gray">
-            <p>No Menu Items added</p>
+            <p className='text-text-color'>No Menu Items added</p>
             </div>}
             {formData.items.map((item, index) => (
               <div key={index} className="border border-nexa-gray rounded-lg mb-4">
                 <div
-                    className="accordion-header bg-black text-white px-4 py-2 flex justify-between items-center cursor-pointer"
+                    className="accordion-header secondary-card text-text-color px-4 py-2 flex justify-between items-center cursor-pointer"
                     onClick={() => toggleAccordion(index, "menu")}
                   >
                     {/* Menu Item Name */}
@@ -636,7 +636,7 @@ const handleAddItem = () => {
                       {/* Close Button */}
                       <button
                         type="button"
-                        className="bg-black text-white px-6 py-2 rounded"
+                        className="bg-secondary-card text-text-color px-6 py-2 rounded"
                         onClick={(e) => {
                           e.stopPropagation(); // Prevent triggering accordion toggle
                           handleRemoveItem(index);
@@ -656,7 +656,7 @@ const handleAddItem = () => {
                     placeholder="Menu Name"
                     value={item.menuName}
                     onChange={(e) => handleNestedChange('items', index, 'menuName', e.target.value)}
-                    className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                    className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                   />
                   <Select
                     options={subMenuTypeOptions}
@@ -669,7 +669,7 @@ const handleAddItem = () => {
                         control: (provided, state) => ({
                           ...provided,
                           backgroundColor: 'black',
-                          borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                          borderColor: state.isFocused ? 'white' : 'black',
                           borderBottomWidth: '2px',
                           borderRadius: '0px',
                           height: '40px',
@@ -692,8 +692,8 @@ const handleAddItem = () => {
                         }),
                         option: (provided, state) => ({
                           ...provided,
-                          backgroundColor: state.isSelected ? '#007bff' : 'black',
-                          color: state.isSelected ? 'black' : 'white',
+                          backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                          color: state.isSelected ? '#f8f9fa' : 'black',
                           cursor: 'pointer',
                         }),
                       }}
@@ -711,7 +711,7 @@ const handleAddItem = () => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -734,8 +734,8 @@ const handleAddItem = () => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -744,7 +744,7 @@ const handleAddItem = () => {
 
                 <div className="w-full p-4">
   {/* Upload File Header */}
-    <label className="block w-full mb-2 text-white">Upload image</label>
+    <label className="block w-full mb-2 text-text-color">Upload image</label>
 
   {/* Dropzone */}
   <div
@@ -770,7 +770,7 @@ const handleAddItem = () => {
     {itemImage.map((file, index) => (
       <div
         key={index}
-        className="flex items-center justify-between p-3 border rounded-md bg-sidebar-card-top"
+        className="flex items-center justify-between p-3 border rounded-md bg-secondary-card"
       >
         {/* Image Preview and Info */}
         <div className="flex items-center">
@@ -868,8 +868,8 @@ const handleAddItem = () => {
         }
         className="sr-only peer"
       />
-      <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-      <span className="ml-3 text-sm font-medium text-white">Allow Image</span>
+      <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
+      <span className="ml-3 text-sm font-medium text-text-color">Allow Image</span>
     </label>
   </div>
 </div>
@@ -885,8 +885,8 @@ const handleAddItem = () => {
         }
         className="sr-only peer"
       />
-      <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-      <span className="ml-3 text-sm font-medium text-white">Active</span>
+      <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
+      <span className="ml-3 text-sm font-medium text-text-color">Active</span>
     </label>
   </div>
 </div> */}
@@ -896,10 +896,10 @@ const handleAddItem = () => {
 {(formData?.items[index]?.menuType !== "single") && 
   (<div className="mb-4">
   <div className="flex items-center justify-between mb-4 ml-2 mr-2">
-    <label className="block w-full mb-2 text-white">Sub-Menu</label>
+    <label className="block w-full mb-2 text-text-color">Sub-Menu</label>
     <button
       type="button"
-      className="bg-black text-white px-4 py-2 rounded"
+      className="bg-secondary-card text-text-color px-4 py-2 rounded"
       onClick={() => handleAddSubItem(index)}
     >
       Add
@@ -907,7 +907,7 @@ const handleAddItem = () => {
   </div>
   {item.multiItems.length === 0 && (
             <div className="mb-4 ml-2 mr-2 border p-4 rounded border-nexa-gray">
-    <p className="text-white">No Sub-Menu added</p>
+    <p className="text-text-color">No Sub-Menu added</p>
     </div>
   )}
   <div
@@ -920,7 +920,7 @@ const handleAddItem = () => {
       key={subIndex}
       className="border border-nexa-gray rounded-lg ml-2 mr-2">
                 <div
-  className="accordion-header bg-black text-white px-4 py-2 flex justify-between items-center cursor-pointer"
+  className="accordion-header secondary-card text-text-color px-4 py-2 flex justify-between items-center cursor-pointer"
   onClick={() => toggleAccordion(subIndex, "sub")}
 >
   {/* Sub-Menu Name */}
@@ -934,7 +934,7 @@ const handleAddItem = () => {
     {/* Close Button */}
     <button
       type="button"
-      className="bg-black text-white px-4 py-2 rounded"
+      className="bg-secondary-card text-text-color px-4 py-2 rounded"
       onClick={(e) => {
         e.stopPropagation(); // Prevent toggle when clicking "x"
         handleRemoveSubItem(index, subIndex);
@@ -964,7 +964,7 @@ const handleAddItem = () => {
               e.target.value
             )
           }
-          className="block w-1/2 h-10 px-2 py-1 ml-2 mt-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+          className="block w-1/2 h-10 px-2 py-1 ml-2 mt-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
         />
         {/* Sub-Item Dropdown */}
         <Select
@@ -983,7 +983,7 @@ const handleAddItem = () => {
             control: (provided, state) => ({
               ...provided,
               backgroundColor: 'black',
-              borderColor: state.isFocused ? 'white' : '#D3D3D3',
+              borderColor: state.isFocused ? 'white' : 'black',
               borderBottomWidth: '2px',
               borderRadius: '0px',
               height: '40px',
@@ -1006,8 +1006,8 @@ const handleAddItem = () => {
             }),
             option: (provided, state) => ({
               ...provided,
-              backgroundColor: state.isSelected ? '#007bff' : 'black',
-              color: state.isSelected ? 'black' : 'white',
+              backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+              color: state.isSelected ? '#f8f9fa' : 'black',
               cursor: 'pointer',
             }),
           }}
@@ -1032,7 +1032,7 @@ const handleAddItem = () => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -1055,8 +1055,8 @@ const handleAddItem = () => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -1065,7 +1065,7 @@ const handleAddItem = () => {
 
     <div className="w-full p-4">
   {/* Upload File Header */}
-    <label className="block w-full mb-2 text-white">Upload image</label>
+    <label className="block w-full mb-2 text-text-color">Upload image</label>
 
   {/* Dropzone */}
   <div
@@ -1091,7 +1091,7 @@ const handleAddItem = () => {
     {subItemImage.map((file, index) => (
       <div
         key={index}
-        className="flex items-center justify-between p-3 border rounded-md bg-sidebar-card-top"
+        className="flex items-center justify-between p-3 border rounded-md bg-secondary-card"
       >
         {/* Image Preview and Info */}
         <div className="flex items-center">
@@ -1189,8 +1189,8 @@ const handleAddItem = () => {
         }
         className="sr-only peer"
       />
-      <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-      <span className="ml-3 text-sm font-medium text-white">Allow Image</span>
+      <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
+      <span className="ml-3 text-sm font-medium text-text-color">Allow Image</span>
     </label>
   </div>
 </div>
@@ -1225,15 +1225,15 @@ const handleAddItem = () => {
         onChange={handleInputChange}
         className="sr-only peer"
       />
-      <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-      <span className="ml-3 text-sm font-medium text-white">Active</span>
+      <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
+      <span className="ml-3 text-sm font-medium text-text-color">Active</span>
     </label>
   </div>
 </div> */}
         </div>
 
 <div className="flex flex-wrap justify-end p-4">
-  <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
+  <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
     {isLoading ? 'Saving...' : 'Save'}
   </button>
 </div>

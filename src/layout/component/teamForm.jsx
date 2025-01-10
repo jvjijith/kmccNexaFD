@@ -67,13 +67,13 @@ function TeamForm({ id, name, closeModal }) {
         <div className="block">
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">
+              <label className="float-left inline-block mb-2 text-text-color">
                 &nbsp;Team Name *&nbsp;
               </label>
               <input
                 type="text"
                 name="teamName"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Your Team Name"
                 autoComplete="off"
                 style={{ textAlign: "initial" }}
@@ -84,7 +84,7 @@ function TeamForm({ id, name, closeModal }) {
             </div>
           </div>
           <div className="flex flex-wrap justify-end p-4">
-            <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded">
+            <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-text-color px-4 py-2 rounded">
               {id ? "Update Team" : "Add Team"}
             </button>
           </div>

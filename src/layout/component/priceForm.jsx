@@ -148,7 +148,7 @@ function PriceForm({ priceId , productId }) {
           <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-white">Product *</label>
+              <label className="block w-full mb-2 text-text-color">Product *</label>
               <Select
                 options={productOptions}
                 value={productOptions.find(option => option.value === (priceId ? product ? priceData.productId : priceData.productId._id : priceData.productId))}
@@ -157,7 +157,7 @@ function PriceForm({ priceId , productId }) {
                   control: (provided, state) => ({
                     ...provided,
                     backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                    borderColor: state.isFocused ? 'white' : 'black',
                     borderBottomWidth: '2px',
                     borderRadius: '0px',
                     height: '40px',
@@ -180,8 +180,8 @@ function PriceForm({ priceId , productId }) {
                   }),
                   option: (provided, state) => ({
                     ...provided,
-                    backgroundColor: state.isSelected ? '#007bff' : 'black',
-                    color: state.isSelected ? 'black' : 'white',
+                    backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                    color: state.isSelected ? '#f8f9fa' : 'black',
                     cursor: 'pointer'
                   })
                 }}
@@ -190,7 +190,7 @@ function PriceForm({ priceId , productId }) {
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-white">Variant</label>
+              <label className="block w-full mb-2 text-text-color">Variant</label>
               <Select
                 options={variantOptions}
                 value={variantOptions.find(option => option.value === (priceId ? variant ? priceData.variantId : priceData.variantId._id : priceData.variantId))}
@@ -199,7 +199,7 @@ function PriceForm({ priceId , productId }) {
                   control: (provided, state) => ({
                     ...provided,
                     backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                    borderColor: state.isFocused ? 'white' : 'black',
                     borderBottomWidth: '2px',
                     borderRadius: '0px',
                     height: '40px',
@@ -222,8 +222,8 @@ function PriceForm({ priceId , productId }) {
                   }),
                   option: (provided, state) => ({
                     ...provided,
-                    backgroundColor: state.isSelected ? '#007bff' : 'black',
-                    color: state.isSelected ? 'black' : 'white',
+                    backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                    color: state.isSelected ? '#f8f9fa' : 'black',
                     cursor: 'pointer'
                   })
                 }}
@@ -236,11 +236,11 @@ function PriceForm({ priceId , productId }) {
           <div key={pricingIndex} className="flex flex-wrap">
             <div className="w-full sm:w-1/2 p-4">
               <div className="mb-4">
-                <label className="block w-full mb-2 text-white">Amount *</label>
+                <label className="block w-full mb-2 text-text-color">Amount *</label>
                 <input
                   type="text"
                   name="amount"
-                  className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                  className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                   placeholder="Enter Amount"
                   autoComplete="off"
                   value={price.amount}
@@ -250,11 +250,11 @@ function PriceForm({ priceId , productId }) {
             </div>
             <div className="w-full sm:w-1/2 p-4">
               <div className="mb-4">
-                <label className="block w-full mb-2 text-white">Currency *</label>
+                <label className="block w-full mb-2 text-text-color">Currency *</label>
                 <input
                   type="text"
                   name="currency"
-                  className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                  className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                   placeholder="Enter Currency"
                   autoComplete="off"
                   value={price.currency}
@@ -264,11 +264,11 @@ function PriceForm({ priceId , productId }) {
             </div>
             <div className="w-full sm:w-1/2 p-4">
               <div className="mb-4">
-                <label className="block w-full mb-2 text-white">Discount *</label>
+                <label className="block w-full mb-2 text-text-color">Discount *</label>
                 <input
                   type="text"
                   name="discount"
-                  className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                  className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                   placeholder="Enter Discount"
                   autoComplete="off"
                   value={price.discount}
@@ -280,7 +280,7 @@ function PriceForm({ priceId , productId }) {
             {productId&&
               <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-white">Variant</label>
+              <label className="block w-full mb-2 text-text-color">Variant</label>
               <Select
                 options={variantOptions}
                 value={variantOptions.find(option => option.value === (priceId ? variant ? priceData.variantId : priceData.variantId._id : priceData.variantId))}
@@ -289,7 +289,7 @@ function PriceForm({ priceId , productId }) {
                   control: (provided, state) => ({
                     ...provided,
                     backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                    borderColor: state.isFocused ? 'white' : 'black',
                     borderBottomWidth: '2px',
                     borderRadius: '0px',
                     height: '40px',
@@ -312,8 +312,8 @@ function PriceForm({ priceId , productId }) {
                   }),
                   option: (provided, state) => ({
                     ...provided,
-                    backgroundColor: state.isSelected ? '#007bff' : 'black',
-                    color: state.isSelected ? 'black' : 'white',
+                    backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                    color: state.isSelected ? '#f8f9fa' : 'black',
                     cursor: 'pointer'
                   })
                 }}
@@ -323,10 +323,10 @@ function PriceForm({ priceId , productId }) {
 
             <div className="w-full p-4">
             <div className="flex items-center justify-between mb-4">
-              <label className="block w-full mb-2 text-white">Rules</label>
+              <label className="block w-full mb-2 text-text-color">Rules</label>
               <button
                 type="button"
-                className="text-white"
+                className="text-text-color"
                 onClick={() => addRule(pricingIndex)}
               >
                 Add
@@ -339,20 +339,20 @@ function PriceForm({ priceId , productId }) {
                 >
               {price.rules.map((rule, ruleIndex) => (
                 <div key={ruleIndex} className="flex mb-4">
-                  {/* <label className="block w-full mb-2 text-white">Rule Type</label> */}
+                  {/* <label className="block w-full mb-2 text-text-color">Rule Type</label> */}
                   <input
                     type="text"
                     name="ruleType"
-                    className="block w-3/5 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                    className="block w-3/5 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                     placeholder="Enter Rule Type"
                     value={rule.ruleType}
                     onChange={(e) => handleRuleChange(pricingIndex, ruleIndex, 'ruleType', e.target.value)}
                   />
-                  {/* <label className="block w-full mb-2 text-white">Rule Country</label> */}
+                  {/* <label className="block w-full mb-2 text-text-color">Rule Country</label> */}
                   <input
                     type="text"
                     name="ruleCountry"
-                    className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                    className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                     placeholder="Enter Rule Country"
                     value={rule.ruleCountry}
                     onChange={(e) => handleRuleChange(pricingIndex, ruleIndex, 'ruleCountry', e.target.value)}
@@ -373,7 +373,7 @@ function PriceForm({ priceId , productId }) {
         
 
 <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
             {isLoading ? 'Saving...' : 'Save'}
           </button>
         </div>

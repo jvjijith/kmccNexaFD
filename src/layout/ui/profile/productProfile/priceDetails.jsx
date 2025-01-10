@@ -12,7 +12,7 @@ function PriceDetails() {
     };
 
     if (!price) {
-        return <p>No prices</p>;
+        return <p className='text-text-color'>No prices</p>;
     }
 
     return (
@@ -22,7 +22,7 @@ function PriceDetails() {
                 priceItem.pricing.map((priceItem) => (
                 <div key={priceItem._id} className="mb-4">
                     <div 
-                        className="p-4 bg-sidebar-card-top rounded shadow cursor-pointer"
+                        className="p-4 bg-secondary-card rounded shadow cursor-pointer"
                         onClick={() => toggleAccordion(priceItem._id)}
                     >
                         <div className="flex justify-between items-center">
@@ -35,30 +35,30 @@ function PriceDetails() {
                             <div className="flex flex-wrap">
                             <div className="w-full sm:w-1/2 p-4">
                                 <label className="block text-sm font-medium mb-1">Amount</label>
-                                <div className="p-2 bg-sidebar-card-top rounded">{priceItem.amount  || 'N/A'}</div>
+                                <div className="p-2 bg-secondary-card rounded">{priceItem.amount  || 'N/A'}</div>
                             </div>
                             <div className="w-full sm:w-1/2 p-4">
                                 <label className="block text-sm font-medium mb-1">Currency</label>
-                                <div className="p-2 bg-sidebar-card-top rounded">{priceItem.currency  || 'N/A'}</div>
+                                <div className="p-2 bg-secondary-card rounded">{priceItem.currency  || 'N/A'}</div>
                             </div>
                             </div>
                             <div className="flex flex-wrap">
                             <div className="w-full sm:w-1/2 p-4">
                                 <label className="block text-sm font-medium mb-1">Discount</label>
-                                <div className="p-2 bg-sidebar-card-top rounded">{priceItem.discount || 'N/A'}</div>
+                                <div className="p-2 bg-secondary-card rounded">{priceItem.discount || 'N/A'}</div>
                             </div>
                             </div>
                            { priceItem.rules.map((priceItem) => (
                                 <div className="flex flex-wrap" key={priceItem._id}>
                             <div className="w-full sm:w-1/2 p-4">
                                 <label className="block text-sm font-medium mb-1">Rule Country</label>
-                                <div className="p-2 bg-sidebar-card-top rounded">{priceItem.ruleCountry || 'N/A'}</div>
+                                <div className="p-2 bg-secondary-card rounded">{priceItem.ruleCountry || 'N/A'}</div>
                             </div>
                             
                             {/* <div className="flex flex-wrap"> */}
                             <div className="w-full sm:w-1/2 p-4">
                                 <label className="block text-sm font-medium mb-1">Rule Type</label>
-                                <div className="p-2 bg-sidebar-card-top rounded">{priceItem.ruleType || 'N/A'}</div>
+                                <div className="p-2 bg-secondary-card rounded">{priceItem.ruleType || 'N/A'}</div>
                             </div>
                             </div>))}
                             {/* Add more fields if necessary */}

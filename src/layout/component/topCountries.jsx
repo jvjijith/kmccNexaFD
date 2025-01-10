@@ -7,7 +7,7 @@ export default function TopCountries() {
     return (
       <div className="flex p-4 flex-col h-full">
         <div className="flex justify-between items-center">
-          <div className="text-white font-bold">Top Countries</div>
+          <div className="text-text-color font-bold">Top Countries</div>
           <Icon path="res-react-dash-plus" className="w-5 h-5" />
         </div>
         <div className="">favourites</div>

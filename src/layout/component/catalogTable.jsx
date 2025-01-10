@@ -52,24 +52,24 @@ function CatalogTable() {
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Catalog Name</Table.HeadCell>
-          {/* <Table.HeadCell className="border-gray-700 bg-black text-white">Catalog Type</Table.HeadCell> */}
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
+        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Catalog Name</Table.HeadCell>
+          {/* <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Catalog Type</Table.HeadCell> */}
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Action</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {data?.catalogues?.map((team) => (
-            <Table.Row key={team.teamId} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={team.teamId} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
                 {team.name}
               </Table.Cell>
-              {/* <Table.Cell className="whitespace-nowrap font-medium text-white">
+              {/* <Table.Cell className="whitespace-nowrap font-medium text-text-color">
                 {team.catType}
               </Table.Cell> */}
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="text-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => navigate(`/catalog`, { state: { catalog: team } })}
                   >
                     Edit Catalog

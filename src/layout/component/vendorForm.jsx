@@ -279,11 +279,11 @@ const renderSuggestion = (suggestion) => (
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Vendor Name *</label>
+              <label className="float-left inline-block mb-2 text-text-color">Vendor Name *</label>
               <input
                 type="text"
                 name="name"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Vendor Name"
                 autoComplete="off"
                 value={customerData.name}
@@ -293,11 +293,11 @@ const renderSuggestion = (suggestion) => (
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Email Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color">Email Address *</label>
               <input
                 type="email"
                 name="email"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Vendor Email"
                 autoComplete="off"
                 value={customerData.email}
@@ -310,11 +310,11 @@ const renderSuggestion = (suggestion) => (
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Phone *</label>
+              <label className="float-left inline-block mb-2 text-text-color">Phone *</label>
               <input
                 type="text"
                 name="phone"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Phone Number"
                 autoComplete="off"
                 value={customerData.phone}
@@ -324,11 +324,11 @@ const renderSuggestion = (suggestion) => (
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Website</label>
+              <label className="float-left inline-block mb-2 text-text-color">Website</label>
               <input
                 type="text"
                 name="website"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Vendor Website"
                 autoComplete="off"
                 value={customerData.website}
@@ -341,7 +341,7 @@ const renderSuggestion = (suggestion) => (
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4 relative">
     <div className="mb-4">
-      <label className="float-left inline-block mb-2 text-white">State</label>
+      <label className="float-left inline-block mb-2 text-text-color">State</label>
       <Autosuggest
         suggestions={stateSuggestions}
         onSuggestionsFetchRequested={handleStateSuggestionsFetchRequested}
@@ -352,11 +352,11 @@ const renderSuggestion = (suggestion) => (
           placeholder: 'Enter State',
           value: stateValue,
           onChange: onStateChange,
-          className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white'
+          className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
         }}
         theme={{
           container: 'relative', // Make sure the container is relatively positioned
-          suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+          suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
           suggestion: 'p-2 cursor-pointer',
           suggestionHighlighted: 'bg-blue-500 text-black'
         }}
@@ -365,11 +365,11 @@ const renderSuggestion = (suggestion) => (
   </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Location</label>
+              <label className="float-left inline-block mb-2 text-text-color">Location</label>
               <input
                 type="text"
                 name="location"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Location"
                 autoComplete="off"
                 value={customerData.location}
@@ -382,11 +382,11 @@ const renderSuggestion = (suggestion) => (
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Country</label>
+              <label className="float-left inline-block mb-2 text-text-color">Country</label>
               <input
                 type="text"
                 name="country"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Country"
                 autoComplete="off"
                 value={customerData.country}
@@ -398,7 +398,7 @@ const renderSuggestion = (suggestion) => (
       
           <div className="w-full sm:w-1/2 p-4">
       <div className="mb-4">
-        <label className="float-left inline-block mb-2 text-white">Language *</label>
+        <label className="float-left inline-block mb-2 text-text-color">Language *</label>
         <Autosuggest
           suggestions={suggestions}
           onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
@@ -409,11 +409,11 @@ const renderSuggestion = (suggestion) => (
             placeholder: 'Enter Language',
               value: languageValue,
               onChange: onLanguageChange,
-            className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white'
+            className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
           }}
           theme={{
             container: 'relative', // Make sure the container is relatively positioned
-            suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+            suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
             suggestion: 'p-2 cursor-pointer',
             suggestionHighlighted: 'bg-blue-500 text-black'
           }}
@@ -426,11 +426,11 @@ const renderSuggestion = (suggestion) => (
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Currency</label>
+              <label className="float-left inline-block mb-2 text-text-color">Currency</label>
               <input
                 type="text"
                 name="currency"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Currency"
                 autoComplete="off"
                 value={customerData.currency}
@@ -441,11 +441,11 @@ const renderSuggestion = (suggestion) => (
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Shipping Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color">Shipping Address *</label>
               <textarea
                 type="text"
                 name="shippingAddress"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Shipping Address"
                 autoComplete="off"
                 value={customerData.shippingAddress}
@@ -458,11 +458,11 @@ const renderSuggestion = (suggestion) => (
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Billing Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color">Billing Address *</label>
               <textarea
                 type="text"
                 name="billingAddress"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Billing Address"
                 autoComplete="off"
                 value={customerData.billingAddress}
@@ -472,7 +472,7 @@ const renderSuggestion = (suggestion) => (
           </div>
           <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="block w-full mb-2 text-white">Category *</label>
+    <label className="block w-full mb-2 text-text-color">Category *</label>
     <Select
      options={categoryOptions}
      value={selectedCategoryOption || null} // Make sure to pass the whole object or null
@@ -483,37 +483,18 @@ const renderSuggestion = (suggestion) => (
        }));
        setChangeCategories(true);
      }}
-      styles={{
-        control: (provided, state) => ({
-          ...provided,
-          backgroundColor: 'black',
-          borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
-          borderBottomWidth: '2px',
-          borderRadius: '0px',
-          height: '40px', // h-10: 2.5rem = 40px
-          paddingLeft: '8px', // px-2: 0.5rem = 8px
-          paddingRight: '8px', // px-2: 0.5rem = 8px
-          color: 'white'
-        }),
-        singleValue: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        placeholder: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        menu: (provided) => ({
-          ...provided,
-          backgroundColor: 'black',
-          color: 'white',
-        }),
-        option: (provided, state) => ({
-          ...provided,
-          backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-          color: state.isSelected ? 'black' : 'white',
-          cursor: 'pointer'
-        })
+      classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
       }}
     />
   </div>
@@ -524,11 +505,11 @@ const renderSuggestion = (suggestion) => (
         {/* {isIndividual && (
           <div className="w-full p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Password *</label>
+              <label className="float-left inline-block mb-2 text-text-color">Password *</label>
               <input
                 type="password"
                 name="password"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Password"
                 autoComplete="off"
                 value={customerData.password}
@@ -549,8 +530,8 @@ const renderSuggestion = (suggestion) => (
                 id="storeUser"
                 checked={isStoreUser}
                 onChange={() => handleToggle('storeUser')} />
-                <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-                <span className="ms-3 text-md font-medium text-white dark:text-white">
+                <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
+                <span className="ms-3 text-md font-medium text-text-color dark:text-text-color">
                 Store User
                 </span>
               </label>
@@ -567,8 +548,8 @@ const renderSuggestion = (suggestion) => (
                 id="individual"
                 checked={customerData.individual}
                 onChange={() => handleToggle('individual')} />
-                <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-                <span className="ms-3 text-md font-medium text-white dark:text-white">
+                <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
+                <span className="ms-3 text-md font-medium text-text-color dark:text-text-color">
                 Individual
                 </span>
               </label>
@@ -584,17 +565,17 @@ const renderSuggestion = (suggestion) => (
         {/* Identification Numbers */}
         <div className="w-full p-4">
         <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-white">Identification Numbers</label>
-          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addIdentificationNumber}>Add</button>
+          <label className="block w-full mb-2 text-text-color">Identification Numbers</label>
+          <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addIdentificationNumber}>Add</button>
           </div>
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-          {(identificationNumbers.length===0)&&<p>No Identification Number added</p>}
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
+          {(identificationNumbers.length===0)&&<p className='text-text-color'>No Identification Number added</p>}
           {identificationNumbers?.map((identification, index) => (
             <div key={index} className="flex mb-2">
               <input
                 type="text"
                 name={`identificationType-${index}`}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Type"
                 value={identification.type}
                 onChange={(e) => handleIdentificationChange(index, 'type', e.target.value)}
@@ -602,12 +583,12 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`identificationNumber-${index}`}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Number"
                 value={identification.number}
                 onChange={(e) => handleIdentificationChange(index, 'number', e.target.value)}
               />
-              <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={() => removeIdentificationNumber(index)}>Remove</button>
+              <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={() => removeIdentificationNumber(index)}>Remove</button>
             </div>
           ))}
           </div>
@@ -616,17 +597,17 @@ const renderSuggestion = (suggestion) => (
         {/* Bank Details */}
         <div className="w-full p-4">
         <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-white">Bank Details</label>
-          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addBankDetail}>Add</button>
+          <label className="block w-full mb-2 text-text-color">Bank Details</label>
+          <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addBankDetail}>Add</button>
         </div>
-        <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-        {(bankDetails.length===0)&&<p>No Bank Details added</p>}
+        <div className="notes-container p-4 bg-secondary-card rounded-lg">
+        {(bankDetails.length===0)&&<p className='text-text-color'>No Bank Details added</p>}
           {bankDetails?.map((bank, index) => (
             <div key={index} className="flex mb-2">
               <input
                 type="text"
                 name={`accountNumber-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Account Number"
                 value={bank.accountNumber}
                 onChange={(e) => handleBankDetailChange(index, 'accountNumber', e.target.value)}
@@ -634,7 +615,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`bankName-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Bank Name"
                 value={bank.bankName}
                 onChange={(e) => handleBankDetailChange(index, 'bankName', e.target.value)}
@@ -642,7 +623,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`location-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Location"
                 value={bank.location}
                 onChange={(e) => handleBankDetailChange(index, 'location', e.target.value)}
@@ -650,7 +631,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`IBAN-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="IBAN"
                 value={bank.IBAN}
                 onChange={(e) => handleBankDetailChange(index, 'IBAN', e.target.value)}
@@ -658,7 +639,7 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`swiftCode-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Swift Code"
                 value={bank.swiftCode}
                 onChange={(e) => handleBankDetailChange(index, 'swiftCode', e.target.value)}
@@ -666,12 +647,12 @@ const renderSuggestion = (suggestion) => (
               <input
                 type="text"
                 name={`IFSC-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="IFSC"
                 value={bank.IFSC}
                 onChange={(e) => handleBankDetailChange(index, 'IFSC', e.target.value)}
               />
-              <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={() => removeBankDetail(index)}>Remove</button>
+              <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={() => removeBankDetail(index)}>Remove</button>
             </div>
           ))}
          </div>
@@ -680,7 +661,7 @@ const renderSuggestion = (suggestion) => (
         
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
             {isLoading || isSigningUp ? 'Saving...' : 'Save'}
           </button>
           {/* {isError && <p className="text-red-500 mt-2">Error occurred while saving the customer.</p>}

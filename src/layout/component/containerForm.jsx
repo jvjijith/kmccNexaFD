@@ -19,7 +19,7 @@ function SortableItem({ id, index, handleRemove, item, element }) {
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="flex mb-2 items-center">
       <input
         type="text"
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
         value={
           element?.elements?.find(
             (el) => el._id === item.element
@@ -28,7 +28,7 @@ function SortableItem({ id, index, handleRemove, item, element }) {
         
         disabled
       />
-      <button type="button" className="bg-red-500 text-white px-4 py-2 rounded ml-2" onClick={() => handleRemove(index)}>
+      <button type="button" className="bg-red-500 text-text-color px-4 py-2 rounded ml-2" onClick={() => handleRemove(index)}>
         Remove
       </button>
     </div>
@@ -276,10 +276,10 @@ function ContainerForm({ container }) {
     if (elementsData.draft && !elementsData.publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-white px-6 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-6 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-white px-6 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-6 py-2 rounded-md">
             Publish
           </button>
         </div>
@@ -287,10 +287,10 @@ function ContainerForm({ container }) {
     } else if (elementsData.draft && elementsData.publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-white px-6 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-6 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-white px-6 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-6 py-2 rounded-md">
             Republish
           </button>
         </div>
@@ -298,7 +298,7 @@ function ContainerForm({ container }) {
     } else {
       return (
         <div className="flex justify-end">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-white px-6 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-6 py-2 rounded-md">
             Draft
           </button>
         </div>
@@ -321,12 +321,12 @@ function ContainerForm({ container }) {
           {/* Reference Name */}
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-white">Reference Name</label>
+              <label className="block w-full mb-2 text-text-color">Reference Name</label>
               <input
                 type="text"
                 value={elementsData.referenceName}
                 onChange={(e) => handleInputChange('referenceName', e.target.value)}
-                className="block w-full px-3 py-2 text-white bg-black border rounded"
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
               />
             </div>
           </div>
@@ -334,18 +334,18 @@ function ContainerForm({ container }) {
           {/* Description */}
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-white">Description</label>
+              <label className="block w-full mb-2 text-text-color">Description</label>
               <textarea
                 value={elementsData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
-                className="block w-full px-3 py-2 text-white bg-black border rounded"
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
               />
             </div>
           </div>
         </div>
 
         <div className="mb-4">
-  <label className="block w-full mb-2 text-white">Available Apps</label>
+  <label className="block w-full mb-2 text-text-color">Available Apps</label>
   <Select
     isMulti
     options={
@@ -372,7 +372,7 @@ function ContainerForm({ container }) {
       control: (provided, state) => ({
         ...provided,
         backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+        borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
         borderBottomWidth: '2px',
         borderRadius: '0px',
         height: '40px', // h-10: 2.5rem = 40px
@@ -395,8 +395,8 @@ function ContainerForm({ container }) {
       }),
       option: (provided, state) => ({
         ...provided,
-        backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-        color: state.isSelected ? 'black' : 'white',
+        backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+        color: state.isSelected ? '#f8f9fa' : 'black',
         cursor: 'pointer',
       }),
     }}
@@ -407,11 +407,11 @@ function ContainerForm({ container }) {
 
         {/* Layout Options */}
 <div className="p-4">
-  <label className="block w-full mb-2 text-white">Layout Settings</label>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+  <label className="block w-full mb-2 text-text-color">Layout Settings</label>
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
     <div className="flex flex-wrap">
       <div className="w-full sm:w-1/2 p-4">
-        <label className="block mb-2 text-white">Select Layout</label>
+        <label className="block mb-2 text-text-color">Select Layout</label>
         <Select
           options={[
             { value: 'tab', label: 'Tab' },
@@ -429,7 +429,7 @@ function ContainerForm({ container }) {
             control: (provided, state) => ({
               ...provided,
               backgroundColor: 'black',
-              borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+              borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
               borderBottomWidth: '2px',
               borderRadius: '0px',
               height: '40px', // h-10: 2.5rem = 40px
@@ -452,8 +452,8 @@ function ContainerForm({ container }) {
             }),
             option: (provided, state) => ({
               ...provided,
-              backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-              color: state.isSelected ? 'black' : 'white',
+              backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+              color: state.isSelected ? '#f8f9fa' : 'black',
               cursor: 'pointer'
             })
           }}
@@ -464,22 +464,22 @@ function ContainerForm({ container }) {
     {/* Grid Layout Options */}
     {elementsData.layoutOptions.layout === 'grid' && (
       <div className="grid-options">
-        <label className="block mb-2 text-white">Grid Options</label>
+        <label className="block mb-2 text-text-color">Grid Options</label>
 
         {/* Spacing */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Spacing</label>
+          <label className="block mb-2 text-text-color">Spacing</label>
           <input
             type="number"
             value={elementsData.layoutOptions.gridOptions?.spacing}
             onChange={(e) => handleSettingsChange('layoutOptions','gridOptions','spacing', e.target.value)}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
         </div>
 
         {/* Direction */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Direction</label>
+          <label className="block mb-2 text-text-color">Direction</label>
           <Select
             options={[
               { value: 'row', label: 'Row' },
@@ -493,7 +493,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -516,8 +516,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -526,7 +526,7 @@ function ContainerForm({ container }) {
 
         {/* Justify Content */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Justify Content</label>
+          <label className="block mb-2 text-text-color">Justify Content</label>
           <Select
             options={[
               { value: 'flex-start', label: 'Flex Start' },
@@ -542,7 +542,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -565,8 +565,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -575,7 +575,7 @@ function ContainerForm({ container }) {
 
         {/* Align Items */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Align Items</label>
+          <label className="block mb-2 text-text-color">Align Items</label>
           <Select
             options={[
               { value: 'stretch', label: 'Stretch' },
@@ -590,7 +590,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -613,8 +613,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -623,7 +623,7 @@ function ContainerForm({ container }) {
 
         {/* Wrap */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Wrap</label>
+          <label className="block mb-2 text-text-color">Wrap</label>
           <Select
             options={[
               { value: 'nowrap', label: 'No Wrap' },
@@ -636,7 +636,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -659,8 +659,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -669,12 +669,12 @@ function ContainerForm({ container }) {
 
         {/* Columns */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Columns</label>
+          <label className="block mb-2 text-text-color">Columns</label>
           <input
             type="number"
             value={elementsData.layoutOptions.gridOptions?.columns}
             onChange={(e) => handleSettingsChange('layoutOptions', 'gridOptions', 'columns', e.target.value)}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
         </div>
       </div>
@@ -683,22 +683,22 @@ function ContainerForm({ container }) {
     {/* Stack Layout Options */}
     {elementsData.layoutOptions.layout === 'stack' && (
       <div className="stack-options">
-        <label className="block mb-2 text-white">Stack Options</label>
+        <label className="block mb-2 text-text-color">Stack Options</label>
 
         {/* Spacing */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Spacing</label>
+          <label className="block mb-2 text-text-color">Spacing</label>
           <input
             type="number"
             value={elementsData.layoutOptions.stackOptions?.spacing}
             onChange={(e) => handleSettingsChange('layoutOptions', 'stackOptions', 'spacing', e.target.value)}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
         </div>
 
         {/* Direction */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Direction</label>
+          <label className="block mb-2 text-text-color">Direction</label>
           <Select
             options={[
               { value: 'column', label: 'Column' },
@@ -712,7 +712,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -735,8 +735,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -745,7 +745,7 @@ function ContainerForm({ container }) {
 
         {/* Justify Content */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Justify Content</label>
+          <label className="block mb-2 text-text-color">Justify Content</label>
           <Select
             options={[
               { value: 'flex-start', label: 'Flex Start' },
@@ -761,7 +761,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -784,8 +784,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -794,7 +794,7 @@ function ContainerForm({ container }) {
 
         {/* Align Items */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Align Items</label>
+          <label className="block mb-2 text-text-color">Align Items</label>
           <Select
             options={[
               { value: 'stretch', label: 'Stretch' },
@@ -809,7 +809,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -832,8 +832,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -842,12 +842,12 @@ function ContainerForm({ container }) {
 
         {/* Divider */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Divider</label>
+          <label className="block mb-2 text-text-color">Divider</label>
           <input
             type="text"
             value={elementsData.layoutOptions.stackOptions?.divider}
             onChange={(e) => handleSettingsChange('layoutOptions', 'stackOptions', 'divider', e.target.value)}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
         </div>
       </div>
@@ -856,11 +856,11 @@ function ContainerForm({ container }) {
     {/* Tab Layout Options */}
     {elementsData.layoutOptions.layout === 'tab' && (
       <div className="tab-options">
-        <label className="block mb-2 text-white">Tab Options</label>
+        <label className="block mb-2 text-text-color">Tab Options</label>
 
         {/* Orientation */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Orientation</label>
+          <label className="block mb-2 text-text-color">Orientation</label>
           <Select
             options={[
               { value: 'horizontal', label: 'Horizontal' },
@@ -872,7 +872,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -895,8 +895,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -905,7 +905,7 @@ function ContainerForm({ container }) {
 
         {/* Variant */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Variant</label>
+          <label className="block mb-2 text-text-color">Variant</label>
           <Select
             options={[
               { value: 'standard', label: 'Standard' },
@@ -918,7 +918,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -941,8 +941,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -951,7 +951,7 @@ function ContainerForm({ container }) {
 
         {/* Centered */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Centered</label>
+          <label className="block mb-2 text-text-color">Centered</label>
           <Select
             options={[
               { value: 'true', label: 'True' },
@@ -963,7 +963,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -986,8 +986,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -996,23 +996,23 @@ function ContainerForm({ container }) {
 
         {/* Indicator Color */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Indicator Color</label>
+          <label className="block mb-2 text-text-color">Indicator Color</label>
           <input
             type="text"
             value={elementsData.layoutOptions.tabOptions?.indicatorColor}
             onChange={(e) => handleSettingsChange('layoutOptions', 'tabOptions', 'indicatorColor', e.target.value)}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
         </div>
 
         {/* Text Color */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Text Color</label>
+          <label className="block mb-2 text-text-color">Text Color</label>
           <input
             type="text"
             value={elementsData.layoutOptions.tabOptions?.textColor}
             onChange={(e) => handleSettingsChange('layoutOptions', 'tabOptions', 'textColor', e.target.value)}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
         </div>
       </div>
@@ -1021,22 +1021,22 @@ function ContainerForm({ container }) {
     {/* Fluid Layout Options */}
     {elementsData.layoutOptions.layout === 'fluid' && (
       <div className="fluid-options">
-        <label className="block mb-2 text-white">Fluid Options</label>
+        <label className="block mb-2 text-text-color">Fluid Options</label>
 
         {/* Gutter */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Gutter</label>
+          <label className="block mb-2 text-text-color">Gutter</label>
           <input
             type="number"
             value={elementsData.layoutOptions.fluidOptions?.gutter}
             onChange={(e) => handleSettingsChange('layoutOptions', 'fluidOptions', 'gutter', e.target.value)}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
         </div>
 
         {/* Justify */}
         <div className="mb-4">
-          <label className="block mb-2 text-white">Justify</label>
+          <label className="block mb-2 text-text-color">Justify</label>
           <Select
             options={[
               { value: 'start', label: 'Start' },
@@ -1051,7 +1051,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -1074,8 +1074,8 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -1088,7 +1088,7 @@ function ContainerForm({ container }) {
 
  {/* Items Section with Drag-and-Drop */}
  <div className="w-full p-4">
-          <label className="block w-full mb-2 text-white">Items</label>
+          <label className="block w-full mb-2 text-text-color">Items</label>
           
           <Select
             options={elementData?.elements.map((element) => ({ value: element._id, label: element.referenceName }))}
@@ -1099,7 +1099,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -1122,13 +1122,13 @@ function ContainerForm({ container }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
           />
-          {(elementsData.items.length!==0) && <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+          {(elementsData.items.length!==0) && <div className="notes-container p-4 bg-secondary-card rounded-lg">
           <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={elementsData.items.map((_, index) => index)}>
               {elementsData.items.map((item, index) => (
@@ -1148,16 +1148,16 @@ function ContainerForm({ container }) {
 
         {/* Style fields */}
         <div className="p-4">
-        <label className="block w-full mb-2 text-white">Style</label>
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+        <label className="block w-full mb-2 text-text-color">Style</label>
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
             <div className="flex flex-wrap">
               {['backgroundColor', 'textColor', 'textMutedColor'].map((field) => (
                 <div key={field} className="w-full sm:w-1/2 p-4">
-                  <label className="block mb-2 text-white capitalize">{field}</label>
+                  <label className="block mb-2 text-text-color capitalize">{field}</label>
                   <div className="flex items-center">
                     <input
                       type="text"
-                      className="block w-full h-10 px-2 py-1 bg-black border-b border-nexa-gray text-white"
+                      className="block w-full h-10 px-2 py-1 secondary-card border-b border-nexa-gray text-text-color"
                       placeholder={`Enter ${field}`}
                       value={elementsData.style[field]}
                       onChange={(e) => handleSettingsChange('style', field, e.target.value)}
@@ -1173,10 +1173,10 @@ function ContainerForm({ container }) {
               ))}
               {['headerFontFamily', 'textFontFamily', 'headerFontSize', 'textFontSize', 'borderRadius', 'padding', 'customCSS'].map((field) => (
                 <div key={field} className="w-full sm:w-1/2 p-4">
-                  <label className="block mb-2 text-white capitalize">{field}</label>
+                  <label className="block mb-2 text-text-color capitalize">{field}</label>
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 bg-black border-b border-nexa-gray text-white"
+                    className="block w-full h-10 px-2 py-1 secondary-card border-b border-nexa-gray text-text-color"
                     placeholder={`Enter ${field}`}
                     value={elementsData.style[field]}
                     onChange={(e) => handleSettingsChange('style', null, field, e.target.value)}

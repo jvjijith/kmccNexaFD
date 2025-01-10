@@ -4,13 +4,13 @@
 body{
   font-family: 'Nunito', sans-serif;
   color:#676767;
-  background-color: #1e1e1e;
+  background-color: #ffffff;
 }
 
 .bg-card{
-  background-color:#171717;
+  background-color:#f8f9fa;
 }
-.bg-sidebar-card-top{
+.bg-secondary-card{
   background-color: #353535;
 }
 .sidebar-separator-top{

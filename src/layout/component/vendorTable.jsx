@@ -131,56 +131,56 @@ function VendorTable() {
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Vendor name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Country</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Category</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">State</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Location</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Vendor name</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Country</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Category</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">State</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Location</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {vendorsArray.map((vendor, index) => (
-            <Table.Row key={index} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">{vendor.name}</Table.Cell>
-              <Table.Cell className="text-gray-300">{vendor.country}</Table.Cell>
-              <Table.Cell className="text-gray-300">{vendor.category.categoryName}</Table.Cell>
-              <Table.Cell className="text-gray-300">{vendor.state}</Table.Cell>
-              <Table.Cell className="text-gray-300">{vendor.location}</Table.Cell>
+            <Table.Row key={index} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="whitespace-nowrap font-medium text-text-color">{vendor.name}</Table.Cell>
+              <Table.Cell className="text-text-color">{vendor.country}</Table.Cell>
+              <Table.Cell className="text-text-color">{vendor.category.categoryName}</Table.Cell>
+              <Table.Cell className="text-text-color">{vendor.state}</Table.Cell>
+              <Table.Cell className="text-text-color">{vendor.location}</Table.Cell>
               <Table.Cell className={`whitespace-nowrap ${vendor.active ? "text-green-500" : "text-red-500"}`}>
                 {vendor.active ? "Active" : "Inactive"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="text-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => handleViewDetails(vendor)}
                   >
                     Details
                   </Dropdown.Item>
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => navigate(`/vendor/edit`, { state: { vendor } })}
                   >
                     Edit vendor
                   </Dropdown.Item>
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => navigate(`/vendor/editContact`, { state: { vendor } })}
                   >
                     Edit Contacts
                   </Dropdown.Item>
                   {vendor.active ? (
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => handleDeactivateVendor(vendor)}
                     >
                       Deactivate Vendor
                     </Dropdown.Item>
                   ) : (
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => handleActivateVendor(vendor)}
                     >
                       Activate Vendor
@@ -199,7 +199,7 @@ function VendorTable() {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-text-color`}
           >
             {index + 1}
           </button>

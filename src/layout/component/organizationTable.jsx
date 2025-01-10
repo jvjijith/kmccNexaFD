@@ -44,34 +44,34 @@ function OrganizationTable() {
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Organization Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Currency</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Address</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Identification</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Organization Name</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Currency</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Address</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Identification</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {organizationData.organizations.map((organization) => (
-            <Table.Row key={organization._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={organization._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
                 {organization.name}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="text-text-color">
                 {organization.currency.code} ({organization.currency.symbol})
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="text-text-color">
                 {organization.addresses
                   .map((address) => `${address.street}, ${address.city}, ${address.country}`)
                   .join(" | ")}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="text-text-color">
                 {organization.identificationDetails
                   .map((id) => `${id.type}: ${id.number}`)
                   .join(" | ")}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="text-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>
                       navigate(`/organization/edit`, { state: { organization } })
@@ -93,8 +93,8 @@ function OrganizationTable() {
             key={index}
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
-              currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"
-            } text-white`}
+              currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
+            } text-text-color`}
           >
             {index + 1}
           </button>

@@ -182,11 +182,11 @@ function AppForm({ appDatas }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">App Title *</label>
+              <label className="float-left inline-block mb-2 text-text-color">App Title *</label>
               <input
                 type="text"
                 name="title"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter App Title"
                 autoComplete="off"
                 value={appData.title}
@@ -197,42 +197,23 @@ function AppForm({ appDatas }) {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-white">App Type *</label>
+              <label className="block w-full mb-2 text-text-color">App Type *</label>
               <Select
                 options={appTypeOptions}
                 value={appTypeOptions.find(option => option.value === appData.appType) || null}
                 onChange={(selectedOption) => handleSelectChange('appType', selectedOption)}
-                styles={{
-        control: (provided, state) => ({
-          ...provided,
-          backgroundColor: 'black',
-          borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
-          borderBottomWidth: '2px',
-          borderRadius: '0px',
-          height: '40px', // h-10: 2.5rem = 40px
-          paddingLeft: '8px', // px-2: 0.5rem = 8px
-          paddingRight: '8px', // px-2: 0.5rem = 8px
-          color: 'white'
-        }),
-        singleValue: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        placeholder: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        menu: (provided) => ({
-          ...provided,
-          backgroundColor: 'black',
-          color: 'white',
-        }),
-        option: (provided, state) => ({
-          ...provided,
-          backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-          color: state.isSelected ? 'black' : 'white',
-          cursor: 'pointer'
-        })
+                classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
       }}
               />
             </div>
@@ -242,11 +223,11 @@ function AppForm({ appDatas }) {
        {/* Geo Settings */}
 <div className="p-4">
 <div className="flex items-center justify-between mb-4">
-  <label className="block w-full mb-2 text-white">Geo Settings</label>
-  <button type="button" onClick={() => addSetting('geo')} className="bg-black text-white px-4 py-2 rounded">Add</button>
+  <label className="block w-full mb-2 text-text-color">Geo Settings</label>
+  <button type="button" onClick={() => addSetting('geo')} className="bg-secondary-card text-text-color px-4 py-2 rounded">Add</button>
   </div>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-        {(appData?.settings?.geo?.length===0)&&<p>No Geo Settings added</p>}
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+        {(appData?.settings?.geo?.length===0)&&<p className='text-text-color'>No Geo Settings added</p>}
   {appData?.settings?.geo?.map((geo, index) => (
     <div key={index} className="flex flex-wrap p-4 mb-4 bg-nexa-gray">
       <div className="w-full sm:w-1/2 p-4">
@@ -258,7 +239,7 @@ function AppForm({ appDatas }) {
             control: (provided, state) => ({
               ...provided,
               backgroundColor: 'black',
-              borderColor: state.isFocused ? 'white' : '#D3D3D3',
+              borderColor: state.isFocused ? 'white' : 'black',
               borderBottomWidth: '2px',
               borderRadius: '0px',
               height: '40px',
@@ -277,8 +258,8 @@ function AppForm({ appDatas }) {
             }),
             option: (provided, state) => ({
               ...provided,
-              backgroundColor: state.isSelected ? '#007bff' : 'black',
-              color: state.isSelected ? 'black' : 'white',
+              backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+              color: state.isSelected ? '#f8f9fa' : 'black',
               cursor: 'pointer'
             })
           }}
@@ -295,18 +276,18 @@ function AppForm({ appDatas }) {
             placeholder: 'Enter Geo Location',
             value: geo.location,
             onChange: (e, { newValue }) => handleSettingsChange('geo', index, 'location', newValue),
-            className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white'
+            className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
           }}
           theme={{
             container: 'relative',
-            suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+            suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
             suggestion: 'p-2 cursor-pointer',
             suggestionHighlighted: 'bg-blue-500 text-black'
           }}
         />
       </div>
       <div className="w-full sm:w-1/3 p-4">
-        <button type="button" onClick={() => deleteSetting('geo', index)} className="bg-black text-white px-4 py-2 rounded">Delete</button>
+        <button type="button" onClick={() => deleteSetting('geo', index)} className="bg-secondary-card text-text-color px-4 py-2 rounded">Delete</button>
       </div>
     </div>
   ))}
@@ -317,11 +298,11 @@ function AppForm({ appDatas }) {
         {/* Domain Settings */}
         <div className="p-4">
         <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-white">Domain Settings</label> 
-          <button type="button" onClick={() => addSetting('domain')} className="bg-black text-white px-4 py-2 rounded">Add</button>
+          <label className="block w-full mb-2 text-text-color">Domain Settings</label> 
+          <button type="button" onClick={() => addSetting('domain')} className="bg-secondary-card text-text-color px-4 py-2 rounded">Add</button>
   </div>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-        {(appData?.settings?.domain?.length===0)&&<p>No Domain Settings added</p>}
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+        {(appData?.settings?.domain?.length===0)&&<p className='text-text-color'>No Domain Settings added</p>}
           {appData?.settings?.domain?.map((domain, index) => (
             <div key={index} className="flex flex-wrap p-4 mb-4 bg-nexa-gray">
               <div className="w-full sm:w-1/2 p-4">
@@ -329,37 +310,18 @@ function AppForm({ appDatas }) {
                   options={ruleTypeOptions}
                   value={ruleTypeOptions.find(option => option.value === domain.ruleType) || null}
                   onChange={(selectedOption) => handleSettingsChange('domain', index, 'ruleType', selectedOption.value)}
-                  styles={{
-        control: (provided, state) => ({
-          ...provided,
-          backgroundColor: 'black',
-          borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
-          borderBottomWidth: '2px',
-          borderRadius: '0px',
-          height: '40px', // h-10: 2.5rem = 40px
-          paddingLeft: '8px', // px-2: 0.5rem = 8px
-          paddingRight: '8px', // px-2: 0.5rem = 8px
-          color: 'white'
-        }),
-        singleValue: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        placeholder: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        menu: (provided) => ({
-          ...provided,
-          backgroundColor: 'black',
-          color: 'white',
-        }),
-        option: (provided, state) => ({
-          ...provided,
-          backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-          color: state.isSelected ? 'black' : 'white',
-          cursor: 'pointer'
-        })
+                  classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
       }}
                 />
               </div>
@@ -367,14 +329,14 @@ function AppForm({ appDatas }) {
                 <input
                   type="text"
                   name={`domain${index}`}
-                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                   placeholder="Domain"
                   value={domain.domain}
                   onChange={(e) => handleSettingsChange('domain', index, 'domain', e.target.value)}
                 />
               </div>
               <div className="w-full sm:w-1/3 p-4">
-                <button type="button" onClick={() => deleteSetting('domain', index)} className="bg-black text-white px-4 py-2 rounded">Delete</button>
+                <button type="button" onClick={() => deleteSetting('domain', index)} className="bg-secondary-card text-text-color px-4 py-2 rounded">Delete</button>
               </div>
             </div>
           ))}
@@ -386,11 +348,11 @@ function AppForm({ appDatas }) {
         {/* Language Settings */}
         <div className="p-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-white">Language Settings</label>
-            <button type="button" onClick={() => addSetting('language')} className="bg-black text-white px-4 py-2 rounded">Add</button>
+            <label className="block w-full mb-2 text-text-color">Language Settings</label>
+            <button type="button" onClick={() => addSetting('language')} className="bg-secondary-card text-text-color px-4 py-2 rounded">Add</button>
           </div>
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-            {appData?.settings?.language?.length === 0 && <p>No Language Settings added</p>}
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
+            {appData?.settings?.language?.length === 0 && <p className='text-text-color'>No Language Settings added</p>}
             {appData?.settings?.language?.map((language, index) => (
               <div key={index} className="flex flex-wrap p-4 mb-4 bg-nexa-gray">
                 <div className="w-full sm:w-1/2 p-4">
@@ -404,11 +366,11 @@ function AppForm({ appDatas }) {
                       placeholder: 'Enter Language',
                       value: language.langName,
                       onChange: (e, { newValue }) => handleSettingsChange('language', index, 'langName', newValue),
-                      className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white'
+                      className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
                     }}
                     theme={{
                       container: 'relative',
-                      suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+                      suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
                       suggestion: 'p-2 cursor-pointer',
                       suggestionHighlighted: 'bg-blue-500 text-black'
                     }}
@@ -418,14 +380,14 @@ function AppForm({ appDatas }) {
                   <input
                     type="text"
                     name={`languageCode${index}`}
-                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                     placeholder="Language Code"
                     value={language.langCode}
                     onChange={(e) => handleSettingsChange('language', index, 'langCode', e.target.value)}
                   />
                 </div>
                 <div className="w-full sm:w-1/3 p-4">
-                  <button type="button" onClick={() => deleteSetting('language', index)} className="bg-black text-white px-4 py-2 rounded">Delete</button>
+                  <button type="button" onClick={() => deleteSetting('language', index)} className="bg-secondary-card text-text-color px-4 py-2 rounded">Delete</button>
                 </div>
               </div>
             ))}
@@ -435,7 +397,7 @@ function AppForm({ appDatas }) {
 
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">Submit</button>
+          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">Submit</button>
         </div>
       </form>
       <ToastContainer />

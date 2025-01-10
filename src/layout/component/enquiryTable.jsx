@@ -44,28 +44,28 @@ function EnquiryTable() {
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Enquiry Number</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Customer Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Customer Email</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Customer Phone</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Enquiry Mode</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Created At</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Enquiry Number</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Customer Name</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Customer Email</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Customer Phone</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Enquiry Mode</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Created At</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {enquiryData.enquiries.map((enquiry) => (
-            <Table.Row key={enquiry._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={enquiry._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
                 {enquiry.enquiryNumber}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">{enquiry.customer.name}</Table.Cell>
-              <Table.Cell className="text-gray-300">{enquiry.customer.email}</Table.Cell>
-              <Table.Cell className="text-gray-300">{enquiry.customer.phone}</Table.Cell>
-              <Table.Cell className="text-gray-300">{enquiry.enquiryMode}</Table.Cell>
-              <Table.Cell className="text-gray-300">{new Date(enquiry.createdAt).toLocaleString()}</Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="text-text-color">{enquiry.customer.name}</Table.Cell>
+              <Table.Cell className="text-text-color">{enquiry.customer.email}</Table.Cell>
+              <Table.Cell className="text-text-color">{enquiry.customer.phone}</Table.Cell>
+              <Table.Cell className="text-text-color">{enquiry.enquiryMode}</Table.Cell>
+              <Table.Cell className="text-text-color">{new Date(enquiry.createdAt).toLocaleString()}</Table.Cell>
+              <Table.Cell className="text-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>
                       navigate(`/enquiry/edit`, { state: { enquiry } })
@@ -87,8 +87,8 @@ function EnquiryTable() {
             key={index}
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
-              currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"
-            } text-white`}
+              currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
+            } text-text-color`}
           >
             {index + 1}
           </button>

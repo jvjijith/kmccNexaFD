@@ -24,7 +24,7 @@ export default function AddComponent() {
               className="w-full h-full"
             />
           </div>
-          <div className="text-white font-bold mt-3">
+          <div className="text-text-color font-bold mt-3">
             No Components Created Yet
           </div>
           <div className="mt-2">Simply create your first component</div>

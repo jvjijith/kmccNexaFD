@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useGetData, usePostData } from '../../common/api';
+import { useGetData } from '../../common/api';
 import LoadingScreen from '../ui/loading/loading';
 import { useNavigate } from 'react-router';
 
-function Modules() {
+function Modules({ data }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [modules, setModules] = useState([]);
@@ -13,13 +13,17 @@ function Modules() {
 
   useEffect(() => {
     if (moduleData?.modules) {
-      setModules(moduleData.modules.map(module => ({
-        ...module,
-        allowedOperations: [],
-      })));
+      const initializedModules = moduleData.modules.map(module => {
+        const matchingModule = data?.find(d => d.moduleId === module._id);
+        return {
+          ...module,
+          allowedOperations: matchingModule?.allowedOperations || [],
+        };
+      });
+      setModules(initializedModules);
       setLoading(false);
     }
-  }, [moduleData]);
+  }, [moduleData, data]);
 
   const handleToggleOperation = (moduleId, operation) => {
     setModules(modules.map(module => {
@@ -39,19 +43,16 @@ function Modules() {
   const handleRemoveModule = (moduleId) => {
     setModules(modules.map(module => {
       if (module._id === moduleId) {
-        // Toggle between clearing and adding all allowedOperations
         return {
           ...module,
           allowedOperations: module.allowedOperations.length === 0
-            ? [...module.moduleOperations] // Add all allowed operations
-            : [], // Clear all allowed operations
+            ? [...module.moduleOperations]
+            : [],
         };
       }
       return module;
     }));
   };
-  
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,14 +64,12 @@ function Modules() {
       }));
 
     console.log("formattedData", formattedData);
-        navigate('/permission/add', { state: { formattedData } });
+    navigate('/permission/add', { state: { formattedData } });
   };
 
   if (loading || isModuleLoading) {
     return <LoadingScreen />;
   }
-
-  console.log("modules", modules);
 
   return (
     <div>
@@ -80,29 +79,28 @@ function Modules() {
             <div key={module._id} className="mb-4 border border-gray-300 rounded-lg">
               {/* Accordion Header */}
               <div
-                  className="accordion-header bg-black text-white px-4 py-2 flex justify-between items-center cursor-pointer"
-                  onClick={() => setActiveAccordion(activeAccordion === index ? null : index)}
-                >
-                  <span>{module.moduleName}</span>
-                  <div className="flex items-center">
-                    <label className="relative inline-flex items-center cursor-pointer mr-2">
-                      <input
-                        type="checkbox"
-                        checked={modules.some(m => m._id === module._id && m.allowedOperations.length > 0)}
-                        onChange={() => handleRemoveModule(module._id)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-black border border-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
-                      </div>
-                    </label>
-                    <span>{activeAccordion === index ? '-' : '+'}</span>
-                  </div>
+                className="accordion-header secondary-card text-text-color px-4 py-2 flex justify-between items-center cursor-pointer"
+                onClick={() => setActiveAccordion(activeAccordion === index ? null : index)}
+              >
+                <span>{module.moduleName}</span>
+                <div className="flex items-center">
+                  <label className="relative inline-flex items-center cursor-pointer mr-2">
+                    <input
+                      type="checkbox"
+                      checked={module.allowedOperations.length > 0}
+                      onChange={() => handleRemoveModule(module._id)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 secondary-card border border-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
+                    </div>
+                  </label>
+                  <span>{activeAccordion === index ? '-' : '+'}</span>
                 </div>
-
+              </div>
 
               {/* Accordion Content */}
               {activeAccordion === index && (
-                <div className="accordion-content bg-gray-800 p-4 text-white">
+                <div className="accordion-content bg-gray-800 p-4 text-text-color">
                   {module.moduleOperations.map(operation => (
                     <div key={operation} className="flex items-center justify-between mb-2">
                       <span>{operation}</span>
@@ -113,7 +111,7 @@ function Modules() {
                           onChange={() => handleToggleOperation(module._id, operation)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-black border border-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
+                        <div className="w-11 h-6 secondary-card border border-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
                         </div>
                       </label>
                     </div>
@@ -128,7 +126,7 @@ function Modules() {
         <div className="flex justify-end p-4">
           <button
             type="submit"
-            className="bg-nexa-orange text-white px-6 py-2 rounded"
+            className="bg-primary-button-color text-text-color px-6 py-2 rounded"
             disabled={isModuleLoading}
           >
             {isModuleLoading ? 'Saving...' : 'Save'}

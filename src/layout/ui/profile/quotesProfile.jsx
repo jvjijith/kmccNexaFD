@@ -50,7 +50,7 @@ function ProfilePage() {
       </div>
       <div className="h-screen flex-grow overflow-x-hidden overflow-auto flex justify-center items-center">
         <div className="w-full max-w-7xl h-full flex flex-col justify-center p-4">
-          <div className="flex flex-col w-full h-full bg-card text-white rounded-lg shadow-lg p-5">
+          <div className="flex flex-col w-full h-full bg-card text-text-color rounded-lg shadow-lg p-5">
             <div className="mb-5">
               <h1 className="text-3xl font-bold">Quote Details</h1>
             </div>
@@ -60,41 +60,41 @@ function ProfilePage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Quote Number</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{quoteNumber}</div>
+                      <div className="p-2 bg-secondary-card rounded">{quoteNumber}</div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Quote Status</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{quoteStatus}</div>
+                      <div className="p-2 bg-secondary-card rounded">{quoteStatus}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Salesman</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{salesman?.name || 'N/A'}</div>
+                      <div className="p-2 bg-secondary-card rounded">{salesman?.name || 'N/A'}</div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Customer</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{customer?.name || 'N/A'}</div>
+                      <div className="p-2 bg-secondary-card rounded">{customer?.name || 'N/A'}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Total Amount</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{totalAmount}</div>
+                      <div className="p-2 bg-secondary-card rounded">{totalAmount}</div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Total Discount</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{totalDiscount}</div>
+                      <div className="p-2 bg-secondary-card rounded">{totalDiscount}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Final Amount</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">{finalAmount}</div>
+                      <div className="p-2 bg-secondary-card rounded">{finalAmount}</div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Valid Until</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">
+                      <div className="p-2 bg-secondary-card rounded">
                         {new Date(validUntil).toLocaleDateString()}
                       </div>
                     </div>
@@ -102,20 +102,20 @@ function ProfilePage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Created At</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">
+                      <div className="p-2 bg-secondary-card rounded">
                         {new Date(createdAt).toLocaleDateString()}
                       </div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Updated At</label>
-                      <div className="p-2 bg-sidebar-card-top rounded">
+                      <div className="p-2 bg-secondary-card rounded">
                         {new Date(updatedAt).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium mb-1">Products</label>
-                    <ul className="list-disc pl-5 bg-sidebar-card-top rounded p-3">
+                    <ul className="list-disc pl-5 bg-secondary-card rounded p-3">
                       {products?.length ? (
                         products.map((product, index) => (
                           <li key={index}>
@@ -129,7 +129,7 @@ function ProfilePage() {
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium mb-1">Edited Notes</label>
-                    <ul className="list-disc pl-5 bg-sidebar-card-top rounded p-3">
+                    <ul className="list-disc pl-5 bg-secondary-card rounded p-3">
                       {editedNotes?.length
                         ? editedNotes.map((note, index) => <li key={index}>{note}</li>)
                         : 'No Notes Available'}
@@ -137,7 +137,7 @@ function ProfilePage() {
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium mb-1">Terms and Conditions</label>
-                    <ul className="list-disc pl-5 bg-sidebar-card-top rounded p-3">
+                    <ul className="list-disc pl-5 bg-secondary-card rounded p-3">
                       {termsAndConditions?.length
                         ? termsAndConditions.map((term, index) => <li key={index}>{term.name}</li>)
                         : 'No Terms Available'}
@@ -145,7 +145,7 @@ function ProfilePage() {
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium mb-1">Edited By</label>
-                    <div className="p-2 bg-sidebar-card-top rounded">{editedBy?.name || 'N/A'}</div>
+                    <div className="p-2 bg-secondary-card rounded">{editedBy?.name || 'N/A'}</div>
                   </div>
                 </div>
               </section>

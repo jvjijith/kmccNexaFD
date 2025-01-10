@@ -71,13 +71,13 @@ function BrandForm({ id, closeModal }) {
         <div className="block">
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">
+              <label className="float-left inline-block mb-2 text-text-color">
                 &nbsp;Brand Name *&nbsp;
               </label>
               <input
                 type="text"
                 name="name"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Your Brand Name"
                 autoComplete="off"
                 style={{ textAlign: "initial" }}
@@ -89,51 +89,32 @@ function BrandForm({ id, closeModal }) {
           </div>
           <div className="w-full">
             <div className="mb-4">
-              <label className="w-full float-left inline-block mb-2 text-white">
+              <label className="w-full float-left inline-block mb-2 text-text-color">
                 &nbsp;Category *&nbsp;
               </label>
               <Select
       options={categories.map(category => ({ value: category._id, label: category.categoryName }))}
       value={categoryOptions.find(option => option._id === brandData.category)}
       onChange={(selectedOption) => setBrandData(prevState => ({ ...prevState, category: selectedOption.value }))}
-      styles={{
-        control: (provided, state) => ({
-          ...provided,
-          backgroundColor: 'black',
-          borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
-          borderBottomWidth: '2px',
-          borderRadius: '0px',
-          height: '40px', // h-10: 2.5rem = 40px
-          paddingLeft: '8px', // px-2: 0.5rem = 8px
-          paddingRight: '8px', // px-2: 0.5rem = 8px
-          color: 'white'
-        }),
-        singleValue: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        placeholder: (provided) => ({
-          ...provided,
-          color: 'white',
-        }),
-        menu: (provided) => ({
-          ...provided,
-          backgroundColor: 'black',
-          color: 'white',
-        }),
-        option: (provided, state) => ({
-          ...provided,
-          backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-          color: state.isSelected ? 'black' : 'white',
-          cursor: 'pointer'
-        })
+      classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
       }}
     />
               <div className="correct"></div>
             </div>
           </div>
           <div className="flex flex-wrap justify-end p-4">
-            <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded">
+            <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-text-color px-4 py-2 rounded">
                Add Brand
             </button>
           </div>

@@ -69,13 +69,13 @@ function SubCategoryForm({ id, name, industry, closeModal, category }) {
         <div className="block">
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">
+              <label className="float-left inline-block mb-2 text-text-color">
                 &nbsp;Sub Category Name *&nbsp;
               </label>
               <input
                 type="text"
                 name="subCategoryName"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Your Sub Category Name"
                 autoComplete="off"
                 style={{ textAlign: "initial" }}
@@ -88,13 +88,13 @@ function SubCategoryForm({ id, name, industry, closeModal, category }) {
 
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left block mb-2 text-white">
+              <label className="float-left block mb-2 text-text-color">
                 &nbsp;Sub Category Type *&nbsp;
               </label>
               <input
                 type="text"
                 name="subCategoryType"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Sub Category Type..."
                 autoComplete="off"
                 style={{ textAlign: "initial" }}
@@ -106,7 +106,7 @@ function SubCategoryForm({ id, name, industry, closeModal, category }) {
 
 
           <div className="flex flex-wrap justify-end p-4">
-            <button type="submit" className="bg-nexa-orange hover:bg-green-400 text-white px-4 py-2 rounded">
+            <button type="submit" className="bg-primary-button-color hover:bg-green-400 text-text-color px-4 py-2 rounded">
               {id ? "Edit Category" : "Add Category"}
             </button>
           </div>

@@ -1,13 +1,13 @@
 import Container from "../../layout/component/container";
-import SalesInvoiceTable from "../../layout/component/salesinvoiceTable";
 import UserTeamPermissionCard from "../../layout/component/userTeamPermissionCard";
+import UserTeamPermissionTable from "../../layout/component/userTeamPermissionTable";
 
 function UserTeamPermission() {
 
   return (
     <Container>
       <UserTeamPermissionCard title={"User/Team Permissions"} button={true}>
-        <SalesInvoiceTable
+        <UserTeamPermissionTable
         />
       </UserTeamPermissionCard>
     </Container>

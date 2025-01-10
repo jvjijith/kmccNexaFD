@@ -255,7 +255,7 @@ const signedUrlResponse = await generateSignedUrl({
       <form onSubmit={handleSubmit}>
           {/* App ID Dropdown */}
             <div className="mb-4">
-              <label className="block w-full mb-2 text-white">App ID *</label>
+              <label className="block w-full mb-2 text-text-color">App ID *</label>
               <Select
             options={filteredAppOptions}
             value={filteredAppOptions?.find(option => option.value === layoutData?.appId) || null}
@@ -270,7 +270,7 @@ const signedUrlResponse = await generateSignedUrl({
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                borderColor: state.isFocused ? 'white' : 'black',
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px',
@@ -289,8 +289,8 @@ const signedUrlResponse = await generateSignedUrl({
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer'
               })
             }}
@@ -300,10 +300,10 @@ const signedUrlResponse = await generateSignedUrl({
 
         {/* Logo upload section */}
         <div className="w-full p-4">
-          <label className="block w-full mb-2 text-white">Logos</label>
-          <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-4">
+          <label className="block w-full mb-2 text-text-color">Logos</label>
+          <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-secondary-card text-text-color border-2 border-nexa-gray rounded mb-4">
             <input {...getInputProps()} />
-            <p>Drag & drop images here, or click to select files</p>
+            <p className='text-text-color'>Drag & drop images here, or click to select files</p>
             <div className="w-full p-4">
               {images?.map((file, index) => (
                 <div key={index} className="flex items-center justify-between mb-2">
@@ -348,26 +348,26 @@ const signedUrlResponse = await generateSignedUrl({
  {/* Font Settings */}
  <div className="p-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-white">Font Settings</label>
+            <label className="block w-full mb-2 text-text-color">Font Settings</label>
             <button
               type="button"
-              className="bg-black text-white px-4 py-2 rounded"
+              className="bg-secondary-card text-text-color px-4 py-2 rounded"
               onClick={addFont}
             >
               Add
             </button>
           </div>
 
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-            {layoutData?.font?.length === 0 && <p>No fonts added</p>}
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
+            {layoutData?.font?.length === 0 && <p className='text-text-color'>No fonts added</p>}
             {layoutData?.font?.map((font, index) => (
               <div key={index} className="mb-4">
                 <div className="flex flex-wrap">
                 <div className="w-full sm:w-1/2 p-4">
-                <label className="block mb-2 text-white">Font Family</label>
+                <label className="block mb-2 text-text-color">Font Family</label>
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white mr-2"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mr-2"
                     placeholder="Font Family"
                     value={font.fontFamily}
                     onChange={(e) =>
@@ -377,10 +377,10 @@ const signedUrlResponse = await generateSignedUrl({
                 </div>
                 
                 <div className="w-full sm:w-1/2 p-4">
-                <label className="block mb-2 text-white">Subset</label>
+                <label className="block mb-2 text-text-color">Subset</label>
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white mr-2"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mr-2"
                     placeholder="Subset"
                     value={font.subset}
                     onChange={(e) =>
@@ -389,7 +389,7 @@ const signedUrlResponse = await generateSignedUrl({
                   />
                 </div>
                 <div className="w-full sm:w-1/2 p-4">
-                <label className="block mb-2 text-white">Font Weight</label>
+                <label className="block mb-2 text-text-color">Font Weight</label>
                   <Select
                     isMulti
                     options={[
@@ -419,7 +419,7 @@ const signedUrlResponse = await generateSignedUrl({
                       control: (provided, state) => ({
                         ...provided,
                         backgroundColor: 'black',
-                        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                        borderColor: state.isFocused ? 'white' : 'black',
                         borderBottomWidth: '2px',
                         borderRadius: '0px',
                         height: '40px',
@@ -436,8 +436,8 @@ const signedUrlResponse = await generateSignedUrl({
                       }),
                       option: (provided, state) => ({
                         ...provided,
-                        backgroundColor: state.isSelected ? '#007bff' : 'black',
-                        color: state.isSelected ? 'black' : 'white',
+                        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                        color: state.isSelected ? '#f8f9fa' : 'black',
                         cursor: 'pointer',
                       }),
                     }}
@@ -445,7 +445,7 @@ const signedUrlResponse = await generateSignedUrl({
                 </div>
                 
                 <div className="w-full sm:w-1/2 p-4">
-                <label className="block mb-2 text-white">Font Style</label>
+                <label className="block mb-2 text-text-color">Font Style</label>
                   <Select
                     isMulti
                     options={[
@@ -468,7 +468,7 @@ const signedUrlResponse = await generateSignedUrl({
                       control: (provided, state) => ({
                         ...provided,
                         backgroundColor: 'black',
-                        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                        borderColor: state.isFocused ? 'white' : 'black',
                         borderBottomWidth: '2px',
                         borderRadius: '0px',
                         height: '40px',
@@ -485,8 +485,8 @@ const signedUrlResponse = await generateSignedUrl({
                       }),
                       option: (provided, state) => ({
                         ...provided,
-                        backgroundColor: state.isSelected ? '#007bff' : 'black',
-                        color: state.isSelected ? 'black' : 'white',
+                        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                        color: state.isSelected ? '#f8f9fa' : 'black',
                         cursor: 'pointer',
                       }),
                     }}
@@ -497,10 +497,10 @@ const signedUrlResponse = await generateSignedUrl({
                 <div className="flex flex-wrap mt-2">
                   
                 <div className="w-full sm:w-1/2 p-4">
-                <label className="block mb-2 text-white">Language</label>
+                <label className="block mb-2 text-text-color">Language</label>
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white mr-2"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mr-2"
                     placeholder="Language Code"
                     value={font.lanCode}
                     onChange={(e) =>
@@ -509,7 +509,7 @@ const signedUrlResponse = await generateSignedUrl({
                   />
                 </div>
                 <div className="w-full sm:w-1/2 p-4">
-  <label className="block mb-2 text-white">Select Type</label>
+  <label className="block mb-2 text-text-color">Select Type</label>
   <Select
     options={[
       { value: "body", label: "Body" },
@@ -529,7 +529,7 @@ const signedUrlResponse = await generateSignedUrl({
       control: (provided, state) => ({
         ...provided,
         backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+        borderColor: state.isFocused ? 'white' : 'black',
         borderBottomWidth: '2px',
         borderRadius: '0px',
         height: '40px',
@@ -546,8 +546,8 @@ const signedUrlResponse = await generateSignedUrl({
       }),
       option: (provided, state) => ({
         ...provided,
-        backgroundColor: state.isSelected ? '#007bff' : 'black',
-        color: state.isSelected ? 'black' : 'white',
+        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+        color: state.isSelected ? '#f8f9fa' : 'black',
         cursor: 'pointer',
       }),
     }}
@@ -558,7 +558,7 @@ const signedUrlResponse = await generateSignedUrl({
                 <div className="flex flex-wrap justify-end p-4">
                   <button
                     type="button"
-                    className="bg-black text-white px-4 py-2 rounded "
+                    className="bg-secondary-card text-text-color px-4 py-2 rounded "
                     onClick={() => removeFont(index)}
                   >
                     Remove
@@ -573,15 +573,15 @@ const signedUrlResponse = await generateSignedUrl({
 
        {/* Font Size Settings */}
 <div className="p-4">
-  <label className="block w-full mb-2 text-white">Font Size</label>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+  <label className="block w-full mb-2 text-text-color">Font Size</label>
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
     <div className="flex flex-wrap">
       {['base', 'xs', 'sm', 'md', 'lg'].map((size) => (
         <div key={size} className="w-full sm:w-1/2 p-4">
           <div className="mb-4 flex items-center">
             <input
               type="text"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder={`Enter ${size} size`}
               value={layoutData?.fontSize?.[size] || ''} // Use optional chaining and fallback to an empty string
               onChange={(e) => handleSettingChange('fontSize', size, e.target.value)}
@@ -594,7 +594,7 @@ const signedUrlResponse = await generateSignedUrl({
 </div>
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
             Submit
           </button>
         </div>

@@ -53,63 +53,63 @@ const VarientTable = ({ productId }) => {
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Color</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Size</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Model</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
+        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Name</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Color</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Size</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Model</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Action</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {varientData?.map((variant) => (
-            <Table.Row key={variant._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={variant._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
                 {variant.name}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="whitespace-nowrap text-text-color">
                 {variant.color}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="whitespace-nowrap text-text-color">
                 {variant.size}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="whitespace-nowrap text-text-color">
                 {variant.model}
               </Table.Cell>
               <Table.Cell className={`whitespace-nowrap ${variant.active ? "text-green-500" : "text-red-500"}`}>
                 {variant.active ? "Active" : "Inactive"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="text-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => navigate(`/variant/add`, { state: { variant, productId }})}
                   >
                     Edit Variant
                   </Dropdown.Item>
                   {variant.active ? (
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => handleDeactivateProduct(variant)}
                     >
                       Deactivate Variant
                     </Dropdown.Item>
                   ) : (
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => handleActivateProduct(variant)}
                     >
                       Activate Variant
                     </Dropdown.Item>
                   )}
                   {/* <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => handleShowVariants(variant.productId)}
                   >
                     Show Variants
                   </Dropdown.Item> */}
                   {/* <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => handleAddVariants(variant.productId)}
                   >
                     Add Variants

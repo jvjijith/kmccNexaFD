@@ -406,38 +406,38 @@ const { data: varientData, varientLoading, varientError, varientRefetch } = useG
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">PO Number</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Purchaser</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Vendor</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Total Amount</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Final Amount</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">PO Number</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Purchaser</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Vendor</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Total Amount</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Final Amount</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {PurchaseOrdersData.purchaseOrders.map((po) => (
-            <Table.Row key={po._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={po._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
                 {po.poNumber}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="text-text-color">
                 {po.purchaser?.name || "N/A"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="text-text-color">
                 {po.vendor?.name || "N/A"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="text-text-color">
                 {po.totalAmount}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="text-text-color">
                 {po.finalAmount}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="text-text-color">
                 {po.poStatus}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="text-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>
                       navigate(`/purchaseorder/edit`, { state: { po } })
@@ -480,8 +480,8 @@ const { data: varientData, varientLoading, varientError, varientRefetch } = useG
             key={index}
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
-              currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"
-            } text-white`}
+              currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
+            } text-text-color`}
           >
             {index + 1}
           </button>
@@ -493,7 +493,7 @@ const { data: varientData, varientLoading, varientError, varientRefetch } = useG
     <BlobProvider document={<QuotePDF quote={previewInvoice} organization={organizationData} />}>
       {({ blob, url, loading }) =>
         loading ? (
-          <p className="text-white">Loading preview...</p>
+          <p className="text-text-color">Loading preview...</p>
         ) : (
           <iframe
             src={url}

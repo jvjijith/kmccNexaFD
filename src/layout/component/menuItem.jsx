@@ -28,7 +28,7 @@ export default function MenuItem({ item }) {
       <div
         className={clsx(
           'w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer',
-          isSelected ? 'sidebar-item-selected' : 'sidebar-item text-white'
+          isSelected ? 'sidebar-item-selected' : 'sidebar-item text-text-color'
         )}
         onClick={handleItemClick}
       >
@@ -50,12 +50,12 @@ export default function MenuItem({ item }) {
         )}
         {notifications && !dropdownItems && (
           <div className="flex sm:hidden xl:flex bg-pink-600 w-5 h-5 flex items-center justify-center rounded-full mr-2">
-            <div className="text-white text-sm">{notifications}</div>
+            <div className="text-text-color text-sm">{notifications}</div>
           </div>
         )}
       </div>
       {isDropdownOpen && dropdownItems && (
-        <div className="mt-2 w-full bg-sidebar-card-top shadow-lg z-10">
+        <div className="mt-2 w-full bg-secondary-card shadow-lg z-10">
           {dropdownItems.map((dropdownItem) => (
             <MenuItem key={dropdownItem.route} item={dropdownItem} />
           ))}

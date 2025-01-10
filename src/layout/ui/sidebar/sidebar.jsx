@@ -40,7 +40,7 @@ export default function Sidebar() {
       <div className="flex-shrink-0 overflow-hidden p-2">
         <div className="flex items-center h-full sm:justify-center xl:justify-start p-2 sidebar-separator-top">
           <IconButton icon="res-react-dash-logo" className="w-10 h-10" />
-          <div className="block sm:hidden xl:block ml-2 font-bold text-xl text-white">
+          <div className="block sm:hidden xl:block ml-2 font-bold text-xl text-text-color">
             NexaConnect
           </div>
           <div className="flex-grow sm:hidden xl:block" />
@@ -53,10 +53,10 @@ export default function Sidebar() {
       </div>
       <div className="flex-grow overflow-x-hidden overflow-y-auto flex flex-col">
         <div className="w-full p-3 h-24 sm:h-20 xl:h-24 hidden sm:block flex-shrink-0">
-          <div className="bg-sidebar-card-top rounded-xl w-full h-full flex items-center justify-start sm:justify-center xl:justify-start px-3 sm:px-0 xl:px-3">
+          <div className="bg-secondary-card rounded-xl w-full h-full flex items-center justify-start sm:justify-center xl:justify-start px-3 sm:px-0 xl:px-3">
             <Icon path="res-react-dash-sidebar-card" className="w-9 h-9 " />
             <div className="block sm:hidden xl:block ml-3">
-              <div className="text-sm font-bold text-white">Sales House</div>
+              <div className="text-sm font-bold text-text-color">Sales House</div>
               <div className="text-sm">General Item</div>
             </div>
             <div className="block sm:hidden xl:block flex-grow" />
@@ -93,22 +93,15 @@ export default function Sidebar() {
         
         <div className="flex-grow" />
         <div className="w-full p-3 h-28 hidden sm:block sm:h-20 xl:h-32">
-          <div
-            className="rounded-xl w-full h-full px-3 sm:px-0 xl:px-3 overflow-hidden"
-            style={{
-              backgroundImage:
-                "url('https://assets.codepen.io/3685267/res-react-dash-usage-card.svg')",
-            }}
-          >
             <div className="block sm:hidden xl:block pt-3">
-              <div className="font-bold text-gray-300 text-sm" >Used Space</div>
+              <div className="font-bold text-text-color text-sm" >Used Space</div>
               <div className="text-gray-500 text-xs">
                 Admin updated 09:12 am November 08,2020
               </div>
               <animated.div className="text-right text-gray-400 text-xs">
                 {precentage.interpolate((i) => `${Math.round(i)}%`)}
               </animated.div>
-              <div className="w-full text-gray-300">
+              <div className="w-full text-text-color">
               <svg
   viewBox="0 0 100 11"
   fill="none"
@@ -160,7 +153,6 @@ export default function Sidebar() {
                 />
               </svg>
             </div>
-          </div>
         </div>
       </div>
 
@@ -188,10 +180,10 @@ export default function Sidebar() {
           <Dropdown label={<Icon
             path="res-react-dash-options"
             className="block sm:hidden xl:block w-3 h-3"
-          />} inline className="bg-card text-white">
+          />} inline className="bg-card text-text-color">
           
             <Dropdown.Item
-              className="text-gray-300"
+              className="text-text-color"
               onClick={handleLogout}
             >
               LOGOUT

@@ -19,7 +19,7 @@ function ContactCard({children,title}) {
             <div className="sm:flex-grow flex justify-between">
               <div className="">
                 <div className="flex items-center">
-                  <div className="text-3xl font-bold text-white">Contact</div>
+                  <div className="text-3xl font-bold text-text-color">Contact</div>
                   
                 </div>
              {/*    <div className="flex items-center">
@@ -46,7 +46,7 @@ function ContactCard({children,title}) {
                   type="text"
                   name="company_website"
                   id="company_website"
-                  className="pl-12 py-2 pr-2 block w-full rounded-lg border-nexa-gray bg-black text-white"
+                  className="pl-12 py-2 pr-2 block w-full rounded-lg border-nexa-gray secondary-card text-text-color"
                   placeholder="search"
                 />
               </form>
@@ -56,7 +56,7 @@ function ContactCard({children,title}) {
           
            <Card title={title}
            component={
-            <button className="bg-black text-white px-4 py-2 rounded" onClick={() => navigate('/addContact')}>
+            <button className="bg-secondary-card text-text-color px-4 py-2 rounded" onClick={() => navigate('/addContact')}>
               Add Contacts
             </button>
           }>

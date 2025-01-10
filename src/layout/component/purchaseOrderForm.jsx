@@ -419,7 +419,7 @@ const handleTermChange = (index, field, value) => {
       <form onSubmit={handleSubmit}>
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">PO Status</label>
+            <label className="block w-full mb-2 text-text-color">PO Status</label>
             <Select
               options={poStatusOptions}
               value={poStatusOptions.find(option => option.value === formValues.poStatus)}
@@ -429,7 +429,7 @@ const handleTermChange = (index, field, value) => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -448,8 +448,8 @@ const handleTermChange = (index, field, value) => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -458,7 +458,7 @@ const handleTermChange = (index, field, value) => {
 
           {/* PO Template */}
           <div className="w-full sm:w-1/2 p-4">
-  <label className="block w-full mb-2 text-white">Template</label>
+  <label className="block w-full mb-2 text-text-color">Template</label>
   <Select
     options={quoteTemplateOptions}
     value={quoteTemplateOptions?.find(option => option.value === formValues.poTemplate)}
@@ -468,7 +468,7 @@ const handleTermChange = (index, field, value) => {
       control: (provided, state) => ({
         ...provided,
         backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+        borderColor: state.isFocused ? 'white' : 'black',
         borderBottomWidth: '2px',
         borderRadius: '0px',
         height: '40px',
@@ -487,8 +487,8 @@ const handleTermChange = (index, field, value) => {
       }),
       option: (provided, state) => ({
         ...provided,
-        backgroundColor: state.isSelected ? '#007bff' : 'black',
-        color: state.isSelected ? 'black' : 'white',
+        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+        color: state.isSelected ? '#f8f9fa' : 'black',
         cursor: 'pointer',
       }),
     }}
@@ -498,7 +498,7 @@ const handleTermChange = (index, field, value) => {
 
           {/* Organization Dropdown */}
           {/* <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Organization</label>
+            <label className="block w-full mb-2 text-text-color">Organization</label>
             <Select
               options={organizationOptions}
               value={organizationOptions?.find(option => option.value === formValues.organization)}
@@ -508,7 +508,7 @@ const handleTermChange = (index, field, value) => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -527,8 +527,8 @@ const handleTermChange = (index, field, value) => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -537,7 +537,7 @@ const handleTermChange = (index, field, value) => {
 
           {/* Quote Status Dropdown */}
           <div className="w-full sm:w-1/2 p-4">
-  <label className="block w-full mb-2 text-white">Quote</label>
+  <label className="block w-full mb-2 text-text-color">Quote</label>
   <Select
     name="quoteId"
     options={quoteStatusOptions}
@@ -548,7 +548,7 @@ const handleTermChange = (index, field, value) => {
       control: (provided, state) => ({
         ...provided,
         backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+        borderColor: state.isFocused ? 'white' : 'black',
         borderBottomWidth: '2px',
         borderRadius: '0px',
         height: '40px',
@@ -567,8 +567,8 @@ const handleTermChange = (index, field, value) => {
       }),
       option: (provided, state) => ({
         ...provided,
-        backgroundColor: state.isSelected ? '#007bff' : 'black',
-        color: state.isSelected ? 'black' : 'white',
+        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+        color: state.isSelected ? '#f8f9fa' : 'black',
         cursor: 'pointer',
       }),
     }}
@@ -577,7 +577,7 @@ const handleTermChange = (index, field, value) => {
 
 
           <div className="w-full md:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white" >Quote Type</label>
+            <label className="block w-full mb-2 text-text-color" >Quote Type</label>
             <Select
               options={[
                 { value: 'Quote Request', label: 'Quote Request' },
@@ -589,7 +589,7 @@ const handleTermChange = (index, field, value) => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -608,8 +608,8 @@ const handleTermChange = (index, field, value) => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -619,7 +619,7 @@ const handleTermChange = (index, field, value) => {
 
 
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Purchaser</label>
+          <label className="block w-full mb-2 text-text-color">Purchaser</label>
           <Select
             name="purchaser"
             options={employeeOptions}
@@ -630,7 +630,7 @@ const handleTermChange = (index, field, value) => {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                borderColor: state.isFocused ? 'white' : 'black',
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px',
@@ -649,8 +649,8 @@ const handleTermChange = (index, field, value) => {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer',
               }),
             }}
@@ -659,7 +659,7 @@ const handleTermChange = (index, field, value) => {
 
  {/* Vendor Dropdown */}
  <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Vendor</label>
+            <label className="block w-full mb-2 text-text-color">Vendor</label>
             <Select
               options={vendorOptions}
               value={vendorOptions.find(option => option.value === formValues.vendor)}
@@ -669,7 +669,7 @@ const handleTermChange = (index, field, value) => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -688,8 +688,8 @@ const handleTermChange = (index, field, value) => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -697,59 +697,59 @@ const handleTermChange = (index, field, value) => {
           </div>
 
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">PO Notes</label>
+            <label className="block w-full mb-2 text-text-color">PO Notes</label>
             <textarea
               name="PO Notes"
               value={formValues.poNotes}
               onChange={(e) => handleInputChange('poNotes', e.target.value)}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
             />
           </div>
 
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Shipping Address</label>
+            <label className="block w-full mb-2 text-text-color">Shipping Address</label>
             <textarea
               name="Shipping Address"
               value={formValues.shippingAddress}
               onChange={(e) => handleInputChange('shippingAddress', e.target.value)}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
             />
           </div>
 
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Billing Address</label>
+            <label className="block w-full mb-2 text-text-color">Billing Address</label>
             <textarea
               name="Billing Address"
               value={formValues.billingAddress}
               onChange={(e) => handleInputChange('billingAddress', e.target.value)}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
             />
           </div>
 
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Payment Terms</label>
+            <label className="block w-full mb-2 text-text-color">Payment Terms</label>
             <textarea
               name="Payment Terms"
               value={formValues.paymentTerms}
               onChange={(e) => handleInputChange('paymentTerms', e.target.value)}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
             />
           </div>
 
           <div className="w-full md:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Expected Delivery Date</label>
+            <label className="block w-full mb-2 text-text-color">Expected Delivery Date</label>
             <input
               type="date"
               id="expectedDeliveryDate"
               value={formValues.expectedDeliveryDate}
               onChange={(e) => handleInputChange('expectedDeliveryDate', e.target.value)}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
               required
             />
           </div>
 
           <div className="w-full md:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Payment Status</label>
+            <label className="block w-full mb-2 text-text-color">Payment Status</label>
             <Select
               options={[
                 { value: 'paid', label: 'Paid' },
@@ -764,7 +764,7 @@ const handleTermChange = (index, field, value) => {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -783,8 +783,8 @@ const handleTermChange = (index, field, value) => {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer',
                 }),
               }}
@@ -793,7 +793,7 @@ const handleTermChange = (index, field, value) => {
           </div>
 
           <div className="w-full sm:w-1/2 p-4">
-  <label className="block w-full mb-2 text-white">Created By</label>
+  <label className="block w-full mb-2 text-text-color">Created By</label>
   <Select
     name="createdBy"
     options={employeeOptions}
@@ -804,7 +804,7 @@ const handleTermChange = (index, field, value) => {
       control: (provided, state) => ({
         ...provided,
         backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+        borderColor: state.isFocused ? 'white' : 'black',
         borderBottomWidth: '2px',
         borderRadius: '0px',
         height: '40px',
@@ -823,8 +823,8 @@ const handleTermChange = (index, field, value) => {
       }),
       option: (provided, state) => ({
         ...provided,
-        backgroundColor: state.isSelected ? '#007bff' : 'black',
-        color: state.isSelected ? 'black' : 'white',
+        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+        color: state.isSelected ? '#f8f9fa' : 'black',
         cursor: 'pointer',
       }),
     }}
@@ -832,7 +832,7 @@ const handleTermChange = (index, field, value) => {
 </div>
 
 <div className="w-full sm:w-1/2 p-4">
-  <label className="block w-full mb-2 text-white">Edited By</label>
+  <label className="block w-full mb-2 text-text-color">Edited By</label>
   <Select
     name="editedBy"
     options={employeeOptions}
@@ -843,7 +843,7 @@ const handleTermChange = (index, field, value) => {
       control: (provided, state) => ({
         ...provided,
         backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : '#D3D3D3',
+        borderColor: state.isFocused ? 'white' : 'black',
         borderBottomWidth: '2px',
         borderRadius: '0px',
         height: '40px',
@@ -862,8 +862,8 @@ const handleTermChange = (index, field, value) => {
       }),
       option: (provided, state) => ({
         ...provided,
-        backgroundColor: state.isSelected ? '#007bff' : 'black',
-        color: state.isSelected ? 'black' : 'white',
+        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+        color: state.isSelected ? '#f8f9fa' : 'black',
         cursor: 'pointer',
       }),
     }}
@@ -874,26 +874,26 @@ const handleTermChange = (index, field, value) => {
           {/* Edited Notes Section */}
 <div className="w-full p-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-white">Edited Notes</label>
-    <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addEditedNote}>
+    <label className="block w-full mb-2 text-text-color">Edited Notes</label>
+    <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={addEditedNote}>
       Add
     </button>
   </div>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-    {formValues?.editedNotes?.length === 0 && <p>No Edited Notes added</p>}
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+    {formValues?.editedNotes?.length === 0 && <p className='text-text-color'>No Edited Notes added</p>}
     {formValues?.editedNotes?.map((note, index) => (
       <div key={index} className="flex flex-col mb-4">
         <div className="flex items-center mb-2">
           <textarea
             name={`editedNote-${index}`}
-            className="block w-full px-3 h-10 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 h-10 py-2 text-text-color secondary-card border rounded"
             placeholder={`Edited Note ${index + 1}`}
             value={note}
             onChange={(e) => handleEditedNoteChange(index, e.target.value)}
           />
           <button
             type="button"
-            className="bg-black w-1/6 text-white px-4 py-2 rounded ml-2"
+            className="bg-secondary-card w-1/6 text-text-color px-4 py-2 rounded ml-2"
             onClick={() => removeEditedNote(index)}
           >
             Remove
@@ -908,20 +908,20 @@ const handleTermChange = (index, field, value) => {
            {/* Payment History Section */}
         <div className="w-full p-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-white">Payment History</label>
-            <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addPayment}>
+            <label className="block w-full mb-2 text-text-color">Payment History</label>
+            <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={addPayment}>
               Add
             </button>
           </div>
-          <div className="p-4 bg-sidebar-card-top rounded-lg">
-            {formValues.paymentHistory.length === 0 && <p>No Payment History added</p>}
+          <div className="p-4 bg-secondary-card rounded-lg">
+            {formValues.paymentHistory.length === 0 && <p className='text-text-color'>No Payment History added</p>}
             {formValues.paymentHistory.map((payment, index) => (
               <div key={index} className="flex flex-col mb-4">
                 <div className="flex items-center mb-2">
                   <input
                     type="date"
                     name={`paymentDate-${index}`}
-                    className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                    className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                     placeholder="Payment Date"
                     value={payment.paymentDate}
                     onChange={(e) => handlePaymentChange(index, 'paymentDate', e.target.value)}
@@ -929,14 +929,14 @@ const handleTermChange = (index, field, value) => {
                   <input
                     type="number"
                     name={`paymentAmount-${index}`}
-                    className="block w-1/4 h-10 px-2 py-1 ml-2 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                    className="block w-1/4 h-10 px-2 py-1 ml-2 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                     placeholder="Payment Amount"
                     value={payment.paymentAmount}
                     onChange={(e) => handlePaymentChange(index, 'paymentAmount', e.target.value)}
                   />
                   <select
                     name={`paymentMethod-${index}`}
-                    className="block w-1/4 h-10 px-2 py-1 ml-2 bg-black text-white border-b border-nexa-gray focus:outline-none"
+                    className="block w-1/4 h-10 px-2 py-1 ml-2 secondary-card text-text-color border-b border-nexa-gray focus:outline-none"
                     value={payment.paymentMethod}
                     onChange={(e) => handlePaymentChange(index, 'paymentMethod', e.target.value)}
                   >
@@ -950,14 +950,14 @@ const handleTermChange = (index, field, value) => {
                   <input
                     type="text"
                     name={`paymentReference-${index}`}
-                    className="block w-1/4 h-10 px-2 py-1 ml-2 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                    className="block w-1/4 h-10 px-2 py-1 ml-2 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                     placeholder="Payment Reference"
                     value={payment.paymentReference}
                     onChange={(e) => handlePaymentChange(index, 'paymentReference', e.target.value)}
                   />
                   <button
                     type="button"
-                    className="bg-black text-white px-4 py-2 rounded ml-2"
+                    className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
                     onClick={() => removePayment(index)}
                   >
                     Remove
@@ -972,20 +972,20 @@ const handleTermChange = (index, field, value) => {
           {/* Terms and Conditions Section */}
         <div className="w-full p-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-white">Terms and Conditions</label>
-    <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addTerm}>
+    <label className="block w-full mb-2 text-text-color">Terms and Conditions</label>
+    <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={addTerm}>
       Add
     </button>
   </div>
-  <div className="terms-container p-4 bg-sidebar-card-top rounded-lg">
-    {formValues.termsAndConditions.length === 0 && <p>No Terms and Conditions added</p>}
+  <div className="terms-container p-4 bg-secondary-card rounded-lg">
+    {formValues.termsAndConditions.length === 0 && <p className='text-text-color'>No Terms and Conditions added</p>}
     {formValues.termsAndConditions.map((term, index) => (
       <div key={index} className="flex flex-col mb-4">
         <div className="flex items-center mb-2">
           <input
             type="text"
             name={`termName-${index}`}
-            className="block w-2/6 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+            className="block w-2/6 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
             placeholder={`Term Name ${index + 1}`}
             value={term.name}
             onChange={(e) => handleTermChange(index, 'name', e.target.value)}
@@ -994,14 +994,14 @@ const handleTermChange = (index, field, value) => {
         <div className="flex items-center mb-2"> */}
           <textarea
             name={`termContent-${index}`}
-            className="block w-3/6 px-3 h-10 py-2 text-white bg-black border rounded  ml-2"
+            className="block w-3/6 px-3 h-10 py-2 text-text-color secondary-card border rounded  ml-2"
             placeholder={`Content for Term ${index + 1}`}
             value={term.content}
             onChange={(e) => handleTermChange(index, 'content', e.target.value)}
           />
         <button
           type="button"
-          className="bg-black w-1/6 text-white px-4 py-2 rounded ml-2"
+          className="bg-secondary-card w-1/6 text-text-color px-4 py-2 rounded ml-2"
           onClick={() => removeTerm(index)}
         >
           Remove
@@ -1015,19 +1015,19 @@ const handleTermChange = (index, field, value) => {
 
           <div className="w-full p-4">
       <div className="flex items-center justify-between mb-4">
-        <label className="block text-white">Products</label>
-        <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addProduct}>
+        <label className="block text-text-color">Products</label>
+        <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={addProduct}>
           Add
         </button>
       </div>
-      <div className="products-container p-4 bg-sidebar-card-top rounded-lg">
-        {formValues.items.length === 0 && <p>No Products added</p>}
+      <div className="products-container p-4 bg-secondary-card rounded-lg">
+        {formValues.items.length === 0 && <p className='text-text-color'>No Products added</p>}
 
         {formValues.items.map((product, index) => (
           <div key={index} className="flex mb-2">
             {/* Product Dropdown */}
             <div className="w-1/6 ml-2">
-              <label className="block text-white">Product</label>
+              <label className="block text-text-color">Product</label>
               <Select
                 options={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
                 value={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' })).find((option) => option.value === product.productId)}
@@ -1037,7 +1037,7 @@ const handleTermChange = (index, field, value) => {
                     control: (provided, state) => ({
                       ...provided,
                       backgroundColor: 'black',
-                      borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                      borderColor: state.isFocused ? 'white' : 'black',
                       borderBottomWidth: '2px',
                       borderRadius: '0px',
                       height: '40px',
@@ -1056,8 +1056,8 @@ const handleTermChange = (index, field, value) => {
                     }),
                     option: (provided, state) => ({
                       ...provided,
-                      backgroundColor: state.isSelected ? '#007bff' : 'black',
-                      color: state.isSelected ? 'black' : 'white',
+                      backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                      color: state.isSelected ? '#f8f9fa' : 'black',
                       cursor: 'pointer',
                     }),
                   }}
@@ -1066,7 +1066,7 @@ const handleTermChange = (index, field, value) => {
 
             {/* Variant Dropdown */}
             <div className="w-1/6 ml-2">
-              <label className="block text-white">Variant</label>
+              <label className="block text-text-color">Variant</label>
               <Select
                 options={varientData?.variants
                   ?.filter((v) => v.productId === product.productId)
@@ -1081,7 +1081,7 @@ const handleTermChange = (index, field, value) => {
                     control: (provided, state) => ({
                       ...provided,
                       backgroundColor: 'black',
-                      borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                      borderColor: state.isFocused ? 'white' : 'black',
                       borderBottomWidth: '2px',
                       borderRadius: '0px',
                       height: '40px',
@@ -1100,8 +1100,8 @@ const handleTermChange = (index, field, value) => {
                     }),
                     option: (provided, state) => ({
                       ...provided,
-                      backgroundColor: state.isSelected ? '#007bff' : 'black',
-                      color: state.isSelected ? 'black' : 'white',
+                      backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                      color: state.isSelected ? '#f8f9fa' : 'black',
                       cursor: 'pointer',
                     }),
                   }}
@@ -1110,10 +1110,10 @@ const handleTermChange = (index, field, value) => {
 
             {/* Quantity Input */}
             <div className="w-1/6 ml-2">
-              <label className="block text-white">Quantity</label>
+              <label className="block text-text-color">Quantity</label>
               <input
                 type="number"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                 value={product.quantity}
                 onChange={(e) => handleProductChange(index, 'quantity', parseFloat(e.target.value))}
               />
@@ -1121,10 +1121,10 @@ const handleTermChange = (index, field, value) => {
 
             {/* Unit Price Input */}
             <div className="w-1/6 ml-2">
-              <label className="block text-white">Unit Price</label>
+              <label className="block text-text-color">Unit Price</label>
               <input
                 type="number"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                 value={product.unitPrice}
                 onChange={(e) => handleProductChange(index, 'unitPrice', parseFloat(e.target.value))}
               />
@@ -1132,10 +1132,10 @@ const handleTermChange = (index, field, value) => {
 
             {/* Discount Input */}
             <div className="w-1/6 ml-2">
-              <label className="block text-white">Discount</label>
+              <label className="block text-text-color">Discount</label>
               <input
                 type="number"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                 value={product.discount}
                 onChange={(e) => handleProductChange(index, 'discount', parseFloat(e.target.value))}
               />
@@ -1143,12 +1143,12 @@ const handleTermChange = (index, field, value) => {
 
             {/* Total Price Display */}
             <div className="w-1/6 ml-2">
-              <label className="block text-white">Total Price</label>
-              <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition" value={product.totalPrice} readOnly />
+              <label className="block text-text-color">Total Price</label>
+              <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={product.totalPrice} readOnly />
             </div>
 
             {/* Remove Button */}
-            <button type="button" className="bg-black h-10 text-white px-4 py-2 rounded ml-2 mt-6" onClick={() => removeProduct(index)}>
+            <button type="button" className="bg-secondary-button-color h-10 text-text-color px-4 py-2 rounded ml-2 mt-6" onClick={() => removeProduct(index)}>
               Remove
             </button>
           </div>
@@ -1158,26 +1158,27 @@ const handleTermChange = (index, field, value) => {
        {formValues.items.length !== 0 &&
         <> 
        <div className="mt-4">
-          <label className="block text-white">Total Amount</label>
-          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition" value={formValues.totalAmount} readOnly />
+          <label className="block text-text-color">Total Amount</label>
+          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={formValues.totalAmount} readOnly />
         </div>
         <div className="mt-4">
-          <label className="block text-white">Total Discount</label>
-          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition" value={formValues.totalDiscount} readOnly />
+          <label className="block text-text-color">Total Discount</label>
+          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={formValues.totalDiscount} readOnly />
         </div>
         <div className="mt-4">
-          <label className="block text-white">Final Amount</label>
-          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition" value={formValues.finalAmount} readOnly />
+          <label className="block text-text-color">Final Amount</label>
+          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={formValues.finalAmount} readOnly />
         </div>
         </>}
       </div>
+      
     </div>
 
 
         </div>
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
             {isLoading ? 'Saving...' : 'Save'}
           </button>
         </div>

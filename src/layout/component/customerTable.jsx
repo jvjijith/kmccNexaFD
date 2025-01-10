@@ -123,28 +123,28 @@ function CustomerTable() {
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Customer name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Country</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Category</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">State</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Location</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Customer name</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Country</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Category</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">State</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Location</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {customerData?.customers.map((customer, index) => (
-            <Table.Row key={index} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">{customer.name}</Table.Cell>
-              <Table.Cell className="text-gray-300">{customer.country}</Table.Cell>
-              <Table.Cell className="text-gray-300">{customer.category?.categoryName || "N/A"}</Table.Cell>
-              <Table.Cell className="text-gray-300">{customer.state}</Table.Cell>
-              <Table.Cell className="text-gray-300">{customer.location}</Table.Cell>
+            <Table.Row key={index} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="whitespace-nowrap font-medium text-text-color">{customer.name}</Table.Cell>
+              <Table.Cell className="text-text-color">{customer.country}</Table.Cell>
+              <Table.Cell className="text-text-color">{customer.category?.categoryName || "N/A"}</Table.Cell>
+              <Table.Cell className="text-text-color">{customer.state}</Table.Cell>
+              <Table.Cell className="text-text-color">{customer.location}</Table.Cell>
               <Table.Cell className={`whitespace-nowrap ${customer.active ? "text-green-500" : "text-red-500"}`}>
                 {customer.active ? "Active" : "Inactive"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="text-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item onClick={() => handleViewDetails(customer)}>Details</Dropdown.Item>
                   <Dropdown.Item onClick={() => navigate(`/customer/edit`, { state: { customer } })}>Edit Customer</Dropdown.Item>
                   <Dropdown.Item onClick={() => navigate(`/customer/editContact`, { state: { customer } })}>Edit Contacts</Dropdown.Item>
@@ -166,7 +166,7 @@ function CustomerTable() {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-text-color`}
           >
             {index + 1}
           </button>

@@ -4,7 +4,7 @@ export default function Segmentation() {
     return (
       <div className="p-4 h-full">
         <div className="flex justify-between items-center">
-          <div className="text-white font-bold">Segmentation</div>
+          <div className="text-text-color font-bold">Segmentation</div>
   
           <Icon path="res-react-dash-options" className="w-2 h-2" />
         </div>
