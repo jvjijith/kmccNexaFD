@@ -255,7 +255,7 @@ const signedUrlResponse = await generateSignedUrl({
       <form onSubmit={handleSubmit}>
           {/* App ID Dropdown */}
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">App ID *</label>
+              <label className="block w-full mb-2 text-text-color primary-text">App ID *</label>
               <Select
             options={filteredAppOptions}
             value={filteredAppOptions?.find(option => option.value === layoutData?.appId) || null}
@@ -266,42 +266,27 @@ const signedUrlResponse = await generateSignedUrl({
               }));
               setChangeAppId(true);
             }}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
             </div>
 
 
         {/* Logo upload section */}
         <div className="w-full p-4">
-          <label className="block w-full mb-2 text-text-color">Logos</label>
-          <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-secondary-card text-text-color border-2 border-nexa-gray rounded mb-4">
+          <label className="block w-full mb-2 text-text-color primary-text">Logos</label>
+          <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-secondary-card text-text-color border-2 border-border rounded mb-4">
             <input {...getInputProps()} />
             <p className='text-text-color'>Drag & drop images here, or click to select files</p>
             <div className="w-full p-4">
@@ -348,7 +333,7 @@ const signedUrlResponse = await generateSignedUrl({
  {/* Font Settings */}
  <div className="p-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-text-color">Font Settings</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Font Settings</label>
             <button
               type="button"
               className="bg-secondary-card text-text-color px-4 py-2 rounded"
@@ -367,7 +352,7 @@ const signedUrlResponse = await generateSignedUrl({
                 <label className="block mb-2 text-text-color">Font Family</label>
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mr-2"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mr-2"
                     placeholder="Font Family"
                     value={font.fontFamily}
                     onChange={(e) =>
@@ -380,7 +365,7 @@ const signedUrlResponse = await generateSignedUrl({
                 <label className="block mb-2 text-text-color">Subset</label>
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mr-2"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mr-2"
                     placeholder="Subset"
                     value={font.subset}
                     onChange={(e) =>
@@ -500,7 +485,7 @@ const signedUrlResponse = await generateSignedUrl({
                 <label className="block mb-2 text-text-color">Language</label>
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mr-2"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mr-2"
                     placeholder="Language Code"
                     value={font.lanCode}
                     onChange={(e) =>
@@ -573,7 +558,7 @@ const signedUrlResponse = await generateSignedUrl({
 
        {/* Font Size Settings */}
 <div className="p-4">
-  <label className="block w-full mb-2 text-text-color">Font Size</label>
+  <label className="block w-full mb-2 text-text-color primary-text">Font Size</label>
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
     <div className="flex flex-wrap">
       {['base', 'xs', 'sm', 'md', 'lg'].map((size) => (
@@ -581,7 +566,7 @@ const signedUrlResponse = await generateSignedUrl({
           <div className="mb-4 flex items-center">
             <input
               type="text"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder={`Enter ${size} size`}
               value={layoutData?.fontSize?.[size] || ''} // Use optional chaining and fallback to an empty string
               onChange={(e) => handleSettingChange('fontSize', size, e.target.value)}
@@ -594,7 +579,7 @@ const signedUrlResponse = await generateSignedUrl({
 </div>
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
             Submit
           </button>
         </div>

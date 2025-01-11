@@ -62,7 +62,7 @@ function CatalogCard({ children, title, button }) {
                 type="text"
                 name="company_website"
                 id="company_website"
-                className="pl-12 py-2 pr-2 block w-full rounded-lg border-nexa-gray secondary-card text-text-color"
+                className="pl-12 py-2 pr-2 block w-full rounded-lg border-border secondary-card text-text-color"
                 placeholder="search"
               />
             </form>
@@ -73,7 +73,7 @@ function CatalogCard({ children, title, button }) {
         <Card title={title}
           component={button?
             (<button
-              className="bg-primary-button-color text-text-color px-4 py-2 rounded"
+              className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded"
               onClick={handleAddCatalog}
               disabled={isAdding} // Disable button while adding
             >

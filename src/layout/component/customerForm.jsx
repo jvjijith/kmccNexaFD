@@ -293,11 +293,11 @@ function CustomerForm({ typeData, customer }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Customer Name *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Customer Name *</label>
               <input
                 type="text"
                 name="name"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Customer Name"
                 autoComplete="off"
                 value={customerData?.name}
@@ -307,11 +307,11 @@ function CustomerForm({ typeData, customer }) {
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Email Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Email Address *</label>
               <input
                 type="email"
                 name="email"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Customer Email"
                 autoComplete="off"
                 value={customerData?.email}
@@ -324,11 +324,11 @@ function CustomerForm({ typeData, customer }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Phone *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Phone *</label>
               <input
                 type="text"
                 name="phone"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Phone Number"
                 autoComplete="off"
                 value={customerData?.phone}
@@ -338,11 +338,11 @@ function CustomerForm({ typeData, customer }) {
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Website</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Website</label>
               <input
                 type="text"
                 name="website"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Customer Website"
                 autoComplete="off"
                 value={customerData?.website}
@@ -355,7 +355,7 @@ function CustomerForm({ typeData, customer }) {
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4 relative">
     <div className="mb-4">
-      <label className="float-left inline-block mb-2 text-text-color">State</label>
+      <label className="float-left inline-block mb-2 text-text-color primary-text">State</label>
       <Autosuggest
         suggestions={stateSuggestions}
         onSuggestionsFetchRequested={handleStateSuggestionsFetchRequested}
@@ -366,7 +366,7 @@ function CustomerForm({ typeData, customer }) {
           placeholder: 'Enter State',
           value: stateValue,
           onChange: onStateChange,
-          className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
+          className: 'block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
         }}
         theme={{
           container: 'relative', // Make sure the container is relatively positioned
@@ -380,11 +380,11 @@ function CustomerForm({ typeData, customer }) {
           
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Location</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Location</label>
               <input
                 type="text"
                 name="location"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Location"
                 autoComplete="off"
                 value={customerData?.location}
@@ -397,11 +397,11 @@ function CustomerForm({ typeData, customer }) {
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Country</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Country</label>
               <input
                 type="text"
                 name="country"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Country"
                 autoComplete="off"
                 value={customerData?.country}
@@ -413,7 +413,7 @@ function CustomerForm({ typeData, customer }) {
       
           <div className="w-full sm:w-1/2 p-4">
       <div className="mb-4">
-        <label className="float-left inline-block mb-2 text-text-color">Language *</label>
+        <label className="float-left inline-block mb-2 text-text-color primary-text">Language *</label>
         <Autosuggest
           suggestions={suggestions}
           onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
@@ -424,7 +424,7 @@ function CustomerForm({ typeData, customer }) {
             placeholder: 'Enter Language',
               value: languageValue,
               onChange: onLanguageChange,
-            className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
+            className: 'block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
           }}
           theme={{
             container: 'relative', // Make sure the container is relatively positioned
@@ -441,11 +441,11 @@ function CustomerForm({ typeData, customer }) {
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Currency</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Currency</label>
               <input
                 type="text"
                 name="currency"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Currency"
                 autoComplete="off"
                 value={customerData?.currency}
@@ -457,11 +457,11 @@ function CustomerForm({ typeData, customer }) {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Shipping Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Shipping Address *</label>
               <textarea
                 type="text"
                 name="shippingAddress"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Shipping Address"
                 autoComplete="off"
                 value={customerData?.shippingAddress}
@@ -474,11 +474,11 @@ function CustomerForm({ typeData, customer }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Billing Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Billing Address *</label>
               <textarea
                 type="text"
                 name="billingAddress"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Billing Address"
                 autoComplete="off"
                 value={customerData?.billingAddress}
@@ -488,7 +488,7 @@ function CustomerForm({ typeData, customer }) {
           </div>
           <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="block w-full mb-2 text-text-color">Category *</label>
+    <label className="block w-full mb-2 text-text-color primary-text">Category *</label>
     <Select
       options={categoryOptions}
       value={selectedCategoryOption || null} // Make sure to pass the whole object or null
@@ -522,11 +522,11 @@ function CustomerForm({ typeData, customer }) {
         {isIndividual && (
           <div className="w-full p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Password *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Password *</label>
               <input
                 type="password"
                 name="password"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Password"
                 autoComplete="off"
                 value={customerData?.password}
@@ -542,7 +542,7 @@ function CustomerForm({ typeData, customer }) {
             {" "}
             {/* col-sm-6 */}
             <div className="mb-4">
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex items-center cursor-pointer primary-text">
                 <input type="checkbox" value="" className="sr-only peer" name="storeUser"
                 id="storeUser"
                 checked={isStoreUser}
@@ -563,7 +563,7 @@ function CustomerForm({ typeData, customer }) {
             {" "}
             {/* col-sm-6 */}
             <div className="mb-4">
-            <label className="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer primary-text">
                 <input type="checkbox" value="" className="sr-only peer" name="individual"
                 id="individual"
                 checked={isIndividual}
@@ -585,8 +585,8 @@ function CustomerForm({ typeData, customer }) {
         {/* Identification Numbers */}
         <div className="w-full p-4">
         <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-text-color">Identification Numbers</label>
-          <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addIdentificationNumber}>Add</button>
+          <label className="block w-full mb-2 text-text-color primary-text">Identification Numbers</label>
+          <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addIdentificationNumber}>Add</button>
           </div>
           <div className="notes-container p-4 bg-secondary-card rounded-lg">
           {(identificationNumbers.length===0)&&<p className='text-text-color'>No Identification Number added</p>}
@@ -595,7 +595,7 @@ function CustomerForm({ typeData, customer }) {
               <input
                 type="text"
                 name={`identificationType-${index}`}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Type"
                 value={identification.type}
                 onChange={(e) => handleIdentificationChange(index, 'type', e.target.value)}
@@ -603,7 +603,7 @@ function CustomerForm({ typeData, customer }) {
               <input
                 type="text"
                 name={`identificationNumber-${index}`}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Number"
                 value={identification.number}
                 onChange={(e) => handleIdentificationChange(index, 'number', e.target.value)}
@@ -617,8 +617,8 @@ function CustomerForm({ typeData, customer }) {
         {/* Bank Details */}
         <div className="w-full p-4">
         <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-text-color">Bank Details</label>
-          <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addBankDetail}>Add</button>
+          <label className="block w-full mb-2 text-text-color primary-text">Bank Details</label>
+          <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addBankDetail}>Add</button>
         </div>
         <div className="notes-container p-4 bg-secondary-card rounded-lg">
         {(bankDetails.length===0)&&<p className='text-text-color'>No Bank Details added</p>}
@@ -627,7 +627,7 @@ function CustomerForm({ typeData, customer }) {
               <input
                 type="text"
                 name={`accountNumber-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Account Number"
                 value={bank.accountNumber}
                 onChange={(e) => handleBankDetailChange(index, 'accountNumber', e.target.value)}
@@ -635,7 +635,7 @@ function CustomerForm({ typeData, customer }) {
               <input
                 type="text"
                 name={`bankName-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Bank Name"
                 value={bank.bankName}
                 onChange={(e) => handleBankDetailChange(index, 'bankName', e.target.value)}
@@ -643,7 +643,7 @@ function CustomerForm({ typeData, customer }) {
               <input
                 type="text"
                 name={`location-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Location"
                 value={bank.location}
                 onChange={(e) => handleBankDetailChange(index, 'location', e.target.value)}
@@ -651,7 +651,7 @@ function CustomerForm({ typeData, customer }) {
               <input
                 type="text"
                 name={`IBAN-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="IBAN"
                 value={bank.IBAN}
                 onChange={(e) => handleBankDetailChange(index, 'IBAN', e.target.value)}
@@ -659,7 +659,7 @@ function CustomerForm({ typeData, customer }) {
               <input
                 type="text"
                 name={`swiftCode-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Swift Code"
                 value={bank.swiftCode}
                 onChange={(e) => handleBankDetailChange(index, 'swiftCode', e.target.value)}
@@ -667,7 +667,7 @@ function CustomerForm({ typeData, customer }) {
               <input
                 type="text"
                 name={`IFSC-${index}`}
-                className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="IFSC"
                 value={bank.IFSC}
                 onChange={(e) => handleBankDetailChange(index, 'IFSC', e.target.value)}
@@ -681,7 +681,7 @@ function CustomerForm({ typeData, customer }) {
         
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
             {isLoading || isSigningUp ? 'Saving...' : 'Save'}
           </button>
           {/* {isError && <p className="text-red-500 mt-2">Error occurred while saving the customer.</p>}

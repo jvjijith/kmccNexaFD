@@ -400,34 +400,35 @@ function SalesInvoiceTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Invoice Number</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Customer Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Total Amount</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Final Amount</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Invoice Number</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Customer Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Total Amount</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Final Amount</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {salesInvoiceData.salesInvoices.map((invoice) => (
             <Table.Row key={invoice._id} className="border-gray-700 bg-secondary-card">
-              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {invoice.invoiceNumber}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {invoice.customer?.name || "N/A"}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {invoice.totalAmount}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {invoice.finalAmount}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {invoice.invoiceStatus}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>

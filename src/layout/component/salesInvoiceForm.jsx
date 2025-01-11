@@ -376,159 +376,99 @@ const handleTermChange = (index, field, value) => {
       <form onSubmit={handleSubmit}>
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-text-color">Invoice Status </label>
+            <label className="block w-full mb-2 text-text-color primary-text">Invoice Status </label>
             <Select
               options={poStatusOptions}
               value={poStatusOptions.find(option => option.value === formValues.invoiceStatus)}
               onChange={handleStatusChange}
               placeholder="Select Invoice Status"
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
-              }}
+              classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
             />
           </div>
 
           {/* Invoice Template */}
           <div className="w-full sm:w-1/2 p-4">
-  <label className="block w-full mb-2 text-text-color">Template</label>
+  <label className="block w-full mb-2 text-text-color primary-text">Template</label>
   <Select
     options={quoteTemplateOptions}
     value={quoteTemplateOptions?.find(option => option.value === formValues.invoiceTemplate)}
     onChange={handleQuoteTemplateChange}
     placeholder="Select Quote Template"
-    styles={{
-      control: (provided, state) => ({
-        ...provided,
-        backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : 'black',
-        borderBottomWidth: '2px',
-        borderRadius: '0px',
-        height: '40px',
-        paddingLeft: '8px',
-        paddingRight: '8px',
-        color: 'white',
-      }),
-      singleValue: (provided) => ({
-        ...provided,
-        color: 'white',
-      }),
-      menu: (provided) => ({
-        ...provided,
-        backgroundColor: 'black',
-        color: 'white',
-      }),
-      option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-        color: state.isSelected ? '#f8f9fa' : 'black',
-        cursor: 'pointer',
-      }),
-    }}
+    classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
   />
 </div>
 
 
           {/* Organization Dropdown */}
           {/* <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-text-color">Organization</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Organization</label>
             <Select
               options={organizationOptions}
               value={organizationOptions?.find(option => option.value === formValues.organization)}
               onChange={handleOrganizationChange}
               placeholder="Select Organization"
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
-              }}
+              classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
             />
           </div> */}
 
           {/* Quote Status Dropdown */}
           <div className="w-full sm:w-1/2 p-4">
-  <label className="block w-full mb-2 text-text-color">Quote</label>
+  <label className="block w-full mb-2 text-text-color primary-text">Quote</label>
   <Select
     name="quoteId"
     options={quoteStatusOptions}
     value={quoteStatusOptions.find((option) => option.value === formValues.quoteId)}
     onChange={(selectedOption) => setFormValues((prev) => ({ ...prev, quoteId: selectedOption.value }))}
     placeholder="Select Quote"
-    styles={{
-      control: (provided, state) => ({
-        ...provided,
-        backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : 'black',
-        borderBottomWidth: '2px',
-        borderRadius: '0px',
-        height: '40px',
-        paddingLeft: '8px',
-        paddingRight: '8px',
-        color: 'white',
-      }),
-      singleValue: (provided) => ({
-        ...provided,
-        color: 'white',
-      }),
-      menu: (provided) => ({
-        ...provided,
-        backgroundColor: 'black',
-        color: 'white',
-      }),
-      option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-        color: state.isSelected ? '#f8f9fa' : 'black',
-        cursor: 'pointer',
-      }),
-    }}
+    classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
   />
 </div>
 
@@ -542,158 +482,98 @@ const handleTermChange = (index, field, value) => {
               ]}
               value={{ value: formValues.quoteType, label: formValues.quoteType }}
               onChange={(option) => handleInputChange('quoteType', option.value)}
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
-              }}
+              classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
               required
             />
           </div> */}
 
 
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color">salesman</label>
+          <label className="block w-full mb-2 text-text-color primary-text">salesman</label>
           <Select
             name="salesman"
             options={employeeOptions}
             value={employeeOptions.find((option) => option.value === formValues.salesman)}
             onChange={handlePurchaser}
             placeholder="Select Salesman"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
 
  {/* Vendor Dropdown */}
  {/* <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-text-color">Vendor</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Vendor</label>
             <Select
               options={vendorOptions}
               value={vendorOptions.find(option => option.value === formValues.vendor)}
               onChange={handleVendorChange}
               placeholder="Select Vendor"
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
-              }}
+              classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
             />
           </div> */}
 
 <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Customer</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Customer</label>
       <Select
         name="customer"
         options={customerOptions}
         value={customerOptions.find((option) => option.value === formValues.customer)}
         onChange={handlePurchaser}
         placeholder="Select Customer"
-        styles={{
-          control: (provided, state) => ({
-            ...provided,
-            backgroundColor: 'black',
-            borderColor: state.isFocused ? 'white' : 'black',
-            borderBottomWidth: '2px',
-            borderRadius: '0px',
-            height: '40px',
-            paddingLeft: '8px',
-            paddingRight: '8px',
-            color: 'white',
-          }),
-          singleValue: (provided) => ({
-            ...provided,
-            color: 'white',
-          }),
-          menu: (provided) => ({
-            ...provided,
-            backgroundColor: 'black',
-            color: 'white',
-          }),
-          option: (provided, state) => ({
-            ...provided,
-            backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-            color: state.isSelected ? '#f8f9fa' : 'black',
-            cursor: 'pointer',
-          }),
-        }}
+        classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
       />
     </div>
 
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-text-color">Invoice Notes</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Invoice Notes</label>
             <textarea
               name="invoiceNotes"
               value={formValues.invoiceNotes}
@@ -703,7 +583,7 @@ const handleTermChange = (index, field, value) => {
           </div>
 
           {/* <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-text-color">Shipping Address</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Shipping Address</label>
             <textarea
               name="Shipping Address"
               value={formValues.shippingAddress}
@@ -713,7 +593,7 @@ const handleTermChange = (index, field, value) => {
           </div> */}
 
           {/* <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-text-color">Billing Address</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Billing Address</label>
             <textarea
               name="Billing Address"
               value={formValues.billingAddress}
@@ -723,7 +603,7 @@ const handleTermChange = (index, field, value) => {
           </div> */}
 
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-text-color">Payment Terms</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Payment Terms</label>
             <textarea
               name="Payment Terms"
               value={formValues.paymentTerms}
@@ -733,7 +613,7 @@ const handleTermChange = (index, field, value) => {
           </div>
 
           <div className="w-full md:w-1/2 p-4">
-            <label className="block w-full mb-2 text-text-color">Due-Date</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Due-Date</label>
             <input
               type="date"
               id="dueDate"
@@ -745,7 +625,7 @@ const handleTermChange = (index, field, value) => {
           </div>
 
           <div className="w-full md:w-1/2 p-4">
-            <label className="block w-full mb-2 text-text-color">Payment Status</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Payment Status</label>
             <Select
               options={[
                 { value: 'paid', label: 'Paid' },
@@ -756,113 +636,68 @@ const handleTermChange = (index, field, value) => {
               ]}
               value={{ value: formValues.paymentStatus, label: formValues.paymentStatus }}
               onChange={(option) => handleInputChange('paymentStatus', option.value)}
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
-              }}
+              classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
               required
             />
           </div>
 
           <div className="w-full sm:w-1/2 p-4">
-  <label className="block w-full mb-2 text-text-color">Created By</label>
+  <label className="block w-full mb-2 text-text-color primary-text">Created By</label>
   <Select
     name="createdBy"
     options={employeeOptions}
     value={employeeOptions.find((option) => option.value === formValues.createdBy)}
     onChange={(selectedOption) => handleInputChange('createdBy', selectedOption.value)}
     placeholder="Select Employee"
-    styles={{
-      control: (provided, state) => ({
-        ...provided,
-        backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : 'black',
-        borderBottomWidth: '2px',
-        borderRadius: '0px',
-        height: '40px',
-        paddingLeft: '8px',
-        paddingRight: '8px',
-        color: 'white',
-      }),
-      singleValue: (provided) => ({
-        ...provided,
-        color: 'white',
-      }),
-      menu: (provided) => ({
-        ...provided,
-        backgroundColor: 'black',
-        color: 'white',
-      }),
-      option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-        color: state.isSelected ? '#f8f9fa' : 'black',
-        cursor: 'pointer',
-      }),
-    }}
+    classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
   />
 </div>
 
 <div className="w-full sm:w-1/2 p-4">
-  <label className="block w-full mb-2 text-text-color">Edited By</label>
+  <label className="block w-full mb-2 text-text-color primary-text">Edited By</label>
   <Select
     name="editedBy"
     options={employeeOptions}
     value={employeeOptions.find((option) => option.value === formValues.editedBy)}
     onChange={(selectedOption) => handleInputChange('editedBy', selectedOption.value)}
     placeholder="Select Employee"
-    styles={{
-      control: (provided, state) => ({
-        ...provided,
-        backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : 'black',
-        borderBottomWidth: '2px',
-        borderRadius: '0px',
-        height: '40px',
-        paddingLeft: '8px',
-        paddingRight: '8px',
-        color: 'white',
-      }),
-      singleValue: (provided) => ({
-        ...provided,
-        color: 'white',
-      }),
-      menu: (provided) => ({
-        ...provided,
-        backgroundColor: 'black',
-        color: 'white',
-      }),
-      option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-        color: state.isSelected ? '#f8f9fa' : 'black',
-        cursor: 'pointer',
-      }),
-    }}
+    classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
   />
 </div>
 
@@ -870,8 +705,8 @@ const handleTermChange = (index, field, value) => {
           {/* Edited Notes Section */}
 <div className="w-full p-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-text-color">Edited Notes</label>
-    <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addEditedNote}>
+    <label className="block w-full mb-2 text-text-color primary-text">Edited Notes</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addEditedNote}>
       Add
     </button>
   </div>
@@ -904,8 +739,8 @@ const handleTermChange = (index, field, value) => {
            {/* Payment History Section */}
         <div className="w-full p-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-text-color">Payment History</label>
-            <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addPayment}>
+            <label className="block w-full mb-2 text-text-color primary-text">Payment History</label>
+            <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addPayment}>
               Add
             </button>
           </div>
@@ -917,7 +752,7 @@ const handleTermChange = (index, field, value) => {
                   <input
                     type="date"
                     name={`paymentDate-${index}`}
-                    className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
+                    className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                     placeholder="Payment Date"
                     value={payment.paymentDate}
                     onChange={(e) => handlePaymentChange(index, 'paymentDate', e.target.value)}
@@ -925,14 +760,14 @@ const handleTermChange = (index, field, value) => {
                   <input
                     type="number"
                     name={`paymentAmount-${index}`}
-                    className="block w-1/4 h-10 px-2 py-1 ml-2 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
+                    className="block w-1/4 h-10 px-2 py-1 ml-2 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                     placeholder="Payment Amount"
                     value={payment.paymentAmount}
                     onChange={(e) => handlePaymentChange(index, 'paymentAmount', e.target.value)}
                   />
                   <select
                     name={`paymentMethod-${index}`}
-                    className="block w-1/4 h-10 px-2 py-1 ml-2 secondary-card text-text-color border-b border-nexa-gray focus:outline-none"
+                    className="block w-1/4 h-10 px-2 py-1 ml-2 secondary-card text-text-color border-b border-border focus:outline-none"
                     value={payment.paymentMethod}
                     onChange={(e) => handlePaymentChange(index, 'paymentMethod', e.target.value)}
                   >
@@ -946,7 +781,7 @@ const handleTermChange = (index, field, value) => {
                   <input
                     type="text"
                     name={`paymentReference-${index}`}
-                    className="block w-1/4 h-10 px-2 py-1 ml-2 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
+                    className="block w-1/4 h-10 px-2 py-1 ml-2 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                     placeholder="Payment Reference"
                     value={payment.paymentReference}
                     onChange={(e) => handlePaymentChange(index, 'paymentReference', e.target.value)}
@@ -968,8 +803,8 @@ const handleTermChange = (index, field, value) => {
           {/* Terms and Conditions Section */}
         <div className="w-full p-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-text-color">Terms and Conditions</label>
-    <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addTerm}>
+    <label className="block w-full mb-2 text-text-color primary-text">Terms and Conditions</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTerm}>
       Add
     </button>
   </div>
@@ -981,7 +816,7 @@ const handleTermChange = (index, field, value) => {
           <input
             type="text"
             name={`termName-${index}`}
-            className="block w-2/6 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+            className="block w-2/6 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
             placeholder={`Term Name ${index + 1}`}
             value={term.name}
             onChange={(e) => handleTermChange(index, 'name', e.target.value)}
@@ -1012,7 +847,7 @@ const handleTermChange = (index, field, value) => {
           <div className="w-full p-4">
       <div className="flex items-center justify-between mb-4">
         <label className="block text-text-color">Products</label>
-        <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addProduct}>
+        <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addProduct}>
           Add
         </button>
       </div>
@@ -1028,35 +863,19 @@ const handleTermChange = (index, field, value) => {
                 options={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
                 value={productData?.products?.map((p) => ({ value: p._id, label: p.name || 'Unnamed Product' }))}
                 onChange={(selectedOption) => handleProductChange(index, 'productId', selectedOption.value)}
-                className="w-full"
-                styles={{
-                    control: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: 'black',
-                      borderColor: state.isFocused ? 'white' : 'black',
-                      borderBottomWidth: '2px',
-                      borderRadius: '0px',
-                      height: '40px',
-                      paddingLeft: '8px',
-                      paddingRight: '8px',
-                      color: 'white',
-                    }),
-                    singleValue: (provided) => ({
-                      ...provided,
-                      color: 'white',
-                    }),
-                    menu: (provided) => ({
-                      ...provided,
-                      backgroundColor: 'black',
-                      color: 'white',
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                      color: state.isSelected ? '#f8f9fa' : 'black',
-                      cursor: 'pointer',
-                    }),
-                  }}
+                classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
               />
             </div>
 
@@ -1072,35 +891,19 @@ const handleTermChange = (index, field, value) => {
                   ?.map((v) => ({ value: v._id, label: v.name }))}
                 onChange={(selectedOption) => handleProductChange(index, 'variantId', selectedOption.value)}
                 isDisabled={!product.productId}
-                className="w-full"
-                styles={{
-                    control: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: 'black',
-                      borderColor: state.isFocused ? 'white' : 'black',
-                      borderBottomWidth: '2px',
-                      borderRadius: '0px',
-                      height: '40px',
-                      paddingLeft: '8px',
-                      paddingRight: '8px',
-                      color: 'white',
-                    }),
-                    singleValue: (provided) => ({
-                      ...provided,
-                      color: 'white',
-                    }),
-                    menu: (provided) => ({
-                      ...provided,
-                      backgroundColor: 'black',
-                      color: 'white',
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                      color: state.isSelected ? '#f8f9fa' : 'black',
-                      cursor: 'pointer',
-                    }),
-                  }}
+                classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
               />
             </div>
 
@@ -1109,7 +912,7 @@ const handleTermChange = (index, field, value) => {
               <label className="block text-text-color">Quantity</label>
               <input
                 type="number"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                 value={product.quantity}
                 onChange={(e) => handleProductChange(index, 'quantity', parseFloat(e.target.value))}
               />
@@ -1120,7 +923,7 @@ const handleTermChange = (index, field, value) => {
               <label className="block text-text-color">Unit Price</label>
               <input
                 type="number"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                 value={product.unitPrice}
                 onChange={(e) => handleProductChange(index, 'unitPrice', parseFloat(e.target.value))}
               />
@@ -1131,7 +934,7 @@ const handleTermChange = (index, field, value) => {
               <label className="block text-text-color">Discount</label>
               <input
                 type="number"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                 value={product.discount}
                 onChange={(e) => handleProductChange(index, 'discount', parseFloat(e.target.value))}
               />
@@ -1140,7 +943,7 @@ const handleTermChange = (index, field, value) => {
             {/* Total Price Display */}
             <div className="w-1/6 ml-2">
               <label className="block text-text-color">Total Price</label>
-              <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={product.totalPrice} readOnly />
+              <input type="number" className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={product.totalPrice} readOnly />
             </div>
 
             {/* Remove Button */}
@@ -1155,15 +958,15 @@ const handleTermChange = (index, field, value) => {
         <> 
        <div className="mt-4">
           <label className="block text-text-color">Total Amount</label>
-          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={formValues.totalAmount} readOnly />
+          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={formValues.totalAmount} readOnly />
         </div>
         <div className="mt-4">
           <label className="block text-text-color">Total Discount</label>
-          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={formValues.totalDiscount} readOnly />
+          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={formValues.totalDiscount} readOnly />
         </div>
         <div className="mt-4">
           <label className="block text-text-color">Final Amount</label>
-          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={formValues.finalAmount} readOnly />
+          <input type="number" className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition" value={formValues.finalAmount} readOnly />
         </div>
         </>}
       </div>
@@ -1173,7 +976,7 @@ const handleTermChange = (index, field, value) => {
         </div>
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
             {isLoading ? 'Saving...' : 'Save'}
           </button>
         </div>

@@ -69,13 +69,13 @@ function SubCategoryForm({ id, name, industry, closeModal, category }) {
         <div className="block">
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">
+              <label className="float-left inline-block mb-2 text-text-color primary-text">
                 &nbsp;Sub Category Name *&nbsp;
               </label>
               <input
                 type="text"
                 name="subCategoryName"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Your Sub Category Name"
                 autoComplete="off"
                 style={{ textAlign: "initial" }}
@@ -94,7 +94,7 @@ function SubCategoryForm({ id, name, industry, closeModal, category }) {
               <input
                 type="text"
                 name="subCategoryType"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Sub Category Type..."
                 autoComplete="off"
                 style={{ textAlign: "initial" }}

@@ -47,28 +47,29 @@ function ColorTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">App Title</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Mode</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Primary Color</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Secondary Color</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">App Title</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Mode</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Primary Color</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Secondary Color</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {colorData?.colorSchemes.map((scheme, index) => (
             <Table.Row key={index} className="border-gray-700 bg-secondary-card">
-              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {scheme.appId.title}
               </Table.Cell>
-              <Table.Cell className="text-text-color">{scheme.mode}</Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">{scheme.mode}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">
                 {scheme.theme.palette.primary.main}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {scheme.theme.palette.secondary.main}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item onClick={() => navigate(`/store/color/edit`, { state: { scheme, colorData } })}>Edit Scheme</Dropdown.Item>
                 </Dropdown>
@@ -84,7 +85,7 @@ function ColorTable() {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-text-color`}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
           >
             {index + 1}
           </button>

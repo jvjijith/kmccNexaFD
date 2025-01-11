@@ -104,14 +104,14 @@ function Catalog({ catalogId }) {
             />
           </div>
 
-          <button className="bg-primary-button-color text-text-color px-4 py-2 rounded flex items-center" onClick={handleSaveCatalog}>
+          <button className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded flex items-center" onClick={handleSaveCatalog}>
             {/* <FaPlusSquare className="mr-2" /> */}
             Save Catalog
           </button>
         </div>
 
         {/* Description */}
-        <label className="float-left inline-block mb-2 text-text-color">
+        <label className="float-left inline-block mb-2 text-text-color primary-text">
           &nbsp;Catalog Description &nbsp;
         </label>
         <textarea
@@ -124,7 +124,7 @@ function Catalog({ catalogId }) {
         {/* Content Area */}
         <div className="flex space-x-8">
           {/* Catalog Preview */}
-          <div className="w-1/3 border-b border-nexa-gray secondary-card p-4 rounded-lg">
+          <div className="w-1/3 border-b border-border secondary-card p-4 rounded-lg">
             <h2 className="text-xl font-bold mb-4">Catalog Preview</h2>
             <ul className="space-y-4">
               {selectedProducts.map((productId) => {
@@ -153,7 +153,7 @@ function Catalog({ catalogId }) {
           </div>
 
           {/* Product Catalog */}
-          <div className="flex-1 border-b border-nexa-gray secondary-card p-4 rounded-lg">
+          <div className="flex-1 border-b border-border secondary-card p-4 rounded-lg">
             <div className="flex justify-between mb-4">
               <h2 className="text-xl font-bold">Product</h2>
             </div>
@@ -165,7 +165,7 @@ function Catalog({ catalogId }) {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="w-full pl-10 pr-4 py-2 rounded border-b border-nexa-gray secondary-card border-none focus:ring-2 focus:ring-green-400 text-text-color"
+                  className="w-full pl-10 pr-4 py-2 rounded border-b border-border secondary-card border-none focus:ring-2 focus:ring-green-400 text-text-color"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -198,7 +198,7 @@ function Catalog({ catalogId }) {
         ) : (
           <div className="flex flex-wrap justify-end">
           <button
-            className="mt-2 bg-primary-button-color text-text-color px-4 py-2 rounded flex items-center"
+            className="mt-2 bg-primary-button-color text-btn-text-color px-4 py-2 rounded flex items-center"
             onClick={() => handleAddProduct(product._id)}
           >
             <FaPlusSquare />
@@ -217,7 +217,7 @@ function Catalog({ catalogId }) {
                 <button
                   key={index}
                   onClick={() => handlePageChange(index + 1)}
-                  className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-text-color`}
+                  className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
                 >
                   {index + 1}
                 </button>

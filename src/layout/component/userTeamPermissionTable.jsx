@@ -44,20 +44,21 @@ function UserTeamPermissionTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Reference Name</Table.HeadCell>
-          {/* <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Allowed Modules</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Allowed Employees</Table.HeadCell> */}
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Reference Name</Table.HeadCell>
+          {/* <Table.HeadCell className="border-border bg-table-heading text-text-color">Allowed Modules</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Allowed Employees</Table.HeadCell> */}
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {userTeamPermissions.map((permission) => (
             <Table.Row key={permission._id} className="border-gray-700 bg-secondary-card">
-              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {permission.referenceName}
               </Table.Cell>
-              {/* <Table.Cell className="text-text-color">
+              {/* <Table.Cell className="border-bordertext-text-color">
                 <ul>
                   {permission.allowedModules.map((module) => (
                     <li key={module._id}>
@@ -66,14 +67,14 @@ function UserTeamPermissionTable() {
                   ))}
                 </ul>
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 <ul>
                   {permission.empAllowed.map((employee) => (
                     <li key={employee._id}>{employee.email}</li>
                   ))}
                 </ul>
               </Table.Cell> */}
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>

@@ -376,8 +376,8 @@ const handleAddItem = () => {
         </div>
         <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="float-left inline-block mb-2 text-text-color">Menu Name</label>
-          <input type="text" className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color" name="menuName" value={formData.menuName} onChange={handleInputChange} required />
+    <label className="float-left inline-block mb-2 text-text-color primary-text">Menu Name</label>
+          <input type="text" className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color" name="menuName" value={formData.menuName} onChange={handleInputChange} required />
         </div>
         </div>
         <div className="w-full sm:w-1/2 p-4">
@@ -509,7 +509,7 @@ const handleAddItem = () => {
 
 
           <div className="w-full p-4">
-  <label className="block w-full mb-2 text-text-color">Upload Image</label>
+  <label className="block w-full mb-2 text-text-color primary-text">Upload Image</label>
 
   <div
     {...getRootProps1({
@@ -585,7 +585,7 @@ const handleAddItem = () => {
 
 <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="relative inline-flex items-center cursor-pointer">
+    <label className="relative inline-flex items-center cursor-pointer primary-text">
       <input
         type="checkbox"
         name="allowImage"
@@ -605,7 +605,7 @@ const handleAddItem = () => {
 {/* Menu Items Section */}
 <div className="mb-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-text-color">Menu Items</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Menu Items</label>
             <button
               type="button"
               className="bg-secondary-card text-text-color px-4 py-2 rounded"
@@ -616,11 +616,11 @@ const handleAddItem = () => {
           </div>
           <div className="accordion-container">
             {formData.items.length === 0 && 
-            <div className="mb-4 border p-4 rounded border-nexa-gray">
+            <div className="mb-4 border p-4 rounded border-border">
             <p className='text-text-color'>No Menu Items added</p>
             </div>}
             {formData.items.map((item, index) => (
-              <div key={index} className="border border-nexa-gray rounded-lg mb-4">
+              <div key={index} className="border border-border rounded-lg mb-4">
                 <div
                     className="accordion-header secondary-card text-text-color px-4 py-2 flex justify-between items-center cursor-pointer"
                     onClick={() => toggleAccordion(index, "menu")}
@@ -656,7 +656,7 @@ const handleAddItem = () => {
                     placeholder="Menu Name"
                     value={item.menuName}
                     onChange={(e) => handleNestedChange('items', index, 'menuName', e.target.value)}
-                    className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                    className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                   />
                   <Select
                     options={subMenuTypeOptions}
@@ -744,7 +744,7 @@ const handleAddItem = () => {
 
                 <div className="w-full p-4">
   {/* Upload File Header */}
-    <label className="block w-full mb-2 text-text-color">Upload image</label>
+    <label className="block w-full mb-2 text-text-color primary-text">Upload image</label>
 
   {/* Dropzone */}
   <div
@@ -859,7 +859,7 @@ const handleAddItem = () => {
 
 <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="relative inline-flex items-center cursor-pointer">
+    <label className="relative inline-flex items-center cursor-pointer primary-text">
       <input
         type="checkbox"
         checked={item.allowImage}
@@ -876,7 +876,7 @@ const handleAddItem = () => {
 
 {/* <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="relative inline-flex items-center cursor-pointer">
+    <label className="relative inline-flex items-center cursor-pointer primary-text">
       <input
         type="checkbox"
         checked={item.active}
@@ -896,7 +896,7 @@ const handleAddItem = () => {
 {(formData?.items[index]?.menuType !== "single") && 
   (<div className="mb-4">
   <div className="flex items-center justify-between mb-4 ml-2 mr-2">
-    <label className="block w-full mb-2 text-text-color">Sub-Menu</label>
+    <label className="block w-full mb-2 text-text-color primary-text">Sub-Menu</label>
     <button
       type="button"
       className="bg-secondary-card text-text-color px-4 py-2 rounded"
@@ -906,7 +906,7 @@ const handleAddItem = () => {
     </button>
   </div>
   {item.multiItems.length === 0 && (
-            <div className="mb-4 ml-2 mr-2 border p-4 rounded border-nexa-gray">
+            <div className="mb-4 ml-2 mr-2 border p-4 rounded border-border">
     <p className="text-text-color">No Sub-Menu added</p>
     </div>
   )}
@@ -918,7 +918,7 @@ const handleAddItem = () => {
   {item.multiItems.map((subItem, subIndex) => (
     <div
       key={subIndex}
-      className="border border-nexa-gray rounded-lg ml-2 mr-2">
+      className="border border-border rounded-lg ml-2 mr-2">
                 <div
   className="accordion-header secondary-card text-text-color px-4 py-2 flex justify-between items-center cursor-pointer"
   onClick={() => toggleAccordion(subIndex, "sub")}
@@ -964,7 +964,7 @@ const handleAddItem = () => {
               e.target.value
             )
           }
-          className="block w-1/2 h-10 px-2 py-1 ml-2 mt-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+          className="block w-1/2 h-10 px-2 py-1 ml-2 mt-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
         />
         {/* Sub-Item Dropdown */}
         <Select
@@ -1065,7 +1065,7 @@ const handleAddItem = () => {
 
     <div className="w-full p-4">
   {/* Upload File Header */}
-    <label className="block w-full mb-2 text-text-color">Upload image</label>
+    <label className="block w-full mb-2 text-text-color primary-text">Upload image</label>
 
   {/* Dropzone */}
   <div
@@ -1180,7 +1180,7 @@ const handleAddItem = () => {
 
 <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="relative inline-flex items-center cursor-pointer">
+    <label className="relative inline-flex items-center cursor-pointer primary-text">
       <input
         type="checkbox"
         checked={subItem.allowImage}
@@ -1217,7 +1217,7 @@ const handleAddItem = () => {
 
 {/* <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="relative inline-flex items-center cursor-pointer">
+    <label className="relative inline-flex items-center cursor-pointer primary-text">
       <input
         type="checkbox"
         name="active"
@@ -1233,7 +1233,7 @@ const handleAddItem = () => {
         </div>
 
 <div className="flex flex-wrap justify-end p-4">
-  <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
+  <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
     {isLoading ? 'Saving...' : 'Save'}
   </button>
 </div>

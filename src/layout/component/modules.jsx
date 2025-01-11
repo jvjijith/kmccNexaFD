@@ -104,7 +104,7 @@ function Modules({ data }) {
                   {module.moduleOperations.map(operation => (
                     <div key={operation} className="flex items-center justify-between mb-2">
                       <span>{operation}</span>
-                      <label className="relative inline-flex items-center cursor-pointer">
+                      <label className="relative inline-flex items-center cursor-pointer primary-text">
                         <input
                           type="checkbox"
                           checked={module.allowedOperations.includes(operation)}
@@ -126,7 +126,7 @@ function Modules({ data }) {
         <div className="flex justify-end p-4">
           <button
             type="submit"
-            className="bg-primary-button-color text-text-color px-6 py-2 rounded"
+            className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded"
             disabled={isModuleLoading}
           >
             {isModuleLoading ? 'Saving...' : 'Save'}

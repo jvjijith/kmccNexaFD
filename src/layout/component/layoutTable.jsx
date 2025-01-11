@@ -43,31 +43,32 @@ function LayoutTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">App ID</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Font Family</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Font Type</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Font Size (Base)</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Logo (Dark)</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">App ID</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Font Family</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Font Type</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Font Size (Base)</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Logo (Dark)</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {layoutData?.layoutSettings.map((setting) => (
             <Table.Row key={setting._id} className="border-gray-700 bg-secondary-card">
-              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {setting.appId.title}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {setting.font[0]?.fontFamily || "N/A"}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {setting.font[0]?.type || "N/A"}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {setting.fontSize?.base || "N/A"}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {setting.logos.length > 0 ? (
                   <img
                     src={setting.logos[0]?.imageUrl}
@@ -78,7 +79,7 @@ function LayoutTable() {
                   "No Logo"
                 )}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 <Dropdown
                   label="Actions"
                   inline

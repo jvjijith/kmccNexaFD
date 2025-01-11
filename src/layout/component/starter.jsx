@@ -14,7 +14,7 @@ function Starter({onSidebarHide,children,title}) {
             <div className="sm:flex-grow flex justify-between">
               <div className="">
                 <div className="flex items-center">
-                  <div className="text-3xl font-bold text-text-color">Title</div>
+                  {/* <div className="text-3xl font-bold text-text-color">Title</div>
                  
                 </div>
                 <div className="flex items-center">

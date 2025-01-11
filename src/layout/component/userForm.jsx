@@ -185,11 +185,11 @@ function UserForm() {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Name *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Name *</label>
               <input
                 type="text"
                 name="name"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter User Name"
                 autoComplete="off"
                 value={employeeData.name}
@@ -200,11 +200,11 @@ function UserForm() {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Email Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Email Address *</label>
               <input
                 type="email"
                 name="email"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Email Address"
                 autoComplete="off"
                 value={employeeData.email}
@@ -217,11 +217,11 @@ function UserForm() {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Password *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Password *</label>
               <input
                 type="password"
                 name="password"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Password"
                 autoComplete="off"
                 value={employeeData.password}
@@ -232,10 +232,10 @@ function UserForm() {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Address *</label>
               <textarea
                 name="address"
-                className="block w-full px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Address"
                 autoComplete="off"
                 value={employeeData.address}
@@ -248,7 +248,7 @@ function UserForm() {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">Team *</label>
+              <label className="block w-full mb-2 text-text-color primary-text">Team *</label>
               <Select
                 options={teamOptions}
                 value={teamOptions?.find(option => option.value === employeeData.teamId)}
@@ -273,11 +273,11 @@ function UserForm() {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">Designation *</label>
+              <label className="block w-full mb-2 text-text-color primary-text">Designation *</label>
               <input
                 type="text"
                 name="designation"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Designation"
                 autoComplete="off"
                 value={employeeData.designation}
@@ -290,7 +290,7 @@ function UserForm() {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">Superior *</label>
+              <label className="block w-full mb-2 text-text-color primary-text">Superior *</label>
               <Select
                 options={employeeOptions}
                 value={employeeOptions?.find(option => option.value === employeeData.superior)}
@@ -315,11 +315,11 @@ function UserForm() {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Passport </label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Passport </label>
               <input
                 type="text"
                 name="passport"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Passport"
                 autoComplete="off"
                 value={employeeData.passport}
@@ -332,11 +332,11 @@ function UserForm() {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Date of Birth *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Date of Birth *</label>
               <input
                 type="date"
                 name="dateOfBirth"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 autoComplete="off"
                 value={employeeData.dateOfBirth}
                 onChange={handleChange}
@@ -346,11 +346,11 @@ function UserForm() {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Date of Joining *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Date of Joining *</label>
               <input
                 type="date"
                 name="dateOfJoining"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 autoComplete="off"
                 value={employeeData.dateOfJoining}
                 onChange={handleChange}
@@ -362,11 +362,11 @@ function UserForm() {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Phone Number *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Phone Number *</label>
               <input
                 type="text"
                 name="phoneNumber"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Phone Number"
                 autoComplete="off"
                 value={employeeData.phoneNumber}
@@ -377,10 +377,10 @@ function UserForm() {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">User Role *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">User Role *</label>
               <select
                 name="userRole"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 value={employeeData.userRole}
                 onChange={handleChange}
               >
@@ -394,14 +394,14 @@ function UserForm() {
         </div>
 
         <div>
-          <label className="block w-full mb-2 text-text-color">Emergency Contacts</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Emergency Contacts</label>
           {emergencyContacts.map((contact, index) => (
             <div key={index} className="flex flex-wrap p-4 mb-4 bg-nexa-gray">
               <div className="w-full sm:w-1/3 p-4">
                 <input
                   type="text"
                   name={`emergencyContactName${index}`}
-                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                   placeholder="Contact Name"
                   value={contact.name}
                   onChange={(e) => handleEmergencyContactChange(index, 'name', e.target.value)}
@@ -411,7 +411,7 @@ function UserForm() {
                 <input
                   type="text"
                   name={`emergencyContactPhone${index}`}
-                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                   placeholder="Contact Phone"
                   value={contact.phone}
                   onChange={(e) => handleEmergencyContactChange(index, 'phone', e.target.value)}
@@ -421,7 +421,7 @@ function UserForm() {
                 <input
                   type="text"
                   name={`emergencyContactRelationship${index}`}
-                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                   placeholder="Contact Relationship"
                   value={contact.relationship}
                   onChange={(e) => handleEmergencyContactChange(index, 'relationship', e.target.value)}

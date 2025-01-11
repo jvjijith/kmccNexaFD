@@ -43,34 +43,35 @@ function OrganizationTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Organization Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Currency</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Address</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Identification</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Organization Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Currency</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Address</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Identification</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {organizationData.organizations.map((organization) => (
             <Table.Row key={organization._id} className="border-gray-700 bg-secondary-card">
-              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {organization.name}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {organization.currency.code} ({organization.currency.symbol})
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {organization.addresses
                   .map((address) => `${address.street}, ${address.city}, ${address.country}`)
                   .join(" | ")}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 {organization.identificationDetails
                   .map((id) => `${id.type}: ${id.number}`)
                   .join(" | ")}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>

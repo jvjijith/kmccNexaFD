@@ -43,28 +43,29 @@ function EnquiryTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Enquiry Number</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Customer Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Customer Email</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Customer Phone</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Enquiry Mode</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Created At</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Enquiry Number</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Customer Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Customer Email</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Customer Phone</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Enquiry Mode</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Created At</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {enquiryData.enquiries.map((enquiry) => (
             <Table.Row key={enquiry._id} className="border-gray-700 bg-secondary-card">
-              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {enquiry.enquiryNumber}
               </Table.Cell>
-              <Table.Cell className="text-text-color">{enquiry.customer.name}</Table.Cell>
-              <Table.Cell className="text-text-color">{enquiry.customer.email}</Table.Cell>
-              <Table.Cell className="text-text-color">{enquiry.customer.phone}</Table.Cell>
-              <Table.Cell className="text-text-color">{enquiry.enquiryMode}</Table.Cell>
-              <Table.Cell className="text-text-color">{new Date(enquiry.createdAt).toLocaleString()}</Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">{enquiry.customer.name}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{enquiry.customer.email}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{enquiry.customer.phone}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{enquiry.enquiryMode}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{new Date(enquiry.createdAt).toLocaleString()}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>

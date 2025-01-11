@@ -398,7 +398,7 @@ function PageForm({ pageDatas }) {
       <div className="flex flex-wrap">
         {/* Slug */}
     <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Slug</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Slug</label>
       <input
         type="text"
         name="slug"
@@ -410,7 +410,7 @@ function PageForm({ pageDatas }) {
 
     {/* Reference Name */}
     <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Reference Name</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Reference Name</label>
       <input
         type="text"
         name="referenceName"
@@ -476,7 +476,7 @@ function PageForm({ pageDatas }) {
 
           {/* Internal Type */}
     {(pageData.type==="internal") && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Internal Type</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Internal Type</label>
       <input
         type="text"
         name="internalType"
@@ -488,7 +488,7 @@ function PageForm({ pageDatas }) {
 
     {/* External URL */}
     {(pageData.type==="external") && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">External URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">External URL</label>
       <input
         type="text"
         name="externalUrl"
@@ -500,7 +500,7 @@ function PageForm({ pageDatas }) {
 
     {/* Banner Image URL */}
     {((pageData.type!=="external") && (pageData.type!=="internal")) && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Banner Image URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Banner Image URL</label>
       <input
         type="text"
         name="bannerImage"
@@ -512,7 +512,7 @@ function PageForm({ pageDatas }) {
 
         {/* Banner Image URL */}
     {((pageData.type==="external") || (pageData.type==="internal")) && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Banner Image URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Banner Image URL</label>
       <input
         type="text"
         name="bannerImage"
@@ -524,7 +524,7 @@ function PageForm({ pageDatas }) {
 
  {/* Portrait Image URL */}
  {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Portrait Image URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Portrait Image URL</label>
       <input
         type="text"
         name="portraitImage"
@@ -536,7 +536,7 @@ function PageForm({ pageDatas }) {
 
      {/* Landscape Image URL */}
      {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Landscape Image URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Landscape Image URL</label>
       <input
         type="text"
         name="landscapeImage"
@@ -548,7 +548,7 @@ function PageForm({ pageDatas }) {
 
     {/* <div className="mb-4"> */}
     <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color">Available Apps</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Available Apps</label>
           <Select
             isMulti
             options={appData?.apps?.map((app) => ({
@@ -599,7 +599,7 @@ function PageForm({ pageDatas }) {
 
             {/* Keywords */}
     <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Keywords</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Keywords</label>
       <input
         type="text"
         name="keywords"
@@ -616,7 +616,7 @@ function PageForm({ pageDatas }) {
 
      {/* Canonical URL */}
      {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Canonical URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Canonical URL</label>
       <input
         type="text"
         name="canonicalUrl"
@@ -628,7 +628,7 @@ function PageForm({ pageDatas }) {
 
          {/* OG Image */}
          {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">OG Image</label>
+      <label className="block w-full mb-2 text-text-color primary-text">OG Image</label>
       <input
         type="text"
         name="ogImage"
@@ -691,7 +691,7 @@ function PageForm({ pageDatas }) {
 
  {/* Twitter Creator */}
  {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color">Twitter Creator</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Twitter Creator</label>
       <input
         type="text"
         name="twitterCreator"
@@ -705,7 +705,7 @@ function PageForm({ pageDatas }) {
 
      {/* Number Items */}
      <div className="mb-4">
-          <label className="block w-full mb-2 text-text-color">Number of Items (Web, Android, iOS)</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Number of Items (Web, Android, iOS)</label>
           <div className="notes-container p-4 bg-secondary-card rounded-lg">
             <div className="flex gap-4">
               <input
@@ -743,8 +743,8 @@ function PageForm({ pageDatas }) {
  {/* Titles */}
  <div className="mb-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-text-color">Titles</label>
-            <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addTitle}>
+            <label className="block w-full mb-2 text-text-color primary-text">Titles</label>
+            <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTitle}>
               Add
             </button>
           </div>
@@ -795,8 +795,8 @@ function PageForm({ pageDatas }) {
     {/* Meta Descriptions */}
 <div className="mb-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-text-color">Meta Descriptions</label>
-    <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addMetaDescription}>Add</button>
+    <label className="block w-full mb-2 text-text-color primary-text">Meta Descriptions</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addMetaDescription}>Add</button>
   </div>
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
     {pageData.metaDescription.length === 0 && <p className='text-text-color'>No Meta Descriptions added</p>}
@@ -844,8 +844,8 @@ function PageForm({ pageDatas }) {
 {/* OG Titles */}
 <div className="mb-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-text-color">OG Titles</label>
-    <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addOgTitle}>Add</button>
+    <label className="block w-full mb-2 text-text-color primary-text">OG Titles</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addOgTitle}>Add</button>
   </div>
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
     {pageData.ogTitle.length === 0 && <p className='text-text-color'>No OG Titles added</p>}
@@ -893,8 +893,8 @@ function PageForm({ pageDatas }) {
 {/* OG Descriptions */}
 <div className="mb-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-text-color">OG Descriptions</label>
-    <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addOgDescription}>Add</button>
+    <label className="block w-full mb-2 text-text-color primary-text">OG Descriptions</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addOgDescription}>Add</button>
   </div>
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
     {pageData.ogDescription.length === 0 && <p className='text-text-color'>No OG Descriptions added</p>}
@@ -941,7 +941,7 @@ function PageForm({ pageDatas }) {
 
  {/* Select Dropdown for Containers */}
  <div className="w-full p-4">
-          <label className="block w-full mb-2 text-text-color">Items</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Items</label>
           <Select
             options={containerData?.containers.map((container) => ({
               value: container._id,

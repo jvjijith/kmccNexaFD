@@ -136,13 +136,13 @@ function UserTeamPermissionForm({ formattedData, permission }) {
       <div className="flex flex-wrap">
         <div className="w-full">
             <div className="mb-4">
-            <label className="float-left inline-block mb-2 text-text-color">Reference Name *</label>
+            <label className="float-left inline-block mb-2 text-text-color primary-text">Reference Name *</label>
             <input
                 type="text"
                 name="referenceName"
                 value={formValues.referenceName}
                 onChange={handleInputChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 required
             />
             </div>
@@ -183,19 +183,19 @@ function UserTeamPermissionForm({ formattedData, permission }) {
 
           <div className="w-full p-4">
           <div className="flex items-center justify-between mb-4">
-  <label className="block w-full mb-2 text-text-color">
+  <label className="block w-full mb-2 text-text-color primary-text">
     Modules
   </label>
-          {/* <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded mt-4" onClick={() => openModal()}>Add</button> */}
+          {/* <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded mt-4" onClick={() => openModal()}>Add</button> */}
           </div>
   <div className="accordion-container">
     {formValues.allowedModules.length === 0 && (
-      <div className="mb-4 border p-4 rounded border-nexa-gray">
+      <div className="mb-4 border p-4 rounded border-border">
         <p className="text-text-color">No Modules added</p>
       </div>
     )}
     {formValues.allowedModules.map((module, index) => (
-      <div key={module.moduleId || index} className="border border-nexa-gray rounded-lg mb-4">
+      <div key={module.moduleId || index} className="border border-border rounded-lg mb-4">
         {/* Accordion Header */}
         <div
           className="accordion-header secondary-card text-text-color px-4 py-2 flex justify-between items-center cursor-pointer"
@@ -227,7 +227,7 @@ function UserTeamPermissionForm({ formattedData, permission }) {
                 >
                   <div className="flex w-full items-center justify-between">
                     <span className="text-text-color">{operation}</span>
-                    <label className="relative inline-flex items-center cursor-pointer">
+                    <label className="relative inline-flex items-center cursor-pointer primary-text">
                       <input
                         type="checkbox"
                         checked={module.allowedOperations.includes(operation)}

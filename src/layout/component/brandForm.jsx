@@ -71,13 +71,13 @@ function BrandForm({ id, closeModal }) {
         <div className="block">
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">
+              <label className="float-left inline-block mb-2 text-text-color primary-text">
                 &nbsp;Brand Name *&nbsp;
               </label>
               <input
                 type="text"
                 name="name"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Your Brand Name"
                 autoComplete="off"
                 style={{ textAlign: "initial" }}

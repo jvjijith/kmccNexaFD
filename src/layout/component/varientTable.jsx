@@ -52,34 +52,35 @@ const VarientTable = ({ productId }) => {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Color</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Size</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Model</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Action</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Color</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Size</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Model</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Action</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {varientData?.map((variant) => (
             <Table.Row key={variant._id} className="border-gray-700 bg-secondary-card">
-              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {variant.name}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {variant.color}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {variant.size}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {variant.model}
               </Table.Cell>
               <Table.Cell className={`whitespace-nowrap ${variant.active ? "text-green-500" : "text-red-500"}`}>
                 {variant.active ? "Active" : "Inactive"}
               </Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     className="text-text-color hover:!bg-orange-600"

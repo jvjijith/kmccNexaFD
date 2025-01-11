@@ -321,7 +321,7 @@ function ContainerForm({ container }) {
           {/* Reference Name */}
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">Reference Name</label>
+              <label className="block w-full mb-2 text-text-color primary-text">Reference Name</label>
               <input
                 type="text"
                 value={elementsData.referenceName}
@@ -334,7 +334,7 @@ function ContainerForm({ container }) {
           {/* Description */}
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">Description</label>
+              <label className="block w-full mb-2 text-text-color primary-text">Description</label>
               <textarea
                 value={elementsData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
@@ -345,7 +345,7 @@ function ContainerForm({ container }) {
         </div>
 
         <div className="mb-4">
-  <label className="block w-full mb-2 text-text-color">Available Apps</label>
+  <label className="block w-full mb-2 text-text-color primary-text">Available Apps</label>
   <Select
     isMulti
     options={
@@ -368,38 +368,19 @@ function ContainerForm({ container }) {
       label: appData?.apps?.find((app) => app._id === item.appId)?.title || item.appId,
     }))}
     isLoading={isAppLoading}
-    styles={{
-      control: (provided, state) => ({
-        ...provided,
-        backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
-        borderBottomWidth: '2px',
-        borderRadius: '0px',
-        height: '40px', // h-10: 2.5rem = 40px
-        paddingLeft: '8px', // px-2: 0.5rem = 8px
-        paddingRight: '8px', // px-2: 0.5rem = 8px
-        color: 'white',
-      }),
-      singleValue: (provided) => ({
-        ...provided,
-        color: 'white',
-      }),
-      placeholder: (provided) => ({
-        ...provided,
-        color: 'white',
-      }),
-      menu: (provided) => ({
-        ...provided,
-        backgroundColor: 'black',
-        color: 'white',
-      }),
-      option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-        color: state.isSelected ? '#f8f9fa' : 'black',
-        cursor: 'pointer',
-      }),
-    }}
+    classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
   />
 </div>
 
@@ -407,7 +388,7 @@ function ContainerForm({ container }) {
 
         {/* Layout Options */}
 <div className="p-4">
-  <label className="block w-full mb-2 text-text-color">Layout Settings</label>
+  <label className="block w-full mb-2 text-text-color primary-text">Layout Settings</label>
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
     <div className="flex flex-wrap">
       <div className="w-full sm:w-1/2 p-4">
@@ -429,7 +410,7 @@ function ContainerForm({ container }) {
             control: (provided, state) => ({
               ...provided,
               backgroundColor: 'black',
-              borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+              borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
               borderBottomWidth: '2px',
               borderRadius: '0px',
               height: '40px', // h-10: 2.5rem = 40px
@@ -493,7 +474,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -542,7 +523,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -590,7 +571,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -636,7 +617,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -712,7 +693,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -761,7 +742,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -809,7 +790,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -872,7 +853,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -918,7 +899,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -963,7 +944,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -1051,7 +1032,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -1088,7 +1069,7 @@ function ContainerForm({ container }) {
 
  {/* Items Section with Drag-and-Drop */}
  <div className="w-full p-4">
-          <label className="block w-full mb-2 text-text-color">Items</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Items</label>
           
           <Select
             options={elementData?.elements.map((element) => ({ value: element._id, label: element.referenceName }))}
@@ -1099,7 +1080,7 @@ function ContainerForm({ container }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px', // h-10: 2.5rem = 40px
@@ -1148,7 +1129,7 @@ function ContainerForm({ container }) {
 
         {/* Style fields */}
         <div className="p-4">
-        <label className="block w-full mb-2 text-text-color">Style</label>
+        <label className="block w-full mb-2 text-text-color primary-text">Style</label>
           <div className="notes-container p-4 bg-secondary-card rounded-lg">
             <div className="flex flex-wrap">
               {['backgroundColor', 'textColor', 'textMutedColor'].map((field) => (
@@ -1157,7 +1138,7 @@ function ContainerForm({ container }) {
                   <div className="flex items-center">
                     <input
                       type="text"
-                      className="block w-full h-10 px-2 py-1 secondary-card border-b border-nexa-gray text-text-color"
+                      className="block w-full h-10 px-2 py-1 secondary-card border-b border-border text-text-color"
                       placeholder={`Enter ${field}`}
                       value={elementsData.style[field]}
                       onChange={(e) => handleSettingsChange('style', field, e.target.value)}
@@ -1176,7 +1157,7 @@ function ContainerForm({ container }) {
                   <label className="block mb-2 text-text-color capitalize">{field}</label>
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 secondary-card border-b border-nexa-gray text-text-color"
+                    className="block w-full h-10 px-2 py-1 secondary-card border-b border-border text-text-color"
                     placeholder={`Enter ${field}`}
                     value={elementsData.style[field]}
                     onChange={(e) => handleSettingsChange('style', null, field, e.target.value)}

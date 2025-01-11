@@ -28,7 +28,7 @@ function VariantDetails() {
                         </div>
                     </div>
                     {openVariantId === variant._id && (
-                        <div className="p-4 border-nexa-gray bg-card rounded shadow mt-2">
+                        <div className="p-4 border-border bg-card rounded shadow mt-2">
                             <div className="space-y-2 text-left">
                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                     <div>

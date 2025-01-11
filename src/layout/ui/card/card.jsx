@@ -6,7 +6,7 @@ const Card = ({ component, title, children }) => {
       <div className="p-6">
        {title && (
         <div className="mb-4 text-md text-text-color-400 card-header w-full pb-4 flex justify-between items-center">
-          <span className="text-3xl text-text-color">{title}</span>
+          <span className="text-3xl main-text text-text-color">{title}</span>
           <div className="flex items-center">
             
               {component}

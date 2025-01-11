@@ -77,13 +77,13 @@ function CategoryForm({ id, name, industry }) {
         <div className="block">
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">
+              <label className="float-left inline-block mb-2 text-text-color primary-text">
                 &nbsp;Category Name *&nbsp;
               </label>
               <input
                 type="text"
                 name="categoryName"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Your Category Name"
                 autoComplete="off"
                 style={{ textAlign: "initial" }}
@@ -110,7 +110,7 @@ function CategoryForm({ id, name, industry }) {
                   value: categoryData.categoryType,
                   onChange: onCategoryTypeChange,
                   className:
-                    "block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color",
+                    "block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color",
                 }}
               />
             </div>

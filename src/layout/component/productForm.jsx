@@ -273,11 +273,11 @@ function ProductForm({ typeData, product }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Product Name *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Product Name *</label>
               <input
                 type="text"
                 name="name"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Product Name"
                 autoComplete="off"
                 value={productData.name}
@@ -287,11 +287,11 @@ function ProductForm({ typeData, product }) {
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Product Description *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Product Description *</label>
               <textarea
                 type="text"
                 name="description"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Product Description"
                 autoComplete="off"
                 value={productData.description}
@@ -304,7 +304,7 @@ function ProductForm({ typeData, product }) {
         <div className="flex flex-wrap">
     <div className="w-full sm:w-1/2 p-4">
       <div className="mb-4">
-        <label className="block w-full mb-2 text-text-color">Brand *</label>
+        <label className="block w-full mb-2 text-text-color primary-text">Brand *</label>
         <div className="flex items-center" style={{ width: '100%' }}>
           <div style={{ width: '90%' }}>
             <Select
@@ -338,7 +338,7 @@ function ProductForm({ typeData, product }) {
     </div>
     <div className="w-full sm:w-1/2 p-4">
       <div className="mb-4">
-        <label className="block w-full mb-2 text-text-color">Sub Brand</label>
+        <label className="block w-full mb-2 text-text-color primary-text">Sub Brand</label>
         <div className="flex items-center" style={{ width: '100%' }}>
           <div style={{ width: '90%' }}>
             <Select
@@ -384,11 +384,11 @@ function ProductForm({ typeData, product }) {
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Stock *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Stock *</label>
               <input
                 type="number"
                 name="stock"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter stock"
                 autoComplete="off"
                 value={productData.stock}
@@ -398,11 +398,11 @@ function ProductForm({ typeData, product }) {
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">HSN *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">HSN *</label>
               <input
                 type="text"
                 name="HSN"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter HSN"
                 autoComplete="off"
                 value={productData.HSN}
@@ -415,11 +415,11 @@ function ProductForm({ typeData, product }) {
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Model *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Model *</label>
               <input
                 type="text"
                 name="model"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Model"
                 autoComplete="off"
                 value={productData.model}
@@ -431,11 +431,11 @@ function ProductForm({ typeData, product }) {
       
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Product Code *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Product Code *</label>
               <input
                 type="text"
                 name="productCode"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Product Code"
                 autoComplete="off"
                 value={productData.productCode}
@@ -452,7 +452,7 @@ function ProductForm({ typeData, product }) {
          
           <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="block w-full mb-2 text-text-color">Category *</label>
+    <label className="block w-full mb-2 text-text-color primary-text">Category *</label>
     <Select
       options={categories?.map(category => ({ value: category._id, label: category.categoryName }))}
       value={categoryOptions?.find(option => option._id === (product?isCategorie?productData.category:productData.category._id:productData.category))}
@@ -476,7 +476,7 @@ function ProductForm({ typeData, product }) {
 
 <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="block w-full mb-2 text-text-color">Sub Category </label>
+    <label className="block w-full mb-2 text-text-color primary-text">Sub Category </label>
     <Select
       options={subCategoryOptions}
       value={subCategoryOptions?.find(option => option.value === (product?isCategorie?productData.subCategory:productData.subCategory:productData.subCategory))}
@@ -505,7 +505,7 @@ function ProductForm({ typeData, product }) {
             {" "}
             {/* col-sm-6 */}
             <div className="mb-4">
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex items-center cursor-pointer primary-text">
                 <input type="checkbox" value="" className="sr-only peer" name="RFQ"
                 id="RFQ"
                 checked={isRFQ}
@@ -523,7 +523,7 @@ function ProductForm({ typeData, product }) {
         </div>
 
         <div className="w-full p-4">
-  <label className="block w-full mb-2 text-text-color">Images</label><div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-secondary-card text-text-color border-2 border-nexa-gray rounded mb-4">
+  <label className="block w-full mb-2 text-text-color primary-text">Images</label><div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-secondary-card text-text-color border-2 border-border rounded mb-4">
     <input {...getInputProps()} />
     <p className='text-text-color'>Drag & drop images here, or click to select files</p>
     <div className="w-full p-4">
@@ -572,7 +572,7 @@ function ProductForm({ typeData, product }) {
         <div className="flex items-center justify-between mb-4">
           <label className="block  text-text-color mt-4">Notes</label>
           
-          <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded mt-4" onClick={addNotes}>Add Notes</button>
+          <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded mt-4" onClick={addNotes}>Add Notes</button>
           </div>
           
           <div className="notes-container p-4 bg-secondary-card rounded-lg">
@@ -584,14 +584,14 @@ function ProductForm({ typeData, product }) {
                 placeholder="Note Name"
                 value={note.name}
                 onChange={(e) => handleNotesChange(index, 'name', e.target.value)}
-                className="block w-2/5 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-2/5 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               />
               <textarea
                 type="text"
                 placeholder="Note Description"
                 value={note.description}
                 onChange={(e) => handleNotesChange(index, 'description', e.target.value)}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color ml-2"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color ml-2"
               />
               <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded ml-2" onClick={() => removeNotes(index)}>Remove</button>
             </div>
@@ -602,7 +602,7 @@ function ProductForm({ typeData, product }) {
         
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
             {isLoading  ? 'Saving...' : 'Save'}
           </button>
         </div>

@@ -43,26 +43,27 @@ function ElementTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-secondary-card text-text-color">
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Component Type</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Reference Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Web Items</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Android Items</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">iOS Items</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-secondary-card text-text-color">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Component Type</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Reference Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Web Items</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Android Items</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">iOS Items</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {elementData?.elements.map((element, index) => (
             <Table.Row key={index} className="border-gray-700 bg-secondary-card">
-              <Table.Cell className="whitespace-nowrap font-medium text-text-color">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {element.componentType}
               </Table.Cell>
-              <Table.Cell className="text-text-color">{element.referenceName}</Table.Cell>
-              <Table.Cell className="text-text-color">{element.numberItems.web}</Table.Cell>
-              <Table.Cell className="text-text-color">{element.numberItems.android}</Table.Cell>
-              <Table.Cell className="text-text-color">{element.numberItems.iOS}</Table.Cell>
-              <Table.Cell className="text-text-color">
+              <Table.Cell className="border-bordertext-text-color">{element.referenceName}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{element.numberItems.web}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{element.numberItems.android}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{element.numberItems.iOS}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item onClick={() => navigate(`/element/edit`, { state: { element } })}>Edit Element</Dropdown.Item>
                 </Dropdown>
@@ -78,7 +79,7 @@ function ElementTable() {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-text-color`}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
           >
             {index + 1}
           </button>

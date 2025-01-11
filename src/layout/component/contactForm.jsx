@@ -181,26 +181,26 @@ const options = combinedArray.map(item => ({
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Contact Name *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Contact Name *</label>
               <input
                 type="text"
                 name="name"
                 value={contactData.name}
                 onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Your Contact Name"
               />
             </div>
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Email Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Email Address *</label>
               <input
                 type="email"
                 name="email"
                 value={contactData.email}
                 onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Email"
               />
             </div>
@@ -210,24 +210,24 @@ const options = combinedArray.map(item => ({
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Address *</label>
               <textarea
                 name="address"
                 value={contactData.address}
                 onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Customer Address ..."
               ></textarea>
             </div>
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Notes *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Notes *</label>
               <textarea
                 name="note"
                 value={contactData.note.join(", ")}
                 onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Notes ..."
               ></textarea>
             </div>
@@ -237,13 +237,13 @@ const options = combinedArray.map(item => ({
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">State *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">State *</label>
               <input
                 type="text"
                 name="state"
                 value={contactData.state}
                 onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Your State"
               />
             </div>
@@ -253,13 +253,13 @@ const options = combinedArray.map(item => ({
         
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Designation *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Designation *</label>
               <input
                 type="text"
                 name="designation"
                 value={contactData.designation}
                 onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Your Designation"
               />
             </div>
@@ -269,13 +269,13 @@ const options = combinedArray.map(item => ({
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Country *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Country *</label>
               <input
                 type="text"
                 name="country"
                 value={contactData.country}
                 onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Country"
               />
             </div>
@@ -283,13 +283,13 @@ const options = combinedArray.map(item => ({
         
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Primary PhoneNumber *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Primary PhoneNumber *</label>
               <input
                 type="text"
                 name="primaryPhoneNumber"
                 value={contactData.primaryPhoneNumber}
                 onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Your Phone Number"
               />
             </div>
@@ -299,13 +299,13 @@ const options = combinedArray.map(item => ({
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Secondary PhoneNumber *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Secondary PhoneNumber *</label>
               <input
                 type="text"
                 name="secondaryPhoneNumber"
                 value={contactData.secondaryPhoneNumber}
                 onChange={handleChange}
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Phone Number"
               />
             </div>
@@ -314,43 +314,24 @@ const options = combinedArray.map(item => ({
           {!(customerId) && (
     <div className="w-full sm:w-1/2 p-4">
       <div className="mb-4">
-        <label className="block w-full mb-2 text-text-color">Customer/Vendor *</label>
+        <label className="block w-full mb-2 text-text-color primary-text">Customer/Vendor *</label>
         <Select
           options={options}
           value={options.find(option => option.value === contactData.customer) || null}
           onChange={(selectedOption) => setContactData(prevState => ({ ...prevState, customer: selectedOption.value }))}
-          styles={{
-            control: (provided, state) => ({
-              ...provided,
-              backgroundColor: 'black',
-              borderColor: state.isFocused ? 'white' : 'black',
-              borderBottomWidth: '2px',
-              borderRadius: '0px',
-              height: '40px',
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              color: 'white'
-            }),
-            singleValue: (provided) => ({
-              ...provided,
-              color: 'white',
-            }),
-            placeholder: (provided) => ({
-              ...provided,
-              color: 'white',
-            }),
-            menu: (provided) => ({
-              ...provided,
-              backgroundColor: 'black',
-              color: 'white',
-            }),
-            option: (provided, state) => ({
-              ...provided,
-              backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-              color: state.isSelected ? '#f8f9fa' : 'black',
-              cursor: 'pointer'
-            })
-          }}
+          classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           isLoading={vendorLoading || customerLoading}
           isDisabled={vendorLoading || customerLoading || vendorError || customerError}
         />
@@ -362,7 +343,7 @@ const options = combinedArray.map(item => ({
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex items-center cursor-pointer primary-text">
                 <input
                   type="checkbox"
                   name="primaryPhoneWhatsApp"
@@ -377,7 +358,7 @@ const options = combinedArray.map(item => ({
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex items-center cursor-pointer primary-text">
                 <input
                   type="checkbox"
                   name="secondaryPhoneWhatsApp"
@@ -394,7 +375,7 @@ const options = combinedArray.map(item => ({
 
         <div className="w-full sm:w-1/2 p-4">
           <div className="mb-4">
-            <label className="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer primary-text">
               <input
                 type="checkbox"
                 name="decisionMaker"

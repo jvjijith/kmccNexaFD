@@ -475,7 +475,7 @@ const handleUploadAttachment = async (file, index) => {
        {/* Name */}
 <div className="flex flex-wrap">
   <div className="w-full p-4">
-    <label className="block w-full mb-2 text-text-color">Name</label>
+    <label className="block w-full mb-2 text-text-color primary-text">Name</label>
     <input
       type="text"
       name="name"
@@ -491,7 +491,7 @@ const handleUploadAttachment = async (file, index) => {
   <label className="block w-full mb-4 text-text-color">Attachments</label>
   <div
     {...getRootProps({ className: "dropzone" })}
-    className="w-full p-4 bg-secondary-card text-text-color border-2 border-nexa-gray rounded mb-2"
+    className="w-full p-4 bg-secondary-card text-text-color border-2 border-border rounded mb-2"
   >
     <input {...getInputProps()} />
     <p className='text-text-color'>Drag & drop files here, or click to select files</p>
@@ -562,8 +562,8 @@ const handleUploadAttachment = async (file, index) => {
        {/* Identification Details */}
        <div className="mb-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-text-color">Identification Details</label>
-            <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addIdentificationDetail}>Add</button>
+            <label className="block w-full mb-2 text-text-color primary-text">Identification Details</label>
+            <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addIdentificationDetail}>Add</button>
           </div>
           <div className="identification-container p-4 bg-secondary-card rounded-lg">
             {formData.identificationDetails.length === 0 && <p className='text-text-color'>No Identification Details added</p>}
@@ -630,7 +630,7 @@ const handleUploadAttachment = async (file, index) => {
          {/* Bank Details */}
          <div className=" mb-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-text-color">Bank Details</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Bank Details</label>
             <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={addBankDetail}>Add</button>
           </div>
           <div className="notes-container p-4 bg-secondary-card rounded-lg">
@@ -640,7 +640,7 @@ const handleUploadAttachment = async (file, index) => {
                 <input
                   type="text"
                   name={`accountName-${index}`}
-                  className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                  className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                   placeholder="Account Name"
                   value={bank.accountName}
                   onChange={(e) => handleBankDetailChange(index, 'accountName', e.target.value)}
@@ -648,7 +648,7 @@ const handleUploadAttachment = async (file, index) => {
                 <input
                   type="text"
                   name={`accountNumber-${index}`}
-                  className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                  className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                   placeholder="Account Number"
                   value={bank.accountNumber}
                   onChange={(e) => handleBankDetailChange(index, 'accountNumber', e.target.value)}
@@ -656,7 +656,7 @@ const handleUploadAttachment = async (file, index) => {
                 <input
                   type="text"
                   name={`bankName-${index}`}
-                  className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                  className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                   placeholder="Bank Name"
                   value={bank.bankName}
                   onChange={(e) => handleBankDetailChange(index, 'bankName', e.target.value)}
@@ -664,7 +664,7 @@ const handleUploadAttachment = async (file, index) => {
                 <input
                   type="text"
                   name={`branchName-${index}`}
-                  className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                  className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                   placeholder="Branch Name"
                   value={bank.branchName}
                   onChange={(e) => handleBankDetailChange(index, 'branchName', e.target.value)}
@@ -672,7 +672,7 @@ const handleUploadAttachment = async (file, index) => {
                 <input
                   type="text"
                   name={`ifscCode-${index}`}
-                  className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                  className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                   placeholder="IFSC"
                   value={bank.ifscCode}
                   onChange={(e) => handleBankDetailChange(index, 'ifscCode', e.target.value)}
@@ -680,7 +680,7 @@ const handleUploadAttachment = async (file, index) => {
                 <input
                   type="text"
                   name={`swiftCode-${index}`}
-                  className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                  className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                   placeholder="SWIFT"
                   value={bank.swiftCode}
                   onChange={(e) => handleBankDetailChange(index, 'swiftCode', e.target.value)}
@@ -694,8 +694,8 @@ const handleUploadAttachment = async (file, index) => {
          {/* Address Section */}
          <div className=" mb-4">
          <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-text-color">Addresses</label>
-          <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addAddress}>Add</button>
+          <label className="block w-full mb-2 text-text-color primary-text">Addresses</label>
+          <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addAddress}>Add</button>
         </div>
         <div className="notes-container p-4 bg-secondary-card rounded-lg">
           {(formData.addresses.length === 0) && <p className='text-text-color'>No Addresses added</p>}
@@ -704,7 +704,7 @@ const handleUploadAttachment = async (file, index) => {
               <input
                 type="text"
                 name={`street-${index}`}
-                className="block w-1/5 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
+                className="block w-1/5 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Street"
                 value={address.street}
                 onChange={(e) => handleAddressChange(index, 'street', e.target.value)}
@@ -712,7 +712,7 @@ const handleUploadAttachment = async (file, index) => {
               <input
                 type="text"
                 name={`city-${index}`}
-                className="block w-1/5 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/5 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="City"
                 value={address.city}
                 onChange={(e) => handleAddressChange(index, 'city', e.target.value)}
@@ -720,7 +720,7 @@ const handleUploadAttachment = async (file, index) => {
               <input
                 type="text"
                 name={`state-${index}`}
-                className="block w-1/5 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/5 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="State"
                 value={address.state}
                 onChange={(e) => handleAddressChange(index, 'state', e.target.value)}
@@ -728,7 +728,7 @@ const handleUploadAttachment = async (file, index) => {
               <input
                 type="text"
                 name={`country-${index}`}
-                className="block w-1/5 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/5 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Country"
                 value={address.country}
                 onChange={(e) => handleAddressChange(index, 'country', e.target.value)}
@@ -736,7 +736,7 @@ const handleUploadAttachment = async (file, index) => {
               <input
                 type="text"
                 name={`postalCode-${index}`}
-                className="block w-1/5 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/5 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                 placeholder="Postal Code"
                 value={address.postalCode}
                 onChange={(e) => handleAddressChange(index, 'postalCode', e.target.value)}
@@ -750,13 +750,13 @@ const handleUploadAttachment = async (file, index) => {
          {/* Render each quote template */}
          <div className=" mb-4">
          <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-text-color">Quote Template</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Quote Template</label>
           <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={addQuoteTemplate}>Add</button>
         </div>
         <div className="notes-container p-4 bg-secondary-card rounded-lg">
         {(formData.quoteTemplates.length === 0) && <p className='text-text-color'>No Quote Template added</p>}
          {formData.quoteTemplates.map((template, templateIndex) => (
-          <div key={templateIndex} className="mb-4 p-4 rounded border border-nexa-gray">
+          <div key={templateIndex} className="mb-4 p-4 rounded border border-border">
          <div className=" mb-4">
             <div className="flex justify-between items-center">
               <input
@@ -764,27 +764,27 @@ const handleUploadAttachment = async (file, index) => {
                 placeholder="Template Name"
                 value={template.name}
                 onChange={(e) => handleTemplateChange(templateIndex, 'name', e.target.value)}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
               />
               <input
                 type="text"
                 placeholder="Template Description"
                 value={template.description}
                 onChange={(e) => handleTemplateChange(templateIndex, 'description', e.target.value)}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
               />
             </div>
             </div>
             <div className=" mb-4">
          <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-text-color">Template Sections</label>
-          <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={() => addSection(templateIndex)}>Add</button>
+          <label className="block w-full mb-2 text-text-color primary-text">Template Sections</label>
+          <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={() => addSection(templateIndex)}>Add</button>
         </div>
         <div className="notes-container p-4 bg-secondary-card rounded-lg">
         {(template.sections.length === 0) &&
-              <div className="mb-4 border p-4 rounded border-nexa-gray"> <p className='text-text-color'>No Template Section added</p></div>}
+              <div className="mb-4 border p-4 rounded border-border"> <p className='text-text-color'>No Template Section added</p></div>}
             {template.sections.map((section, sectionIndex) => (
-              <div key={sectionIndex} className="mb-4 border p-4 rounded border-nexa-gray">
+              <div key={sectionIndex} className="mb-4 border p-4 rounded border-border">
                 <div className="flex justify-between items-center">
                 <Select
                   options={[
@@ -836,20 +836,20 @@ const handleUploadAttachment = async (file, index) => {
                   placeholder="Content"
                   value={section.content}
                   onChange={(e) => handleSectionChange(templateIndex, sectionIndex, 'content', e.target.value)}
-                  className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mb-2 ml-2"
+                  className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mb-2 ml-2"
                 />
                 <input
                   type="number"
                   placeholder="Order"
                   value={section.order}
                   onChange={(e) => handleSectionChange(templateIndex, sectionIndex, 'order', e.target.value)}
-                  className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mb-2 ml-2"
+                  className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color mb-2 ml-2"
                 />
                 
                 </div>
                 <div className="w-1/2 sm:w-1/2 p-4">
                 {/* <div className="mb-2"> */}
-                    <label className="relative inline-flex items-center cursor-pointer">
+                    <label className="relative inline-flex items-center cursor-pointer primary-text">
                     <input
                         type="checkbox"
                         name="isEditable"
@@ -883,13 +883,13 @@ const handleUploadAttachment = async (file, index) => {
         {/* Render each tax setting */}
 <div className=" mb-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-text-color">Tax Settings</label>
-    <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={addTaxSetting}>Add</button>
+    <label className="block w-full mb-2 text-text-color primary-text">Tax Settings</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTaxSetting}>Add</button>
   </div>
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
     {(formData.taxSettings.length === 0) && <p className='text-text-color'>No Tax Setting added</p>}
     {formData.taxSettings.map((taxSetting, taxIndex) => (
-      <div key={taxIndex} className="mb-4 p-4 rounded text-text-color border border-nexa-gray">
+      <div key={taxIndex} className="mb-4 p-4 rounded text-text-color border border-border">
         
         <div className="flex justify-between items-center mb-2">
           <input
@@ -897,14 +897,14 @@ const handleUploadAttachment = async (file, index) => {
             placeholder="Tax Name"
             value={taxSetting.name}
             onChange={(e) => handleNestedChange('taxSettings', taxIndex, 'name', e.target.value)}
-            className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+            className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
           />
           <input
             type="text"
             placeholder="Country"
             value={taxSetting.country}
             onChange={(e) => handleNestedChange('taxSettings', taxIndex, 'country', e.target.value)}
-            className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+            className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
           />
           
         </div>
@@ -996,12 +996,12 @@ const handleUploadAttachment = async (file, index) => {
             placeholder="Notes"
             value={taxSetting.notes}
             onChange={(e) => handleNestedChange('taxSettings', taxIndex, 'notes', e.target.value)}
-            className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+            className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
           />
         </div>
 
         {/* <div className="w-1/2 sm:w-1/2 p-4">
-          <label className="relative inline-flex items-center cursor-pointer">
+          <label className="relative inline-flex items-center cursor-pointer primary-text">
             <input
               type="checkbox"
               checked={taxSetting.isDefault}
@@ -1015,33 +1015,33 @@ const handleUploadAttachment = async (file, index) => {
 
         {/* Render each component */}
         <div className="flex items-center justify-between mb-2 mt-2">
-          <label className="block w-full mb-2 text-text-color">Components</label>
-          <button type="button" className="bg-primary-button-color text-text-color px-4 py-2 rounded" onClick={() => addComponent(taxIndex)}>Add</button>
+          <label className="block w-full mb-2 text-text-color primary-text">Components</label>
+          <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={() => addComponent(taxIndex)}>Add</button>
         </div>
-        {(taxSetting.components.length === 0) &&<div className="mb-4 border p-4 rounded border-nexa-gray"> <p className='text-text-color'>No Components added</p></div>}
+        {(taxSetting.components.length === 0) &&<div className="mb-4 border p-4 rounded border-border"> <p className='text-text-color'>No Components added</p></div>}
         {taxSetting.components.map((component, compIndex) => (
-          <div key={compIndex} className="mb-4 p-4 rounded border border-nexa-gray">
+          <div key={compIndex} className="mb-4 p-4 rounded border border-border">
         <div className="flex items-center justify-between mb-2">
             <input
               type="text"
               placeholder="Component Name"
               value={component.name}
               onChange={(e) => handleComponentChange(taxIndex, compIndex, 'name', e.target.value)}
-              className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+              className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
             />
             <input
               type="number"
               placeholder="Rate (%)"
               value={component.rate}
               onChange={(e) => handleComponentChange(taxIndex, compIndex, 'rate', e.target.value)}
-              className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+              className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
             />
             <input
               type="text"
               placeholder="Description"
               value={component.description}
               onChange={(e) => handleComponentChange(taxIndex, compIndex, 'description', e.target.value)}
-              className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
+              className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
             />
             <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded ml-2" onClick={() => removeComponent(taxIndex, compIndex)}>Remove</button>
           </div>
@@ -1081,7 +1081,7 @@ const handleUploadAttachment = async (file, index) => {
                 }));
               },
               className:
-                'block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color',
+                'block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color',
             }}
             theme={{
               container: 'relative', // Make sure the container is relatively positioned
@@ -1097,7 +1097,7 @@ const handleUploadAttachment = async (file, index) => {
             <input
               type="text"
               name={`currency.${field}`}
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               value={formData.currency[field]}
               readOnly
             />
@@ -1108,7 +1108,7 @@ const handleUploadAttachment = async (file, index) => {
     </div>
 {/* Submit Button */}
 <div className="flex flex-wrap justify-end p-4">
-        <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">Submit</button>
+        <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">Submit</button>
         </div>
       </form>
       <ToastContainer />

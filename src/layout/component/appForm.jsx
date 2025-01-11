@@ -182,11 +182,11 @@ function AppForm({ appDatas }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">App Title *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">App Title *</label>
               <input
                 type="text"
                 name="title"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter App Title"
                 autoComplete="off"
                 value={appData.title}
@@ -197,7 +197,7 @@ function AppForm({ appDatas }) {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">App Type *</label>
+              <label className="block w-full mb-2 text-text-color primary-text">App Type *</label>
               <Select
                 options={appTypeOptions}
                 value={appTypeOptions.find(option => option.value === appData.appType) || null}
@@ -223,7 +223,7 @@ function AppForm({ appDatas }) {
        {/* Geo Settings */}
 <div className="p-4">
 <div className="flex items-center justify-between mb-4">
-  <label className="block w-full mb-2 text-text-color">Geo Settings</label>
+  <label className="block w-full mb-2 text-text-color primary-text">Geo Settings</label>
   <button type="button" onClick={() => addSetting('geo')} className="bg-secondary-card text-text-color px-4 py-2 rounded">Add</button>
   </div>
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
@@ -235,34 +235,19 @@ function AppForm({ appDatas }) {
           options={ruleTypeOptions}
           value={ruleTypeOptions.find(option => option.value === geo.ruleType) || null}
           onChange={(selectedOption) => handleSettingsChange('geo', index, 'ruleType', selectedOption.value)}
-          styles={{
-            control: (provided, state) => ({
-              ...provided,
-              backgroundColor: 'black',
-              borderColor: state.isFocused ? 'white' : 'black',
-              borderBottomWidth: '2px',
-              borderRadius: '0px',
-              height: '40px',
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              color: 'white'
-            }),
-            singleValue: (provided) => ({
-              ...provided,
-              color: 'white',
-            }),
-            menu: (provided) => ({
-              ...provided,
-              backgroundColor: 'black',
-              color: 'white',
-            }),
-            option: (provided, state) => ({
-              ...provided,
-              backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-              color: state.isSelected ? '#f8f9fa' : 'black',
-              cursor: 'pointer'
-            })
-          }}
+          classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
         />
       </div>
       <div className="w-full sm:w-1/2 p-4">
@@ -276,7 +261,7 @@ function AppForm({ appDatas }) {
             placeholder: 'Enter Geo Location',
             value: geo.location,
             onChange: (e, { newValue }) => handleSettingsChange('geo', index, 'location', newValue),
-            className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
+            className: 'block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
           }}
           theme={{
             container: 'relative',
@@ -298,7 +283,7 @@ function AppForm({ appDatas }) {
         {/* Domain Settings */}
         <div className="p-4">
         <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-text-color">Domain Settings</label> 
+          <label className="block w-full mb-2 text-text-color primary-text">Domain Settings</label> 
           <button type="button" onClick={() => addSetting('domain')} className="bg-secondary-card text-text-color px-4 py-2 rounded">Add</button>
   </div>
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
@@ -329,7 +314,7 @@ function AppForm({ appDatas }) {
                 <input
                   type="text"
                   name={`domain${index}`}
-                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                  className="block w-full h-10 px-2 py-1 mb-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                   placeholder="Domain"
                   value={domain.domain}
                   onChange={(e) => handleSettingsChange('domain', index, 'domain', e.target.value)}
@@ -348,7 +333,7 @@ function AppForm({ appDatas }) {
         {/* Language Settings */}
         <div className="p-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-text-color">Language Settings</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Language Settings</label>
             <button type="button" onClick={() => addSetting('language')} className="bg-secondary-card text-text-color px-4 py-2 rounded">Add</button>
           </div>
           <div className="notes-container p-4 bg-secondary-card rounded-lg">
@@ -366,7 +351,7 @@ function AppForm({ appDatas }) {
                       placeholder: 'Enter Language',
                       value: language.langName,
                       onChange: (e, { newValue }) => handleSettingsChange('language', index, 'langName', newValue),
-                      className: 'block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
+                      className: 'block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color'
                     }}
                     theme={{
                       container: 'relative',
@@ -380,7 +365,7 @@ function AppForm({ appDatas }) {
                   <input
                     type="text"
                     name={`languageCode${index}`}
-                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                    className="block w-full h-10 px-2 py-1 mb-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                     placeholder="Language Code"
                     value={language.langCode}
                     onChange={(e) => handleSettingsChange('language', index, 'langCode', e.target.value)}
@@ -397,7 +382,7 @@ function AppForm({ appDatas }) {
 
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">Submit</button>
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">Submit</button>
         </div>
       </form>
       <ToastContainer />

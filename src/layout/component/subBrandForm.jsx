@@ -70,13 +70,13 @@ function SubBrandForm({ id, closeModal }) {
         <div className="block">
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">
+              <label className="float-left inline-block mb-2 text-text-color primary-text">
                 &nbsp;SubBrand Name *&nbsp;
               </label>
               <input
                 type="text"
                 name="subBrandName"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Your SubBrand Name"
                 autoComplete="off"
                 style={{ textAlign: "initial" }}
@@ -99,7 +99,7 @@ function SubBrandForm({ id, closeModal }) {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                  borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px', // h-10: 2.5rem = 40px

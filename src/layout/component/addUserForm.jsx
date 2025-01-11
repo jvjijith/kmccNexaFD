@@ -193,11 +193,11 @@ function UserForm({ userId }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Name *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Name *</label>
               <input
                 type="text"
                 name="name"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter User Name"
                 autoComplete="off"
                 value={employeeData.name}
@@ -208,11 +208,11 @@ function UserForm({ userId }) {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Email Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Email Address *</label>
               <input
                 type="email"
                 name="email"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Email Address"
                 autoComplete="off"
                 value={employeeData.email}
@@ -225,10 +225,10 @@ function UserForm({ userId }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Address *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Address *</label>
               <textarea
                 name="address"
-                className="block w-full px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Address"
                 autoComplete="off"
                 value={employeeData.address}
@@ -239,7 +239,7 @@ function UserForm({ userId }) {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">Team *</label>
+              <label className="block w-full mb-2 text-text-color primary-text">Team *</label>
               <Select
                 options={teamOptions}
                 value={teamOptions?.find(option => option.value === employeeData.teamId)}
@@ -249,7 +249,7 @@ function UserForm({ userId }) {
                   control: (provided, state) => ({
                     ...provided,
                     backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                    borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                     borderBottomWidth: '2px',
                     borderRadius: '0',
                     minHeight: '40px',
@@ -277,11 +277,11 @@ function UserForm({ userId }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Designation *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Designation *</label>
               <input
                 type="text"
                 name="designation"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Designation"
                 autoComplete="off"
                 value={employeeData.designation}
@@ -292,7 +292,7 @@ function UserForm({ userId }) {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">Superior *</label>
+              <label className="block w-full mb-2 text-text-color primary-text">Superior *</label>
               <Select
                 options={employeeOptions}
                 value={employeeOptions?.find(option => option.value === employeeData.superior)}
@@ -302,7 +302,7 @@ function UserForm({ userId }) {
                   control: (provided, state) => ({
                     ...provided,
                     backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
+                    borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                     borderBottomWidth: '2px',
                     borderRadius: '0',
                     minHeight: '40px',
@@ -330,11 +330,11 @@ function UserForm({ userId }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Date of Birth *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Date of Birth *</label>
               <input
                 type="date"
                 name="dateOfBirth"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 autoComplete="off"
                 value={employeeData.dateOfBirth}
                 onChange={handleChange}
@@ -344,11 +344,11 @@ function UserForm({ userId }) {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Date of Joining *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Date of Joining *</label>
               <input
                 type="date"
                 name="dateOfJoining"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 autoComplete="off"
                 value={employeeData.dateOfJoining}
                 onChange={handleChange}
@@ -360,11 +360,11 @@ function UserForm({ userId }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Phone Number *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Phone Number *</label>
               <input
                 type="tel"
                 name="phoneNumber"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Phone Number"
                 autoComplete="off"
                 value={employeeData.phoneNumber}
@@ -375,7 +375,7 @@ function UserForm({ userId }) {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block w-full mb-2 text-text-color">User Role *</label>
+              <label className="block w-full mb-2 text-text-color primary-text">User Role *</label>
               <Select
                 options={userRoleOptions}
                 value={userRoleOptions.find(option => option.value === employeeData.userRole)}
@@ -412,11 +412,11 @@ function UserForm({ userId }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Passport</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Passport</label>
               <input
                 type="text"
                 name="passport"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Passport"
                 autoComplete="off"
                 value={employeeData.passport}
@@ -427,7 +427,7 @@ function UserForm({ userId }) {
 
           {/* <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color">Active User</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Active User</label>
               <input
                 type="checkbox"
                 name="activeUser"
@@ -447,7 +447,7 @@ function UserForm({ userId }) {
                 <div className="w-full sm:w-1/3 p-2">
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                    className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                     placeholder="Name"
                     value={contact.name}
                     onChange={(e) => handleEmergencyContactChange(index, 'name', e.target.value)}
@@ -456,7 +456,7 @@ function UserForm({ userId }) {
                 <div className="w-full sm:w-1/3 p-2">
                   <input
                     type="tel"
-                    className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                    className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                     placeholder="Phone"
                     value={contact.phone}
                     onChange={(e) => handleEmergencyContactChange(index, 'phone', e.target.value)}
@@ -465,7 +465,7 @@ function UserForm({ userId }) {
                 <div className="w-full sm:w-1/3 p-2">
                   <input
                     type="text"
-                    className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                    className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                     placeholder="Relationship"
                     value={contact.relationship}
                     onChange={(e) => handleEmergencyContactChange(index, 'relationship', e.target.value)}

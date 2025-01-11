@@ -118,7 +118,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
         {/* App ID Dropdown */}
         <div className="w-full sm:w-1/2 p-4">
           <div className="mb-4">
-            <label className="block w-full mb-2 text-text-color">App ID *</label>
+            <label className="block w-full mb-2 text-text-color primary-text">App ID *</label>
             <Select
             options={filteredAppOptions}
             value={filteredAppOptions?.find(option => option.value === (colorDatas ? changeAppId ? colorData.appId : colorData.appId._id : colorData.appId)) || null}
@@ -129,34 +129,19 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
               }));
               setChangeAppId(true);
             }}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
           </div>
         </div>
@@ -164,7 +149,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
         {/* Mode Dropdown */}
         <div className="w-full sm:w-1/2 p-4">
           <div className="mb-4">
-            <label className="block w-full mb-2 text-text-color">Mode *</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Mode *</label>
             <Select
               options={modeOptions}
               value={modeOptions?.find(option => option.value === colorData.mode) || null}
@@ -225,7 +210,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
                                 <input
                                 type="text"
                                 name={field}
-                                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                                 placeholder={`Enter ${section} ${field}`}
                                 value={colorData.theme.palette[section][field]}
                                 onChange={(e) => handleChange(e, section, field)}
@@ -251,7 +236,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
                               <input
                                 type="text"
                                 name={field}
-                                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                                 placeholder={`Enter text ${field}`}
                                 value={colorData.theme.palette.text[field]}
                                 onChange={(e) => handleChange(e, 'text', field)}
@@ -277,7 +262,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
                               <input
                                 type="text"
                                 name={field}
-                                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                                 placeholder={`Enter background ${field}`}
                                 value={colorData.theme.palette.background[field]}
                                 onChange={(e) => handleChange(e, 'background', field)}
@@ -304,7 +289,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
                                 <input
                                 type="text"
                                 name={field}
-                                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                                 placeholder={`Enter ${section} ${field}`}
                                 value={colorData.theme.palette[section][field]}
                                 onChange={(e) => handleChange(e, section, field)}
@@ -337,7 +322,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
               <input
                 type="text"
                 name="divider"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter divider color"
                 value={colorData.theme.palette.divider}
                 onChange={(e) => setColorData({
@@ -377,7 +362,7 @@ const filteredAppOptions = appData?.apps?.filter(app => !existingAppIds?.include
 
         {/* Submit Button */}
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-primary-button-color text-text-color px-6 py-2 rounded">Submit</button>
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">Submit</button>
         </div>
       </form>
       <ToastContainer />
