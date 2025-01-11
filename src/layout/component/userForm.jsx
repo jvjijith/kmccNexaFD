@@ -254,38 +254,19 @@ function UserForm() {
                 value={teamOptions?.find(option => option.value === employeeData.teamId)}
                 onChange={(selectedOption) => setEmployeeData(prevState => ({ ...prevState, teamId: selectedOption.value }))}
                 isLoading={teamLoading}
-                styles={{
-                  control: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
-                    borderBottomWidth: '2px',
-                    borderRadius: '0px',
-                    height: '40px', // h-10: 2.5rem = 40px
-                    paddingLeft: '8px', // px-2: 0.5rem = 8px
-                    paddingRight: '8px', // px-2: 0.5rem = 8px
-                    color: 'white'
-                  }),
-                  singleValue: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  placeholder: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  menu: (provided) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    color: 'white',
-                  }),
-                  option: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                    color: state.isSelected ? '#f8f9fa' : 'black',
-                    cursor: 'pointer'
-                  })
-                }}
+                classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
               />
             </div>
           </div>
@@ -315,38 +296,19 @@ function UserForm() {
                 value={employeeOptions?.find(option => option.value === employeeData.superior)}
                 onChange={(selectedOption) => setEmployeeData(prevState => ({ ...prevState, superior: selectedOption.value }))}
                 isLoading={employeeLoading}
-                styles={{
-                  control: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : 'black', // border-nexa-gray: #D3D3D3
-                    borderBottomWidth: '2px',
-                    borderRadius: '0px',
-                    height: '40px', // h-10: 2.5rem = 40px
-                    paddingLeft: '8px', // px-2: 0.5rem = 8px
-                    paddingRight: '8px', // px-2: 0.5rem = 8px
-                    color: 'white'
-                  }),
-                  singleValue: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  placeholder: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  menu: (provided) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    color: 'white',
-                  }),
-                  option: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                    color: state.isSelected ? '#f8f9fa' : 'black',
-                    cursor: 'pointer'
-                  })
-                }}
+                classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
               />
             </div>
           </div>

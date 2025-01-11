@@ -33,7 +33,7 @@ export default function Sidebar() {
   return (
     <div
       className={clsx(
-        "fixed inset-y-0 left-0 bg-card w-full sm:w-20 xl:w-60 sm:flex flex-col z-10",
+        "fixed inset-y-0 left-0 bg-sidebar w-full sm:w-20 xl:w-60 sm:flex flex-col z-10",
         showSidebar ? "flex" : "hidden"
       )}
     >
@@ -180,7 +180,7 @@ export default function Sidebar() {
           <Dropdown label={<Icon
             path="res-react-dash-options"
             className="block sm:hidden xl:block w-3 h-3"
-          />} inline className="bg-card text-text-color">
+          />} inline className="bg-sidebar text-text-color">
           
             <Dropdown.Item
               className="text-text-color"
