@@ -82,7 +82,7 @@ function Catalog({ catalogId }) {
   };
 
   return (
-    <div className="flex min-h-screen text-white">
+    <div className="flex min-h-screen text-text-color">
       <div className="flex-1 p-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
@@ -104,18 +104,18 @@ function Catalog({ catalogId }) {
             />
           </div>
 
-          <button className="bg-nexa-orange text-white px-4 py-2 rounded flex items-center" onClick={handleSaveCatalog}>
+          <button className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded flex items-center" onClick={handleSaveCatalog}>
             {/* <FaPlusSquare className="mr-2" /> */}
             Save Catalog
           </button>
         </div>
 
         {/* Description */}
-        <label className="float-left inline-block mb-2 text-white">
+        <label className="float-left inline-block mb-2 text-text-color primary-text">
           &nbsp;Catalog Description &nbsp;
         </label>
         <textarea
-          className="w-full p-2 mb-4 bg-black border-none rounded focus:ring-2 focus:ring-green-400 text-white"
+          className="w-full p-2 mb-4 secondary-card border-none rounded focus:ring-2 focus:ring-green-400 text-text-color"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Catalog Description"
@@ -124,13 +124,13 @@ function Catalog({ catalogId }) {
         {/* Content Area */}
         <div className="flex space-x-8">
           {/* Catalog Preview */}
-          <div className="w-1/3 border-b border-nexa-gray bg-black p-4 rounded-lg">
+          <div className="w-1/3 border-b border-border secondary-card p-4 rounded-lg">
             <h2 className="text-xl font-bold mb-4">Catalog Preview</h2>
             <ul className="space-y-4">
               {selectedProducts.map((productId) => {
                 const product = productData?.products.find((p) => p._id === productId);
                 return (
-                  <li key={productId} className="flex items-center justify-between p-2 bg-sidebar-card-top rounded">
+                  <li key={productId} className="flex items-center justify-between p-2 bg-secondary-card rounded">
                      {/* Image Section on the Left */}
                       <div className="w-1/3 mr-2">
                         <img
@@ -153,7 +153,7 @@ function Catalog({ catalogId }) {
           </div>
 
           {/* Product Catalog */}
-          <div className="flex-1 border-b border-nexa-gray bg-black p-4 rounded-lg">
+          <div className="flex-1 border-b border-border secondary-card p-4 rounded-lg">
             <div className="flex justify-between mb-4">
               <h2 className="text-xl font-bold">Product</h2>
             </div>
@@ -165,7 +165,7 @@ function Catalog({ catalogId }) {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="w-full pl-10 pr-4 py-2 rounded border-b border-nexa-gray bg-black border-none focus:ring-2 focus:ring-green-400 text-white"
+                  className="w-full pl-10 pr-4 py-2 rounded border-b border-border secondary-card border-none focus:ring-2 focus:ring-green-400 text-text-color"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -175,7 +175,7 @@ function Catalog({ catalogId }) {
             {/* Products with Image Holders */}
             <div className="grid grid-cols-3 gap-4">
   {currentProducts.map((product) => (
-    <div key={product._id} className="p-4 bg-sidebar-card-top rounded flex items-start">
+    <div key={product._id} className="p-4 bg-secondary-card rounded flex items-start">
       {/* Image Section on the Left */}
       <div className="w-1/3 mr-4">
         <img
@@ -191,14 +191,14 @@ function Catalog({ catalogId }) {
         <p className="text-sm text-gray-400">{product.description}</p>
         {selectedProducts.includes(product._id) ? (
           <div className="flex flex-wrap justify-end">
-          <button className="mt-2 text-white px-4 py-2 rounded flex items-center bg-gray-500" disabled>
+          <button className="mt-2 text-text-color px-4 py-2 rounded flex items-center bg-gray-500" disabled>
             <FaCheck />
           </button>
           </div>
         ) : (
           <div className="flex flex-wrap justify-end">
           <button
-            className="mt-2 bg-nexa-orange text-white px-4 py-2 rounded flex items-center"
+            className="mt-2 bg-primary-button-color text-btn-text-color px-4 py-2 rounded flex items-center"
             onClick={() => handleAddProduct(product._id)}
           >
             <FaPlusSquare />
@@ -217,7 +217,7 @@ function Catalog({ catalogId }) {
                 <button
                   key={index}
                   onClick={() => handlePageChange(index + 1)}
-                  className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+                  className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
                 >
                   {index + 1}
                 </button>

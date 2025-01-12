@@ -40,7 +40,7 @@ function ProfilePage() {
             </div>
             <div className="h-screen flex-grow overflow-x-hidden overflow-auto flex justify-center items-center">
                 <div className="w-full max-w-7xl h-full flex flex-col justify-center p-4">
-                    <div className="flex flex-col w-full h-full bg-card text-white rounded-lg shadow-lg p-5">
+                    <div className="flex flex-col w-full h-full bg-card text-text-color rounded-lg shadow-lg p-5">
                         <div className="mb-5">
                             <h1 className="text-3xl font-bold">Profile</h1>
                         </div>
@@ -54,14 +54,14 @@ function ProfilePage() {
                         </div>
 
                         <nav className="mb-5">
-                            <ul className="flex justify-center list-none p-0 m-0 bg-sidebar-card-top border-b border-gray-700">
+                            <ul className="flex justify-center list-none p-0 m-0 bg-secondary-card border-b border-gray-700">
                                 <li className="mr-5">
                                     <NavLink 
                                         to={`/product/profile/${id}/productdetails`}
                                         className={({ isActive }) =>
                                             isActive
-                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
-                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                                ? "no-underline text-primary-button-color border-b-2 border-primary-button-color py-2 px-4 block"
+                                                : "no-underline text-text-color py-2 px-4 block hover:border-b-2 hover:border-primary-button-color hover:text-primary-button-color"
                                         }
                                     >
                                         Details
@@ -72,8 +72,8 @@ function ProfilePage() {
                                         to={`/product/profile/${id}/variants`}
                                         className={({ isActive }) =>
                                             isActive
-                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
-                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                                ? "no-underline text-primary-button-color border-b-2 border-primary-button-color py-2 px-4 block"
+                                                : "no-underline text-text-color py-2 px-4 block hover:border-b-2 hover:border-primary-button-color hover:text-primary-button-color"
                                         }
                                     >
                                         variants
@@ -84,8 +84,8 @@ function ProfilePage() {
                                         to={`/product/profile/${id}/price`}
                                         className={({ isActive }) =>
                                             isActive
-                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
-                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                                ? "no-underline text-primary-button-color border-b-2 border-primary-button-color py-2 px-4 block"
+                                                : "no-underline text-text-color py-2 px-4 block hover:border-b-2 hover:border-primary-button-color hover:text-primary-button-color"
                                         }
                                     >
                                         Price

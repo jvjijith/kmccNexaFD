@@ -36,42 +36,43 @@ function CustomerContactTable({ customerId }) {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Contact Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Country</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Customer</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">State</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Primary Phone Number</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Email</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Designation</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Decision Maker</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Contact Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Country</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Customer</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">State</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Primary Phone Number</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Email</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Designation</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Decision Maker</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {data.contacts.map((contact) => (
-            <Table.Row key={contact._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={contact._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {contact.name}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.country}</Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="border-bordertext-text-color">{contact.country}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">
                 {contact.customer?.name || "N/A"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.state}</Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="border-bordertext-text-color">{contact.state}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">
                 <div className="flex items-center">
                   {contact.primaryPhoneWhatsApp && <FaWhatsapp size={18} className="text-green-500" />}
                   &nbsp; {contact.primaryPhoneNumber}
                 </div>
               </Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.email}</Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.designation}</Table.Cell>
-              <Table.Cell className="text-gray-300">{contact.decisionMaker ? "Yes" : "No"}</Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="border-bordertext-text-color">{contact.email}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{contact.designation}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{contact.decisionMaker ? "Yes" : "No"}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
-                    className="text-gray-300 hover:bg-orange-600"
+                    className="text-text-color hover:bg-orange-600"
                     onClick={() => navigate(`/contact/addContact`, { state: { contact } })}
                   >
                     Edit Contact

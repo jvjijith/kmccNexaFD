@@ -30,7 +30,7 @@ function ProfilePage() {
             </div>
             <div className="h-screen flex-grow overflow-x-hidden overflow-auto flex justify-center items-center">
                 <div className="w-full max-w-7xl h-full flex flex-col justify-center p-4">
-                    <div className="flex flex-col w-full h-full bg-card text-white rounded-lg shadow-lg p-5">
+                    <div className="flex flex-col w-full h-full bg-card text-text-color rounded-lg shadow-lg p-5">
                         <div className="mb-5">
                             <h1 className="text-3xl font-bold">Profile</h1>
                         </div>
@@ -44,15 +44,15 @@ function ProfilePage() {
                         </div>
 
                         <nav className="mb-5">
-                            <ul className="flex justify-center list-none p-0 m-0 bg-sidebar-card-top border-b border-gray-700">
+                            <ul className="flex justify-center list-none p-0 m-0 bg-secondary-card border-b border-gray-700">
                                 <li className="mr-5">
                                     <NavLink 
                                         exact
                                         to={`/profile/${userId}/details`}
                                         className={({ isActive }) =>
                                             isActive
-                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
-                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                                ? "no-underline text-primary-button-color border-b-2 border-primary-button-color py-2 px-4 block"
+                                                : "no-underline text-text-color py-2 px-4 block hover:border-b-2 hover:border-primary-button-color hover:text-primary-button-color"
                                         }
                                     >
                                         Details
@@ -64,8 +64,8 @@ function ProfilePage() {
                                         to={`/profile/${userId}/permissions`}
                                         className={({ isActive }) =>
                                             isActive
-                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
-                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                                ? "no-underline text-primary-button-color border-b-2 border-primary-button-color py-2 px-4 block"
+                                                : "no-underline text-text-color py-2 px-4 block hover:border-b-2 hover:border-primary-button-color hover:text-primary-button-color"
                                         }
                                     >
                                         Permissions
@@ -77,8 +77,8 @@ function ProfilePage() {
                                         to={`/profile/${userId}/activities`}
                                         className={({ isActive }) =>
                                             isActive
-                                                ? "no-underline text-nexa-orange border-b-2 border-nexa-orange py-2 px-4 block"
-                                                : "no-underline text-white py-2 px-4 block hover:border-b-2 hover:border-nexa-orange hover:text-nexa-orange"
+                                                ? "no-underline text-primary-button-color border-b-2 border-primary-button-color py-2 px-4 block"
+                                                : "no-underline text-text-color py-2 px-4 block hover:border-b-2 hover:border-primary-button-color hover:text-primary-button-color"
                                         }
                                     >
                                         Activities
@@ -94,47 +94,47 @@ function ProfilePage() {
                                     <div className="grid grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Name</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{employee.name}</div>
+                                            <div className="p-2 bg-secondary-card rounded">{employee.name}</div>
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Email</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{employee.email}</div>
+                                            <div className="p-2 bg-secondary-card rounded">{employee.email}</div>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Phone Number</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{employee.phoneNumber}</div>
+                                            <div className="p-2 bg-secondary-card rounded">{employee.phoneNumber}</div>
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Date of Birth</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{employee.dateOfBirth}</div>
+                                            <div className="p-2 bg-secondary-card rounded">{employee.dateOfBirth}</div>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Address</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{employee.address}</div>
+                                            <div className="p-2 bg-secondary-card rounded">{employee.address}</div>
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Designation</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{employee.designation}</div>
+                                            <div className="p-2 bg-secondary-card rounded">{employee.designation}</div>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Superior</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{memployee ? memployee.name : 'N/A'}</div>
+                                            <div className="p-2 bg-secondary-card rounded">{memployee ? memployee.name : 'N/A'}</div>
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Date of Joining</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{employee.dateOfJoining}</div>
+                                            <div className="p-2 bg-secondary-card rounded">{employee.dateOfJoining}</div>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-sm font-medium mb-1">Active User</label>
-                                            <div className="p-2 bg-sidebar-card-top rounded">{employee.activeUser ? 'Yes' : 'No'}</div>
+                                            <div className="p-2 bg-secondary-card rounded">{employee.activeUser ? 'Yes' : 'No'}</div>
                                         </div>
                                     </div>
                                 </div>

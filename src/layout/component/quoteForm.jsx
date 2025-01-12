@@ -411,327 +411,222 @@ const removeTerm = (index) => {
       <form onSubmit={handleSubmit}>
         <div className="flex flex-wrap">
           {/* <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Quote Number</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Quote Number</label>
             <input
               type="text"
               name="quoteNumber"
               value={formData.quoteNumber}
               onChange={handleChange}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
             />
           </div> */}
 
           {/* Quote Template Dropdown */}
         <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Quote Template</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Quote Template</label>
           <Select
             options={quoteTemplateOptions}
             value={quoteTemplateOptions.find((option) => option.value === formData.quoteTemplate)}
             onChange={handleTemplateChange}
             placeholder="Select Quote Template"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
 
 
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Quote Status</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Quote Status</label>
             <Select
               options={quoteStatusOptions}
               value={quoteStatusOptions.find(option => option.value === formData.quoteStatus)}
               onChange={handleStatusChange}
               placeholder="Select Quote Status"
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
-                  cursor: 'pointer',
-                }),
-              }}
+              classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
             />
           </div>
 
           {/* Enquiry Dropdown */}
         <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Enquiry ID</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Enquiry ID</label>
           <Select
             options={enquiryOptions}
             value={enquiryOptions.find((option) => option.value === formData.enquiryId)}
             onChange={handleEnquiryChange}
             placeholder="Select Enquiry ID"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
 
 
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Salesman</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Salesman</label>
           <Select
             options={salesmanOptions}
             value={salesmanOptions.find(option => option.value === formData.salesman)}
             onChange={handleSalesmanChange}
             placeholder="Select Salesman"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
 
         <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Customer</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Customer</label>
           <Select
             options={customerOptions}
             value={customerOptions.find(option => option.value === formData.customer)}
             onChange={handleCustomerChange}
             placeholder="Select a Customer"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
 
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Valid Until</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Valid Until</label>
             <input
               type="date"
               name="validUntil"
               value={formData.validUntil}
               onChange={handleChange}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
             />
           </div>
 
           {/* <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Terms and Conditions</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Terms and Conditions</label>
             <textarea
               name="termsAndConditions"
               value={formData.termsAndConditions}
               onChange={handleChange}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
             />
           </div> */}
 
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block w-full mb-2 text-white">Quote Notes</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Quote Notes</label>
             <textarea
               name="quoteNotes"
               value={formData.quoteNotes}
               onChange={handleChange}
-              className="block w-full px-3 py-2 text-white bg-black border rounded"
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
             />
           </div>
 
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Created By</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Created By</label>
           <Select
             name="createdBy"
             options={employeeOptions}
             value={employeeOptions.find((option) => option.value === formData.createdBy)}
             onChange={handleCreatedByChange}
             placeholder="Select Employee"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
 
         {/* Edited By Dropdown */}
         <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Edited By</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Edited By</label>
           <Select
             options={editedByOptions}
             value={editedByOptions.find((option) => option.value === formData.editedBy)}
             onChange={handleEditedByChange}
             placeholder="Select Employee"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
 
         {/* <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Edited Count</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Edited Count</label>
           <input
             type="number"
             name="editedCount"
             value={formData.editedCount}
             onChange={handleChange}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
         </div> */}
 
@@ -739,20 +634,20 @@ const removeTerm = (index) => {
         {/* Terms and Conditions Section */}
         <div className="w-full p-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-white">Terms and Conditions</label>
-    <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addTerm}>
+    <label className="block w-full mb-2 text-text-color primary-text">Terms and Conditions</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTerm}>
       Add
     </button>
   </div>
-  <div className="terms-container p-4 bg-sidebar-card-top rounded-lg">
-    {formData.termsAndConditions.length === 0 && <p>No Terms and Conditions added</p>}
+  <div className="terms-container p-4 bg-secondary-card rounded-lg">
+    {formData.termsAndConditions.length === 0 && <p className='text-text-color'>No Terms and Conditions added</p>}
     {formData.termsAndConditions.map((term, index) => (
       <div key={index} className="flex flex-col mb-4">
         <div className="flex items-center mb-2">
           <input
             type="text"
             name={`termName-${index}`}
-            className="block w-2/6 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+            className="block w-2/6 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
             placeholder={`Term Name ${index + 1}`}
             value={term.name}
             onChange={(e) => handleTermChange(index, 'name', e.target.value)}
@@ -761,14 +656,14 @@ const removeTerm = (index) => {
         <div className="flex items-center mb-2"> */}
           <textarea
             name={`termContent-${index}`}
-            className="block w-3/6 px-3 h-10 py-2 text-white bg-black border rounded  ml-2"
+            className="block w-3/6 px-3 h-10 py-2 text-text-color secondary-card border rounded  ml-2"
             placeholder={`Content for Term ${index + 1}`}
             value={term.content}
             onChange={(e) => handleTermChange(index, 'content', e.target.value)}
           />
         <button
           type="button"
-          className="bg-black w-1/6 text-white px-4 py-2 rounded ml-2"
+          className="bg-secondary-card w-1/6 text-text-color px-4 py-2 rounded ml-2"
           onClick={() => removeTerm(index)}
         >
           Remove
@@ -784,26 +679,26 @@ const removeTerm = (index) => {
         {/* Edited Notes Section */}
         <div className="w-full p-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-white">Edited Notes</label>
-            <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addEditedNote}>
+            <label className="block w-full mb-2 text-text-color primary-text">Edited Notes</label>
+            <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addEditedNote}>
               Add
             </button>
           </div>
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-            {formData.editedNotes.length === 0 && <p>No Notes added</p>}
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
+            {formData.editedNotes.length === 0 && <p className='text-text-color'>No Notes added</p>}
             {formData.editedNotes.map((note, index) => (
               <div key={index} className="flex items-center mb-2">
                 <input
                   type="text"
                   name={`editedNote-${index}`}
-                  className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                  className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                   placeholder={`Note ${index + 1}`}
                   value={note}
                   onChange={(e) => handleEditedNoteChange(index, e.target.value)}
                 />
                 <button
                   type="button"
-                  className="bg-black text-white px-4 py-2 rounded ml-2"
+                  className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
                   onClick={() => removeEditedNote(index)}
                 >
                   Remove
@@ -816,19 +711,19 @@ const removeTerm = (index) => {
            {/* Products */}
         <div className="w-full p-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block mb-2 text-white">Products</label>
-            <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addProduct}>
+            <label className="block mb-2 text-text-color">Products</label>
+            <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addProduct}>
               Add
             </button>
           </div>
-          <div className="products-container p-4 bg-sidebar-card-top rounded-lg">
-            {formData?.products?.length === 0 && <p>No Products added</p>}
+          <div className="products-container p-4 bg-secondary-card rounded-lg">
+            {formData?.products?.length === 0 && <p className='text-text-color'>No Products added</p>}
             {formData?.products?.map((product, index) => (
                <div key={index} className="flex mb-2">
                {/* Product Dropdown */}
                
         <div className="w-1/6 ml-2">
-             <label className="block text-white w-full">Product</label>
+             <label className="block text-text-color w-full">Product</label>
                <Select
                  options={productData?.products?.map((p) => ({
                    value: p._id,
@@ -842,40 +737,24 @@ const removeTerm = (index) => {
                    handleProductChange(index, "productId", selectedOption.value)
                  }
                 //  placeholder="Select Product"
-                 className="w-full"
-                 styles={{
-                  control: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                    borderBottomWidth: '2px',
-                    borderRadius: '0px',
-                    height: '40px',
-                    paddingLeft: '8px',
-                    paddingRight: '8px',
-                    color: 'white',
-                  }),
-                  singleValue: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  menu: (provided) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    color: 'white',
-                  }),
-                  option: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: state.isSelected ? '#007bff' : 'black',
-                    color: state.isSelected ? 'black' : 'white',
-                    cursor: 'pointer',
-                  }),
-                }}
+                 classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
                />
        </div>
                {/* Variant Dropdown */}
                <div className="w-1/6 ml-2">
-               <label className="block text-white w-full">Variant</label>
+               <label className="block text-text-color w-full">Variant</label>
                <Select
                  options={varientData?.variants
                    ?.filter((v) => v.productId === product.productId)
@@ -888,44 +767,28 @@ const removeTerm = (index) => {
                    handleProductChange(index, "variantId", selectedOption.value)
                  }
                 //  placeholder="Select Variant"
-                 className="w-full"
-                 styles={{
-                  control: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                    borderBottomWidth: '2px',
-                    borderRadius: '0px',
-                    height: '40px',
-                    paddingLeft: '8px',
-                    paddingRight: '8px',
-                    color: 'white',
-                  }),
-                  singleValue: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  menu: (provided) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    color: 'white',
-                  }),
-                  option: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: state.isSelected ? '#007bff' : 'black',
-                    color: state.isSelected ? 'black' : 'white',
-                    cursor: 'pointer',
-                  }),
-                }}
+                 classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
                  isDisabled={!product.productId}
                />
        </div>
        
        <div className="w-1/6 ml-2">
-               <label className="block text-white w-full">Quantity</label>
+               <label className="block text-text-color w-full">Quantity</label>
                <input
                  type="number"
-                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                 className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                  placeholder="Quantity"
                  value={product.quantity}
                  onChange={(e) =>
@@ -934,10 +797,10 @@ const removeTerm = (index) => {
                />
                </div>
        <div className="w-1/6 ml-2">
-               <label className="block text-white w-full">Unit Price</label>
+               <label className="block text-text-color w-full">Unit Price</label>
                <input
                  type="number"
-                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                 className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                  placeholder="Unit Price"
                  value={product.unitPrice}
                  onChange={(e) =>
@@ -946,10 +809,10 @@ const removeTerm = (index) => {
                /> 
                </div>
                <div className="w-1/6 ml-2">
-                       <label className="block text-white w-full">Discount</label>
+                       <label className="block text-text-color w-full">Discount</label>
                <input
                  type="number"
-                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                 className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                  placeholder="Discount"
                  value={product.discount}
                  onChange={(e) =>
@@ -958,17 +821,17 @@ const removeTerm = (index) => {
                /> 
                </div>
                <div className="w-1/6 ml-2">
-                       <label className="block text-white w-full">Total Price</label>
+                       <label className="block text-text-color w-full">Total Price</label>
                <input
                  type="number"
-                 className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+                 className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                  placeholder="Total Price"
                  value={product.totalPrice}
                  readOnly
                /> </div>
                <button
                  type="button"
-                 className="bg-black h-10 text-white px-4 py-2 rounded ml-2 mt-6"
+                 className="bg-secondary-card h-10 text-text-color px-4 py-2 rounded ml-2 mt-6"
                  onClick={() => removeProduct(index)}
                >
                  Remove
@@ -980,28 +843,28 @@ const removeTerm = (index) => {
            { !(formData?.products?.length === 0) &&
             <>
             <div className="mt-4">
-             <label className="block text-white">Total Amount</label>
+             <label className="block text-text-color">Total Amount</label>
              <input
                type="number"
-               className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+               className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                value={formData.totalAmount}
                readOnly
              />
            </div>
            <div className="mt-4">
-             <label className="block text-white">Total Discount</label>
+             <label className="block text-text-color">Total Discount</label>
              <input
                type="number"
-               className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+               className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                value={formData.totalDiscount}
                readOnly
              />
            </div>
            <div className="mt-4">
-             <label className="block text-white">Final Amount</label>
+             <label className="block text-text-color">Final Amount</label>
              <input
                type="number"
-               className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black text-white rounded-none focus:outline-none focus:border-white transition"
+               className="block w-full h-10 px-2 py-1 border-b border-border secondary-card text-text-color rounded-none focus:outline-none focus:border-white transition"
                value={formData.finalAmount}
                readOnly
              />
@@ -1012,7 +875,7 @@ const removeTerm = (index) => {
         </div>
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
             {isLoading ? 'Saving...' : 'Save'}
           </button>
         </div>

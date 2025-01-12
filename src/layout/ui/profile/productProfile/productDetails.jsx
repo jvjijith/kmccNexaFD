@@ -5,7 +5,7 @@ function ProductDetails() {
     const { product } = useOutletContext();
 
     if (!product) {
-        return <p>Loading product details...</p>;
+        return <p className='text-text-color'>Loading product details...</p>;
     }
 
     return (
@@ -15,66 +15,66 @@ function ProductDetails() {
                 <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">Name</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.name || 'N/A'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.name || 'N/A'}</div>
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Model</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.model || 'N/A'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.model || 'N/A'}</div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">Product Code</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.productCode || 'N/A'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.productCode || 'N/A'}</div>
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">HSN</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.HSN || 'N/A'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.HSN || 'N/A'}</div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">Stock</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.stock || 'N/A'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.stock || 'N/A'}</div>
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">RFQ</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.RFQ ? 'Yes' : 'No'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.RFQ ? 'Yes' : 'No'}</div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">Brand</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.brand?.name || 'N/A'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.brand?.name || 'N/A'}</div>
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Sub Brand</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.subBrand?.subBrandName || 'N/A'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.subBrand?.subBrandName || 'N/A'}</div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label className="block text-sm font-medium mb-1">Category</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.category?.categoryName || 'N/A'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.category?.categoryName || 'N/A'}</div>
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Category Type</label>
-                        <div className="p-2 bg-sidebar-card-top rounded">{product.category?.categoryType || 'N/A'}</div>
+                        <div className="p-2 bg-secondary-card rounded">{product.category?.categoryType || 'N/A'}</div>
                     </div>
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Description</label>
-                    <div className="p-2 bg-sidebar-card-top rounded">{product.description || 'N/A'}</div>
+                    <div className="p-2 bg-secondary-card rounded">{product.description || 'N/A'}</div>
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Notes</label>
-                    <ul className="p-2 bg-sidebar-card-top rounded">
+                    <ul className="p-2 bg-secondary-card rounded">
                         {product.notes && product.notes.length > 0 ? (
                             product.notes.map(note => (
                                 <li key={note._id} className="mb-2">

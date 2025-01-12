@@ -43,29 +43,30 @@ function MenuTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Menu Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">App Title</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Menu Type</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Layout Type</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Active</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Menu Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">App Title</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Menu Type</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Layout Type</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Active</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {menuData.menus.map((menu) => (
-            <Table.Row key={menu._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={menu._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {menu.menuName}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">{menu.appId.title}</Table.Cell>
-              <Table.Cell className="text-gray-300">{menu.menuType}</Table.Cell>
-              <Table.Cell className="text-gray-300">{menu.layoutType}</Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="border-bordertext-text-color">{menu.appId.title}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{menu.menuType}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{menu.layoutType}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">
                 {menu.active ? "True" : "False"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="border-bordertext-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>
                       navigate(`/menu/edit`, { state: { menu } })
@@ -87,8 +88,8 @@ function MenuTable() {
             key={index}
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
-              currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"
-            } text-white`}
+              currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
+            } text-text-color`}
           >
             {index + 1}
           </button>

@@ -15,7 +15,7 @@ function CustomerContacts() {
             {contact.contacts.map((contactItem) => (
                 <div key={contactItem._id} className="mb-4">
                     <div 
-                        className="p-4 bg-sidebar-card-top rounded shadow cursor-pointer"
+                        className="p-4 bg-secondary-card rounded shadow cursor-pointer"
                         onClick={() => toggleAccordion(contactItem._id)}
                     >
                         <div className="flex justify-between items-center">
@@ -28,11 +28,11 @@ function CustomerContacts() {
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Email</label>
-                                    <div className="p-2 bg-sidebar-card-top rounded">{contactItem.email || 'N/A'}</div>
+                                    <div className="p-2 bg-secondary-card rounded">{contactItem.email || 'N/A'}</div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Primary Phone</label>
-                                    <div className="p-2 bg-sidebar-card-top rounded">
+                                    <div className="p-2 bg-secondary-card rounded">
                                         {contactItem.primaryPhoneNumber || 'N/A'} {contactItem.primaryPhoneWhatsApp && "(WhatsApp)"}
                                     </div>
                                 </div>
@@ -41,35 +41,35 @@ function CustomerContacts() {
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Secondary Phone</label>
-                                    <div className="p-2 bg-sidebar-card-top rounded">
+                                    <div className="p-2 bg-secondary-card rounded">
                                         {contactItem.secondaryPhoneNumber || 'N/A'} {contactItem.secondaryPhoneWhatsApp && "(WhatsApp)"}
                                     </div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Address</label>
-                                    <div className="p-2 bg-sidebar-card-top rounded">{contactItem.address || 'N/A'}</div>
+                                    <div className="p-2 bg-secondary-card rounded">{contactItem.address || 'N/A'}</div>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Country</label>
-                                    <div className="p-2 bg-sidebar-card-top rounded">{contactItem.country || 'N/A'}</div>
+                                    <div className="p-2 bg-secondary-card rounded">{contactItem.country || 'N/A'}</div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">State</label>
-                                    <div className="p-2 bg-sidebar-card-top rounded">{contactItem.state || 'N/A'}</div>
+                                    <div className="p-2 bg-secondary-card rounded">{contactItem.state || 'N/A'}</div>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Designation</label>
-                                    <div className="p-2 bg-sidebar-card-top rounded">{contactItem.designation || 'N/A'}</div>
+                                    <div className="p-2 bg-secondary-card rounded">{contactItem.designation || 'N/A'}</div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Notes</label>
-                                    <div className="p-2 bg-sidebar-card-top rounded">
+                                    <div className="p-2 bg-secondary-card rounded">
                                         {contactItem.note && contactItem.note.length > 0 ? (
                                             contactItem.note.join(', ')
                                         ) : (

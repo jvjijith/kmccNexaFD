@@ -3,33 +3,47 @@ import Icon from '../ui/icon/icon';
 import IconButton from '../ui/icon/iconButton';
 import Card from '../ui/card/card';
 import { useSidebar } from '../../context/sidebar.context';
+import PopUpModal from '../ui/modal/modal';
+import PriceForm from './priceForm';
 import { useNavigate } from 'react-router';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import Modules from './modules';
 import { useGetData } from '../../common/api';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
-function PageCard({children,title,button}) {
+function UserTeamPermissionCard({children,title,button}) {
   
-      const navigate = useNavigate();
-  const [userObj, setUserObj, clearUser] = useLocalStorage("user", null);
-  const { data: employeeData, refetch: refetchEmployees } = useGetData("employee", `/employee/user/${userObj?.uid}`);
-  const [isDropdownOpen, setDropdownOpen] = useState(false); // State to toggle dropdown
-
-  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
-
+  const navigate = useNavigate();
   const {toggleSidebar} = useSidebar();
 
-  const getInitials = (name) => {
-    if (!name) return "NA"; // Handle cases where name might be null or undefined
-    const words = name.split(" ");
-    const firstInitial = words[0]?.[0] || ""; // First letter of the first word
-    const secondInitial = words[1]?.[0] || ""; // First letter of the second word (if exists)
-    return firstInitial + secondInitial; // Combine initials
+  const [userObj, setUserObj, clearUser] = useLocalStorage("user", null);
+    const { data: employeeData, refetch: refetchEmployees } = useGetData("employee", `/employee/user/${userObj?.uid}`);
+    const [isDropdownOpen, setDropdownOpen] = useState(false); // State to toggle dropdown
+  
+    const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+  
+    const getInitials = (name) => {
+      if (!name) return "NA"; // Handle cases where name might be null or undefined
+      const words = name.split(" ");
+      const firstInitial = words[0]?.[0] || ""; // First letter of the first word
+      const secondInitial = words[1]?.[0] || ""; // First letter of the second word (if exists)
+      return firstInitial + secondInitial; // Combine initials
+    };
+  
+    const handleLogout = () => {
+      clearUser();
+      navigate("/login");
+    };
+  
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => {
+    setModalOpen(true);
   };
 
-  const handleLogout = () => {
-    clearUser();
-    navigate("/login");
+  const closeModal = () => {
+    setModalOpen(false);
   };
+
     return (
         <div className="flex w-full">
               <div className="w-full h-screen hidden sm:block sm:w-20 xl:w-60 flex-shrink-0">
@@ -40,7 +54,7 @@ function PageCard({children,title,button}) {
             <div className="sm:flex-grow flex justify-between">
               <div className="">
                 <div className="flex items-center">
-                  {/* <div className="text-3xl font-bold text-text-color">Pages</div> */}
+                  {/* <div className="text-3xl font-bold text-text-color">User/Team Permission</div> */}
                   
                 </div>
              {/*    <div className="flex items-center">
@@ -128,19 +142,18 @@ function PageCard({children,title,button}) {
           
            <Card title={title}
            component={button?
-            (<button
-              className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded"
-              onClick={() => navigate(`/page/add`)}
-            >
+            <button className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={() => navigate('/permission/add')}>
               Add
-            </button>):null
+            </button>:null
           }>
-          {children}
+               {children}
             </Card>
             </div>
-
+            <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Modules"}>
+        <Modules closeModal={closeModal} />
+      </PopUpModal>
         </div>
     );
 }
 
-export default PageCard;
+export default UserTeamPermissionCard;

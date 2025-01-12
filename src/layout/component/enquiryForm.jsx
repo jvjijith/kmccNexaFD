@@ -194,7 +194,7 @@ console.log(formData);
         <div className="w-full sm:w-1/2 p-4">
       {/* Enquiry Mode as a Dropdown */}
       <div className="mb-4">
-          <label  className="block mb-2 text-white">Enquiry Mode</label>
+          <label  className="block mb-2 text-text-color">Enquiry Mode</label>
           <Select
             options={enquiryModeOptions}
             value={{
@@ -202,38 +202,19 @@ console.log(formData);
               label: formData.enquiryMode,
             }}
             onChange={handleSelectChange('enquiryMode')}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
         </div>
@@ -242,7 +223,7 @@ console.log(formData);
         {formData.enquiryMode === 'Salesman' && (
           <div className="w-full sm:w-1/2 p-4">
       <div className="mb-4">
-          <label className="block mb-2 text-white">Select Salesman</label>
+          <label className="block mb-2 text-text-color">Select Salesman</label>
           <Select
             options={
               employeeData?.employees?.map((employee) => ({
@@ -265,38 +246,19 @@ console.log(formData);
                 salesman: selectedOption.value,
               }))
             }
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
             placeholder="Select Salesman"
             isLoading={isEmployeeLoading}
             isClearable
@@ -308,7 +270,7 @@ console.log(formData);
 
         {formData.enquiryMode === 'Existing Customer' && (
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block mb-2 text-white">Select Existing Customer</label>
+          <label className="block mb-2 text-text-color">Select Existing Customer</label>
           <Select
             options={customerData?.customers.map((customer) => ({
               value: customer._id,
@@ -330,38 +292,19 @@ console.log(formData);
                 existingCustomerId: selectedOption?.value || "",
               }))
             }
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: "black",
-                borderColor: state.isFocused ? "white" : "#D3D3D3",
-                borderBottomWidth: "2px",
-                borderRadius: "0px",
-                height: "40px",
-                paddingLeft: "8px",
-                paddingRight: "8px",
-                color: "white",
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: "white",
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: "white",
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: "black",
-                color: "white",
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? "#007bff" : "black",
-                color: state.isSelected ? "black" : "white",
-                cursor: "pointer",
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
         
@@ -369,45 +312,26 @@ console.log(formData);
 
         {formData.enquiryMode === 'Store' && (
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block mb-2 text-white">Select Store Order</label>
+          <label className="block mb-2 text-text-color">Select Store Order</label>
           <Select
             options={storeOrderOptions}
             value={
               storeOrderOptions.find((option) => option.value === formData.storeOrderId) || null
             }
             onChange={handleSelectChange('storeOrderId')}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
             placeholder="Select a store order"
           />
         </div>
@@ -416,54 +340,35 @@ console.log(formData);
         <div>
         </div>
         <div className="w-full sm:w-1/2 p-4">
-          <label className="block mb-2 text-white">Enquiry Mode Details</label>
+          <label className="block mb-2 text-text-color">Enquiry Mode Details</label>
           <Select
             options={enquiryModeDetailsOptions}
             value={enquiryModeDetailsOptions.find(
               (option) => option.value === formData.enquiryModeDetails
             )}
             onChange={handleSelectChange('enquiryModeDetails')}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
 
         <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="float-left inline-block mb-2 text-white">Enquiry Notes </label>
+    <label className="float-left inline-block mb-2 text-text-color primary-text">Enquiry Notes </label>
     <textarea
       name="enquiryNotes"
-      className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+      className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
       placeholder="Enter additional notes about the enquiry"
       autoComplete="off"
       value={formData.enquiryNotes}
@@ -473,7 +378,7 @@ console.log(formData);
 </div>
 
 <div className="w-full sm:w-1/2 p-4">
-          <label className="block mb-2 text-white">Customer *</label>
+          <label className="block mb-2 text-text-color">Customer *</label>
           <Select
             options={customerData?.customers.map((customer) => ({
               value: customer._id,
@@ -495,47 +400,28 @@ console.log(formData);
                 customer: selectedOption?.value || "",
               }))
             }
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: "black",
-                borderColor: state.isFocused ? "white" : "#D3D3D3",
-                borderBottomWidth: "2px",
-                borderRadius: "0px",
-                height: "40px",
-                paddingLeft: "8px",
-                paddingRight: "8px",
-                color: "white",
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: "white",
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: "white",
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: "black",
-                color: "white",
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? "#007bff" : "black",
-                color: state.isSelected ? "black" : "white",
-                cursor: "pointer",
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
         </div>
 
         <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-    <label className="float-left inline-block mb-2 text-white">Customer Notes</label>
+    <label className="float-left inline-block mb-2 text-text-color primary-text">Customer Notes</label>
     <textarea
       name="customerNotes"
-      className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+      className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
       placeholder="Enter additional notes about the enquiry"
       autoComplete="off"
       value={formData.customerNotes}
@@ -547,17 +433,17 @@ console.log(formData);
  {/* Products */}
        {formData.enquiryModeDetails === 'productList' && <div className="w-full p-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-white">Products</label>
+            <label className="block w-full mb-2 text-text-color primary-text">Products</label>
             <button
               type="button"
-              className="bg-black text-white px-4 py-2 rounded"
+              className="bg-secondary-card text-text-color px-4 py-2 rounded"
               onClick={addProduct}
             >
               Add
             </button>
           </div>
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-            {formData.products.length === 0 && <p>No Products Added</p>}
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
+            {formData.products.length === 0 && <p className='text-text-color'>No Products Added</p>}
             {formData?.products?.map((product, index) => (
               <div key={index} className="flex mb-2 items-center">
                 {/* Product Dropdown */}
@@ -568,39 +454,19 @@ console.log(formData);
                   onChange={(selected) =>
                     handleProductChange(index, 'productId', selected.value)
                   }
-                  className="w-1/4"
-                  styles={{
-                    control: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: "black",
-                      borderColor: state.isFocused ? "white" : "#D3D3D3",
-                      borderBottomWidth: "2px",
-                      borderRadius: "0px",
-                      height: "40px",
-                      paddingLeft: "8px",
-                      paddingRight: "8px",
-                      color: "white",
-                    }),
-                    singleValue: (provided) => ({
-                      ...provided,
-                      color: "white",
-                    }),
-                    placeholder: (provided) => ({
-                      ...provided,
-                      color: "white",
-                    }),
-                    menu: (provided) => ({
-                      ...provided,
-                      backgroundColor: "black",
-                      color: "white",
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected ? "#007bff" : "black",
-                      color: state.isSelected ? "black" : "white",
-                      cursor: "pointer",
-                    }),
-                  }}
+                  classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
                 />
 
                 {/* Variant Dropdown */}
@@ -613,47 +479,26 @@ console.log(formData);
                   onChange={(selected) =>
                     handleProductChange(index, 'VariantId', selected.value)
                   }
-                  className="w-1/4 ml-2"
-                  isDisabled={!product.productId}
-                  styles={{
-                    control: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: "black",
-                      borderColor: state.isFocused ? "white" : "#D3D3D3",
-                      borderBottomWidth: "2px",
-                      borderRadius: "0px",
-                      height: "40px",
-                      paddingLeft: "8px",
-                      paddingRight: "8px",
-                      color: "white",
-                    }),
-                    singleValue: (provided) => ({
-                      ...provided,
-                      color: "white",
-                    }),
-                    placeholder: (provided) => ({
-                      ...provided,
-                      color: "white",
-                    }),
-                    menu: (provided) => ({
-                      ...provided,
-                      backgroundColor: "black",
-                      color: "white",
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected ? "#007bff" : "black",
-                      color: state.isSelected ? "black" : "white",
-                      cursor: "pointer",
-                    }),
-                  }}
+                  classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
                 />
 
                 {/* Quantity Input */}
                 <input
                   type="number"
                   name={`quantity-${index}`}
-                  className="block w-1/4 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white ml-2"
+                  className="block w-1/4 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
                   placeholder="Quantity"
                   min="1"
                   value={product.quantity}
@@ -665,7 +510,7 @@ console.log(formData);
                 {/* Remove Button */}
                 <button
                   type="button"
-                  className="bg-black text-white px-4 py-2 rounded ml-2"
+                  className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
                   onClick={() => removeProduct(index)}
                 >
                   Remove
@@ -680,7 +525,7 @@ console.log(formData);
 
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
             {isLoading ? 'Saving...' : 'Save'}
           </button>
           {/* {isError && <p className="text-red-500 mt-2">Error occurred while saving the customer.</p>}

@@ -10,7 +10,20 @@ export default {
     extend: {
       colors: {
         'nexa-orange': '#ff4a17',
-         'nexa-gray':"#3f3f3f"
+         'nexa-gray':"#3f3f3f",
+         'primary':"#fff8f6",
+         'secondary':"#eeeeee",
+         'sidebar':"#fffaf8",
+         'focus-color':"#000000",
+         'sidebar-text-color':"#737791",
+         'text-color':"#262b43",
+         'btn-text-color':"#ffffff",
+         'primary-card':"#ffffff",
+         'secondary-card':"#ffffff",
+         'primary-button-color':"#000000",
+         'secondary-button-color':"#3f3f3f",
+         'border':"#eeeeee",
+         'table-heading':"#fff8f6"
       }
     },
   },

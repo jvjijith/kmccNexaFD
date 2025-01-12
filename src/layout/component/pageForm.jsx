@@ -345,10 +345,10 @@ function PageForm({ pageDatas }) {
     if (draft && !publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-white px-4 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-4 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-white px-4 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-4 py-2 rounded-md">
             Publish
           </button>
         </div>
@@ -356,10 +356,10 @@ function PageForm({ pageDatas }) {
     } else if (draft && publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-white px-4 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-4 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-white px-4 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-4 py-2 rounded-md">
             Republish
           </button>
         </div>
@@ -367,7 +367,7 @@ function PageForm({ pageDatas }) {
     } else {
       return (
         <div className="flex justify-end">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-white px-4 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-4 py-2 rounded-md">
             Save Draft
           </button>
         </div>
@@ -398,25 +398,25 @@ function PageForm({ pageDatas }) {
       <div className="flex flex-wrap">
         {/* Slug */}
     <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Slug</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Slug</label>
       <input
         type="text"
         name="slug"
         value={pageData.slug}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>
 
     {/* Reference Name */}
     <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Reference Name</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Reference Name</label>
       <input
         type="text"
         name="referenceName"
         value={pageData.referenceName}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>
     </div>
@@ -424,7 +424,7 @@ function PageForm({ pageDatas }) {
     {/* Type */}
     <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
-            <label className="block mb-2 text-white">Select Page Type</label>
+            <label className="block mb-2 text-text-color">Select Page Type</label>
             <Select
               options={[
                 { value: 'normal', label: 'Normal' },
@@ -443,7 +443,7 @@ function PageForm({ pageDatas }) {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                  borderColor: state.isFocused ? 'white' : 'black',
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px',
@@ -466,8 +466,8 @@ function PageForm({ pageDatas }) {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer'
                 })
               }}
@@ -476,79 +476,79 @@ function PageForm({ pageDatas }) {
 
           {/* Internal Type */}
     {(pageData.type==="internal") && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Internal Type</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Internal Type</label>
       <input
         type="text"
         name="internalType"
         value={pageData.internalType}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>}
 
     {/* External URL */}
     {(pageData.type==="external") && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">External URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">External URL</label>
       <input
         type="text"
         name="externalUrl"
         value={pageData.externalUrl}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>}
 
     {/* Banner Image URL */}
     {((pageData.type!=="external") && (pageData.type!=="internal")) && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Banner Image URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Banner Image URL</label>
       <input
         type="text"
         name="bannerImage"
         value={pageData.bannerImage}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>}
 
         {/* Banner Image URL */}
     {((pageData.type==="external") || (pageData.type==="internal")) && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Banner Image URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Banner Image URL</label>
       <input
         type="text"
         name="bannerImage"
         value={pageData.bannerImage}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>}
 
  {/* Portrait Image URL */}
  {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Portrait Image URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Portrait Image URL</label>
       <input
         type="text"
         name="portraitImage"
         value={pageData.portraitImage}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>}
 
      {/* Landscape Image URL */}
      {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Landscape Image URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Landscape Image URL</label>
       <input
         type="text"
         name="landscapeImage"
         value={pageData.landscapeImage}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>}
 
     {/* <div className="mb-4"> */}
     <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Available Apps</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Available Apps</label>
           <Select
             isMulti
             options={appData?.apps?.map((app) => ({
@@ -565,7 +565,7 @@ function PageForm({ pageDatas }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                borderColor: state.isFocused ? 'white' : 'black',
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px',
@@ -588,8 +588,8 @@ function PageForm({ pageDatas }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+                color: state.isSelected ? '#f8f9fa' : 'black',
                 cursor: 'pointer',
               })
             }}
@@ -599,7 +599,7 @@ function PageForm({ pageDatas }) {
 
             {/* Keywords */}
     <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Keywords</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Keywords</label>
       <input
         type="text"
         name="keywords"
@@ -610,36 +610,36 @@ function PageForm({ pageDatas }) {
             keywords: e.target.value.split(",").map((kw) => kw.trim()),
           }))
         }
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>
 
      {/* Canonical URL */}
      {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Canonical URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Canonical URL</label>
       <input
         type="text"
         name="canonicalUrl"
         value={pageData.canonicalUrl}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>}
 
          {/* OG Image */}
          {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">OG Image</label>
+      <label className="block w-full mb-2 text-text-color primary-text">OG Image</label>
       <input
         type="text"
         name="ogImage"
         value={pageData.ogImage}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>}
 
   <div className="w-full sm:w-1/2 p-4">
-    <label className="block mb-2 text-white">Select Twitter Card Type</label>
+    <label className="block mb-2 text-text-color">Select Twitter Card Type</label>
     <Select
       options={[
         { value: 'summary', label: 'Summary' },
@@ -657,8 +657,8 @@ function PageForm({ pageDatas }) {
       styles={{
         control: (provided, state) => ({
           ...provided,
-          backgroundColor: 'black',
-          borderColor: state.isFocused ? 'white' : '#D3D3D3',
+          backgroundColor: '#f8f9fa',
+          borderColor: state.isFocused ? 'white' : 'black',
           borderBottomWidth: '2px',
           borderRadius: '0px',
           height: '40px',
@@ -668,21 +668,21 @@ function PageForm({ pageDatas }) {
         }),
         singleValue: (provided) => ({
           ...provided,
-          color: 'white',
+          color: 'black',
         }),
         placeholder: (provided) => ({
           ...provided,
-          color: 'white',
+          color: 'black',
         }),
         menu: (provided) => ({
           ...provided,
-          backgroundColor: 'black',
-          color: 'white',
+          backgroundColor: '#f8f9fa',
+          color: 'black',
         }),
         option: (provided, state) => ({
           ...provided,
-          backgroundColor: state.isSelected ? '#007bff' : 'black',
-          color: state.isSelected ? 'black' : 'white',
+          backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+          color: state.isSelected ? '#f8f9fa' : 'black',
           cursor: 'pointer',
         }),
       }}
@@ -691,13 +691,13 @@ function PageForm({ pageDatas }) {
 
  {/* Twitter Creator */}
  {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Twitter Creator</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Twitter Creator</label>
       <input
         type="text"
         name="twitterCreator"
         value={pageData.twitterCreator}
         onChange={handleChange}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
       />
     </div>}
 
@@ -705,8 +705,8 @@ function PageForm({ pageDatas }) {
 
      {/* Number Items */}
      <div className="mb-4">
-          <label className="block w-full mb-2 text-white">Number of Items (Web, Android, iOS)</label>
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+          <label className="block w-full mb-2 text-text-color primary-text">Number of Items (Web, Android, iOS)</label>
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
             <div className="flex gap-4">
               <input
                 type="number"
@@ -714,7 +714,7 @@ function PageForm({ pageDatas }) {
                 onChange={(e) =>
                   handleInputChange('numberItems', { ...pageData.numberItems, web: e.target.value })
                 }
-                className="block w-1/3 px-3 py-2 text-white bg-black border rounded"
+                className="block w-1/3 px-3 py-2 text-text-color secondary-card border rounded"
                 placeholder="Web"
               />
               <input
@@ -723,7 +723,7 @@ function PageForm({ pageDatas }) {
                 onChange={(e) =>
                   handleInputChange('numberItems', { ...pageData.numberItems, android: e.target.value })
                 }
-                className="block w-1/3 px-3 py-2 text-white bg-black border rounded"
+                className="block w-1/3 px-3 py-2 text-text-color secondary-card border rounded"
                 placeholder="Android"
               />
               <input
@@ -732,7 +732,7 @@ function PageForm({ pageDatas }) {
                 onChange={(e) =>
                   handleInputChange('numberItems', { ...pageData.numberItems, iOS: e.target.value })
                 }
-                className="block w-1/3 px-3 py-2 text-white bg-black border rounded"
+                className="block w-1/3 px-3 py-2 text-text-color secondary-card border rounded"
                 placeholder="iOS"
               />
             </div>
@@ -743,13 +743,13 @@ function PageForm({ pageDatas }) {
  {/* Titles */}
  <div className="mb-4">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-white">Titles</label>
-            <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addTitle}>
+            <label className="block w-full mb-2 text-text-color primary-text">Titles</label>
+            <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTitle}>
               Add
             </button>
           </div>
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-            {pageData.title.length === 0 && <p>No Titles added</p>}
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
+            {pageData.title.length === 0 && <p className='text-text-color'>No Titles added</p>}
             {pageData.title?.map((title, index) => (
               <div className="flex gap-4 mb-2" key={index}>
                 <Autosuggest
@@ -763,11 +763,11 @@ function PageForm({ pageDatas }) {
                     value: title.lanCode,
                     onChange: (e, { newValue }) =>
                       handleNestedChange('title', index, 'lanCode', newValue),
-                    className: 'block w-full px-3 py-2 text-white bg-black border rounded',
+                    className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded',
                   }}
                   theme={{
                     container: 'relative',
-                    suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+                    suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
                     suggestion: 'p-2 cursor-pointer',
                     suggestionHighlighted: 'bg-blue-500 text-black',
                   }}
@@ -776,12 +776,12 @@ function PageForm({ pageDatas }) {
                   type="text"
                   value={title.title}
                   onChange={(e) => handleNestedChange('title', index, 'title', e.target.value)}
-                  className="block w-full px-3 py-2 text-white bg-black border rounded"
+                  className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
                   placeholder="Title Name"
                 />
                 <button
                   type="button"
-                  className="bg-black text-white px-4 py-2 rounded ml-2"
+                  className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
                   onClick={() => removeTitle(index)}
                 >
                   Remove
@@ -795,11 +795,11 @@ function PageForm({ pageDatas }) {
     {/* Meta Descriptions */}
 <div className="mb-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-white">Meta Descriptions</label>
-    <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addMetaDescription}>Add</button>
+    <label className="block w-full mb-2 text-text-color primary-text">Meta Descriptions</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addMetaDescription}>Add</button>
   </div>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-    {pageData.metaDescription.length === 0 && <p>No Meta Descriptions added</p>}
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+    {pageData.metaDescription.length === 0 && <p className='text-text-color'>No Meta Descriptions added</p>}
     {pageData.metaDescription.map((description, index) => (
       <div className="flex gap-4 mb-2" key={index}>
         <Autosuggest
@@ -813,11 +813,11 @@ function PageForm({ pageDatas }) {
             value: description.lanCode,
             onChange: (e, { newValue }) =>
               handleNestedChange('metaDescription', index, 'lanCode', newValue),
-            className: 'block w-full px-3 py-2 text-white bg-black border rounded',
+            className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded',
           }}
           theme={{
             container: 'relative',
-            suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+            suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
             suggestion: 'p-2 cursor-pointer',
             suggestionHighlighted: 'bg-blue-500 text-black',
           }}
@@ -826,12 +826,12 @@ function PageForm({ pageDatas }) {
           type="text"
           value={description.description}
           onChange={(e) => handleNestedChange('metaDescription', index, 'description', e.target.value)}
-          className="block w-full px-3 py-2 text-white bg-black border rounded"
+          className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           placeholder="Meta Description"
         />
         <button
           type="button"
-          className="bg-black text-white px-4 py-2 rounded ml-2"
+          className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
           onClick={() => removeMetaDescription(index)}
         >
           Remove
@@ -844,11 +844,11 @@ function PageForm({ pageDatas }) {
 {/* OG Titles */}
 <div className="mb-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-white">OG Titles</label>
-    <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addOgTitle}>Add</button>
+    <label className="block w-full mb-2 text-text-color primary-text">OG Titles</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addOgTitle}>Add</button>
   </div>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-    {pageData.ogTitle.length === 0 && <p>No OG Titles added</p>}
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+    {pageData.ogTitle.length === 0 && <p className='text-text-color'>No OG Titles added</p>}
     {pageData.ogTitle?.map((ogTitle, index) => (
       <div className="flex gap-4 mb-2" key={index}>
         <Autosuggest
@@ -862,11 +862,11 @@ function PageForm({ pageDatas }) {
             value: ogTitle.lanCode,
             onChange: (e, { newValue }) =>
               handleNestedChange('ogTitle', index, 'lanCode', newValue),
-            className: 'block w-full px-3 py-2 text-white bg-black border rounded'
+            className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded'
           }}
           theme={{
             container: 'relative',
-            suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+            suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
             suggestion: 'p-2 cursor-pointer',
             suggestionHighlighted: 'bg-blue-500 text-black'
           }}
@@ -875,12 +875,12 @@ function PageForm({ pageDatas }) {
           type="text"
           value={ogTitle.title}
           onChange={(e) => handleNestedChange('ogTitle', index, 'title', e.target.value)}
-          className="block w-full px-3 py-2 text-white bg-black border rounded"
+          className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           placeholder="Open Graph Title"
         />
         <button
           type="button"
-          className="bg-black text-white px-4 py-2 rounded ml-2"
+          className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
           onClick={() => removeOgTitle(index)}
         >
           Remove
@@ -893,11 +893,11 @@ function PageForm({ pageDatas }) {
 {/* OG Descriptions */}
 <div className="mb-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-white">OG Descriptions</label>
-    <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addOgDescription}>Add</button>
+    <label className="block w-full mb-2 text-text-color primary-text">OG Descriptions</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addOgDescription}>Add</button>
   </div>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-    {pageData.ogDescription.length === 0 && <p>No OG Descriptions added</p>}
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+    {pageData.ogDescription.length === 0 && <p className='text-text-color'>No OG Descriptions added</p>}
     {pageData.ogDescription?.map((desc, index) => (
       <div key={index} className="flex gap-4 mb-2">
         <Autosuggest
@@ -911,11 +911,11 @@ function PageForm({ pageDatas }) {
             value: desc.lanCode,
             onChange: (e, { newValue }) =>
               handleNestedChange('ogDescription', index, 'lanCode', newValue),
-            className: 'block w-full px-3 py-2 text-white bg-black border rounded'
+            className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded'
           }}
           theme={{
             container: 'relative',
-            suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+            suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
             suggestion: 'p-2 cursor-pointer',
             suggestionHighlighted: 'bg-blue-500 text-black'
           }}
@@ -924,12 +924,12 @@ function PageForm({ pageDatas }) {
           type="text"
           value={desc.description}
           onChange={(e) => handleNestedChange('ogDescription', index, 'description', e.target.value)}
-          className="block w-full px-3 py-2 text-white bg-black border rounded"
+          className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           placeholder="Description"
         />
         <button
           type="button"
-          className="bg-black text-white px-4 py-2 rounded ml-2"
+          className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
           onClick={() => removeOgDescription(index)}
         >
           Remove
@@ -941,7 +941,7 @@ function PageForm({ pageDatas }) {
 
  {/* Select Dropdown for Containers */}
  <div className="w-full p-4">
-          <label className="block w-full mb-2 text-white">Items</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Items</label>
           <Select
             options={containerData?.containers.map((container) => ({
               value: container._id,
@@ -955,7 +955,7 @@ function PageForm({ pageDatas }) {
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
+                borderColor: state.isFocused ? 'white' : 'black',
                 borderBottomWidth: '2px',
                 borderRadius: '0px',
                 height: '40px',
@@ -978,7 +978,7 @@ function PageForm({ pageDatas }) {
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
+                backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
                 color: 'white',
                 cursor: 'pointer',
               }),
@@ -987,7 +987,7 @@ function PageForm({ pageDatas }) {
 
           {/* Drag-and-Drop Items */}
           {pageData.items.length !== 0 && (
-            <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+            <div className="notes-container p-4 bg-secondary-card rounded-lg">
               <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                 <SortableContext items={pageData.items.map((_, index) => index)}>
                   {pageData.items.map((item, index) => (

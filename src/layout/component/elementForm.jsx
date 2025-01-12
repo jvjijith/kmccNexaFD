@@ -207,10 +207,10 @@ function ElementForm({ elementsDatas }) {
     if (elementsData.draft && !elementsData.publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-nexa-orange text-white px-6 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-white px-6 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-6 py-2 rounded-md">
             Publish
           </button>
         </div>
@@ -218,10 +218,10 @@ function ElementForm({ elementsDatas }) {
     } else if (!elementsData.draft && elementsData.publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-nexa-orange text-white px-6 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-white px-6 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-6 py-2 rounded-md">
             Republish
           </button>
         </div>
@@ -229,7 +229,7 @@ function ElementForm({ elementsDatas }) {
     } else {
       return (
         <div className="flex justify-end">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded-md">
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Save Draft
           </button>
         </div>
@@ -399,7 +399,7 @@ console.log("elementsData",elementsData);
         <div className="w-full sm:w-1/2 p-4">
       {/* Component Type as a Dropdown */}
       <div className="mb-4">
-        <label className="block w-full mb-2 text-white">Component Type</label>
+        <label className="block w-full mb-2 text-text-color primary-text">Component Type</label>
         <Select
           options={componentTypeOptions}
           value={componentTypeOptions.find(option => option.value === elementsData.componentType) || null}
@@ -407,46 +407,31 @@ console.log("elementsData",elementsData);
             handleInputChange('componentType', selectedOption.value);
             setChangeComponentType(true);
           }}
-          styles={{
-            control: (provided, state) => ({
-              ...provided,
-              backgroundColor: 'black',
-              borderColor: state.isFocused ? 'white' : '#D3D3D3',
-              borderBottomWidth: '2px',
-              borderRadius: '0px',
-              height: '40px',
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              color: 'white'
-            }),
-            singleValue: (provided) => ({
-              ...provided,
-              color: 'white',
-            }),
-            menu: (provided) => ({
-              ...provided,
-              backgroundColor: 'black',
-              color: 'white',
-            }),
-            option: (provided, state) => ({
-              ...provided,
-              backgroundColor: state.isSelected ? '#007bff' : 'black',
-              color: state.isSelected ? 'black' : 'white',
-              cursor: 'pointer'
-            })
-          }}
+          classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
         />
       </div>
     </div>
         {/* Reference Name */}
         <div className="w-full sm:w-1/2 p-4">
         <div className="mb-4">
-          <label className="block w-full mb-2 text-white">Reference Name</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Reference Name</label>
           <input
             type="text"
             value={elementsData.referenceName}
             onChange={(e) => handleInputChange('referenceName', e.target.value)}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
           </div>
         </div>
@@ -457,7 +442,7 @@ console.log("elementsData",elementsData);
   
   <div className="w-full sm:w-1/2 p-4">
   <div className="mb-4">
-      <label className="block w-full mb-2 text-white">Availability</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Availability</label>
       {/* {elementsData?.availability?.map((avail, index) => ( */}
         {/* <div key={index} className="mb-2"> */}
         <Select
@@ -482,38 +467,19 @@ console.log("elementsData",elementsData);
       label: appData?.apps?.find((app) => app._id === item.appId)?.title || item.appId,
     }))}
     isLoading={isAppLoading}
-    styles={{
-      control: (provided, state) => ({
-        ...provided,
-        backgroundColor: 'black',
-        borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
-        borderBottomWidth: '2px',
-        borderRadius: '0px',
-        height: '40px', // h-10: 2.5rem = 40px
-        paddingLeft: '8px', // px-2: 0.5rem = 8px
-        paddingRight: '8px', // px-2: 0.5rem = 8px
-        color: 'white',
-      }),
-      singleValue: (provided) => ({
-        ...provided,
-        color: 'white',
-      }),
-      placeholder: (provided) => ({
-        ...provided,
-        color: 'white',
-      }),
-      menu: (provided) => ({
-        ...provided,
-        backgroundColor: 'black',
-        color: 'white',
-      }),
-      option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-        color: state.isSelected ? 'black' : 'white',
-        cursor: 'pointer',
-      }),
-    }}
+    classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
   />
 
 
@@ -524,12 +490,12 @@ console.log("elementsData",elementsData);
   {/* View Text */}
   <div className="w-full sm:w-1/2 p-4">
         <div className="mb-4">
-          <label className="block w-full mb-2 text-white">View Text</label>
+          <label className="block w-full mb-2 text-text-color primary-text">View Text</label>
           <input
             type="text"
             value={elementsData.viewText}
             onChange={(e) => handleInputChange('viewText', e.target.value)}
-            className="block w-full px-3 py-2 text-white bg-black border rounded"
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
           </div>
         </div>
@@ -540,40 +506,25 @@ console.log("elementsData",elementsData);
 {/* View All */}
 <div className="w-full sm:w-1/2 p-4">
           <div className="mb-4">
-            <label className="block w-full mb-2 text-white">View All</label>
+            <label className="block w-full mb-2 text-text-color primary-text">View All</label>
             <Select
               options={pageOptions}  // Dropdown options populated with page names
               value={pageOptions.find(option => option.value === elementsData.viewAll)}  // Set the current selected value
               onChange={handlePageSelection}  // Handle selection change
               className="block w-full"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer',
-              }),
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
             />
           </div>
         </div>
@@ -582,7 +533,7 @@ console.log("elementsData",elementsData);
  {/* Hover Effect */}
  {/* <div className="flex flex-wrap mb-4"> */}
  <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Hover Effect</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Hover Effect</label>
         <Select
           options={[
             { value: 'none', label: 'None' },
@@ -595,34 +546,19 @@ console.log("elementsData",elementsData);
           value={{ value: elementsData.hoverEffect, label: elementsData.hoverEffect }}
           onChange={(selectedOption) => handleInputChange('hoverEffect', selectedOption.value )}
           placeholder="Hover Effect"
-          styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
-                  cursor: 'pointer',
-                }),
-              }}
+          classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
         />
  </div>
         </div>
@@ -630,10 +566,10 @@ console.log("elementsData",elementsData);
         {/* Audio URL */}
         {/* <div className="flex flex-wrap mb-4">
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Audio URL</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Audio URL</label>
             <input
               type="text"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder="Audio URL"
               value={elementsData.audioUrl}
               onChange={(e) => handleInputChange('audioUrl', e.target.value)}
@@ -644,10 +580,10 @@ console.log("elementsData",elementsData);
         {/* Video URL */}
         {/* <div className="flex flex-wrap mb-4"> */}
           {/* <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Video URL</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Video URL</label>
             <input
               type="text"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder="Video URL"
               value={elementsData.videoUrl}
               onChange={(e) => handleInputChange('videoUrl', e.target.value)}
@@ -659,10 +595,10 @@ console.log("elementsData",elementsData);
 
           {(elementsData.componentType === "image" )&& <div className="flex flex-wrap mb-4">
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Image URL</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Image URL</label>
             <input
               type="text"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder="Image URL"
               value={elementsData.imageUrl}
               onChange={(e) => handleInputChange('imageUrl', e.target.value)}
@@ -673,16 +609,16 @@ console.log("elementsData",elementsData);
 
 {/* Swiper Options Settings */}
 {(elementsData.componentType === "swimlane" )&& <div className="mb-4">
-      <label className="block w-full mb-2 text-white">Swiper Options</label>
-      <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+      <label className="block w-full mb-2 text-text-color primary-text">Swiper Options</label>
+      <div className="notes-container p-4 bg-secondary-card rounded-lg">
 
         {/* Slides Per View */}
         <div className="flex flex-wrap mb-4">
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Swiper Options</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Swiper Options</label>
             <input
               type="number"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder="Slides Per View"
               value={elementsData.swiperOptions.slidesPerView}
               onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, slidesPerView: e.target.value })}
@@ -691,7 +627,7 @@ console.log("elementsData",elementsData);
 
           {/* Swiper Type Dropdown */}
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Swiper Options</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Swiper Options</label>
           <Select
   options={[
     { value: 'portrait', label: 'Portrait' },
@@ -707,7 +643,7 @@ console.log("elementsData",elementsData);
     control: (provided, state) => ({
       ...provided,
       backgroundColor: 'black',
-      borderColor: state.isFocused ? 'white' : '#D3D3D3',
+      borderColor: state.isFocused ? 'white' : 'black',
       borderBottomWidth: '2px',
       borderRadius: '0px',
       height: '40px',
@@ -726,8 +662,8 @@ console.log("elementsData",elementsData);
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isSelected ? '#007bff' : 'black',
-      color: state.isSelected ? 'black' : 'white',
+      backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+      color: state.isSelected ? '#f8f9fa' : 'black',
       cursor: 'pointer',
     }),
   }}
@@ -739,10 +675,10 @@ console.log("elementsData",elementsData);
         {/* Space Between */}
         <div className="flex flex-wrap mb-4">
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Space Between</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Space Between</label>
             <input
               type="number"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder="Space Between"
               value={elementsData.swiperOptions.spaceBetween}
               onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, spaceBetween: e.target.value })}
@@ -751,10 +687,10 @@ console.log("elementsData",elementsData);
 
           {/* Autoplay Delay */}
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Autoplay Delay</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Autoplay Delay</label>
             <input
               type="number"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder="Autoplay Delay"
               value={elementsData.swiperOptions.autoplay?.delay}
               onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, autoplay: { ...elementsData.swiperOptions.autoplay, delay: e.target.value } })}
@@ -765,10 +701,10 @@ console.log("elementsData",elementsData);
         {/* Speed */}
         <div className="flex flex-wrap mb-4">
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Speed</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Speed</label>
             <input
               type="number"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder="Speed"
               value={elementsData.swiperOptions.speed}
               onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, speed: e.target.value })}
@@ -777,10 +713,10 @@ console.log("elementsData",elementsData);
 
           {/* Effect */}
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-white">Effect</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Effect</label>
             <input
               type="text"
-              className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               placeholder="Effect"
               value={elementsData.swiperOptions.effect}
               onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, effect: e.target.value })}
@@ -791,29 +727,29 @@ console.log("elementsData",elementsData);
         {/* Loop Toggle */}
         <div className="flex flex-wrap mb-4">
           <div className="w-full sm:w-1/2 p-4">
-            <label className="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer primary-text">
               <input
                 type="checkbox"
                 className="sr-only peer"
                 checked={elementsData.swiperOptions.loop}
                 onChange={() => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, loop: !elementsData.swiperOptions.loop })}
               />
-              <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-              <span className="ms-3 text-md font-medium text-white">Loop</span>
+              <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+              <span className="ms-3 text-md font-medium text-text-color">Loop</span>
             </label>
           </div>
 
           {/* Disable on Interaction */}
           <div className="w-full sm:w-1/2 p-4">
-            <label className="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer primary-text">
               <input
                 type="checkbox"
                 className="sr-only peer"
                 checked={elementsData.swiperOptions.autoplay?.disableOnInteraction}
                 onChange={() => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, autoplay: { ...elementsData.swiperOptions.autoplay, disableOnInteraction: !elementsData.swiperOptions.autoplay?.disableOnInteraction } })}
               />
-              <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-              <span className="ms-3 text-md font-medium text-white">Disable on Interaction</span>
+              <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+              <span className="ms-3 text-md font-medium text-text-color">Disable on Interaction</span>
             </label>
           </div>
         </div>
@@ -824,85 +760,55 @@ console.log("elementsData",elementsData);
 
     {/* Card Options Settings */}
 {(elementsData.componentType === "card")&&<div className="mb-4">
-  <label className="block w-full mb-2 text-white">Card Options</label>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+  <label className="block w-full mb-2 text-text-color primary-text">Card Options</label>
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
     
     {/* Image Position Dropdown */}
     <div className="flex flex-wrap mb-4">
       <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Image Position</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Image Position</label>
         <Select
           options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }, { value: 'none', label: 'None' }]}
           value={{ value: elementsData.cardOptions.imagePosition, label: elementsData.cardOptions.imagePosition }}
           onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, imagePosition: selectedOption.value })}
           placeholder="Image Position"
-          styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
-                  cursor: 'pointer',
-                }),
-              }}
+          classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
         />
       </div>
 
       {/* Title Position Dropdown */}
       <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Title Position</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Title Position</label>
         <Select
           options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }, { value: 'none', label: 'None' }]}
           value={{ value: elementsData.cardOptions.titlePosition, label: elementsData.cardOptions.titlePosition }}
           onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, titlePosition: selectedOption.value })}
           placeholder="Title Position"
-          styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
-                  cursor: 'pointer',
-                }),
-              }}
+          classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
         />
       </div>
     </div>
@@ -910,79 +816,49 @@ console.log("elementsData",elementsData);
     {/* Description Position Dropdown */}
     <div className="flex flex-wrap mb-4">
       <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Description Position</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Description Position</label>
         <Select
           options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }, { value: 'none', label: 'None' }]}
           value={{ value: elementsData.cardOptions.descriptionPosition, label: elementsData.cardOptions.descriptionPosition }}
           onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, descriptionPosition: selectedOption.value })}
           placeholder="Description Position"
-          styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
-                  cursor: 'pointer',
-                }),
-              }}
+          classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
         />
       </div>
 
       {/* Action Button Position Dropdown */}
       <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Action Button Position</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Action Button Position</label>
         <Select
           options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'inline', label: 'Inline' }, { value: 'hidden', label: 'Hidden' }, { value: 'none', label: 'None' }]}
           value={{ value: elementsData.cardOptions.actionButtonPosition, label: elementsData.cardOptions.actionButtonPosition }}
           onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonPosition: selectedOption.value })}
           placeholder="Action Button Position"
-          styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black',
-                  color: state.isSelected ? 'black' : 'white',
-                  cursor: 'pointer',
-                }),
-              }}
+          classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
         />
       </div>
     </div>
@@ -990,10 +866,10 @@ console.log("elementsData",elementsData);
     {/* Action Button Text */}
     <div className="flex flex-wrap mb-4">
       <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Action Button Text</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Action Button Text</label>
         <input
           type="text"
-          className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+          className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
           placeholder="Action Button Text"
           value={elementsData.cardOptions.actionButtonText}
           onChange={(e) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonText: e.target.value })}
@@ -1002,10 +878,10 @@ console.log("elementsData",elementsData);
 
       {/* Action Button URL */}
       <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Action Button URL</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Action Button URL</label>
         <input
           type="text"
-          className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+          className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
           placeholder="Action Button URL"
           value={elementsData.cardOptions.actionButtonUrl}
           onChange={(e) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonUrl: e.target.value })}
@@ -1016,10 +892,10 @@ console.log("elementsData",elementsData);
     {/* Card Aspect Ratio */}
     <div className="flex flex-wrap mb-4">
       <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-white">Card Aspect Ratio</label>
+      <label className="block w-full mb-2 text-text-color primary-text">Card Aspect Ratio</label>
         <input
           type="text"
-          className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+          className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
           placeholder="Card Aspect Ratio"
           value={elementsData.cardOptions.cardAspectRatio}
           onChange={(e) => handleInputChange('cardOptions', { ...elementsData.cardOptions, cardAspectRatio: e.target.value })}
@@ -1034,29 +910,29 @@ console.log("elementsData",elementsData);
 
         {/* Number Items */}
         <div className="mb-4">
-          <label className="block w-full mb-2 text-white">Number of Items (Web, Android, iOS)</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Number of Items (Web, Android, iOS)</label>
           
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
           <div className="flex gap-4">
             <input
               type="number"
               value={elementsData.numberItems.web}
               onChange={(e) => handleInputChange('numberItems', { ...elementsData.numberItems, web: e.target.value })}
-              className="block w-1/3 px-3 py-2 text-white bg-black border rounded"
+              className="block w-1/3 px-3 py-2 text-text-color secondary-card border rounded"
               placeholder="Web"
             />
             <input
               type="number"
               value={elementsData.numberItems.android}
               onChange={(e) => handleInputChange('numberItems', { ...elementsData.numberItems, android: e.target.value })}
-              className="block w-1/3 px-3 py-2 text-white bg-black border rounded"
+              className="block w-1/3 px-3 py-2 text-text-color secondary-card border rounded"
               placeholder="Android"
             />
             <input
               type="number"
               value={elementsData.numberItems.iOS}
               onChange={(e) => handleInputChange('numberItems', { ...elementsData.numberItems, iOS: e.target.value })}
-              className="block w-1/3 px-3 py-2 text-white bg-black border rounded"
+              className="block w-1/3 px-3 py-2 text-text-color secondary-card border rounded"
               placeholder="iOS"
             />
           </div>
@@ -1066,11 +942,11 @@ console.log("elementsData",elementsData);
         {/* Titles */}
         <div className="mb-4">
   <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-white">Titles</label>
-    <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addTitle}>Add</button>
+    <label className="block w-full mb-2 text-text-color primary-text">Titles</label>
+    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTitle}>Add</button>
   </div>
-  <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-    {elementsData.title.length === 0 && <p>No Titles added</p>}
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+    {elementsData.title.length === 0 && <p className='text-text-color'>No Titles added</p>}
     {elementsData.title?.map((title, index) => (
       <div className="flex gap-4 mb-2">
         <Autosuggest
@@ -1084,11 +960,11 @@ console.log("elementsData",elementsData);
     value: title.lanCode,
     onChange: (e, { newValue }) =>
       handleNestedChange('title', index, 'lanCode', newValue),
-    className: 'block w-full px-3 py-2 text-white bg-black border rounded'
+    className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded'
   }}
   theme={{
     container: 'relative', // Make sure the container is relatively positioned
-    suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+    suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
     suggestion: 'p-2 cursor-pointer',
     suggestionHighlighted: 'bg-blue-500 text-black'
   }}
@@ -1097,13 +973,13 @@ console.log("elementsData",elementsData);
   type="text"
   value={title.name}
   onChange={(e) => handleNestedChange('title', index, 'name', e.target.value)}
-  className="block w-full px-3 py-2 text-white bg-black border rounded"
+  className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
   placeholder="Title Name"
 />
 
         <button
           type="button"
-          className="bg-black text-white px-4 py-2 rounded ml-2"
+          className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
           onClick={() => removeTitle(index)}
         >
           Remove
@@ -1117,11 +993,11 @@ console.log("elementsData",elementsData);
         {/* Description */}
         <div className="mb-4">
 <div className="flex items-center justify-between mb-4">
-  <label className="block w-full mb-2 text-white">Description</label>
-  <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addDescription}>Add</button>
+  <label className="block w-full mb-2 text-text-color primary-text">Description</label>
+  <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addDescription}>Add</button>
 </div>
-<div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-  {elementsData.description.length === 0 && <p>No Descriptions added</p>}
+<div className="notes-container p-4 bg-secondary-card rounded-lg">
+  {elementsData.description.length === 0 && <p className='text-text-color'>No Descriptions added</p>}
   {elementsData.description?.map((desc, index) => (
     <div className="flex gap-4 mb-2" key={index}>
       <Autosuggest
@@ -1135,11 +1011,11 @@ console.log("elementsData",elementsData);
     value: desc.lanCode,
     onChange: (e, { newValue }) =>
       handleNestedChange('description', index, 'lanCode', newValue),
-    className: 'block w-full px-3 py-2 text-white bg-black border rounded'
+    className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded'
   }}
   theme={{
     container: 'relative', // Make sure the container is relatively positioned
-    suggestionsContainer: 'absolute w-full bg-black rounded-md z-10',
+    suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
     suggestion: 'p-2 cursor-pointer',
     suggestionHighlighted: 'bg-blue-500 text-black'
   }}
@@ -1148,12 +1024,12 @@ console.log("elementsData",elementsData);
         type="text"
         value={desc.paragraph}
         onChange={(e) => handleNestedChange('description', index, 'paragraph', e.target.value)}
-        className="block w-full px-3 py-2 text-white bg-black border rounded"
+        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
         placeholder="Description"
       />
       <button
         type="button"
-        className="bg-black text-white px-4 py-2 rounded ml-2"
+        className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
         onClick={() => removeDescription(index)}
       >
         Remove
@@ -1166,11 +1042,11 @@ console.log("elementsData",elementsData);
         {/* Items */}
         <div className="mb-4">
         <div className="flex items-center justify-between mb-4">
-      <label className="block w-full mb-2 text-white">Items</label>
-      <button type="button" onClick={handleAddItem} className="bg-black text-white px-4 py-2 rounded">Add</button>
+      <label className="block w-full mb-2 text-text-color primary-text">Items</label>
+      <button type="button" onClick={handleAddItem} className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded">Add</button>
       </div>
-      <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-          {(elementsData?.items?.length===0)&&<p>No Items added</p>}
+      <div className="notes-container p-4 bg-secondary-card rounded-lg">
+          {(elementsData?.items?.length===0)&&<p className='text-text-color'>No Items added</p>}
       {elementsData.items.map((item, index) => (
         <div key={index} className="flex gap-4 mb-2">
           <Select
@@ -1189,7 +1065,7 @@ console.log("elementsData",elementsData);
     control: (provided, state) => ({
       ...provided,
       backgroundColor: 'black',
-      borderColor: state.isFocused ? 'white' : '#D3D3D3',
+      borderColor: state.isFocused ? 'white' : 'black',
       borderBottomWidth: '2px',
       borderRadius: '0px',
       height: '40px',
@@ -1208,8 +1084,8 @@ console.log("elementsData",elementsData);
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isSelected ? '#007bff' : 'black',
-      color: state.isSelected ? 'black' : 'white',
+      backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
+      color: state.isSelected ? '#f8f9fa' : 'black',
       cursor: 'pointer',
     }),
   }}
@@ -1220,39 +1096,24 @@ console.log("elementsData",elementsData);
             value={getItemOptions(item.itemType)?.find(option => option.value === item.itemId)}
             onChange={(selectedOption) => handleNestedChange('items', index, 'itemId', selectedOption.value)}
             className="block w-1/2"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : '#D3D3D3',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? '#007bff' : 'black',
-                color: state.isSelected ? 'black' : 'white',
-                cursor: 'pointer'
-              })
-            }}
+            classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
+      }}
           />
            <button
            type="button"
             onClick={() => handleRemoveItem(index)}
-            className="bg-black text-white px-4 py-2 rounded"
+            className="bg-secondary-card text-text-color px-4 py-2 rounded"
           >
             Remove
           </button>
@@ -1266,9 +1127,9 @@ console.log("elementsData",elementsData);
         <SortableContext items={elementsData.items.map((_, index) => index)}>
           <table className="mt-4 w-full">
             <thead>
-              <tr className="border-gray-700 bg-black text-white">
-                <th className="border-gray-700 bg-black text-white rounded-l-lg">Item Type</th>
-                <th className="border-gray-700 bg-black text-white rounded-r-lg">Item ID</th>
+              <tr className="border-gray-700 bg-secondary-card text-text-color">
+                <th className="border-gray-700 bg-secondary-card text-text-color rounded-l-lg">Item Type</th>
+                <th className="border-gray-700 bg-secondary-card text-text-color rounded-r-lg">Item ID</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -1289,30 +1150,30 @@ console.log("elementsData",elementsData);
         {/* With Text */}
         <div className="flex flex-wrap mb-4">
           <div className="w-full sm:w-1/2 p-4">
-            <label className="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer primary-text">
               <input
                 type="checkbox"
                 className="sr-only peer"
                 checked={elementsData.withText}
                 onChange={() => handleInputChange('withText', !elementsData.withText )}
               />
-              <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-              <span className="ms-3 text-md font-medium text-white">With Text</span>
+              <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+              <span className="ms-3 text-md font-medium text-text-color">With Text</span>
             </label>
           </div>
 
 
           {/* With Description */}
           <div className="w-full sm:w-1/2 p-4">
-            <label className="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex items-center cursor-pointer primary-text">
               <input
                 type="checkbox"
                 className="sr-only peer"
                 checked={elementsData.withDescription}
                 onChange={() => handleInputChange('withDescription',  !elementsData.withDescription )}
               />
-              <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-              <span className="ms-3 text-md font-medium text-white">With Description</span>
+              <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+              <span className="ms-3 text-md font-medium text-text-color">With Description</span>
             </label>
           </div>
         </div>
@@ -1341,10 +1202,10 @@ const SortableRow = ({ index, item }) => {
   style={style}
   {...attributes}
   {...listeners}
-  className="border-gray-700 bg-zinc-950 text-center"
+  className="border-gray-700 bg-secondary-card text-center"
 >
-  <td className="whitespace-nowrap font-medium text-white rounded-l-lg">{item.itemType}</td>
-  <td className="whitespace-nowrap font-medium text-white rounded-r-lg">{item.itemId}</td>
+  <td className="whitespace-nowrap font-medium text-text-color rounded-l-lg">{item.itemType}</td>
+  <td className="whitespace-nowrap font-medium text-text-color rounded-r-lg">{item.itemId}</td>
 </tr>
 
   );

@@ -400,35 +400,36 @@ function SalesInvoiceTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Invoice Number</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Customer Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Total Amount</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Final Amount</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Invoice Number</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Customer Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Total Amount</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Final Amount</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {salesInvoiceData.salesInvoices.map((invoice) => (
-            <Table.Row key={invoice._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={invoice._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {invoice.invoiceNumber}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="border-bordertext-text-color">
                 {invoice.customer?.name || "N/A"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="border-bordertext-text-color">
                 {invoice.totalAmount}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="border-bordertext-text-color">
                 {invoice.finalAmount}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="border-bordertext-text-color">
                 {invoice.invoiceStatus}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="border-bordertext-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>
                       navigate(`/salesInvoice/edit`, { state: { invoice } })
@@ -471,8 +472,8 @@ function SalesInvoiceTable() {
             key={index}
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
-              currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"
-            } text-white`}
+              currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
+            } text-text-color`}
           >
             {index + 1}
           </button>
@@ -484,7 +485,7 @@ function SalesInvoiceTable() {
     <BlobProvider document={<QuotePDF quote={previewInvoice} organization={organizationData} />}>
       {({ blob, url, loading }) =>
         loading ? (
-          <p className="text-white">Loading preview...</p>
+          <p className="text-text-color">Loading preview...</p>
         ) : (
           <iframe
             src={url}

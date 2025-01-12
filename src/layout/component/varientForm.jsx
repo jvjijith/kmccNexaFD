@@ -237,11 +237,11 @@ function VarientForm({ typeData, productId, variantId }) {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Varient Name *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Varient Name *</label>
               <input
                 type="text"
                 name="name"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Varient Name"
                 autoComplete="off"
                 value={productData.name}
@@ -251,11 +251,11 @@ function VarientForm({ typeData, productId, variantId }) {
           </div>
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Varient Color *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Varient Color *</label>
               <input
                 type="text"
                 name="color"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Varient Color"
                 autoComplete="off"
                 value={productData.color}
@@ -268,11 +268,11 @@ function VarientForm({ typeData, productId, variantId }) {
         <div className="flex flex-wrap">
     <div className="w-full sm:w-1/2 p-4">
       <div className="mb-4">
-        <label className="block w-full mb-2 text-white">Size *</label>
+        <label className="block w-full mb-2 text-text-color primary-text">Size *</label>
         <input
                 type="text"
                 name="size"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Varient Size"
                 autoComplete="off"
                 value={productData.size}
@@ -283,11 +283,11 @@ function VarientForm({ typeData, productId, variantId }) {
     
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">HSN *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">HSN *</label>
               <input
                 type="text"
                 name="HSN"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter HSN"
                 autoComplete="off"
                 value={productData.HSN}
@@ -300,11 +300,11 @@ function VarientForm({ typeData, productId, variantId }) {
         <div className="flex flex-wrap">
         <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Model *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Model *</label>
               <input
                 type="text"
                 name="model"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Model"
                 autoComplete="off"
                 value={productData.model}
@@ -316,11 +316,11 @@ function VarientForm({ typeData, productId, variantId }) {
       
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">Product Code *</label>
+              <label className="float-left inline-block mb-2 text-text-color primary-text">Product Code *</label>
               <input
                 type="text"
                 name="productCode"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
                 placeholder="Enter Product Code"
                 autoComplete="off"
                 value={productData.productCode}
@@ -332,7 +332,7 @@ function VarientForm({ typeData, productId, variantId }) {
 
           <div className="w-full sm:w-1/2 p-4">
             <div className="mb-4">
-              <label className="block mb-2 text-white">Product *</label>
+              <label className="block mb-2 text-text-color">Product *</label>
           <Select
                   options={productOptions}
                   placeholder="Select Product"
@@ -385,13 +385,13 @@ function VarientForm({ typeData, productId, variantId }) {
             {" "}
             {/* col-sm-6 */}
             <div className="mb-4">
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex items-center cursor-pointer primary-text">
                 <input type="checkbox" value="" className="sr-only peer" name="RFQ"
                 id="RFQ"
                 checked={isRFQ}
                 onChange={() => handleToggle('RFQ')} />
-                <div className="w-11 h-6 bg-black peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-black peer-checked:bg-orange-600"></div>
-                <span className="ms-3 text-md font-medium text-white dark:text-white">
+                <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
+                <span className="ms-3 text-md font-medium text-text-color dark:text-text-color">
                 RFQ
                 </span>
               </label>
@@ -401,9 +401,9 @@ function VarientForm({ typeData, productId, variantId }) {
         </div>
 
         <div className="w-full p-4">
-  <label className="block w-full mb-2 text-white">Images</label><div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-sidebar-card-top text-white border-2 border-nexa-gray rounded mb-4">
+  <label className="block w-full mb-2 text-text-color primary-text">Images</label><div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-secondary-card text-text-color border-2 border-border rounded mb-4">
     <input {...getInputProps()} />
-    <p>Drag & drop images here, or click to select files</p>
+    <p className='text-text-color'>Drag & drop images here, or click to select files</p>
     <div className="w-full p-4">
       {images.map((file, index) => (
         <div key={index} className="flex items-center justify-between mb-2">
@@ -447,11 +447,11 @@ function VarientForm({ typeData, productId, variantId }) {
         {/* Bank Details */}
         <div className="w-full p-4">
         <div className="flex items-center justify-between mb-4">
-          <label className="block w-full mb-2 text-white">Notes</label>
-          <button type="button" className="bg-black text-white px-4 py-2 rounded" onClick={addNotes}>Add</button>
+          <label className="block w-full mb-2 text-text-color primary-text">Notes</label>
+          <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addNotes}>Add</button>
           </div>
-          <div className="notes-container p-4 bg-sidebar-card-top rounded-lg">
-            {(notes.length===0)&&<p>No notes added</p>}
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
+            {(notes.length===0)&&<p className='text-text-color'>No notes added</p>}
           {notes.map((note, index) => (
             <div key={index} className="flex flex-wrap items-center mb-4 p-2  rounded-lg">
               <input
@@ -459,16 +459,16 @@ function VarientForm({ typeData, productId, variantId }) {
                 placeholder="Note Name"
                 value={note.name}
                 onChange={(e) => handleNotesChange(index, 'name', e.target.value)}
-                className="block w-2/5 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-2/5 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
               />
               <textarea
                 type="text"
                 placeholder="Note Description"
                 value={note.description}
                 onChange={(e) => handleNotesChange(index, 'description', e.target.value)}
-                className="block w-1/2 h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white ml-2"
+                className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color ml-2"
               />
-              <button type="button" className="bg-black text-white px-4 py-2 rounded ml-2" onClick={() => removeNotes(index)}>Remove</button>
+              <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded ml-2" onClick={() => removeNotes(index)}>Remove</button>
             </div>
           ))}
           </div>
@@ -477,7 +477,8 @@ function VarientForm({ typeData, productId, variantId }) {
         
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-nexa-orange text-white px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-butt
+          olor px-6 py-2 rounded">
             {isSaving  ? 'Saving...' : 'Save'}
           </button>
         </div>

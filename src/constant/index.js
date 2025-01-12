@@ -88,8 +88,9 @@ export const employeeData = [
           { id: '5-2', title: "Quotes", route: "/presales/quotes/view" },
           // { id: '5-3', title: "Add Enquiry", route: "/presales/enquiry/add" },
           { id: '5-4', title: "Enquiry", route: "/presales/enquiry/list" },
-          { id: '5-5', title: "Add Purchase Order", route: "/presales/purchaseorder/add" },
-          { id: '5-6', title: "List Purchase Order", route: "/presales/purchaseorder/list" },
+          // { id: '5-5', title: "Add Purchase Order", route: "/presales/purchaseorder/add" },
+          { id: '5-6', title: "Purchase Order", route: "/presales/purchaseorder/list" },
+          { id: '5-6', title: "Sales Invoice", route: "/presales/salesInvoice/list" },
           { id: '5-7', title: "Add Delivery Note", route: "/presales/deliverynote/add" },
           { id: '5-8', title: "List Delivery Note", route: "/presales/deliverynote/list" }
         ]

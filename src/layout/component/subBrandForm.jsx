@@ -70,13 +70,13 @@ function SubBrandForm({ id, closeModal }) {
         <div className="block">
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-white">
+              <label className="float-left inline-block mb-2 text-text-color primary-text">
                 &nbsp;SubBrand Name *&nbsp;
               </label>
               <input
                 type="text"
                 name="subBrandName"
-                className="block w-full h-10 px-2 py-1 border-b border-nexa-gray bg-black rounded-none focus:outline-none focus:border-white-500 transition text-white"
+                className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
                 placeholder="Enter Your SubBrand Name"
                 autoComplete="off"
                 style={{ textAlign: "initial" }}
@@ -88,7 +88,7 @@ function SubBrandForm({ id, closeModal }) {
           </div>
           <div className="w-full">
             <div className="mb-4">
-              <label className="w-full float-left inline-block mb-2 text-white">
+              <label className="w-full float-left inline-block mb-2 text-text-color">
                 &nbsp;Brand *&nbsp;
               </label>
               <Select
@@ -99,7 +99,7 @@ function SubBrandForm({ id, closeModal }) {
                 control: (provided, state) => ({
                   ...provided,
                   backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : '#D3D3D3', // border-nexa-gray: #D3D3D3
+                  borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
                   borderBottomWidth: '2px',
                   borderRadius: '0px',
                   height: '40px', // h-10: 2.5rem = 40px
@@ -122,8 +122,8 @@ function SubBrandForm({ id, closeModal }) {
                 }),
                 option: (provided, state) => ({
                   ...provided,
-                  backgroundColor: state.isSelected ? '#007bff' : 'black', // bg-blue-500: #007bff
-                  color: state.isSelected ? 'black' : 'white',
+                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
+                  color: state.isSelected ? '#f8f9fa' : 'black',
                   cursor: 'pointer'
                 })
               }}
@@ -134,7 +134,7 @@ function SubBrandForm({ id, closeModal }) {
 
           
           <div className="flex flex-wrap justify-end p-4">
-            <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded">
+            <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-text-color px-4 py-2 rounded">
                Add SubBrand
             </button>
           </div>

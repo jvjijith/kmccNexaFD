@@ -135,75 +135,77 @@ function UserTable() {
         return "text-green-500";
       case "User":
       default:
-        return "text-white";
+        return "text-text-color";
     }
   };
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">User Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Email</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">User Role</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Designation</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Superior</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Date of Joining</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">User Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Email</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">User Role</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Designation</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Superior</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Date of Joining</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Action</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {employeeData.employees.map((employee) => {
             const role = getUserRole(employee.admin, employee.superAdmin);
             return (
-              <Table.Row key={employee.userId} className="border-gray-700 bg-zinc-950">
-                <Table.Cell className="whitespace-nowrap font-medium text-white">
+              <Table.Row key={employee.userId} className="border-gray-700 bg-secondary-card">
+                <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                   {employee.name}
                 </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-white">
+                <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                   {employee.email}
                 </Table.Cell>
                 <Table.Cell className={`whitespace-nowrap ${getUserRoleColor(role)}`}>
                   {role}
                 </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-white">
+                <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                   {employee.designation}
                 </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-white">
+                <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                   {superiors[employee.metadataId] || "Unknown"}
                 </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-white">
+                <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                   {employee.dateOfJoining}
                 </Table.Cell>
                 <Table.Cell className={`whitespace-nowrap ${employee.activeUser ? "text-green-500" : "text-red-500"}`}>
                   {employee.activeUser ? "Active" : "Inactive"}
                 </Table.Cell>
-                <Table.Cell className="text-gray-300">
-                  <Dropdown label="Actions" inline className="bg-black text-white border-black">
+                <Table.Cell className="border-bordertext-text-color">
+                  <Dropdown label="Actions" inline className="bg-secondary-ca
+                  order-black">
                   {employee.superAdmin !== true && (
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => openModal(employee)}
                     >
                       Edit User
                     </Dropdown.Item>
                     )}
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => handleViewDetails(employee)}
                     >
                       Details
                     </Dropdown.Item>
                     {employee.activeUser ? (
                       <Dropdown.Item
-                        className="text-gray-300 hover:!bg-orange-600"
+                        className="text-text-color hover:!bg-orange-600"
                         onClick={() => handleDeactivateEmployee(employee)}
                       >
                         Deactivate User
                       </Dropdown.Item>
                     ) : (
                       <Dropdown.Item
-                        className="text-gray-300 hover:!bg-orange-600"
+                        className="text-text-color hover:!bg-orange-600"
                         onClick={() => handleActivateEmployee(employee)}
                       >
                         Activate User

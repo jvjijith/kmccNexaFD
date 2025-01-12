@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { Dropdown, Table } from "flowbite-react";
+import { Button, Dropdown, Modal, Table } from "flowbite-react";
 import { useNavigate } from "react-router";
 import { useGetData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
 
-function LayoutTable() {
+function UserTeamPermissionTable() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
-  const { data: layoutData, isLoading, error, refetch } = useGetData(
-    "LayoutData",
-    `/layout?page=${currentPage}&limit=${limit}`,
+  const { data: userTeamPermissionsData, isLoading, error, refetch } = useGetData(
+    "userteampermissions",
+    `/user-team-permissions?page=${currentPage}&limit=${limit}`,
     {}
   );
 
@@ -39,58 +39,49 @@ function LayoutTable() {
     return <div>Error loading data</div>;
   }
 
-  const totalPages = Math.ceil(layoutData.pagination.totalCount / limit);
+  const { userTeamPermissions, pagination } = userTeamPermissionsData;
+  const totalPages = Math.ceil(pagination.totalCount / limit);
 
   return (
     <div className="overflow-x-auto min-h-96">
       <Table theme={{ dark: true }}
       className="border border-border rounded-lg">
         <Table.Head className=" bg-secondary-card text-text-color">
-          <Table.HeadCell className="border-border bg-table-heading text-text-color">App ID</Table.HeadCell>
-          <Table.HeadCell className="border-border bg-table-heading text-text-color">Font Family</Table.HeadCell>
-          <Table.HeadCell className="border-border bg-table-heading text-text-color">Font Type</Table.HeadCell>
-          <Table.HeadCell className="border-border bg-table-heading text-text-color">Font Size (Base)</Table.HeadCell>
-          <Table.HeadCell className="border-border bg-table-heading text-text-color">Logo (Dark)</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Reference Name</Table.HeadCell>
+          {/* <Table.HeadCell className="border-border bg-table-heading text-text-color">Allowed Modules</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Allowed Employees</Table.HeadCell> */}
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y divide-border">
-          {layoutData?.layoutSettings.map((setting) => (
-            <Table.Row key={setting._id} className="border-gray-700 bg-secondary-card">
+          {userTeamPermissions.map((permission) => (
+            <Table.Row key={permission._id} className="border-gray-700 bg-secondary-card">
               <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
-                {setting.appId.title}
+                {permission.referenceName}
+              </Table.Cell>
+              {/* <Table.Cell className="border-bordertext-text-color">
+                <ul>
+                  {permission.allowedModules.map((module) => (
+                    <li key={module._id}>
+                      <strong>{module.moduleId.moduleName}:</strong> {module.allowedOperations.join(", ")}
+                    </li>
+                  ))}
+                </ul>
               </Table.Cell>
               <Table.Cell className="border-bordertext-text-color">
-                {setting.font[0]?.fontFamily || "N/A"}
-              </Table.Cell>
+                <ul>
+                  {permission.empAllowed.map((employee) => (
+                    <li key={employee._id}>{employee.email}</li>
+                  ))}
+                </ul>
+              </Table.Cell> */}
               <Table.Cell className="border-bordertext-text-color">
-                {setting.font[0]?.type || "N/A"}
-              </Table.Cell>
-              <Table.Cell className="border-bordertext-text-color">
-                {setting.fontSize?.base || "N/A"}
-              </Table.Cell>
-              <Table.Cell className="border-bordertext-text-color">
-                {setting.logos.length > 0 ? (
-                  <img
-                    src={setting.logos[0]?.imageUrl}
-                    alt="Logo"
-                    className="h-10"
-                  />
-                ) : (
-                  "No Logo"
-                )}
-              </Table.Cell>
-              <Table.Cell className="border-bordertext-text-color">
-                <Dropdown
-                  label="Actions"
-                  inline
-                  className="bg-secondary-card text-text-color border-black"
-                >
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>
-                      navigate(`/layout/edit`, { state: {  setting } })
+                      navigate(`/permission/edit`, { state: { permission } })
                     }
                   >
-                    Edit Layout
+                    Edit Permission
                   </Dropdown.Item>
                 </Dropdown>
               </Table.Cell>
@@ -117,4 +108,4 @@ function LayoutTable() {
   );
 }
 
-export default LayoutTable;
+export default UserTeamPermissionTable;

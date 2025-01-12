@@ -92,55 +92,56 @@ function PriceTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Product</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Variant</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Amount</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Currency</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Discount</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Product</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Variant</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Amount</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Currency</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Discount</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Action</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {data.map((price) => (
-            <Table.Row key={price._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={price._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {price?.productId?.name || "N/A"}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {price?.variantId?.name || 'N/A'}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {price?.pricing?.[0]?.amount || 'N/A'}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {price?.pricing?.[0]?.currency || 'N/A'}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {price?.pricing?.[0]?.discount || 'N/A'}
               </Table.Cell>
               <Table.Cell className={`whitespace-nowrap ${price?.active ? "text-green-500" : "text-red-500"}`}>
                 {price?.active ? "Active" : "Inactive"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="border-bordertext-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => openModal(price)}
                   >
                     Edit Price
                   </Dropdown.Item>
                   {price?.active ? (
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => handleDeactivatePrice(price)}
                     >
                       Deactivate Price
                     </Dropdown.Item>
                   ) : (
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => handleActivatePrice(price)}
                     >
                       Activate Price

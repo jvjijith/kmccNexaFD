@@ -93,80 +93,81 @@ const ProductTable = () => {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Category</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Brand</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Stock</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Sub Brand</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Category</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Brand</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Stock</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Sub Brand</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Action</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {productData?.products.map((product) => (
-            <Table.Row key={product._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={product._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {product.name}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {product.category?.categoryName}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {product.brand?.name}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {product.stock}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {product.subBrand?.subBrandName}
               </Table.Cell>
               <Table.Cell className={`whitespace-nowrap ${product.active ? "text-green-500" : "text-red-500"}`}>
                 {product.active ? "Active" : "Inactive"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="border-bordertext-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => handleViewDetails(product)}
                   >
                     Details
                   </Dropdown.Item>
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => navigate(`/product/edit`, { state: { product } })}
                   >
                     Edit Product
                   </Dropdown.Item>
                   {product.active ? (
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => handleDeactivateProduct(product)}
                     >
                       Deactivate Product
                     </Dropdown.Item>
                   ) : (
                     <Dropdown.Item
-                      className="text-gray-300 hover:!bg-orange-600"
+                      className="text-text-color hover:!bg-orange-600"
                       onClick={() => handleActivateProduct(product)}
                     >
                       Activate Product
                     </Dropdown.Item>
                   )}
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => handleShowVariants(product)}
                   >
                     Show Variants
                   </Dropdown.Item>
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => openModal(product)}
                   >
                     Add Price
                   </Dropdown.Item>
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => handleAddVariants(product)}
                   >
                     Add Variants
@@ -184,7 +185,7 @@ const ProductTable = () => {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
           >
             {index + 1}
           </button>

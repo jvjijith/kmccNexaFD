@@ -319,41 +319,42 @@ function VendorQuoteTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">
             Quote Request Number
           </Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">
             Vendor Name
           </Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">
             Vendor Email
           </Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">
             Status
           </Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">
             Actions
           </Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {quoteRequestData.vendorQuoteRequests.map((request) => (
-            <Table.Row key={request._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={request._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {request.quoteRequestNumber}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="border-bordertext-text-color">
                 {request.vendor.name}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
+              <Table.Cell className="border-bordertext-text-color">
                 {request.vendor.email}
               </Table.Cell>
-              <Table.Cell className={`text-gray-300 `}>
+              <Table.Cell className={`text-text-color `}>
                 {request.vendorQuoteRequestStatus}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="border-bordertext-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     onClick={() =>
                       navigate(`/quoterequest/edit`, {
@@ -398,8 +399,8 @@ function VendorQuoteTable() {
             key={index}
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
-              currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"
-            } text-white`}
+              currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
+            } text-text-color`}
           >
             {index + 1}
           </button>
@@ -411,7 +412,7 @@ function VendorQuoteTable() {
     <BlobProvider document={<QuotePDF quote={previewInvoice} organization={organizationData} />}>
       {({ blob, url, loading }) =>
         loading ? (
-          <p className="text-white">Loading preview...</p>
+          <p className="text-text-color">Loading preview...</p>
         ) : (
           <iframe
             src={url}

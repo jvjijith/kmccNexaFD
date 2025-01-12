@@ -6,7 +6,7 @@ function SalesInvoice() {
 
   return (
     <Container>
-      <SalesInvoiceCard title={"Add Sales Invoice"} button={true}>
+      <SalesInvoiceCard title={"Sales Invoice"} button={true}>
         <SalesInvoiceTable
         />
       </SalesInvoiceCard>

@@ -118,29 +118,30 @@ function AppTable() {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">App Title</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">App Type</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Geo Location</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Domain</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Language</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Status</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Actions</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">App Title</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">App Type</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Geo Location</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Domain</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Language</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Status</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {AppData?.apps.map((app, index) => (
-            <Table.Row key={index} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">{app.title}</Table.Cell>
-              <Table.Cell className="text-gray-300">{app.appType}</Table.Cell>
-              <Table.Cell className="text-gray-300">{app.settings.geo?.map(geo => geo.location).join(', ')}</Table.Cell>
-              <Table.Cell className="text-gray-300">{app.settings.domain?.map(domain => domain.domain).join(', ')}</Table.Cell>
-              <Table.Cell className="text-gray-300">{app.settings.language?.map(language => language.langName).join(', ')}</Table.Cell>
+            <Table.Row key={index} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">{app.title}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{app.appType}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{app.settings.geo?.map(geo => geo.location).join(', ')}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{app.settings.domain?.map(domain => domain.domain).join(', ')}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{app.settings.language?.map(language => language.langName).join(', ')}</Table.Cell>
               <Table.Cell className={`whitespace-nowrap ${app.active ? "text-green-500" : "text-red-500"}`}>
                 {app.active ? "Active" : "Inactive"}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="border-bordertext-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item onClick={() => navigate(`/store/appmanagement/appsetting/edit`, { state: { app } })}>Edit App</Dropdown.Item>
                   {app.active ? (
                     <Dropdown.Item onClick={() => handleDeactivateApp(app)}>Deactivate App</Dropdown.Item>
@@ -160,7 +161,7 @@ function AppTable() {
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-nexa-orange" : "bg-gray-700"} text-white`}
+            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
           >
             {index + 1}
           </button>

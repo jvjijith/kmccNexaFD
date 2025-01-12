@@ -24,7 +24,7 @@ export default function NameCard({
               <Image path={`mock_faces_${imgId}`} className="w-10 h-10" />
               <div className="ml-2">
                 <div className="flex items-center">
-                  <div className="mr-2 font-bold text-white">{name}</div>
+                  <div className="mr-2 font-bold text-text-color">{name}</div>
                   <Icon path="res-react-dash-tick" />
                 </div>
                 <div className="text-sm ">{position}</div>

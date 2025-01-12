@@ -42,31 +42,32 @@ function SubCategoryTable({categoryId}) {
 
   return (
     <div className="overflow-x-auto min-h-96">
-      <Table theme={{ dark: true }}>
-        <Table.Head className="border-gray-700 bg-black text-white">
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Category Name</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Category Type</Table.HeadCell>
-          <Table.HeadCell className="border-gray-700 bg-black text-white">Action</Table.HeadCell>
+      <Table theme={{ dark: true }}
+      className="border border-border rounded-lg">
+        <Table.Head className=" bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Category Name</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Category Type</Table.HeadCell>
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">Action</Table.HeadCell>
         </Table.Head>
-        <Table.Body className="divide-y">
+        <Table.Body className="divide-y divide-border">
           {data?.map((category) => (
-            <Table.Row key={category._id} className="border-gray-700 bg-zinc-950">
-              <Table.Cell className="whitespace-nowrap font-medium text-white">
+            <Table.Row key={category._id} className="border-gray-700 bg-secondary-card">
+              <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {category.subCategoryName}
               </Table.Cell>
-              <Table.Cell className="whitespace-nowrap text-white">
+              <Table.Cell className="border-borderwhitespace-nowrap text-text-color">
                 {category.subCategoryType}
               </Table.Cell>
-              <Table.Cell className="text-gray-300">
-                <Dropdown label="Actions" inline className="bg-black text-white border-black">
+              <Table.Cell className="border-bordertext-text-color">
+                <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => openModal(category)}
                   >
                     Edit Category
                   </Dropdown.Item>
                   {/* <Dropdown.Item
-                    className="text-gray-300 hover:!bg-orange-600"
+                    className="text-text-color hover:!bg-orange-600"
                     onClick={() => handleDeleteCategory(category)}
                   >
                     Delete Category

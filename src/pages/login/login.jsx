@@ -1,3 +1,7 @@
+import React from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import IconButton from '../../layout/ui/icon/iconButton';
+import Image from '../../layout/ui/image/image';
 import { Link } from "react-router-dom";
 import "./login.css";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -11,7 +15,10 @@ import { useEffect } from "react";
 import LoadingScreen from "../../layout/ui/loading/loading";
 import axios from "axios";
 
-function Login() {
+const Login = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
+  // const [email, setEmail] = React.useState('');
+  // const [password, setPassword] = React.useState('');
   const email = useFormInput("");
   const password = useFormInput("");
   const auth = getAuth(appFirebase);
@@ -177,45 +184,149 @@ function Login() {
   }
 
   return (
-    <div className="box-container">
-      <div className="box">
-        <span className="box__borderline" />
-        <form className="form" onSubmit={signInWEAP}>
-          <img src="/nexa.png" className="form_img" />
-          <h3 className="form__title">NexaConnect</h3>
-          <div className="form__box">
-            <input
-              className="form__input"
-              type="email"
-              required="required"
-              name="email"
-              {...email}
-              placeholder="Email"
-            />
+    <div className="flex h-screen bg-white">
+      {/* Left Side - Login Form */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-16">
+        <div className="max-w-md w-full mx-auto">
+          {/* Logo */}
+          <div className="mb-8">
+            <div className=" rounded-lg flex items-center justify-center">
+              <img src="/icon.png" className="w-15 h-10" />
+              <div className="block sm:hidden xl:block ml-2 font-bold text-xl text-sidebar-text-color">
+            NexaConnect
           </div>
-          <div className="form__box">
-            <input
-              className="form__input"
-              type="password"
-              required="required"
-              name="password"
-              {...password}
-              placeholder="Password"
-            />
+            </div>
           </div>
-          <div className="form__links">
-            <Link className="form__link" to="/forgot">
-              Forgot Password
-            </Link>
-          </div>
-          <button className="form__submit" type="submit">
-            Login
-          </button>
-        </form>
+
+          {/* Rest of the form remains exactly the same */}
+          {/* Welcome Text */}
+          {/* <h1 className="text-2xl font-bold mb-2">Welcome back!</h1>
+          <p className="text-gray-600 mb-8">Please enter your credentials to sign in!</p> */}
+
+          {/* Login Form */}
+          <form onSubmit={signInWEAP}>
+            <div className="space-y-6">
+              {/* Email Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email
+                </label>
+                <input
+                 type="email"
+                 required="required"
+                 name="email"
+                 {...email}
+                 placeholder="Email"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Password Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    required="required"
+                    name="password"
+                    {...password}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="••••••"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Forgot Password Link */}
+              <div className="text-right">
+                <a href="/forgot" className="text-sm text-blue-600 hover:text-blue-800">
+                  Forgot password
+                </a>
+              </div>
+
+              {/* Sign In Button */}
+              <button
+                type="submit"
+                className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Sign In
+              </button>
+
+              {/* Social Login */}
+              {/* <div>
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">
+                      or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                  >
+                    <img
+                      src="/api/placeholder/20/20"
+                      alt="Google"
+                      className="w-5 h-5 mr-2"
+                    />
+                    Google
+                  </button>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                  >
+                    <img
+                      src="/api/placeholder/20/20"
+                      alt="GitHub"
+                      className="w-5 h-5 mr-2"
+                    />
+                    Github
+                  </button>
+                </div>
+              </div> */}
+
+              {/* Sign Up Link */}
+              {/* <div className="text-center text-sm text-gray-600">
+                Don't have an account yet?{' '}
+                <a href="#" className="text-blue-600 hover:text-blue-800">
+                  Sign up
+                </a>
+              </div> */}
+            </div>
+          </form>
+        </div>
       </div>
-      <ToastContainer></ToastContainer>
+
+      {/* Right Side - Decorative Image */}
+      <div className="px-10 lg:flex flex-col flex-1 justify-between hidden rounded-3xl items-end relative max-w-[600px] 2xl:max-w-[800px] ml-auto mr-0">
+        <div className="h-[calc(100vh-1px)] w-full relative">
+          <div className="absolute inset-0 mx-8 my-12">
+            <div className="w-full h-full rounded-3xl overflow-hidden">
+              <img 
+                className="absolute h-full w-full top-0 left-0 rounded-3xl"
+                src="https://ecme-react.themenate.net/img/others/auth-side-bg.png"
+                alt="Decorative background"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default Login;
