@@ -114,7 +114,7 @@ function UserTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   if (!Array.isArray(employeeData?.employees)) {

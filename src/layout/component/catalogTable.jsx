@@ -44,7 +44,7 @@ function CatalogTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   console.log(data);
@@ -71,7 +71,7 @@ function CatalogTable() {
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     className="text-text-color hover:!bg-orange-600"
-                    onClick={() => navigate(`/catalog`, { state: { catalog: team } })}
+                    onClick={() => navigate(`/catalog/edit`, { state: { catalog: team } })}
                   >
                     Edit Catalog
                   </Dropdown.Item>

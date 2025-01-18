@@ -5,6 +5,7 @@ import { useGetData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
 import { BlobProvider, Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import PopUpModal from "../ui/modal/modal";
+import UserTeamPermissionsPage from "../../routes/userPermission";
 
 // Header Component
 function Header({ organization }) {
@@ -393,7 +394,7 @@ function SalesInvoiceTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   const totalPages = Math.ceil(salesInvoiceData.pagination.totalCount / limit);
@@ -437,7 +438,7 @@ function SalesInvoiceTable() {
                   >
                     Edit Invoice
                   </Dropdown.Item>
-                    <Dropdown.Item>
+                    <UserTeamPermissionsPage requiredModule={"salesinvoices"} permission={"view"} page={<Dropdown.Item>
                       <BlobProvider document={<QuotePDF quote={invoice} organization={organizationData} productData={productData} varientData={varientData} />}>
                         {({ url, loading }) =>
                           loading ? (
@@ -449,15 +450,15 @@ function SalesInvoiceTable() {
                           )
                         }
                       </BlobProvider>
-                    </Dropdown.Item>
-                    <Dropdown.Item
+                    </Dropdown.Item>} />
+                    <UserTeamPermissionsPage requiredModule={"salesinvoices"} permission={"view"} page={<Dropdown.Item
                     onClick={() => {
                       setPreviewInvoice(invoice);
                       setIsPreviewOpen(true); // Open the modal
                     }}
                   >
                     Preview Invoice
-                  </Dropdown.Item>
+                  </Dropdown.Item>} />
                 </Dropdown>
               </Table.Cell>
             </Table.Row>

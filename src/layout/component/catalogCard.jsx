@@ -27,7 +27,7 @@ function CatalogCard({ children, title, button }) {
     addCatalog(catalogPayload, {
       onSuccess: (response) => {
         console.log('Catalog added successfully:', response);
-        navigate(`/catalog`, { state: { catalog: response?.data } }); // Navigate to the catalog page after success
+        navigate(`/catalog/add`, { state: { catalog: response?.data } }); // Navigate to the catalog page after success
       },
       onError: (error) => {
         console.error('Error adding catalog:', error);
@@ -77,7 +77,7 @@ function CatalogCard({ children, title, button }) {
               onClick={handleAddCatalog}
               disabled={isAdding} // Disable button while adding
             >
-              {isAdding ? 'Adding...' : 'Add Catalog'}
+              {isAdding ? 'Adding...' : 'Add'}
             </button>):null
           }>
           {children}

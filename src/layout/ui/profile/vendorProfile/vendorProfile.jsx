@@ -53,7 +53,7 @@ function ProfilePage() {
                             <ul className="flex justify-center list-none p-0 m-0 bg-secondary-card border-b border-gray-700">
                                 <li className="mr-5">
                                     <NavLink 
-                                        to={`/customer/profile/${id}/customerdetails`}
+                                        to={`/vendor/profile/${id}/vendordetails`}
                                         className={({ isActive }) =>
                                             isActive
                                                 ? "no-underline text-primary-button-color border-b-2 border-primary-button-color py-2 px-4 block"
@@ -65,7 +65,7 @@ function ProfilePage() {
                                 </li>
                                 <li className="mr-5">
                                     <NavLink 
-                                        to={`/customer/profile/${id}/contacts`}
+                                        to={`/vendor/profile/${id}/contacts`}
                                         className={({ isActive }) =>
                                             isActive
                                                 ? "no-underline text-primary-button-color border-b-2 border-primary-button-color py-2 px-4 block"

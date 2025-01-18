@@ -588,7 +588,7 @@ const renderSuggestion = (suggestion) => (
                 value={identification.number}
                 onChange={(e) => handleIdentificationChange(index, 'number', e.target.value)}
               />
-              <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={() => removeIdentificationNumber(index)}>Remove</button>
+              <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={() => removeIdentificationNumber(index)}>Remove</button>
             </div>
           ))}
           </div>
@@ -652,7 +652,7 @@ const renderSuggestion = (suggestion) => (
                 value={bank.IFSC}
                 onChange={(e) => handleBankDetailChange(index, 'IFSC', e.target.value)}
               />
-              <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded" onClick={() => removeBankDetail(index)}>Remove</button>
+              <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={() => removeBankDetail(index)}>Remove</button>
             </div>
           ))}
          </div>

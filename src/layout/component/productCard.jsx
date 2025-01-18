@@ -8,8 +8,9 @@ import PriceForm from './priceForm';
 import { useNavigate } from 'react-router';
 import { useGetData } from '../../common/api';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import UserTeamPermissionsPage from '../../routes/userPermission';
 
-function ProductCard({children,title,button}) {
+function ProductCard({children,type,title,button}) {
   
   const navigate = useNavigate();
   const {toggleSidebar} = useSidebar();
@@ -141,15 +142,15 @@ function ProductCard({children,title,button}) {
           
            <Card title={title}
            component={button?
-            <button className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={() => navigate(`/product/add`)}>
+            <button className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={type?openModal:() => navigate(`/product/add`)}>
               Add
-            </button>:null
+            </button>:null 
           }>
                {children}
             </Card>
             </div>
             <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Price"}>
-        <PriceForm closeModal={closeModal} />
+        <UserTeamPermissionsPage requiredModule={"pricing"} permission={"view"} page={<PriceForm closeModal={closeModal} />} />
       </PopUpModal>
         </div>
     );

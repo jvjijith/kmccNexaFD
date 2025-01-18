@@ -153,38 +153,19 @@ function PriceForm({ priceId , productId }) {
                 options={productOptions}
                 value={productOptions.find(option => option.value === (priceId ? product ? priceData.productId : priceData.productId._id : priceData.productId))}
                 onChange={(selectedOption) => { handleSelectChange(selectedOption, 'productId'); setProduct(true); }}
-                styles={{
-                  control: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : 'black',
-                    borderBottomWidth: '2px',
-                    borderRadius: '0px',
-                    height: '40px',
-                    paddingLeft: '8px',
-                    paddingRight: '8px',
-                    color: 'white'
-                  }),
-                  singleValue: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  placeholder: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  menu: (provided) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    color: 'white',
-                  }),
-                  option: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                    color: state.isSelected ? '#f8f9fa' : 'black',
-                    cursor: 'pointer'
-                  })
-                }}
+                classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
+            }}
               />
             </div>
           </div>
@@ -195,38 +176,19 @@ function PriceForm({ priceId , productId }) {
                 options={variantOptions}
                 value={variantOptions.find(option => option.value === (priceId ? variant ? priceData.variantId : priceData.variantId._id : priceData.variantId))}
                 onChange={(selectedOption) => { handleSelectChange(selectedOption, 'variantId'); setVariant(true); }}
-                styles={{
-                  control: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : 'black',
-                    borderBottomWidth: '2px',
-                    borderRadius: '0px',
-                    height: '40px',
-                    paddingLeft: '8px',
-                    paddingRight: '8px',
-                    color: 'white'
-                  }),
-                  singleValue: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  placeholder: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  menu: (provided) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    color: 'white',
-                  }),
-                  option: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                    color: state.isSelected ? '#f8f9fa' : 'black',
-                    cursor: 'pointer'
-                  })
-                }}
+                classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
+            }}
               />
             </div>
           </div>
@@ -285,38 +247,19 @@ function PriceForm({ priceId , productId }) {
                 options={variantOptions}
                 value={variantOptions.find(option => option.value === (priceId ? variant ? priceData.variantId : priceData.variantId._id : priceData.variantId))}
                 onChange={(selectedOption) => { handleSelectChange(selectedOption, 'variantId'); setVariant(true); }}
-                styles={{
-                  control: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    borderColor: state.isFocused ? 'white' : 'black',
-                    borderBottomWidth: '2px',
-                    borderRadius: '0px',
-                    height: '40px',
-                    paddingLeft: '8px',
-                    paddingRight: '8px',
-                    color: 'white'
-                  }),
-                  singleValue: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  placeholder: (provided) => ({
-                    ...provided,
-                    color: 'white',
-                  }),
-                  menu: (provided) => ({
-                    ...provided,
-                    backgroundColor: 'black',
-                    color: 'white',
-                  }),
-                  option: (provided, state) => ({
-                    ...provided,
-                    backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                    color: state.isSelected ? '#f8f9fa' : 'black',
-                    cursor: 'pointer'
-                  })
-                }}
+                classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
+            }}
               />
             </div>
           </div>}
@@ -326,7 +269,7 @@ function PriceForm({ priceId , productId }) {
               <label className="block w-full mb-2 text-text-color primary-text">Rules</label>
               <button
                 type="button"
-                className="text-text-color"
+                className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded ml-2"
                 onClick={() => addRule(pricingIndex)}
               >
                 Add
@@ -359,7 +302,7 @@ function PriceForm({ priceId , productId }) {
                   />
                   <button
                     type="button"
-                    className="text-red-500 ml-2"
+                    className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded ml-2"
                     onClick={() => removeRule(pricingIndex, ruleIndex)}
                   >
                     Remove

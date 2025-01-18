@@ -7,11 +7,11 @@ const PopUpModal = ({ isOpen, onClose, title, children, size }) => {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex items-center justify-center z-50">
       {/* Backdrop */}
-      <div className="absolute inset-0 secondary-card opacity-50" onClick={onClose}></div>
+      <div className="absolute inset-0 primary opacity-100" onClick={onClose}></div>
 
       {/* Modal Content */}
       <div
-        className={`secondary-card rounded-lg overflow-hidden shadow-xl transform transition-all ${
+        className={`primary rounded-lg bg-secondary-card overflow-hidden shadow-xl transform transition-all ${
           size
             ? "sm:max-w-4xl sm:w-full h-full p-8"
             : "sm:max-w-lg sm:w-full p-6"

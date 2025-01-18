@@ -177,7 +177,7 @@ function UserForm() {
   }
 
   // if (teamError || employeeError || addError || signupError) {
-  //   return <div>Error loading data</div>;
+  //   return <div className="text-text-color">Error loading data</div>;
   // }
   return (
     <div>

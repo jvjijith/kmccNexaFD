@@ -10,6 +10,7 @@ import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { useNavigate } from "react-router";
 import { Dropdown } from "flowbite-react";
 import { useGetData } from "../../../common/api";
+import FilteredSidebar from "./filteredSidebar";
 
 
 export default function Sidebar() {
@@ -26,6 +27,11 @@ export default function Sidebar() {
 
   const { data: employeeData, refetch: refetchEmployees } = useGetData("employee", `/employee/user/${userObj?.uid}`);
   const { data: teamData, refetch: refetchTeams } = useGetData("team", `/team`);
+  const { data: permissionData, isLoading: isPermissionsLoading } = useGetData(
+    "permission",
+    "/user-team-permissions/employees/permissions",
+    {}
+  );
   
        const handleLogout = () => {
       clearUser();
@@ -92,12 +98,14 @@ export default function Sidebar() {
         {/* <button className="mt-8 mb-0 font-bold px-3 block sm:hidden xl:block" onClick={handleLogout}>
           LOGOUT
         </button> */}
-        {sidebarItems.flat().map((i) => (
+        {/* {sidebarItems.flat().map((i) => (
         <MenuItem
           key={i.id}
           item={i}
         />
-      ))}
+      ))} */}
+
+        <FilteredSidebar permissions={permissionData} />
         
         <div className="flex-grow" />
         {/* <div className="w-full p-3 h-28 hidden sm:block sm:h-20 xl:h-32">

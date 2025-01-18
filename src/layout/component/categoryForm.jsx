@@ -77,7 +77,7 @@ function CategoryForm({ id, name, industry }) {
         <div className="block">
           <div className="w-full">
             <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color primary-text">
+              <label className="float-left inline-block mb-2 text-text-color">
                 &nbsp;Category Name *&nbsp;
               </label>
               <input
@@ -117,7 +117,7 @@ function CategoryForm({ id, name, industry }) {
           </div>
 
           <div className="flex flex-wrap justify-end p-4">
-            <button type="submit" className="bg-primary-button-color hover:bg-green-400 text-text-color px-4 py-2 rounded">
+            <button type="submit" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded">
               {id ? "Edit Category" : "Add Category"}
             </button>
           </div>

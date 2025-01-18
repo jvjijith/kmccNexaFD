@@ -36,7 +36,7 @@ function OrganizationTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   const totalPages = organizationData.pagination.totalPages;

@@ -74,7 +74,7 @@ function VendorTable() {
   };
 
   const handleViewDetails = (vendor) => {
-    navigate(`/profile/${vendor._id}/customerdetails`, { state: { vendor } });
+    navigate(`/vendor/profile/${vendor._id}/vendordetails`, { state: { vendor } });
     console.log(vendor._id);
   };
 
@@ -116,7 +116,7 @@ function VendorTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   // Check if vendorData exists and is an array

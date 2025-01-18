@@ -38,7 +38,7 @@ function ContactTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   return (
@@ -79,7 +79,7 @@ function ContactTable() {
       <Table.Cell className="border-bordertext-text-color">
         <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
           {/* <Dropdown.Item className="text-text-color hover:!bg-orange-600" onClick={() => navigate('/addContact')}>Edit Contact</Dropdown.Item> */}
-          <Dropdown.Item className="text-text-color hover:!bg-orange-600" onClick={() => navigate(`/contact/addContact`, { state: { contact: contact } })}>Edit Contact</Dropdown.Item>
+          <Dropdown.Item className="text-text-color hover:!bg-orange-600" onClick={() => navigate(`/contact/edit`, { state: { contact } })}>Edit Contact</Dropdown.Item>
           {/* <Dropdown.Item className="text-text-color hover:!bg-orange-600" onClick={() => navigate('/addCustomer')}>Delete Contact</Dropdown.Item> */}
         </Dropdown>
       </Table.Cell>

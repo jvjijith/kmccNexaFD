@@ -85,6 +85,11 @@ import EditMenu from "./pages/menu/editMenu";
 import UserTeamPermission from "./pages/userTeamPermission/userTeamPermission";
 import AddUserTeamPermission from "./pages/userTeamPermission/addUserTeamPermission";
 import EditUserTeamPermission from "./pages/userTeamPermission/editUserTeamPermission";
+import UserTeamPermissionsPage from "./routes/userPermission";
+import ErrorPage from "./pages/error/errorPage";
+import VendorProfile from "./pages/vendor/vendorProfile";
+import VendorDetails from "./layout/ui/profile/vendorProfile/details";
+import VendorContacts from "./layout/ui/profile/vendorProfile/contact";
 
 const App = () => {
   return (
@@ -93,138 +98,147 @@ const App = () => {
       <Routes>
       <Route element={<ProtectedRoute></ProtectedRoute>}>
       <Route exact path="/" element={<Dashboard></Dashboard>}></Route>
-      <Route exact path="home" element={<Dashboard></Dashboard>}></Route> 
-      <Route exact path="customer" element={<Customer></Customer>}></Route> 
-      <Route exact path="vendor/list" element={<Vendor></Vendor>}></Route>
-      <Route exact path="admin/teams" element={<Team></Team>}></Route>
-      <Route exact path="admin/viewuser" element={<User></User>}></Route>
-      <Route exact path="vendor/contacts" element={<Contact></Contact>}></Route>
-      <Route exact path="customer/contacts" element={<Contact></Contact>}></Route>
-      <Route exact path="vendor/add" element={<AddVendor></AddVendor>}></Route>
-      <Route exact path="vendor/edit" element={<EditVendor></EditVendor>}></Route>
-      <Route exact path="group" element={<Group></Group>}></Route>      
-      <Route exact path="/customer/editContact" element={<CustomerContact></CustomerContact>}></Route> 
-      <Route exact path="contact/addContact" element={<AddContact></AddContact>}></Route>      
-      <Route exact path="/vendor/editContact" element={<CustomerContact></CustomerContact>}></Route>      
-      <Route exact path="addContact" element={<AddContact></AddContact>}></Route>
-      <Route exact path="loading" element={<Loading></Loading>}></Route>
-      <Route path="customer/add" element={<AddCustomer />} />
-      <Route path="customer/edit" element={<EditCustomer />} />
-      <Route path="admin/adduser" element={<AddUser />} />
-      <Route path="admin/edituser" element={<AddUser />} />
-      <Route path="product/add" element={<AddProduct />} />
-      <Route path="product/edit" element={<EditProduct />} />
-      <Route path="product/list" element={<Product />} />
-      <Route path="variant/list" element={<Varient />} />
-      <Route path="variant/add" element={<AddVarient />} />
-      <Route path="product/prices" element={<ListPrice />} />
-      <Route path="customer/category" element={<CategoriesList />} />
-      <Route path="vendor/category" element={<CategoriesList />} />
-      <Route path="product/category" element={<CategoriesList />} />
-      <Route path="category/subcategory" element={<SubCategoriesList />} />
-      <Route path="addcategory" element={<AddCategories />} />
-      <Route path="product/catalog" element={<CatalogList />} />
-      <Route path="product/inventory" element={<ComingSoonPage />} />
-      <Route path="services/category" element={<ComingSoonPage />} />
-      <Route path="services/add" element={<ComingSoonPage />} />
-      <Route path="services/list" element={<ComingSoonPage />} />
-      <Route path="services/prices" element={<ComingSoonPage />} />
-      <Route path="presales/quotes/add" element={<ComingSoonPage />} />
-      <Route path="presales/quotes/view" element={<Quote />} />
-      <Route path="presales/enquiry/add" element={<ComingSoonPage />} />
-      <Route path="presales/enquiry/list" element={<Enquiry />} />
-      <Route path="presales/purchaseorder/add" element={<ComingSoonPage />} />
-      <Route path="presales/purchaseorder/list" element={<PurchaseOrder />} />
-      <Route path="/presales/salesInvoice/list" element={<SalesInvoice />} />
-      <Route path="presales/deliverynote/add" element={<ComingSoonPage />} />
-      <Route path="presales/deliverynote/list" element={<ComingSoonPage />} />
-      <Route path="delivery/shippingcarrier" element={<ComingSoonPage />} />
-      <Route path="delivery/logisticmanagement" element={<ComingSoonPage />} />
-      <Route path="delivery/byowner" element={<ComingSoonPage />} />
-      <Route path="delivery/tracking" element={<ComingSoonPage />} />
-      <Route path="store/ordermanagement/add" element={<ComingSoonPage />} />
-      <Route path="store/ordermanagement/list" element={<ComingSoonPage />} />
-      <Route path="store/ordermanagement/cancel" element={<ComingSoonPage />} />
-      <Route path="store/ordermanagement/refund" element={<ComingSoonPage />} />
-      <Route path="store/rfq/add" element={<ComingSoonPage />} />
-      <Route path="store/rfq/view" element={<ComingSoonPage />} />
-      <Route path="store/rfq/cancel" element={<ComingSoonPage />} />
-      <Route path="store/rfq/send" element={<ComingSoonPage />} />
-      <Route path="store/appmanagement/appsetting/add" element={<AddApp />} />
-      <Route path="store/appmanagement/appsetting/edit" element={<EditApp />} />
-      <Route path="store/appmanagement/appsetting/list" element={<ListApp />} />
-      <Route path="store/appmanagement/page" element={<Page />} />
-      <Route path="store/appmanagement/geoblocking" element={<ComingSoonPage />} />
-      <Route path="store/appmanagement/layout" element={<Layout />} />
-      <Route path="store/appmanagement/element" element={<Element />} />
-      <Route path="store/appmanagement/container" element={<Containers />} />
-      <Route path="store/appmanagement/menu" element={<ComingSoonPage />} />
-      <Route path="store/appmanagement/paymentconfig" element={<ComingSoonPage />} />
-      <Route path="store/appmanagement/mailtemplate" element={<ComingSoonPage />} />
-      <Route path="store/appmanagement/branding" element={<ComingSoonPage />} />
-      <Route path="store/payment/list" element={<ComingSoonPage />} />
-      <Route path="store/payment/cancel" element={<ComingSoonPage />} />
-      <Route path="store/payment/refund" element={<ComingSoonPage />} />
-      <Route path="store/color/add" element={<AddColor />} />
-      <Route path="store/color/edit" element={<EditColor />} />
-      <Route path="store/color/list" element={<Color />} />
-      <Route path="reporting/reports" element={<ComingSoonPage />} />
-      <Route path="reporting/analytics" element={<ComingSoonPage />} />
-      <Route path="admin/organization" element={<Organization />} />
-      <Route path="admin/userpermission" element={<ComingSoonPage />} />
-      <Route path="admin/logininfo" element={<ComingSoonPage />} />
-      <Route path="admin/logs" element={<ComingSoonPage />} />
-      <Route path="layout/add" element={<AddLayout />} />
-      <Route path="layout/edit" element={<EditLayout />} />
-      <Route path="layout" element={<Layout />} />
-      <Route path="element/add" element={<AddElement />} />
-      <Route path="element/edit" element={<EditElement />} />
-      <Route path="element" element={<Element />} />
-      <Route path="container" element={<Containers />} />
-      <Route path="container/add" element={<AddContainer />} />
-      <Route path="container/edit" element={<EditContainer />} />
-      <Route path="page/add" element={<AddPage />} />
-      <Route path="page/edit" element={<EditPage />} />
-      <Route path="page" element={<Page />} />
-      <Route path="enquiry/add" element={<AddEnquiry />} />
-      <Route path="enquiry/edit" element={<EditEnquiry />} />
-      <Route path="enquiry" element={<Enquiry />} />
-      <Route path="organization/add" element={<AddOrganization />} />
-      <Route path="purchaseorder/add" element={<AddPurchaseOrder />} />
-      <Route path="purchaseorder/edit" element={<EditPurchaseOrder />} />
-      <Route path="purchaseorder" element={<PurchaseOrder />} />
-      <Route path="salesinvoice/add" element={<AddSalesInvoice />} />
-      <Route path="salesinvoice/edit" element={<EditSalesInvoice />} />
-      <Route path="salesinvoice" element={<SalesInvoice />} />
-      <Route path="quoterequest/add" element={<AddVendorQuoteRequest />} />
-      <Route path="quoterequest/edit" element={<EditVendorQuoteRequest />} />
-      <Route path="quoterequest" element={<VendorQuoteRequest />} />
-      <Route path="organization/edit" element={<EditOrganization />} />
-      <Route path="organization" element={<Organization />} />
-      <Route path="quote/add" element={<AddQuote />} />
-      <Route path="quote/edit" element={<EditQuote />} />
-      <Route path="quote" element={<Quote />} />
-      <Route path="menu/add" element={<AddMenu />} />
-      <Route path="menu/edit" element={<EditMenu />} />
-      <Route path="menu" element={<Menu />} />
-      <Route path="permission" element={<UserTeamPermission />} />
-      <Route path="permission/add" element={<AddUserTeamPermission />} />
-      <Route path="permission/edit" element={<EditUserTeamPermission />} />
-      <Route path="catalog" element={<CatalogPage />} />
-      <Route path="profile/:userId/details" element={<Profile />} />
-            <Route path="/profile/:id" element={<CustomerProfile />}>
-                <Route path="customerdetails" element={<CustomerDetails />} />
-                <Route path="contacts" element={<CustomerContacts />} />
-            </Route>
-            <Route path="/product/profile/:id" element={<ProductProfile />}>
-                <Route path="productdetails" element={<ProductDetails />} />
-                <Route path="variants" element={<VariantDetails />} />
-                <Route path="price" element={<PriceDetails />} />
-            </Route>
-            <Route path="/quote/:id" element={<QuotesProfile />}>
-            <Route path="details" element={<QuotesProfile />} />
-            <Route path="products" element={<ComingSoonPage />} />
-            </Route>
+      <Route exact path="home" element={<Dashboard></Dashboard>}></Route>  
+      <Route path="customer/add" element={<UserTeamPermissionsPage requiredModule={"customers"} permission={"create"} page={<AddCustomer />} />} />
+      <Route exact path="customer/list" element={<UserTeamPermissionsPage requiredModule={"customers"} permission={"view"} page={<Customer/>} />}></Route>
+      <Route path="/customer/profile/:id" element={<UserTeamPermissionsPage requiredModule={"customers"} permission={"view"} page={<CustomerProfile />} />}>
+        <Route path="customerdetails" element={<UserTeamPermissionsPage requiredModule={"customers"} permission={"view"} page={<CustomerDetails />} />} />
+        <Route path="contacts" element={<UserTeamPermissionsPage requiredModule={"customers"} permission={"view"} page={<CustomerContacts />} />} />
+      </Route>
+      <Route path="customer/edit" element={<UserTeamPermissionsPage requiredModule={"customers"} permission={"update"} page={<EditCustomer />} />} />
+      <Route exact path="/customer/contact" element={<UserTeamPermissionsPage requiredModule={"contacts"} permission={"view"} page={<CustomerContact></CustomerContact>} />}></Route> 
+      <Route exact path="customer/addcontact" element={<UserTeamPermissionsPage requiredModule={"customers"} permission={"create"} page={<AddContact></AddContact>} />}></Route> 
+      <Route exact path="customer/editcontact" element={<UserTeamPermissionsPage requiredModule={"customers"} permission={"update"} page={<AddContact></AddContact>} />}></Route> 
+      <Route path="customer/category" element={<UserTeamPermissionsPage requiredModule={"categories"} permission={"view"} page={<CategoriesList />} />} />
+      <Route path="customer/category/subcategory" element={<UserTeamPermissionsPage requiredModule={"subcategories"} permission={"view"} page={<SubCategoriesList />} />} />
+      <Route exact path="contact" element={<UserTeamPermissionsPage requiredModule={"contacts"} permission={"view"} page={<Contact></Contact>} />}></Route>
+      <Route exact path="vendor/add" element={<UserTeamPermissionsPage requiredModule={"vendors"} permission={"create"} page={<AddVendor></AddVendor>} />}></Route>
+      <Route exact path="vendor/list" element={<UserTeamPermissionsPage requiredModule={"vendors"} permission={"view"} page={<Vendor></Vendor>} />}></Route>
+      <Route path="/vendor/profile/:id" element={<UserTeamPermissionsPage requiredModule={"vendors"} permission={"view"} page={<VendorProfile />} />}>
+        <Route path="vendordetails" element={<UserTeamPermissionsPage requiredModule={"vendors"} permission={"view"} page={<VendorDetails />} />} />
+        <Route path="contacts" element={<UserTeamPermissionsPage requiredModule={"vendors"} permission={"view"} page={<VendorContacts />} />} />
+      </Route>
+      <Route exact path="vendor/edit" element={<UserTeamPermissionsPage requiredModule={"vendors"} permission={"update"} page={<EditVendor></EditVendor>} />}></Route>
+      <Route exact path="/vendor/editContact" element={<UserTeamPermissionsPage requiredModule={"vendors"} permission={"update"} page={<CustomerContact></CustomerContact>} />}></Route> 
+      <Route path="vendor/category" element={<UserTeamPermissionsPage requiredModule={"vendors"} permission={"view"} page={<CategoriesList />} />} />
+      <Route exact path="contact" element={<UserTeamPermissionsPage requiredModule={"contacts"} permission={"view"} page={<Contact></Contact>} />}></Route>
+      <Route exact path="contact/edit" element={<UserTeamPermissionsPage requiredModule={"contacts"} permission={"update"} page={<AddContact></AddContact>} />}></Route>
+      <Route path="product/add" element={<UserTeamPermissionsPage requiredModule={"products"} permission={"create"} page={<AddProduct />} />} />
+      <Route path="product/list" element={<UserTeamPermissionsPage requiredModule={"products"} permission={"view"} page={<Product />} />} />
+      <Route path="/product/profile/:id" element={<UserTeamPermissionsPage requiredModule={"products"} permission={"view"} page={<ProductProfile />} />}>
+        <Route path="productdetails" element={<UserTeamPermissionsPage requiredModule={"products"} permission={"view"} page={<ProductDetails />} />} />
+        <Route path="variants" element={<UserTeamPermissionsPage requiredModule={"products"} permission={"view"} page={<VariantDetails />} />} />
+        <Route path="price" element={<UserTeamPermissionsPage requiredModule={"products"} permission={"view"} page={<PriceDetails />} />} />
+      </Route>
+      <Route path="product/edit" element={<UserTeamPermissionsPage requiredModule={"products"} permission={"view"} page={<EditProduct />} />} />
+      <Route path="variant/list" element={<UserTeamPermissionsPage requiredModule={"variants"} permission={"view"} page={<Varient />} />} />
+      <Route path="variant/add" element={<UserTeamPermissionsPage requiredModule={"variants"} permission={"update"} page={<AddVarient />} />} />
+      <Route path="product/category" element={<UserTeamPermissionsPage requiredModule={"categories"} permission={"view"} page={<CategoriesList />} />} />
+      <Route path="product/catalog" element={<UserTeamPermissionsPage requiredModule={"catalogues"} permission={"view"} page={<CatalogList />} />} />
+      <Route path="catalog/add" element={<UserTeamPermissionsPage requiredModule={"catalogues"} permission={"create"} page={<CatalogPage />} />} />
+      <Route path="catalog/edit" element={<UserTeamPermissionsPage requiredModule={"catalogues"} permission={"update"} page={<CatalogPage />} />} />
+      <Route path="product/prices" element={<UserTeamPermissionsPage requiredModule={"pricing"} permission={"view"} page={<ListPrice />} />} />
+      <Route path="product/inventory" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="services/category" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="services/add" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="services/list" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="services/prices" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="presales/quotes/add" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="presales/quotes/view" element={<UserTeamPermissionsPage requiredModule={"quotes"} permission={"view"} page={<Quote />} />} />
+      <Route path="quote/add" element={<UserTeamPermissionsPage requiredModule={"quotes"} permission={"create"} page={<AddQuote />} />} />
+      <Route path="quote/edit" element={<UserTeamPermissionsPage requiredModule={"quotes"} permission={"update"} page={<EditQuote />} />} />
+      <Route path="/quote/:id" element={<UserTeamPermissionsPage requiredModule={"quotes"} permission={"update"} page={<QuotesProfile />} />}>
+        <Route path="details" element={<UserTeamPermissionsPage requiredModule={"quotes"} permission={"update"} page={<QuotesProfile />} />} />
+        <Route path="products" element={<UserTeamPermissionsPage requiredModule={"quotes"} permission={"update"} page={<ComingSoonPage />} />} />
+      </Route>
+      <Route path="presales/enquiry/add" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="presales/enquiry/list" element={<UserTeamPermissionsPage requiredModule={"enquiries"} permission={"view"} page={<Enquiry />} />} />
+      <Route path="enquiry/add" element={<UserTeamPermissionsPage requiredModule={"enquiries"} permission={"create"} page={<AddEnquiry />} />} />
+      <Route path="enquiry/edit" element={<UserTeamPermissionsPage requiredModule={"enquiries"} permission={"update"} page={<EditEnquiry />} />} />
+      <Route path="presales/purchaseorder/add" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="presales/purchaseorder/list" element={<UserTeamPermissionsPage requiredModule={"purchaseorders"} permission={"view"} page={<PurchaseOrder />} />} />
+      <Route path="purchaseorder/add" element={<UserTeamPermissionsPage requiredModule={"purchaseorders"} permission={"create"} page={<AddPurchaseOrder />} />} />
+      <Route path="purchaseorder/edit" element={<UserTeamPermissionsPage requiredModule={"purchaseorders"} permission={"update"} page={<EditPurchaseOrder />} />} />
+      <Route path="/presales/salesInvoice/list" element={<UserTeamPermissionsPage requiredModule={"salesinvoices"} permission={"view"} page={<SalesInvoice />} />} />
+      <Route path="salesinvoice/add" element={<UserTeamPermissionsPage requiredModule={"salesinvoices"} permission={"create"} page={<AddSalesInvoice />} />} />
+      <Route path="salesinvoice/edit" element={<UserTeamPermissionsPage requiredModule={"salesinvoices"} permission={"update"} page={<EditSalesInvoice />} />} />
+      <Route path="presales/deliverynote/add" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="presales/deliverynote/list" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="delivery/shippingcarrier" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="delivery/logisticmanagement" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="delivery/byowner" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="delivery/tracking" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/ordermanagement/add" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/ordermanagement/list" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/ordermanagement/cancel" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/ordermanagement/refund" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/rfq/add" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/rfq/view" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/rfq/cancel" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/rfq/send" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/appmanagement/appsetting/list" element={<UserTeamPermissionsPage requiredModule={"apps"} permission={"view"} page={<ListApp />} />} />
+      <Route path="store/appmanagement/appsetting/add" element={<UserTeamPermissionsPage requiredModule={"apps"} permission={"create"} page={<AddApp />} />} />
+      <Route path="store/appmanagement/appsetting/edit" element={<UserTeamPermissionsPage requiredModule={"apps"} permission={"update"} page={<EditApp />} />} />
+      <Route path="store/appmanagement/page" element={<UserTeamPermissionsPage requiredModule={"pages"} permission={"view"} page={<Page />} />} />
+      <Route path="page/add" element={<UserTeamPermissionsPage requiredModule={"pages"} permission={"create"} page={<AddPage />} />} />
+      <Route path="page/edit" element={<UserTeamPermissionsPage requiredModule={"pages"} permission={"update"} page={<EditPage />} />} />
+      <Route path="store/appmanagement/geoblocking" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/appmanagement/layout" element={<UserTeamPermissionsPage requiredModule={"layoutsettings"} permission={"view"} page={<Layout />} />} />
+      <Route path="layout/add" element={<UserTeamPermissionsPage requiredModule={"layoutsettings"} permission={"create"} page={<AddLayout />} />} />
+      <Route path="layout/edit" element={<UserTeamPermissionsPage requiredModule={"layoutsettings"} permission={"update"} page={<EditLayout />} />} />
+      <Route path="store/appmanagement/element" element={<UserTeamPermissionsPage requiredModule={"elements"} permission={"view"} page={<Element />} />} />
+      <Route path="element/add" element={<UserTeamPermissionsPage requiredModule={"elements"} permission={"create"} page={<AddElement />} />} />
+      <Route path="element/edit" element={<UserTeamPermissionsPage requiredModule={"elements"} permission={"update"} page={<EditElement />} />} />
+      <Route path="store/appmanagement/container" element={<UserTeamPermissionsPage requiredModule={"containers"} permission={"view"} page={<Containers />} />} />
+      <Route path="container/add" element={<UserTeamPermissionsPage requiredModule={"containers"} permission={"create"} page={<AddContainer />} />} />
+      <Route path="container/edit" element={<UserTeamPermissionsPage requiredModule={"containers"} permission={"update"} page={<EditContainer />} />} />
+      <Route path="store/appmanagement/menu" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/appmanagement/paymentconfig" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/appmanagement/mailtemplate" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/appmanagement/branding" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/payment/list" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/payment/cancel" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/payment/refund" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/color/add" element={<UserTeamPermissionsPage requiredModule={"colorschemes"} permission={"create"} page={<AddColor />} />} />
+      <Route path="store/color/edit" element={<UserTeamPermissionsPage requiredModule={"colorschemes"} permission={"update"} page={<EditColor />} />} />
+      <Route path="store/color/list" element={<UserTeamPermissionsPage requiredModule={"colorschemes"} permission={"view"} page={<Color />} />} />
+      <Route path="reporting/reports" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="reporting/analytics" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="admin/organization" element={<UserTeamPermissionsPage requiredModule={"organizations"} permission={"view"} page={<Organization />} />} />
+      <Route path="organization/add" element={<UserTeamPermissionsPage requiredModule={"organizations"} permission={"create"} page={<AddOrganization />} />} />
+      <Route path="organization/edit" element={<UserTeamPermissionsPage requiredModule={"organizations"} permission={"update"} page={<EditOrganization />} />} />
+      <Route path="admin/teams" element={<UserTeamPermissionsPage requiredModule={"teams"} permission={"view"} page={<Team></Team>} />}></Route>
+      <Route path="admin/adduser" element={<UserTeamPermissionsPage requiredModule={"authentication"} permission={"create"} page={<AddUser />} />} />
+      <Route path="admin/viewuser" element={<UserTeamPermissionsPage requiredModule={"authentication"} permission={"view"} page={<User></User>} />}></Route>
+      <Route path="profile/:userId/details" element={<UserTeamPermissionsPage requiredModule={"authentication"} permission={"view"} page={<Profile />} />} />
+      <Route path="admin/edituser" element={<UserTeamPermissionsPage requiredModule={"authentication"} permission={"update"} page={<AddUser />} />} />
+      <Route path="admin/userpermission" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="admin/logininfo" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="admin/logs" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="loading" element={<Loading></Loading>}></Route>
+
+      <Route path="group" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<Group></Group>} />}></Route>                
+      <Route path="addContact" element={<UserTeamPermissionsPage requiredModule={"contacts"} permission={"create"} page={<AddContact></AddContact>} />}></Route>
+      <Route path="addcategory" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<AddCategories />} />} />
+      <Route path="layout" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<Layout />} />} />
+      <Route path="element" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<Element />} />} />
+      <Route path="container" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<Containers />} />} />
+      <Route path="page" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<Page />} />} />
+      <Route path="enquiry" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<Enquiry />} />} />
+      <Route path="purchaseorder" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<PurchaseOrder />} />} />
+      <Route path="salesinvoice" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<SalesInvoice />} />} />
+      <Route path="quoterequest/add" element={<UserTeamPermissionsPage requiredModule={"vendorquoterequests"} permission={"create"} page={<AddVendorQuoteRequest />} />} />
+      <Route path="quoterequest/edit" element={<UserTeamPermissionsPage requiredModule={"vendorquoterequests"} permission={"update"} page={<EditVendorQuoteRequest />} />} />
+      <Route path="quoterequest" element={<UserTeamPermissionsPage requiredModule={"vendorquoterequests"} permission={"view"} page={<VendorQuoteRequest />} />} />
+      <Route path="organization" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<Organization />} />} />
+      <Route path="quote" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<Quote />} />} />
+      <Route path="menu/add" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"create"} page={<AddMenu />} />} />
+      <Route path="menu/edit" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"update"} page={<EditMenu />} />} />
+      <Route path="menu" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"view"} page={<Menu />} />} />
+      <Route path="permission" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"view"} page={<UserTeamPermission />} />} />
+      <Route path="permission/add" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"create"} page={<AddUserTeamPermission />} />} />
+      <Route path="permission/edit" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"update"} page={<EditUserTeamPermission />} />} />
+      <Route path="error" element={<ErrorPage />} />
       </Route>
 
       <Route element={<PublicRoute></PublicRoute>}>

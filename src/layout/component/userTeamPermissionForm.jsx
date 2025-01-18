@@ -12,6 +12,7 @@ function UserTeamPermissionForm({ formattedData, permission }) {
   const [activeAccordion, setActiveAccordion] = useState(null);  
   const [isModalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(true); // Loading state
+  const limit = 100;
   const [formValues, setFormValues] = useState({
     referenceName: "",
     allowedModules: formattedData || [],
@@ -25,7 +26,7 @@ function UserTeamPermissionForm({ formattedData, permission }) {
 
   const { data: employeeData, refetch: refetchEmployees } = useGetData("employees", "/employee");
   
-  const { data: moduleData, isLoading: isModuleLoading } = useGetData('modules', '/modules', {});
+  const { data: moduleData, isLoading: isModuleLoading } = useGetData('modules', `/modules?limit=${limit}`, {});
 
     useEffect(() => {
       const timer = setTimeout(() => {
@@ -121,6 +122,13 @@ function UserTeamPermissionForm({ formattedData, permission }) {
     }
   };
 
+    // Define a function to update allowedModules
+    const updateAllowedModules = (newAllowedModules) => {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        allowedModules: newAllowedModules,
+      }));
+    }
 
   if ( loading ) {
     return <LoadingScreen />;
@@ -186,7 +194,7 @@ function UserTeamPermissionForm({ formattedData, permission }) {
   <label className="block w-full mb-2 text-text-color primary-text">
     Modules
   </label>
-          {/* <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded mt-4" onClick={() => openModal()}>Add</button> */}
+          <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded mt-4" onClick={() => openModal()}>Add</button>
           </div>
   <div className="accordion-container">
     {formValues.allowedModules.length === 0 && (
@@ -263,13 +271,13 @@ function UserTeamPermissionForm({ formattedData, permission }) {
 
     </div>
         <div className="flex justify-end">
-          <button type="submit" className="bg-orange-600 text-text-color px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
             {isLoading ? "Saving..." : "Save"}
           </button>
         </div>
       </form>
             <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Modules"}>
-        <Modules data={formValues.allowedModules} closeModal={closeModal} />
+        <Modules data={formValues.allowedModules} closeModal={closeModal} fun={updateAllowedModules} />
       </PopUpModal>
     </div>
   );

@@ -1,72 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { useGetData, usePostData, usePutData } from "../../common/api";
-import Select from 'react-select';
+import Select from "react-select";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import LoadingScreen from "../ui/loading/loading";
 
-function ContactForm({ typeData, customerId }) {
-  
+function ContactForm({ contact ,custId, nav }) {
   const navigate = useNavigate();
-
-  console.log("customerId", customerId);
-  console.log("typeData", typeData);
   const [contactData, setContactData] = useState({
-    name: '',
-    email: '',
-    primaryPhoneNumber: '',
-    secondaryPhoneNumber: '',
+    name: "",
+    email: "",
+    primaryPhoneNumber: "",
+    secondaryPhoneNumber: "",
     primaryPhoneWhatsApp: false,
     secondaryPhoneWhatsApp: false,
-    address: '',
-    country: '',
-    state: '',
-    customer: '',
+    address: "",
+    country: "",
+    state: "",
+    customer: custId ? custId : "",
     note: [],
-    designation: '',
+    designation: "",
     decisionMaker: false,
   });
+  const [loading, setLoading] = useState(true);
 
-  const [currentPage, setCurrentPage] = useState(0);
-  const [contactId, setContactId] = useState(null);
+  const mutationHook = contact ? usePutData : usePostData;
+  const api_url = contact ? `/contact/update/${contact?._id}` : "/contact/add";
+  const api_key = contact ? "updateContact" : "addContact";
+  const { mutate: saveContact, isLoading, isError } = mutationHook(api_key, api_url);
 
-  const { data: contactDetail, refetch: refetchContactDetail, load } = useGetData('contactDetail',
-    typeData === "contacts" ? `contact/${customerId}` : `contact/customer/${customerId}`
-  );
-  const { data: vendorData, isLoading: vendorLoading, error: vendorError } = useGetData("VendorData", "/vendor", {});
-const { data: customerData, isLoading: customerLoading, error: customerError } = useGetData("customerData", "/customer", {});
-  const { mutate: addContact, isLoading, isError } = usePostData("addContact", "/contact/add");
-  const { mutate: updateContact, loading, error } = usePutData("updateContact", `/contact/update/${contactId}`);
-
-  useEffect(() => {
-    const hasReloaded = sessionStorage.getItem('hasReloaded');
-
-    if (!hasReloaded) {
-      sessionStorage.setItem('hasReloaded', 'true');
-      window.location.reload();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (customerId) {
-      refetchContactDetail();
-    }
-  }, [customerId, refetchContactDetail]);
-
-  useEffect(() => {
-    if (contactDetail) {
-      let currentContact = Array.isArray(contactDetail.contacts) ? contactDetail.contacts[currentPage] : contactDetail;
-      
-      if (currentContact) {
-        setContactData((prevState) => ({
-          ...prevState,
-          ...currentContact,
-          note: currentContact.note || [],
-        }));
-        setContactId(currentContact._id);
-      }
-    }
-  }, [contactDetail, currentPage]);
+  const { data: vendorData, isLoading: vendorLoading, vendorError } = useGetData("VendorData", "/vendor", {});
+  const { data: customerData, isLoading: customerLoading, customerError } = useGetData("CustomerData", "/customer", {});
 
   const vendorsArray = Array.isArray(vendorData) ? vendorData : vendorData?.customers;
   const customersArray = Array.isArray(customerData) ? customerData : customerData?.customers;
@@ -80,100 +44,62 @@ const options = combinedArray.map(item => ({
   type: item.vendor ? 'Vendor' : 'Customer', // Identify whether the option is a Vendor or Customer
 }));
 
+  useEffect(() => {
+    if (contact) {
+      setContactData({
+        name: contact?.name,
+        email: contact?.email,
+        primaryPhoneNumber: contact?.primaryPhoneNumber,
+        secondaryPhoneNumber: contact?.secondaryPhoneNumber,
+        primaryPhoneWhatsApp: contact?.primaryPhoneWhatsApp,
+        secondaryPhoneWhatsApp: contact?.secondaryPhoneWhatsApp,
+        address: contact?.address,
+        country: contact?.country,
+        state: contact?.state,
+        designation: contact?.designation,
+        decisionMaker: contact?.decisionMaker,
+        customer: contact?.customer?._id,
+        note: contact.note || [],
+      });
+    }
+    setLoading(false);
+  }, [contact]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (name === 'note') {
       setContactData((prevState) => ({
         ...prevState,
         note: value?.split(",").map(note => note.trim()),
-      }));
-    } else {
-      setContactData((prevState) => ({
-        ...prevState,
-        [name]: type === 'checkbox' ? checked : value,
-      }));
+      }));}
+    else{
+    setContactData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const { _id, __v, ...cleanedData } = contactData;
-
-    const payload = customerId ? { 
-      ...cleanedData, 
-      customer: customerId 
-    } : { 
-      ...cleanedData 
-    };
-
-    const mutate = contactId ? updateContact : addContact;
-    mutate(payload, {
+    saveContact(contactData, {
       onSuccess: () => {
-        toast.success(`Contact ${contactId ? 'updated' : 'added'} successfully!`);
-        if (typeData==="vendor") {
-          navigate("/vendor/list");
-        }
-        if (typeData==="customer") {
-          navigate("/customer");
-        }
-        
+        toast.success(`Contact ${contact ? "updated" : "added"} successfully!`);
+        navigate(nav?`/${nav}/contact`:`/contact`, { state: { custId } });
       },
       onError: (error) => {
-        console.error(`Error ${contactId ? 'updating' : 'adding'} contact:`, error);
-        toast.error(`Error ${contactId ? 'updating' : 'adding'} contact`);
-        if (typeData==="vendor") {
-          navigate("/vendor/list");
-        }
-        if (typeData==="customer") {
-          navigate("/customer");
-        }
-        
+        console.error(error);
+        toast.error(`Failed to ${contact ? "update" : "add"} contact.`);
       },
     });
-
-    if (!contactId) {
-      setContactData({
-        name: '',
-        email: '',
-        primaryPhoneNumber: '',
-        secondaryPhoneNumber: '',
-        primaryPhoneWhatsApp: false,
-        secondaryPhoneWhatsApp: false,
-        address: '',
-        country: '',
-        state: '',
-        customer: '',
-        note: [],
-        designation: '',
-        decisionMaker: false,
-      });
-
-
-
-    }
   };
 
-  const handlePreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
-  };
-
-  const handleNextPage = () => {
-    if (contactDetail && Array.isArray(contactDetail.contacts)) {
-      setCurrentPage((prevPage) => Math.min(prevPage + 1, contactDetail.contacts.length - 1));
-    }
-  };
-
-  // Handle case when contactDetail or contacts array is not available or empty
-  if (customerId && !typeData && (!contactDetail || !contactDetail.contacts || contactDetail.contacts.length < 1)) {
-    return <div>No contacts available</div>;
-  }
-
-  if (vendorLoading || customerLoading || isLoading || loading || load) {
+  if (loading) {
     return <LoadingScreen />;
   }
 
-  console.log(contactDetail);
+  console.log("custId",custId);
+  console.log("contactData",contactData);
 
   return (
     <div>
@@ -311,7 +237,7 @@ const options = combinedArray.map(item => ({
             </div>
           </div>
         
-          {!(customerId) && (
+          {!(contact) || !(custId) && (
     <div className="w-full sm:w-1/2 p-4">
       <div className="mb-4">
         <label className="block w-full mb-2 text-text-color primary-text">Customer/Vendor *</label>
@@ -398,26 +324,6 @@ const options = combinedArray.map(item => ({
           </button>
         </div>
       </form>
-
-      {/* {contactDetail && contactDetail.contacts.length > 1 && ( */}
-       {(contactDetail?.contacts?.length < 0) && <div className="flex justify-center items-center mt-4">
-          <button
-            onClick={handlePreviousPage}
-            // disabled={currentPage === 0}
-            className="text-text-color px-2 py-1 bg-gray-600 rounded hover:bg-gray-700 disabled:opacity-50"
-          >
-            {"<"}
-          </button>
-          <span className="mx-2 text-text-color">{currentPage + 1}</span>
-          <button
-            onClick={handleNextPage}
-            // disabled={currentPage === contactDetail.contacts.length - 1}
-            className="text-text-color px-2 py-1 bg-gray-600 rounded hover:bg-gray-700 disabled:opacity-50"
-          >
-            {">"}
-          </button>
-        </div>}
-      {/* )} */}
     </div>
   );
 }

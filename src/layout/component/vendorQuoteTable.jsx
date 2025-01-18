@@ -310,7 +310,7 @@ function VendorQuoteTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   const totalPages = Math.ceil(quoteRequestData.pagination.totalCount / limit);
