@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useGetData } from "../../common/api";
 import { BlobProvider, Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import LoadingScreen from "../ui/loading/loading";
+import UserTeamPermissionsPage from "../../routes/userPermission";
 
 
 // Header Component
@@ -372,7 +373,7 @@ function QuoteTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   const totalPages = Math.ceil(QuoteData.pagination.totalCount / limit);
@@ -438,7 +439,7 @@ function QuoteTable() {
                     Details
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <BlobProvider document={<QuotePDF quote={quote} organization={organizationData} />}>
+                    <UserTeamPermissionsPage requiredModule={"quotes"} permission={"view"} page={<BlobProvider document={<QuotePDF quote={quote} organization={organizationData} />}>
                       {({ url, loading }) =>
                         loading ? (
                           "Generating PDF..."
@@ -448,7 +449,7 @@ function QuoteTable() {
                           </button>
                         )
                       }
-                    </BlobProvider>
+                    </BlobProvider>} />
                   </Dropdown.Item>
                 </Dropdown>
               </Table.Cell>
@@ -465,7 +466,7 @@ function QuoteTable() {
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
               currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
-            } text-text-color`}
+            } text-btn-text-color`}
           >
             {index + 1}
           </button>

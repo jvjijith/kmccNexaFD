@@ -9,6 +9,7 @@ function CustomerContact() {
     const location = useLocation();
   const customer = location.state?.customer || null;
   const vendor = location.state?.vendor || null;
+  const custId = location.state?.custId || null;
 
 
   console.log("customer",customer);
@@ -16,9 +17,10 @@ function CustomerContact() {
 
     return (
         <Container>
-         <ContactCard  title ={"Contacts List"}>
+         <ContactCard  title ={"Contacts List"} nav={"customer"} customerId={ customer ? customer._id : vendor ? vendor._id : custId }>
              <CustomerContactTable
-             customerId={customer?customer._id:vendor._id}
+             customerId={customer ? customer._id : vendor ? vendor._id : custId }
+             nav={"customer"}
              ></CustomerContactTable>
          </ContactCard>
         </Container>

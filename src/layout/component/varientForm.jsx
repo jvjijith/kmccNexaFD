@@ -339,40 +339,19 @@ function VarientForm({ typeData, productId, variantId }) {
                   value={productOptions.find((opt) => opt.value === productData.productId)}
                   
             onChange={handleSelectChange('productId')}
-                  className="w-full"
-                 
-                  styles={{
-                    control: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: "black",
-                      borderColor: state.isFocused ? "white" : "#D3D3D3",
-                      borderBottomWidth: "2px",
-                      borderRadius: "0px",
-                      height: "40px",
-                      paddingLeft: "8px",
-                      paddingRight: "8px",
-                      color: "white",
-                    }),
-                    singleValue: (provided) => ({
-                      ...provided,
-                      color: "white",
-                    }),
-                    placeholder: (provided) => ({
-                      ...provided,
-                      color: "white",
-                    }),
-                    menu: (provided) => ({
-                      ...provided,
-                      backgroundColor: "black",
-                      color: "white",
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected ? "#007bff" : "black",
-                      color: state.isSelected ? "black" : "white",
-                      cursor: "pointer",
-                    }),
-                  }}
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
+            }}
                 />
         </div>
         </div>
@@ -468,7 +447,7 @@ function VarientForm({ typeData, productId, variantId }) {
                 onChange={(e) => handleNotesChange(index, 'description', e.target.value)}
                 className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color ml-2"
               />
-              <button type="button" className="bg-secondary-button-color text-text-color px-4 py-2 rounded ml-2" onClick={() => removeNotes(index)}>Remove</button>
+              <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded ml-2" onClick={() => removeNotes(index)}>Remove</button>
             </div>
           ))}
           </div>
@@ -477,8 +456,7 @@ function VarientForm({ typeData, productId, variantId }) {
         
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-primary-butt
-          olor px-6 py-2 rounded">
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
             {isSaving  ? 'Saving...' : 'Save'}
           </button>
         </div>

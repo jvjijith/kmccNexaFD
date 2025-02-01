@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useGetData } from '../../common/api';
 
-function ContactCard({children,title}) {
+function ContactCard({ children, title, nav, customerId }) {
   
   const navigate = useNavigate();
   const {toggleSidebar} = useSidebar();
@@ -128,8 +128,8 @@ function ContactCard({children,title}) {
           
            <Card title={title}
            component={
-            <button className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={() => navigate('/addContact')}>
-              Add Contacts
+            <button className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={() => navigate(`/${nav}/addcontact`, { state : { nav , customerId } })}>
+              Add
             </button>
           }>
                {children}

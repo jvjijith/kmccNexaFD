@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Table } from "flowbite-react";
 import { useGetData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
@@ -6,15 +6,25 @@ import { ToastContainer, toast } from 'react-toastify';
 import CategoryForm from "./categoryForm";
 import PopUpModal from "../ui/modal/modal";
 import SubCategoryForm from "./subCategoryForm";
+import UserTeamPermissionsPage from "../../routes/userPermission";
 
 function SubCategoryTable({categoryId}) {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
+    const [loading, setLoading] = useState(true); // Loading state
 
 
-  const { data, isLoading, error, refetch } = useGetData("categoryData", `/subcategories/bycategory/${categoryId}`, {});
+  const { data, isLoading, error, refetch } = useGetData("subcategoryData", `/subcategories/bycategory/${categoryId}`, {});
+
+  useEffect(() => {
+        const timer = setTimeout(() => {
+          setLoading(false);
+        }, 3000); // 10 seconds delay
+    
+        return () => clearTimeout(timer); // Cleanup timeout on unmount
+      }, []);
 
   const openModal = (team) => {
     setSelectedTeam(team);
@@ -26,16 +36,16 @@ function SubCategoryTable({categoryId}) {
     setModalOpen(false);
   };
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <LoadingScreen />;
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
   
-  if (!data) {
-    return <div>No Sub-Category</div>;
+  if (data.length<1) {
+    return <div className="text-text-color">No Sub-Category</div>;
   }
 
   console.log('subCategory',data);
@@ -64,7 +74,7 @@ function SubCategoryTable({categoryId}) {
                     className="text-text-color hover:!bg-orange-600"
                     onClick={() => openModal(category)}
                   >
-                    Edit Category
+                    Edit Sub-Category
                   </Dropdown.Item>
                   {/* <Dropdown.Item
                     className="text-text-color hover:!bg-orange-600"
@@ -80,7 +90,7 @@ function SubCategoryTable({categoryId}) {
       </Table>
 
       <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Edit Sub Category"}>
-        <SubCategoryForm id={selectedTeam?._id} name={selectedTeam?.subCategoryName} industry={selectedTeam?.subCategoryType} category={selectedTeam?.category?._id} closeModal={closeModal} />
+        <UserTeamPermissionsPage requiredModule={"SubCategories"} permission={"update"} page={<SubCategoryForm id={selectedTeam?._id} name={selectedTeam?.subCategoryName} industry={selectedTeam?.subCategoryType} category={selectedTeam?.category?._id} closeModal={closeModal} />} />
       </PopUpModal>
 
       <ToastContainer />

@@ -16,6 +16,20 @@ function AdminCard({children,title}) {
   const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
 
   const {toggleSidebar} = useSidebar();
+
+  const getInitials = (name) => {
+    if (!name) return "NA"; // Handle cases where name might be null or undefined
+    const words = name.split(" ");
+    const firstInitial = words[0]?.[0] || ""; // First letter of the first word
+    const secondInitial = words[1]?.[0] || ""; // First letter of the second word (if exists)
+    return firstInitial + secondInitial; // Combine initials
+  };
+
+  const handleLogout = () => {
+    clearUser();
+    navigate("/login");
+  };
+  
     return (
         <div className="flex w-full">
               <div className="w-full h-screen hidden sm:block sm:w-20 xl:w-60 flex-shrink-0">

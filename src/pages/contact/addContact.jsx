@@ -8,9 +8,11 @@ import { useLocation } from "react-router";
 function AddContact() {
 
   const location = useLocation();
+  const customerId = location.state?.customerId || null;
   const customer = location.state?.customer || null;
   const contact = location.state?.contact || null;
   const vendor = location.state?.vendor || null;
+  const nav = location.state?.nav || null;
 
   console.log("customer",customer);
   console.log("contact",contact);
@@ -25,7 +27,9 @@ function AddContact() {
           <ContactForm
           
           typeData={contact ? "contacts" : customer? "customer" : vendor? "vendor" : ""}
-          customerId={customer ? customer._id : vendor ? vendor._id : contact ? contact._id : null}
+          contact={customer ? customer : vendor ? vendor : contact ? contact : null}
+          custId={customerId}
+          nav={nav}
           ></ContactForm>
           </ContactCard>
        </Container>

@@ -7,8 +7,9 @@ import CategoryForm from "./categoryForm";
 import PopUpModal from "../ui/modal/modal";
 import { useNavigate } from "react-router";
 import SubCategoryForm from "./subCategoryForm";
+import UserTeamPermissionsPage from "../../routes/userPermission";
 
-function CategoryTable() {
+function CategoryTable({nav}) {
   
   const navigate = useNavigate();
 
@@ -55,7 +56,7 @@ function CategoryTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   return (
@@ -86,7 +87,7 @@ function CategoryTable() {
                   </Dropdown.Item>
                   <Dropdown.Item
                     className="text-text-color hover:!bg-orange-600"
-                    onClick={() => navigate(`/category/subcategory`, { state: { category } })}
+                    onClick={() => navigate(`/${nav}/category/subcategory`, { state: { category } })}
                   >
                     Show Sub-Category
                   </Dropdown.Item>
@@ -103,12 +104,12 @@ function CategoryTable() {
         </Table.Body>
       </Table>
 
-      <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Edit Team"}>
-        <CategoryForm id={selectedTeam?._id} name={selectedTeam?.categoryName} industry={selectedTeam?.categoryType} closeModal={closeModal} />
+      <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Edit Category"}>
+        <UserTeamPermissionsPage requiredModule={"categories"} permission={"update"} page={<CategoryForm id={selectedTeam?._id} name={selectedTeam?.categoryName} industry={selectedTeam?.categoryType} closeModal={closeModal} />} />
       </PopUpModal>
 
-      <PopUpModal isOpen={isSubModalOpen} onClose={closeSubModal} title={"Edit Sub Category"}>
-        <SubCategoryForm  category={selectedTeam?._id} closeModal={closeSubModal} />
+      <PopUpModal isOpen={isSubModalOpen} onClose={closeSubModal} title={"Add Sub Category"}>
+        <UserTeamPermissionsPage requiredModule={"SubCategories"} permission={"create"} page={<SubCategoryForm  category={selectedTeam?._id} closeModal={closeSubModal} />} />
       </PopUpModal>
 
       <ToastContainer />

@@ -1,73 +1,100 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useGetData } from '../../common/api';
 import LoadingScreen from '../ui/loading/loading';
 import { useNavigate } from 'react-router';
 
-function Modules({ data }) {
+function Modules({ data, closeModal, fun }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [modules, setModules] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
+  
+  // Maintain a separate state for selected operations across all pages
+  const [selectedOperations, setSelectedOperations] = useState({});
   const [activeAccordion, setActiveAccordion] = useState(null);
 
-  const { data: moduleData, isLoading: isModuleLoading } = useGetData('modules', '/modules', {});
-
-  useEffect(() => {
-    if (moduleData?.modules) {
-      const initializedModules = moduleData.modules.map(module => {
-        const matchingModule = data?.find(d => d.moduleId === module._id);
-        return {
-          ...module,
-          allowedOperations: matchingModule?.allowedOperations || [],
-        };
-      });
-      setModules(initializedModules);
-      setLoading(false);
+  const { data: moduleData, isLoading: isModuleLoading } = useGetData(
+    ['modules', currentPage],
+    `/modules?page=${currentPage}&limit=${limit}`,
+    {
+      keepPreviousData: true,
     }
-  }, [moduleData, data]);
+  );
 
-  const handleToggleOperation = (moduleId, operation) => {
-    setModules(modules.map(module => {
-      if (module._id === moduleId) {
-        const isOperationAllowed = module.allowedOperations.includes(operation);
-        return {
-          ...module,
-          allowedOperations: isOperationAllowed
-            ? module.allowedOperations.filter(op => op !== operation)
-            : [...module.allowedOperations, operation],
-        };
-      }
-      return module;
+  // Initialize or update modules with their operations
+  const modules = useMemo(() => {
+    if (!moduleData?.modules) return [];
+    
+    return moduleData.modules.map(module => ({
+      ...module,
+      allowedOperations: selectedOperations[module._id] || 
+                        data?.find(d => d.moduleId === module._id)?.allowedOperations || 
+                        []
     }));
-  };
+  }, [moduleData, selectedOperations, data]);
 
-  const handleRemoveModule = (moduleId) => {
-    setModules(modules.map(module => {
-      if (module._id === moduleId) {
-        return {
-          ...module,
-          allowedOperations: module.allowedOperations.length === 0
-            ? [...module.moduleOperations]
-            : [],
-        };
-      }
-      return module;
-    }));
-  };
+  const totalPages = useMemo(() => 
+    Math.ceil((moduleData?.pagination?.totalCount || 0) / limit),
+    [moduleData?.pagination?.totalCount]
+  );
+
+  // Update selected operations when data prop changes
+  useEffect(() => {
+    if (data) {
+      const initialOperations = {};
+      data.forEach(item => {
+        initialOperations[item.moduleId] = item.allowedOperations;
+      });
+      setSelectedOperations(initialOperations);
+    }
+  }, [data]);
+
+  const handlePageChange = useCallback((page) => {
+    if (page === currentPage || page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  }, [currentPage, totalPages]);
+
+  const handleToggleOperation = useCallback((moduleId, operation) => {
+    setSelectedOperations(prev => {
+      const currentOperations = prev[moduleId] || [];
+      const isOperationAllowed = currentOperations.includes(operation);
+      
+      return {
+        ...prev,
+        [moduleId]: isOperationAllowed
+          ? currentOperations.filter(op => op !== operation)
+          : [...currentOperations, operation]
+      };
+    });
+  }, []);
+
+  const handleRemoveModule = useCallback((moduleId, moduleOperations) => {
+    setSelectedOperations(prev => {
+      const currentOperations = prev[moduleId] || [];
+      return {
+        ...prev,
+        [moduleId]: currentOperations.length === 0 ? [...moduleOperations] : []
+      };
+    });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formattedData = modules
-      .filter(module => module.allowedOperations.length > 0)
-      .map(module => ({
-        moduleId: module._id,
-        allowedOperations: module.allowedOperations,
+    const formattedData = Object.entries(selectedOperations)
+      .filter(([_, operations]) => operations.length > 0)
+      .map(([moduleId, allowedOperations]) => ({
+        moduleId,
+        allowedOperations,
       }));
 
-    console.log("formattedData", formattedData);
-    navigate('/permission/add', { state: { formattedData } });
+    if (fun) {
+      fun(formattedData);
+      closeModal();
+    } else {
+      navigate('/permission/add', { state: { formattedData } });
+    }
   };
 
-  if (loading || isModuleLoading) {
+  if (isModuleLoading && !modules.length) {
     return <LoadingScreen />;
   }
 
@@ -77,7 +104,6 @@ function Modules({ data }) {
         <div className="accordion-container p-4">
           {modules.map((module, index) => (
             <div key={module._id} className="mb-4 border border-gray-300 rounded-lg">
-              {/* Accordion Header */}
               <div
                 className="accordion-header secondary-card text-text-color px-4 py-2 flex justify-between items-center cursor-pointer"
                 onClick={() => setActiveAccordion(activeAccordion === index ? null : index)}
@@ -87,18 +113,16 @@ function Modules({ data }) {
                   <label className="relative inline-flex items-center cursor-pointer mr-2">
                     <input
                       type="checkbox"
-                      checked={module.allowedOperations.length > 0}
-                      onChange={() => handleRemoveModule(module._id)}
+                      checked={(selectedOperations[module._id] || []).length > 0}
+                      onChange={() => handleRemoveModule(module._id, module.moduleOperations)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 secondary-card border border-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
-                    </div>
+                    <div className="w-11 h-6 secondary-card border border-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600" />
                   </label>
                   <span>{activeAccordion === index ? '-' : '+'}</span>
                 </div>
               </div>
 
-              {/* Accordion Content */}
               {activeAccordion === index && (
                 <div className="accordion-content bg-gray-800 p-4 text-text-color">
                   {module.moduleOperations.map(operation => (
@@ -107,12 +131,11 @@ function Modules({ data }) {
                       <label className="relative inline-flex items-center cursor-pointer primary-text">
                         <input
                           type="checkbox"
-                          checked={module.allowedOperations.includes(operation)}
+                          checked={(selectedOperations[module._id] || []).includes(operation)}
                           onChange={() => handleToggleOperation(module._id, operation)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 secondary-card border border-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
-                        </div>
+                        <div className="w-11 h-6 secondary-card border border-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600" />
                       </label>
                     </div>
                   ))}
@@ -122,7 +145,6 @@ function Modules({ data }) {
           ))}
         </div>
 
-        {/* Save Button */}
         <div className="flex justify-end p-4">
           <button
             type="submit"
@@ -133,6 +155,41 @@ function Modules({ data }) {
           </button>
         </div>
       </form>
+
+      <div className="flex justify-center mt-4 space-x-2">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1 || isModuleLoading}
+          className={`px-3 py-1 rounded ${
+            currentPage === 1 ? 'bg-gray-500' : 'bg-gray-700'
+          } text-text-color`}
+        >
+          &lt;
+        </button>
+
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            disabled={isModuleLoading}
+            className={`px-3 py-1 rounded ${
+              currentPage === page ? "bg-primary-button-color" : "bg-gray-700"
+            } text-text-color`}
+          >
+            {page}
+          </button>
+        ))}
+
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages || isModuleLoading}
+          className={`px-3 py-1 rounded ${
+            currentPage === totalPages ? 'bg-gray-500' : 'bg-gray-700'
+          } text-text-color`}
+        >
+          &gt;
+        </button>
+      </div>
     </div>
   );
 }

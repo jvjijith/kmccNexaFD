@@ -8,7 +8,7 @@ function CategoriesList() {
     return (
         <Container>
          <CategoriesCard  title ={"Category List"}>
-             <CategoryTable></CategoryTable>
+             <CategoryTable nav={"customer"}></CategoryTable>
          </CategoriesCard>
         </Container>
      );

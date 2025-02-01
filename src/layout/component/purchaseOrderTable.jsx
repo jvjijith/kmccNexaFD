@@ -5,6 +5,7 @@ import { useGetData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
 import { BlobProvider, Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 import PopUpModal from "../ui/modal/modal";
+import UserTeamPermissionsPage from "../../routes/userPermission";
 
 // Header Component
 function Header({ organization }) {
@@ -396,7 +397,7 @@ const { data: varientData, varientLoading, varientError, varientRefetch } = useG
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   const totalPages = Math.ceil(PurchaseOrdersData.pagination.totalCount / limit);
@@ -446,7 +447,7 @@ const { data: varientData, varientLoading, varientError, varientRefetch } = useG
                   >
                     Edit PO
                   </Dropdown.Item>
-                   <Dropdown.Item>
+                  <UserTeamPermissionsPage requiredModule={"purchaseorders"} permission={"view"} page={<Dropdown.Item>
                     <BlobProvider document={<QuotePDF quote={po} organization={organizationData} productData={productData} varientData={varientData} />}>
                       {({ url, loading }) =>
                         loading ? (
@@ -458,15 +459,15 @@ const { data: varientData, varientLoading, varientError, varientRefetch } = useG
                         )
                       }
                     </BlobProvider>
-                  </Dropdown.Item>
-                  <Dropdown.Item
+                  </Dropdown.Item>} />
+                  <UserTeamPermissionsPage requiredModule={"purchaseorders"} permission={"view"} page={<Dropdown.Item
                   onClick={() => {
                     setPreviewInvoice(po);
                     setIsPreviewOpen(true); // Open the modal
                   }}
                 >
                   Preview PO
-                </Dropdown.Item>
+                </Dropdown.Item>} />
                 </Dropdown>
               </Table.Cell>
             </Table.Row>
@@ -482,7 +483,7 @@ const { data: varientData, varientLoading, varientError, varientRefetch } = useG
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
               currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
-            } text-text-color`}
+            } text-btn-text-color`}
           >
             {index + 1}
           </button>

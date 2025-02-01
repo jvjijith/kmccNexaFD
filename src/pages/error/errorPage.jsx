@@ -7,9 +7,9 @@ function ErrorPage() {
 
   return (
     <Container>
-      {/* <ErrorCard> */}
+      <ErrorCard>
         <ErrorComponent />
-      {/* </ErrorCard> */}
+      </ErrorCard>
     </Container>
   );
 }

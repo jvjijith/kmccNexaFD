@@ -109,7 +109,7 @@ function AppTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   const totalPages = Math.ceil(AppData.pagination.totalCount / limit); // Calculate total pages

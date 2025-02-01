@@ -8,6 +8,7 @@ import PopUpModal from '../ui/modal/modal';
 import CategoryForm from './categoryForm';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useGetData } from '../../common/api';
+import UserTeamPermissionsPage from '../../routes/userPermission';
 
 function CategoriesCard({children,title,type}) {
 
@@ -142,17 +143,17 @@ function CategoriesCard({children,title,type}) {
            <Card title={title}
            component={type!=="subcategory"?
             <button className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded"onClick={openModal}>
-              Add Category
+              Add
             </button>:null
           }>
                {children}
                
             </Card>
             </div>
-            <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Team"}>
+            <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Add Category"}>
         {/* Modal Content */}
 
-        <CategoryForm></CategoryForm>
+        <UserTeamPermissionsPage requiredModule={"categories"} permission={"create"} page={<CategoryForm></CategoryForm>} />
       </PopUpModal>
         </div>
     );

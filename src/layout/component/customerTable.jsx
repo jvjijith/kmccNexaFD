@@ -51,7 +51,7 @@ function CustomerTable() {
   };
 
   const handleViewDetails = (customer) => {
-    navigate(`/profile/${customer._id}/customerdetails`, { state: { customer } });
+    navigate(`/customer/profile/${customer._id}/customerdetails`, { state: { customer } });
   };
 
   const handleDeactivateCustomer = (customer) => {
@@ -113,7 +113,7 @@ function CustomerTable() {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   const totalPages = Math.ceil(customerData.pagination.totalCount / limit); // Calculate total pages
@@ -148,7 +148,7 @@ function CustomerTable() {
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item onClick={() => handleViewDetails(customer)}>Details</Dropdown.Item>
                   <Dropdown.Item onClick={() => navigate(`/customer/edit`, { state: { customer } })}>Edit Customer</Dropdown.Item>
-                  <Dropdown.Item onClick={() => navigate(`/customer/editContact`, { state: { customer } })}>Edit Contacts</Dropdown.Item>
+                  <Dropdown.Item onClick={() => navigate(`/customer/contact`, { state: { customer } })}>Contacts</Dropdown.Item>
                   {customer.active ? (
                     <Dropdown.Item onClick={() => handleDeactivateCustomer(customer)}>Deactivate Customer</Dropdown.Item>
                   ) : (

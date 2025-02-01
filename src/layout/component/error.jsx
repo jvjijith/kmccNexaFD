@@ -1,9 +1,9 @@
 import React from 'react';
 import '@dotlottie/player-component/dist/dotlottie-player';
 
-const ErrorComponent = ({ title = "Something went wrong!", message = "Please try again later." }) => {
+const ErrorComponent = ({ title = "Access Denied", message = "You are not authorized to visit this page at this time" }) => {
   return (
-    <div className="flex flex-wrap mt-20 items-center justify-center">
+    <div className="flex flex-col items-center justify-center">
       <dotlottie-player
         src="/errorAnimation.json" // Replace with your .lottie file path
         background="transparent"
@@ -12,11 +12,8 @@ const ErrorComponent = ({ title = "Something went wrong!", message = "Please try
         loop
         autoplay
       />
-      
-    <div className="flex flex-wrap items-center w-full justify-center">
-      <h2 className="text-2xl font-bold text-red-600 mt-4">{title}</h2>
-      </div>
-      <p className="text-lg text-gray-600 mt-2">{message}</p>
+      <h2 className="text-3xl font-semibold text-red-600 mt-2">{title}</h2>
+      <p className="text-lg text-gray-600 mt-4">{message}</p>
     </div>
   );
 };

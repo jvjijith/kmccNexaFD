@@ -5,7 +5,7 @@ import { useGetData } from "../../common/api";
 import { useState } from "react";
 import LoadingScreen from "../ui/loading/loading";
 
-function CustomerContactTable({ customerId }) {
+function CustomerContactTable({ customerId, nav }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
 
@@ -27,11 +27,11 @@ function CustomerContactTable({ customerId }) {
   }
 
   if (error) {
-    return <div>Error loading data</div>;
+    return <div className="text-text-color">Error loading data</div>;
   }
 
   if (data.contacts.length<1) {
-    return <div>No contact data</div>;
+    return <div className="text-text-color">No contact data</div>;
   }
 
   return (
@@ -73,7 +73,7 @@ function CustomerContactTable({ customerId }) {
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   <Dropdown.Item
                     className="text-text-color hover:bg-orange-600"
-                    onClick={() => navigate(`/contact/addContact`, { state: { contact } })}
+                    onClick={() => navigate(`/customer/editcontact`, { state: { contact , customerId , nav } })}
                   >
                     Edit Contact
                   </Dropdown.Item>
