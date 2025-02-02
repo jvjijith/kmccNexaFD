@@ -90,6 +90,10 @@ import ErrorPage from "./pages/error/errorPage";
 import VendorProfile from "./pages/vendor/vendorProfile";
 import VendorDetails from "./layout/ui/profile/vendorProfile/details";
 import VendorContacts from "./layout/ui/profile/vendorProfile/contact";
+import Event from "./pages/events/events";
+import AddEvent from "./pages/events/addEvents";
+import CreateEvent from "./layout/component/event/createEvent";
+import EditEvent from "./pages/events/editEvents";
 
 const App = () => {
   return (
@@ -238,6 +242,9 @@ const App = () => {
       <Route path="permission" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"view"} page={<UserTeamPermission />} />} />
       <Route path="permission/add" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"create"} page={<AddUserTeamPermission />} />} />
       <Route path="permission/edit" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"update"} page={<EditUserTeamPermission />} />} />
+      <Route path="event" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"update"} page={<Event />} />} />
+      <Route path="event/add" element={<AddEvent />} />
+      <Route path="event/edit" element={<EditEvent />} />
       <Route path="error" element={<ErrorPage />} />
       </Route>
 
