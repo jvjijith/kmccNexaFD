@@ -229,7 +229,7 @@ function AppForm({ appDatas }) {
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
         {(appData?.settings?.geo?.length===0)&&<p className='text-text-color'>No Geo Settings added</p>}
   {appData?.settings?.geo?.map((geo, index) => (
-    <div key={index} className="flex flex-wrap p-4 mb-4 bg-nexa-gray">
+    <div key={index} className="flex flex-wrap p-4 mb-4 ">
       <div className="w-full sm:w-1/2 p-4">
         <Select
           options={ruleTypeOptions}
@@ -289,7 +289,7 @@ function AppForm({ appDatas }) {
   <div className="notes-container p-4 bg-secondary-card rounded-lg">
         {(appData?.settings?.domain?.length===0)&&<p className='text-text-color'>No Domain Settings added</p>}
           {appData?.settings?.domain?.map((domain, index) => (
-            <div key={index} className="flex flex-wrap p-4 mb-4 bg-nexa-gray">
+            <div key={index} className="flex flex-wrap p-4 mb-4 ">
               <div className="w-full sm:w-1/2 p-4">
                 <Select
                   options={ruleTypeOptions}
@@ -339,7 +339,7 @@ function AppForm({ appDatas }) {
           <div className="notes-container p-4 bg-secondary-card rounded-lg">
             {appData?.settings?.language?.length === 0 && <p className='text-text-color'>No Language Settings added</p>}
             {appData?.settings?.language?.map((language, index) => (
-              <div key={index} className="flex flex-wrap p-4 mb-4 bg-nexa-gray">
+              <div key={index} className="flex flex-wrap p-4 mb-4 ">
                 <div className="w-full sm:w-1/2 p-4">
                   <Autosuggest
                     suggestions={suggestions}

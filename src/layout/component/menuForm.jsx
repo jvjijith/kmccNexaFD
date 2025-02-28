@@ -92,7 +92,7 @@ function MenuForm({ menu }) {
         menuPage: menu.menuPage,
         imageUrl: menu.imageUrl,
         allowImage: menu.allowImage,
-        items: menu.items,
+        items: cleanedMenu.items,
         active: menu.active,
       });
     }
@@ -339,38 +339,19 @@ const handleAddItem = () => {
             options={appOptions}
             value={appOptions.find((opt) => opt.value === formData.appId)}
             onChange={(opt) => setFormData((prev) => ({ ...prev, appId: opt.value }))}
-            styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
-              }}
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
+            }}
           />
         </div>
         </div>
@@ -388,38 +369,19 @@ const handleAddItem = () => {
             options={menuTypeOptions}
             value={menuTypeOptions.find((opt) => opt.value === formData.menuType)}
             onChange={(opt) => setFormData((prev) => ({ ...prev, menuType: opt.value }))}
-            styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
-              }}
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
+            }}
           />
         </div>
         </div>
@@ -431,38 +393,19 @@ const handleAddItem = () => {
             options={layoutTypeOptions}
             value={layoutTypeOptions.find((opt) => opt.value === formData.layoutType)}
             onChange={(opt) => setFormData((prev) => ({ ...prev, layoutType: opt.value }))}
-            styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
-              }}
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
+            }}
           />
         </div>
         </div>
@@ -472,37 +415,18 @@ const handleAddItem = () => {
               options={pageOptions}
               value={pageOptions?.find((opt) => opt.value === formData.menuPage)}
               onChange={(opt) => setFormData((prev) => ({ ...prev, menuPage: opt.value }))}
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
+              classNames={{
+                control: ({ isFocused }) =>
+                  `bg-primary border ${
+                    isFocused ? 'border-secondary' : 'border-focus-color'
+                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                singleValue: () => `text-focus-color`,
+                placeholder: () => `text-focus-color`,
+                menu: () => `bg-primary text-focus-color`,
+                option: ({ isSelected }) =>
+                  `cursor-pointer ${
+                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                  }`,
               }}
             />
           </div>
@@ -665,38 +589,19 @@ const handleAddItem = () => {
                       handleNestedChange('items', index, 'menuType', option.value)
                     }
                     className="w-1/2 ml-2 mr-2"
-                    styles={{
-                        control: (provided, state) => ({
-                          ...provided,
-                          backgroundColor: 'black',
-                          borderColor: state.isFocused ? 'white' : 'black',
-                          borderBottomWidth: '2px',
-                          borderRadius: '0px',
-                          height: '40px',
-                          paddingLeft: '8px',
-                          paddingRight: '8px',
-                          color: 'white',
-                        }),
-                        singleValue: (provided) => ({
-                          ...provided,
-                          color: 'white',
-                        }),
-                        placeholder: (provided) => ({
-                          ...provided,
-                          color: 'white',
-                        }),
-                        menu: (provided) => ({
-                          ...provided,
-                          backgroundColor: 'black',
-                          color: 'white',
-                        }),
-                        option: (provided, state) => ({
-                          ...provided,
-                          backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                          color: state.isSelected ? '#f8f9fa' : 'black',
-                          cursor: 'pointer',
-                        }),
-                      }}
+                    classNames={{
+                      control: ({ isFocused }) =>
+                        `bg-primary border ${
+                          isFocused ? 'border-secondary' : 'border-focus-color'
+                        } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                      singleValue: () => `text-focus-color`,
+                      placeholder: () => `text-focus-color`,
+                      menu: () => `bg-primary text-focus-color`,
+                      option: ({ isSelected }) =>
+                        `cursor-pointer ${
+                          isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                        }`,
+                    }}
                   />
                 </div>
                 <div className="flex items-center justify-between mb-2">
@@ -707,37 +612,18 @@ const handleAddItem = () => {
                 handleNestedChange('items', index, 'menuPage', opt.value)
               }
               className="w-1/2 ml-2"
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
+              classNames={{
+                control: ({ isFocused }) =>
+                  `bg-primary border ${
+                    isFocused ? 'border-secondary' : 'border-focus-color'
+                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                singleValue: () => `text-focus-color`,
+                placeholder: () => `text-focus-color`,
+                menu: () => `bg-primary text-focus-color`,
+                option: ({ isSelected }) =>
+                  `cursor-pointer ${
+                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                  }`,
               }}
             />
                 </div>
@@ -979,37 +865,18 @@ const handleAddItem = () => {
             )
           }
           className="w-1/2 mr-2 mt-2"
-          styles={{
-            control: (provided, state) => ({
-              ...provided,
-              backgroundColor: 'black',
-              borderColor: state.isFocused ? 'white' : 'black',
-              borderBottomWidth: '2px',
-              borderRadius: '0px',
-              height: '40px',
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              color: 'white',
-            }),
-            singleValue: (provided) => ({
-              ...provided,
-              color: 'white',
-            }),
-            placeholder: (provided) => ({
-              ...provided,
-              color: 'white',
-            }),
-            menu: (provided) => ({
-              ...provided,
-              backgroundColor: 'black',
-              color: 'white',
-            }),
-            option: (provided, state) => ({
-              ...provided,
-              backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-              color: state.isSelected ? '#f8f9fa' : 'black',
-              cursor: 'pointer',
-            }),
+          classNames={{
+            control: ({ isFocused }) =>
+              `bg-primary border ${
+                isFocused ? 'border-secondary' : 'border-focus-color'
+              } border-b-2 rounded-none h-10 px-2 text-text-color`,
+            singleValue: () => `text-focus-color`,
+            placeholder: () => `text-focus-color`,
+            menu: () => `bg-primary text-focus-color`,
+            option: ({ isSelected }) =>
+              `cursor-pointer ${
+                isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+              }`,
           }}
         />
       </div>
@@ -1028,37 +895,18 @@ const handleAddItem = () => {
                   )
               }
               className="w-1/2 ml-2 mr-2 mt-2"
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white',
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer',
-                }),
+              classNames={{
+                control: ({ isFocused }) =>
+                  `bg-primary border ${
+                    isFocused ? 'border-secondary' : 'border-focus-color'
+                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                singleValue: () => `text-focus-color`,
+                placeholder: () => `text-focus-color`,
+                menu: () => `bg-primary text-focus-color`,
+                option: ({ isSelected }) =>
+                  `cursor-pointer ${
+                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                  }`,
               }}
             />
     </div>

@@ -11,7 +11,7 @@ import { languages } from '../../constant';
 
 function SortableItem({ id, item, handleRemove }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-  
+
   return (
     <div
       ref={setNodeRef}
@@ -22,24 +22,25 @@ function SortableItem({ id, item, handleRemove }) {
         transition,
         padding: '8px',
         marginBottom: '4px',
-        backgroundColor: '#333',
-        color: 'white',
+        backgroundColor: '#ffffff',
+        color: '#000000',
         borderRadius: '4px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
       }}
     >
       <div>
         <span>{item}</span>
-        <div className="text-sm text-gray-400">{item.description}</div>
+        <div className="text-sm text-text-color">{item.description}</div>
       </div>
-      <button onClick={() => handleRemove(id)} className="text-red-500">
+      <button type="button" onClick={() => handleRemove(id)} className="text-red-500">
         Remove
       </button>
     </div>
   );
 }
+
 
 function PageForm({ pageDatas }) {
   const navigate = useNavigate();
@@ -345,10 +346,10 @@ function PageForm({ pageDatas }) {
     if (draft && !publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-4 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-4 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded-md">
             Publish
           </button>
         </div>
@@ -356,10 +357,10 @@ function PageForm({ pageDatas }) {
     } else if (draft && publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-4 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-4 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded-md">
             Republish
           </button>
         </div>
@@ -367,7 +368,7 @@ function PageForm({ pageDatas }) {
     } else {
       return (
         <div className="flex justify-end">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-4 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded-md">
             Save Draft
           </button>
         </div>
@@ -439,37 +440,18 @@ function PageForm({ pageDatas }) {
                 label: pageData.type.charAt(0).toUpperCase() + pageData.type.slice(1),
               }}
               onChange={handleTypeChange}
-              styles={{
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  borderColor: state.isFocused ? 'white' : 'black',
-                  borderBottomWidth: '2px',
-                  borderRadius: '0px',
-                  height: '40px',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  color: 'white'
-                }),
-                singleValue: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: 'white',
-                }),
-                menu: (provided) => ({
-                  ...provided,
-                  backgroundColor: 'black',
-                  color: 'white',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                  color: state.isSelected ? '#f8f9fa' : 'black',
-                  cursor: 'pointer'
-                })
+              classNames={{
+                control: ({ isFocused }) =>
+                  `bg-primary border ${
+                    isFocused ? 'border-secondary' : 'border-focus-color'
+                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                singleValue: () => `text-focus-color`,
+                placeholder: () => `text-focus-color`,
+                menu: () => `bg-primary text-focus-color`,
+                option: ({ isSelected }) =>
+                  `cursor-pointer ${
+                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                  }`,
               }}
             />
           </div>
@@ -561,37 +543,18 @@ function PageForm({ pageDatas }) {
               label: appData?.apps?.find((app) => app._id === item.appId)?.title || "Unknown",
           }))}
             isLoading={isAppLoading}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer',
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -654,37 +617,18 @@ function PageForm({ pageDatas }) {
       onChange={(selectedOption) => 
         setPageData((prevData) => ({ ...prevData, twitterCard: selectedOption.value }))
       }
-      styles={{
-        control: (provided, state) => ({
-          ...provided,
-          backgroundColor: '#f8f9fa',
-          borderColor: state.isFocused ? 'white' : 'black',
-          borderBottomWidth: '2px',
-          borderRadius: '0px',
-          height: '40px',
-          paddingLeft: '8px',
-          paddingRight: '8px',
-          color: 'white',
-        }),
-        singleValue: (provided) => ({
-          ...provided,
-          color: 'black',
-        }),
-        placeholder: (provided) => ({
-          ...provided,
-          color: 'black',
-        }),
-        menu: (provided) => ({
-          ...provided,
-          backgroundColor: '#f8f9fa',
-          color: 'black',
-        }),
-        option: (provided, state) => ({
-          ...provided,
-          backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-          color: state.isSelected ? '#f8f9fa' : 'black',
-          cursor: 'pointer',
-        }),
+      classNames={{
+        control: ({ isFocused }) =>
+          `bg-primary border ${
+            isFocused ? 'border-secondary' : 'border-focus-color'
+          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+        singleValue: () => `text-focus-color`,
+        placeholder: () => `text-focus-color`,
+        menu: () => `bg-primary text-focus-color`,
+        option: ({ isSelected }) =>
+          `cursor-pointer ${
+            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+          }`,
       }}
     />
 </div>
@@ -951,37 +895,18 @@ function PageForm({ pageDatas }) {
             onChange={handleAddItem}
             placeholder="Select an Element to Add"
             className="mb-4"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black',
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                color: 'white',
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-                color: 'white',
-                cursor: 'pointer',
-              }),
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
 

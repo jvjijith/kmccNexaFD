@@ -196,7 +196,7 @@ const App = () => {
       <Route path="store/appmanagement/container" element={<UserTeamPermissionsPage requiredModule={"containers"} permission={"view"} page={<Containers />} />} />
       <Route path="container/add" element={<UserTeamPermissionsPage requiredModule={"containers"} permission={"create"} page={<AddContainer />} />} />
       <Route path="container/edit" element={<UserTeamPermissionsPage requiredModule={"containers"} permission={"update"} page={<EditContainer />} />} />
-      <Route path="store/appmanagement/menu" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="store/appmanagement/menu" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"view"} page={<Menu />} />} />
       <Route path="store/appmanagement/paymentconfig" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
       <Route path="store/appmanagement/mailtemplate" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
       <Route path="store/appmanagement/branding" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />

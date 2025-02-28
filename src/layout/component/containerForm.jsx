@@ -276,10 +276,10 @@ function ContainerForm({ container }) {
     if (elementsData.draft && !elementsData.publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-6 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-6 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Publish
           </button>
         </div>
@@ -287,10 +287,10 @@ function ContainerForm({ container }) {
     } else if (elementsData.draft && elementsData.publish) {
       return (
         <div className="flex justify-end space-x-4">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-6 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-6 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Republish
           </button>
         </div>
@@ -298,7 +298,7 @@ function ContainerForm({ container }) {
     } else {
       return (
         <div className="flex justify-end">
-          <button type="button" onClick={handleDraftSubmit} className="bg-orange-500 text-text-color px-6 py-2 rounded-md">
+          <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Draft
           </button>
         </div>
@@ -406,37 +406,18 @@ function ContainerForm({ container }) {
             label: elementsData.layoutOptions.layout.charAt(0).toUpperCase() + elementsData.layoutOptions.layout.slice(1),
           }}
           onChange={(selectedOption) => handleSettingsChange('layoutOptions',null, 'layout', selectedOption.value)}
-          styles={{
-            control: (provided, state) => ({
-              ...provided,
-              backgroundColor: 'black',
-              borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-              borderBottomWidth: '2px',
-              borderRadius: '0px',
-              height: '40px', // h-10: 2.5rem = 40px
-              paddingLeft: '8px', // px-2: 0.5rem = 8px
-              paddingRight: '8px', // px-2: 0.5rem = 8px
-              color: 'white'
-            }),
-            singleValue: (provided) => ({
-              ...provided,
-              color: 'white',
-            }),
-            placeholder: (provided) => ({
-              ...provided,
-              color: 'white',
-            }),
-            menu: (provided) => ({
-              ...provided,
-              backgroundColor: 'black',
-              color: 'white',
-            }),
-            option: (provided, state) => ({
-              ...provided,
-              backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-              color: state.isSelected ? '#f8f9fa' : 'black',
-              cursor: 'pointer'
-            })
+          classNames={{
+            control: ({ isFocused }) =>
+              `bg-primary border ${
+                isFocused ? 'border-secondary' : 'border-focus-color'
+              } border-b-2 rounded-none h-10 px-2 text-text-color`,
+            singleValue: () => `text-focus-color`,
+            placeholder: () => `text-focus-color`,
+            menu: () => `bg-primary text-focus-color`,
+            option: ({ isSelected }) =>
+              `cursor-pointer ${
+                isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+              }`,
           }}
         />
       </div>
@@ -470,37 +451,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.gridOptions?.direction || 'row', label: elementsData.layoutOptions.gridOptions?.direction}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'gridOptions', 'direction', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -519,37 +481,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.gridOptions?.justifyContent || 'flex-start', label: elementsData.layoutOptions.gridOptions?.justifyContent}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'gridOptions', 'justifyContent', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -567,37 +510,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.gridOptions?.alignItems || 'stretch', label: elementsData.layoutOptions.gridOptions?.alignItems}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'gridOptions', 'alignItems', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -613,37 +537,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.gridOptions?.wrap || 'wrap', label: elementsData.layoutOptions.gridOptions?.wrap}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'gridOptions' , 'wrap', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -689,37 +594,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.stackOptions?.direction || 'column', label: elementsData.layoutOptions.stackOptions?.direction}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'stackOptions', 'direction', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -738,37 +624,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.stackOptions?.justifyContent || 'flex-start', label: elementsData.layoutOptions.stackOptions?.justifyContent}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'stackOptions', 'justifyContent', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -786,37 +653,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.stackOptions?.alignItems || 'stretch', label: elementsData.layoutOptions.stackOptions?.alignItems}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'stackOptions', 'alignItems', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -849,37 +697,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.tabOptions?.orientation || 'horizontal', label: elementsData.layoutOptions.tabOptions?.orientation}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'tabOptions', 'orientation', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -895,37 +724,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.tabOptions?.variant || 'standard', label: elementsData.layoutOptions.tabOptions?.variant}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'tabOptions', 'variant', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -940,37 +750,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.tabOptions?.centered || 'false', label: elementsData.layoutOptions.tabOptions?.centered}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'tabOptions', 'centered', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -1028,37 +819,18 @@ function ContainerForm({ container }) {
             ]}
             value={{ value: elementsData.layoutOptions.fluidOptions?.justify || 'start', label: elementsData.layoutOptions.fluidOptions?.justify}}
             onChange={(selectedOption) => handleSettingsChange('layoutOptions', 'fluidOptions', 'justify', selectedOption.value)}
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
         </div>
@@ -1076,37 +848,18 @@ function ContainerForm({ container }) {
             onChange={handleAddItem}
             placeholder="Select an Element to Add"
             className="mb-4"
-            styles={{
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: 'black',
-                borderColor: state.isFocused ? 'white' : 'black', // border-border: #D3D3D3
-                borderBottomWidth: '2px',
-                borderRadius: '0px',
-                height: '40px', // h-10: 2.5rem = 40px
-                paddingLeft: '8px', // px-2: 0.5rem = 8px
-                paddingRight: '8px', // px-2: 0.5rem = 8px
-                color: 'white'
-              }),
-              singleValue: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              placeholder: (provided) => ({
-                ...provided,
-                color: 'white',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                backgroundColor: 'black',
-                color: 'white',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? 'black' : '#f8f9fa', // bg-blue-500: #007bff
-                color: state.isSelected ? '#f8f9fa' : 'black',
-                cursor: 'pointer'
-              })
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
             }}
           />
           {(elementsData.items.length!==0) && <div className="notes-container p-4 bg-secondary-card rounded-lg">
