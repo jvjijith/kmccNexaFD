@@ -210,7 +210,7 @@ function ElementForm({ elementsDatas }) {
           <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-6 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Publish
           </button>
         </div>
@@ -221,7 +221,7 @@ function ElementForm({ elementsDatas }) {
           <button type="button" onClick={handleDraftSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Redraft
           </button>
-          <button type="button" onClick={handlePublishSubmit} className="bg-green-500 text-text-color px-6 py-2 rounded-md">
+          <button type="button" onClick={handlePublishSubmit} className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded-md">
             Republish
           </button>
         </div>
@@ -639,33 +639,18 @@ console.log("elementsData",elementsData);
   value={{ value: elementsData.swiperOptions.swiperType, label: elementsData.swiperOptions.swiperType }}
   onChange={(selectedOption) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, swiperType: selectedOption.value })}
   placeholder="Swiper Type"
-  styles={{
-    control: (provided, state) => ({
-      ...provided,
-      backgroundColor: 'black',
-      borderColor: state.isFocused ? 'white' : 'black',
-      borderBottomWidth: '2px',
-      borderRadius: '0px',
-      height: '40px',
-      paddingLeft: '8px',
-      paddingRight: '8px',
-      color: 'white',
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: 'white',
-    }),
-    menu: (provided) => ({
-      ...provided,
-      backgroundColor: 'black',
-      color: 'white',
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-      color: state.isSelected ? '#f8f9fa' : 'black',
-      cursor: 'pointer',
-    }),
+  classNames={{
+    control: ({ isFocused }) =>
+      `bg-primary border ${
+        isFocused ? 'border-secondary' : 'border-focus-color'
+      } border-b-2 rounded-none h-10 px-2 text-text-color`,
+    singleValue: () => `text-focus-color`,
+    placeholder: () => `text-focus-color`,
+    menu: () => `bg-primary text-focus-color`,
+    option: ({ isSelected }) =>
+      `cursor-pointer ${
+        isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+      }`,
   }}
 />
 
@@ -1061,33 +1046,18 @@ console.log("elementsData",elementsData);
   value={{ value: item.itemType, label: item.itemType.charAt(0).toUpperCase() + item.itemType.slice(1) }}
   onChange={(selectedOption) => handleNestedChange('items', index, 'itemType', selectedOption.value)}
   className="block w-1/2"
-  styles={{
-    control: (provided, state) => ({
-      ...provided,
-      backgroundColor: 'black',
-      borderColor: state.isFocused ? 'white' : 'black',
-      borderBottomWidth: '2px',
-      borderRadius: '0px',
-      height: '40px',
-      paddingLeft: '8px',
-      paddingRight: '8px',
-      color: 'white',
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: 'white',
-    }),
-    menu: (provided) => ({
-      ...provided,
-      backgroundColor: 'black',
-      color: 'white',
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? 'black' : '#f8f9fa',
-      color: state.isSelected ? '#f8f9fa' : 'black',
-      cursor: 'pointer',
-    }),
+  classNames={{
+    control: ({ isFocused }) =>
+      `bg-primary border ${
+        isFocused ? 'border-secondary' : 'border-focus-color'
+      } border-b-2 rounded-none h-10 px-2 text-text-color`,
+    singleValue: () => `text-focus-color`,
+    placeholder: () => `text-focus-color`,
+    menu: () => `bg-primary text-focus-color`,
+    option: ({ isSelected }) =>
+      `cursor-pointer ${
+        isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+      }`,
   }}
 />
 
