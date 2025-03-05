@@ -8,6 +8,8 @@ import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
 import { DndContext } from '@dnd-kit/core';
 import { languages } from '../../constant';
 import Autosuggest from 'react-autosuggest';
+import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 
 function ElementForm({ elementsDatas }) {
   const navigate = useNavigate();
@@ -50,6 +52,10 @@ function ElementForm({ elementsDatas }) {
   const [loading, setLoading] = useState(true);
   const [changeComponentType, setChangeComponentType] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [images, setImages] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState({});
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [mediaId, setMediaId] = useState([]);
   const [value, setValue] = useState("");
   const items = [
     { itemType: 'Catalogue' },
@@ -67,12 +73,14 @@ function ElementForm({ elementsDatas }) {
     { value: 'banner', label: 'Banner' }
   ];
   
-  const mutationHook = elementsDatas | elementsData.draft ? usePutData : usePostData;
-  const api_url = elementsDatas | elementsData.draft ? `/elements/${elementsDatas?elementsDatas._id:elementsData._id}` : '/elements';
-  const api_key = elementsDatas | elementsData.draft ? 'updateElement' : 'addElement';
+  const mutationHook = elementsDatas ? usePutData : usePostData;
+  const api_url = elementsDatas ? `/elements/${elementsDatas?elementsDatas._id:elementsData._id}` : '/elements';
+  const api_key = elementsDatas  ? 'updateElement' : 'addElement';
   const { mutate: saveLayout, isLoading, isError } = mutationHook(api_key, api_url);
   const { data: pagesData, isLoading: isPagesLoading } = useGetData('pages', '/pages', {});
   const { data: cataloguesData, isLoading: isCataloguesLoading } = useGetData('catalogues', '/catalogues', {});
+    const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
+    const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
   // Fetch app data
   const { data: appData, isLoading: isAppLoading } = useGetData("data", "/app", {});
 
@@ -131,6 +139,7 @@ function ElementForm({ elementsDatas }) {
             cardOptions: cleanedContainer.cardOptions,
             hoverEffect: cleanedContainer.hoverEffect,
         });
+        setUploadedImages(cleanedContainer.imageUrl);
     }
     setLoading(false);
 }, [elementsDatas]);
@@ -138,11 +147,12 @@ function ElementForm({ elementsDatas }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    saveLayout({ ...elementsData, draft: true, publish: false }, {
+    saveLayout({ ...elementsData, draft: true, publish: false, imageUrl: uploadedImages }, {
       onSuccess: (response) => {
         // Update the state with response to reflect draft and publish status
         // console.log("response",response.data);
-        setElementsData(response.data);
+        // setElementsData(response.data);
+        // navigate('/store/appmanagement/element');
         toast.success('Layout saved successfully!');
       },
       onError: (error) => {
@@ -174,11 +184,12 @@ function ElementForm({ elementsDatas }) {
   };
   
   const handleDraftSubmit = () => {
-    const cleanedData = cleanData({ ...elementsData, draft: true, publish: false });
+    const cleanedData = cleanData({ ...elementsData, draft: true, publish: false, imageUrl: uploadedImages  });
   
     saveLayout(cleanedData, {
       onSuccess: (response) => {
-        setElementsData(response.data);
+        // setElementsData(response.data);
+        // navigate('/store/appmanagement/element');
         toast.success('Layout saved as draft!');
       },
       onError: (error) => {
@@ -189,11 +200,12 @@ function ElementForm({ elementsDatas }) {
   };
   
   const handlePublishSubmit = () => {
-    const cleanedData = cleanData({ ...elementsData, draft: false, publish: true });
+    const cleanedData = cleanData({ ...elementsData, draft: false, publish: true, imageUrl: uploadedImages  });
   
     saveLayout(cleanedData, {
       onSuccess: (response) => {
-        setElementsData(response.data);
+        // setElementsData(response.data);
+        // navigate('/store/appmanagement/element');
         toast.success('Layout published successfully!');
       },
       onError: (error) => {
@@ -381,6 +393,78 @@ const renderSuggestion = (suggestion) => (
        label: page.title?.[0]?.title || page.slug  // Display the title or slug
      }))
    : [];
+
+    const { getRootProps, getInputProps } = useDropzone({
+       onDrop: (acceptedFiles) => {
+         setImages([...images, ...acceptedFiles]);
+         console.log("images",images);
+       }
+     });
+
+   const handleRemoveImage = (index) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
+
+  const handleUploadImages = async (index) => {
+    try {
+      const image = images[index];
+      console.log(`Generating signed URL for ${image.name}`);
+
+// Generate signed URL for the image upload
+const signedUrlResponse = await generateSignedUrl({
+  title: image.name,
+  mediaType: "image",
+  ext: image.name.split('.').pop(), // Extract the file extension
+  active: true,
+  uploadStatus: "progressing",
+  uploadProgress: 0,
+});
+
+
+      if (!signedUrlResponse) {
+        throw new Error('Signed URL data is undefined');
+      }
+
+      const signedUrl = signedUrlResponse.signedUrl;
+      const mediaId = signedUrlResponse.media._id;
+
+      console.log("Signed URL generated:", signedUrl);
+      console.log("Media ID generated:", mediaId);
+
+      setMediaId(mediaId);
+
+      // Proceed with uploading the image to the signed URL
+      await axios.put(signedUrl, image, {
+        headers: {
+          'Content-Type': image.type
+        },
+        onUploadProgress: (progressEvent) => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
+
+          // Update media status when the upload is complete
+          if (progress === 100) {
+            updateMediaStatus({
+              mediaType: "image",
+              title: image.name,
+              ext: image.name.split('.').pop(), // Extract the file extension
+              active: true,
+              uploadStatus: "completed",
+              uploadProgress: 100,
+            });
+          }
+        }
+      });
+
+      // Add the uploaded image's URL to the list
+      setUploadedImages(signedUrl.split("?")[0]);
+
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('An error occurred while uploading the image. Please try again.');
+    }
+  };
+
 
   if (loading || isLoading) {
     return <LoadingScreen />;
@@ -593,19 +677,66 @@ console.log("elementsData",elementsData);
         
         {/* Image URL */}
 
-          {(elementsData.componentType === "image" )&& <div className="flex flex-wrap mb-4">
-          <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Image URL</label>
-            <input
-              type="text"
-              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
-              placeholder="Image URL"
-              value={elementsData.imageUrl}
-              onChange={(e) => handleInputChange('imageUrl', e.target.value)}
+        {(elementsData.componentType === "image" || elementsData.componentType === "card") && (
+  <div className="w-full p-4">
+    <label className="block w-full mb-2 text-text-color primary-text">Image</label>
+    <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-secondary-card text-text-color border-2 border-border rounded mb-4">
+      <input {...getInputProps()} />
+      <p className='text-text-color'>Drag & drop images here, or click to select files</p>
+
+      <div className="w-full p-4">
+        {/* Show the existing image from elementsData if available */}
+        {elementsData.imageUrl && (
+          <div className="flex items-center justify-between mb-2">
+            <img 
+              src={elementsData.imageUrl} 
+              alt="Uploaded Logo" 
+              className="w-16 h-16 object-cover mr-4"
             />
+            <span className="text-sm">{elementsData.imageUrl.split('/').pop()}</span>
           </div>
-          
- </div>}
+        )}
+
+        {/* Show newly uploaded images */}
+        {images?.map((file, index) => (
+          <div key={index} className="flex items-center justify-between mb-2">
+            <img 
+              src={URL.createObjectURL(file)} 
+              alt={file.name} 
+              className="w-16 h-16 object-cover mr-4" 
+            />
+            <span>{file.name}</span>
+            <progress value={uploadProgress[file.name] || 0} max="100" className="flex-1 mx-2">
+              {uploadProgress[file.name] || 0}%
+            </progress>
+            <button
+              type="button"
+              className="ml-2 text-blue-500"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleUploadImages(index);
+              }}
+            >
+              Upload
+            </button>
+            <button
+              type="button"
+              className="ml-2 text-red-500"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveImage(index);
+              }}
+            >
+              X
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
 
 {/* Swiper Options Settings */}
 {(elementsData.componentType === "swimlane" )&& <div className="mb-4">
@@ -627,7 +758,7 @@ console.log("elementsData",elementsData);
 
           {/* Swiper Type Dropdown */}
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Swiper Options</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Swiper Type</label>
           <Select
   options={[
     { value: 'portrait', label: 'Portrait' },

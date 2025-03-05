@@ -10,6 +10,7 @@ import Autosuggest from 'react-autosuggest';
 import { languages } from '../../constant';
 
 function SortableItem({ id, item, handleRemove }) {
+  const navigate = useNavigate();
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
   return (
@@ -147,11 +148,12 @@ function PageForm({ pageDatas }) {
     saveLayout(pageData, {
       onSuccess: (response) => {
         console.log("response",response);
-        setPageData(response.data);
+        // setPageData(response.data);
+        navigate('/store/appmanagement/page');
         toast.success('Layout saved successfully!');
       },
       onError: (error) => {
-        toast.error('Failed to save layout.');
+        toast.error('Failed to save page.');
         console.error(error);
       }
     });
@@ -317,7 +319,8 @@ function PageForm({ pageDatas }) {
     const dataToSave = { ...pageData, draft: true, publish: false };
     saveLayout(dataToSave, {
       onSuccess: (response) => {
-        setPageData(response.data);
+        // setPageData(response.data);
+        navigate('/store/appmanagement/page');
         toast.success('Draft saved successfully!');
       },
       onError: (error) => {
@@ -331,7 +334,8 @@ function PageForm({ pageDatas }) {
     const dataToSave = { ...pageData, draft: false, publish: true };
     saveLayout(dataToSave, {
       onSuccess: (response) => {
-        setPageData(response.data);
+        // setPageData(response.data);
+        navigate('/store/appmanagement/page');
         toast.success('Page published successfully!');
       },
       onError: (error) => {
