@@ -41,6 +41,7 @@ function ContainerForm({ container }) {
   const [loading, setLoading] = useState(true);
   const [elementsData, setElementsData] = useState({
     referenceName: '',
+    title: '',
     description: '',
     layoutOptions: {
     layout: "tab",
@@ -90,6 +91,7 @@ function ContainerForm({ container }) {
     draft: false,
     publish: false,
   });
+  const limit = 100; // Set your desired limit value
 
   
   const mutationHook = container  ? usePutData : usePostData;
@@ -98,8 +100,8 @@ function ContainerForm({ container }) {
   
   // Call the mutation hook at the top level
   const { mutate: handleApiMutation } = mutationHook(api_key, api_url, elementsData);
-  const { data: elementData, isLoading: isElementLoading } = useGetData("elementdata", "/elements", {});
-  const { data: appData, isLoading: isAppLoading } = useGetData("appdata", "/app", {});
+  const { data: elementData, isLoading: isElementLoading } = useGetData("elementdata", `/elements?limit=${limit}`, {});
+  const { data: appData, isLoading: isAppLoading } = useGetData("appdata", `/app?limit=${limit}`, {});
 
   const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
     if (Array.isArray(data)) {
@@ -131,6 +133,7 @@ function ContainerForm({ container }) {
 
       setElementsData({
         referenceName: cleanedContainer.referenceName || '',
+        title: cleanedContainer.title || '',
         description: cleanedContainer.description || '',
         layoutOptions: cleanedContainer.layoutOptions || {},
         items: transformedItems || [],
@@ -243,7 +246,7 @@ function ContainerForm({ container }) {
             ...prevData.layoutOptions.gridOptions.sizeData,
             {
               column: prevData.layoutOptions.gridOptions.sizeData.length, // Auto-increment column
-              size: { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 },
+              size: { xs: 12, sm: 6, md: 4, lg: 3, xl: 3 },
             },
           ],
         },
@@ -270,6 +273,11 @@ function ContainerForm({ container }) {
   
   
   const handleColorPickerChange = (value, field) => {
+    handleSettingsChange('style', null, field, value);
+  };
+  
+  const handleColorInputChange = (e, field) => {
+    const value = e.target.value;
     handleSettingsChange('style', null, field, value);
   };
 
@@ -415,6 +423,18 @@ function ContainerForm({ container }) {
                 type="text"
                 value={elementsData.referenceName}
                 onChange={(e) => handleInputChange('referenceName', e.target.value)}
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
+              />
+            </div>
+          </div>
+
+          <div className="w-full sm:w-1/2 p-4">
+            <div className="mb-4">
+              <label className="block w-full mb-2 text-text-color primary-text">Title</label>
+              <input
+                type="text"
+                value={elementsData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
                 className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
               />
             </div>
@@ -1044,31 +1064,33 @@ function ContainerForm({ container }) {
         </div>}
         </div>
 
-        {/* Style fields */}
-        <div className="p-4">
-        <label className="block w-full mb-2 text-text-color primary-text">Style</label>
-          <div className="notes-container p-4 bg-secondary-card rounded-lg">
-            <div className="flex flex-wrap">
-              {['backgroundColor', 'textColor', 'textMutedColor'].map((field) => (
-                <div key={field} className="w-full sm:w-1/2 p-4">
-                  <label className="block mb-2 text-text-color capitalize">{field}</label>
-                  <div className="flex items-center">
-                    <input
-                      type="text"
-                      className="block w-full h-10 px-2 py-1 secondary-card border-b border-border text-text-color"
-                      placeholder={`Enter ${field}`}
-                      value={elementsData.style[field]}
-                      onChange={(e) => handleSettingsChange('style', field, e.target.value)}
-                    />
-                    <input
-                      type="color"
-                      value={elementsData.style[field]}
-                      onChange={(e) => handleColorPickerChange(e.target.value, field)}
-                      className="w-10 h-10 ml-2 border-none"
-                    />
-                  </div>
-                </div>
-              ))}
+            {/* Style fields */}
+            <div className="p-4">
+  <label className="block w-full mb-2 text-text-color primary-text">Style</label>
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+    <div className="flex flex-wrap">
+      {['backgroundColor', 'textColor', 'textMutedColor'].map((field) => (
+        <div key={field} className="w-full sm:w-1/2 p-4">
+          <label className="block mb-2 text-text-color capitalize">{field}</label>
+          <div className="flex items-center">
+            {/* Text Input for Manual Color Entry */}
+            <input
+              type="text"
+              className="block w-full h-10 px-2 py-1 secondary-card border-b border-border text-text-color"
+              placeholder={`Enter ${field}`}
+              value={elementsData.style[field] || ""}
+              onChange={(e) => handleColorInputChange(e, field)}
+            />
+            {/* Color Picker */}
+            <input
+              type="color"
+              value={elementsData.style[field] || "#ffffff"} // Default to white if undefined
+              onChange={(e) => handleColorPickerChange(e.target.value, field)}
+              className="w-10 h-10 ml-2 border-none"
+            />
+          </div>
+        </div>
+      ))}
               {['headerFontFamily', 'textFontFamily', 'headerFontSize', 'textFontSize', 'borderRadius', 'padding', 'customCSS'].map((field) => (
                 <div key={field} className="w-full sm:w-1/2 p-4">
                   <label className="block mb-2 text-text-color capitalize">{field}</label>

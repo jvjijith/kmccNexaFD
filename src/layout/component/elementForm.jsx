@@ -18,7 +18,7 @@ function ElementForm({ elementsDatas }) {
       referenceName: "",
       items: [],
       availability: [],
-      numberItems: {},
+      numberItems: {web: 1, android: 1, iOS: 1},
       title: [],
       description: [],
       draft: false,
@@ -54,9 +54,11 @@ function ElementForm({ elementsDatas }) {
   const [suggestions, setSuggestions] = useState([]);
   const [images, setImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState(null);
+  const [info, setInfo ] = useState([]);
   const [mediaId, setMediaId] = useState([]);
   const [value, setValue] = useState("");
+  const limit = 100; // Set your desired limit value
   const items = [
     { itemType: 'Catalogue' },
     { itemType: 'Page' },
@@ -77,8 +79,9 @@ function ElementForm({ elementsDatas }) {
   const api_url = elementsDatas ? `/elements/${elementsDatas?elementsDatas._id:elementsData._id}` : '/elements';
   const api_key = elementsDatas  ? 'updateElement' : 'addElement';
   const { mutate: saveLayout, isLoading, isError } = mutationHook(api_key, api_url);
-  const { data: pagesData, isLoading: isPagesLoading } = useGetData('pages', '/pages', {});
-  const { data: cataloguesData, isLoading: isCataloguesLoading } = useGetData('catalogues', '/catalogues', {});
+  const { data: pagesData, isLoading: isPagesLoading } = useGetData('pages', `/pages?limit=${limit}`, {});
+  const { data: cataloguesData, isLoading: isCataloguesLoading } = useGetData('catalogues', `/catalogues?limit=${limit}`, {});
+  
     const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
     const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
   // Fetch app data
@@ -138,6 +141,7 @@ function ElementForm({ elementsDatas }) {
             imageUrl: cleanedContainer.imageUrl,
             cardOptions: cleanedContainer.cardOptions,
             hoverEffect: cleanedContainer.hoverEffect,
+            info: cleanedContainer.info,
         });
         setUploadedImages(cleanedContainer.imageUrl);
     }
@@ -147,7 +151,7 @@ function ElementForm({ elementsDatas }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    saveLayout({ ...elementsData, draft: true, publish: false, imageUrl: uploadedImages }, {
+    saveLayout({ ...elementsData, draft: true, publish: false, imageUrl: uploadedImages, info: info }, {
       onSuccess: (response) => {
         // Update the state with response to reflect draft and publish status
         // console.log("response",response.data);
@@ -184,7 +188,8 @@ function ElementForm({ elementsDatas }) {
   };
   
   const handleDraftSubmit = () => {
-    const cleanedData = cleanData({ ...elementsData, draft: true, publish: false, imageUrl: uploadedImages  });
+    const cleanedData = cleanData({ ...elementsData, draft: true, publish: false, imageUrl: uploadedImages, info: info  });
+
   
     saveLayout(cleanedData, {
       onSuccess: (response) => {
@@ -200,7 +205,8 @@ function ElementForm({ elementsDatas }) {
   };
   
   const handlePublishSubmit = () => {
-    const cleanedData = cleanData({ ...elementsData, draft: false, publish: true, imageUrl: uploadedImages  });
+    const cleanedData = cleanData({ ...elementsData, draft: false, publish: true, imageUrl: uploadedImages, info: info  });
+    console.log("cleanedData",cleanedData);
   
     saveLayout(cleanedData, {
       onSuccess: (response) => {
@@ -253,7 +259,7 @@ function ElementForm({ elementsDatas }) {
   const addDescription = () => {
     setElementsData((prevState) => ({
       ...prevState,
-      description: [...prevState.description, { lanCode: '', paragraph: '' }],
+      description: [...prevState.description, { lanCode: 'English', paragraph: '' }],
     }));
   };
 
@@ -405,6 +411,15 @@ const renderSuggestion = (suggestion) => (
     setImages(images.filter((_, i) => i !== index));
   };
 
+  const handleRemoveExistingImage = () => {
+    setUploadedImages(null);
+    setElementsData((prev) => ({
+      ...prev,
+      imageUrl: null, // Remove the image URL from state
+    }));
+  };
+  
+
   const handleUploadImages = async (index) => {
     try {
       const image = images[index];
@@ -457,7 +472,9 @@ const signedUrlResponse = await generateSignedUrl({
       });
 
       // Add the uploaded image's URL to the list
-      setUploadedImages(signedUrl.split("?")[0]);
+      
+      console.log("media.nexalogics.in",`https://media.nexalogics.in/${mediaId}.${image.name.split('.').pop()}`);
+      setUploadedImages(`https://media.nexalogics.in/${mediaId}.${image.name.split('.').pop()}`);
 
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -465,6 +482,34 @@ const signedUrlResponse = await generateSignedUrl({
     }
   };
 
+  const handleInfoChange = (index, field, value) => {
+    const updatedInfo = [...info];
+    updatedInfo[index] = {
+      ...updatedInfo[index],
+      [field]: value
+    };
+    setInfo(updatedInfo);
+  };
+
+  // Add a new info item
+  const addInfo = () => {
+    setInfo([
+      ...info,
+      {
+        lanCode: '',
+        infoCode: '',
+        infoName: '',
+        infoValue: ''
+      }
+    ]);
+  };
+
+  // Remove an info item
+  const removeInfo = (index) => {
+    const updatedInfo = [...info];
+    updatedInfo.splice(index, 1);
+    setInfo(updatedInfo);
+  };
 
   if (loading || isLoading) {
     return <LoadingScreen />;
@@ -475,6 +520,7 @@ console.log('pagesData:', pagesData);
 console.log("elementsData.draft",elementsData.draft);
 console.log("elementsData",elementsData);
 
+console.log("uploadedImages",uploadedImages);
 
   return (
     <div>
@@ -674,10 +720,65 @@ console.log("elementsData",elementsData);
             />
           </div>
         </div> */}
+
+<div className="mb-4">
+      <div className="flex items-center justify-between mb-4">
+        <label className="block w-full mb-2 text-text-color primary-text">Information</label>
+        <button 
+          type="button" 
+          className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" 
+          onClick={addInfo}
+        >
+          Add
+        </button>
+      </div>
+      <div className="notes-container p-4 bg-secondary-card rounded-lg">
+        {info?.length === 0 && <p className='text-text-color'>No information added</p>}
+        {info?.map((item, index) => (
+          <div key={index} className="flex gap-4 mb-4">
+            <input
+              type="text"
+              value={item.lanCode}
+              onChange={(e) => handleInfoChange(index, 'lanCode', e.target.value)}
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
+              placeholder="Language Code"
+            />
+            <input
+              type="text"
+              value={item.infoCode}
+              onChange={(e) => handleInfoChange(index, 'infoCode', e.target.value)}
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
+              placeholder="Info Code"
+            />
+            <input
+              type="text"
+              value={item.infoName}
+              onChange={(e) => handleInfoChange(index, 'infoName', e.target.value)}
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
+              placeholder="Info Name"
+            />
+            <input
+              type="text"
+              value={item.infoValue}
+              onChange={(e) => handleInfoChange(index, 'infoValue', e.target.value)}
+              className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
+              placeholder="Info Value"
+            />
+            <button
+              type="button"
+              className="bg-secondary-card text-text-color px-4 py-2 rounded"
+              onClick={() => removeInfo(index)}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
         
         {/* Image URL */}
 
-        {(elementsData.componentType === "image" || elementsData.componentType === "card") && (
+        {(elementsData.componentType === "image" || elementsData.componentType === "card" || elementsData.componentType === "banner") && (
   <div className="w-full p-4">
     <label className="block w-full mb-2 text-text-color primary-text">Image</label>
     <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-secondary-card text-text-color border-2 border-border rounded mb-4">
@@ -694,6 +795,16 @@ console.log("elementsData",elementsData);
               className="w-16 h-16 object-cover mr-4"
             />
             <span className="text-sm">{elementsData.imageUrl.split('/').pop()}</span>
+            <button
+              type="button"
+              className="ml-2 text-red-500"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveExistingImage();
+              }}
+            >
+              X
+            </button>
           </div>
         )}
 
@@ -746,7 +857,7 @@ console.log("elementsData",elementsData);
         {/* Slides Per View */}
         <div className="flex flex-wrap mb-4">
           <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Swiper Options</label>
+          <label className="block w-full mb-2 text-text-color primary-text">Slides Per View</label>
             <input
               type="number"
               className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
@@ -958,7 +1069,7 @@ console.log("elementsData",elementsData);
       <div className="w-full sm:w-1/2 p-4">
       <label className="block w-full mb-2 text-text-color primary-text">Action Button Position</label>
         <Select
-          options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'inline', label: 'Inline' }, { value: 'hidden', label: 'Hidden' }, { value: 'none', label: 'None' }]}
+          options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'inline', label: 'Inline' }, { value: 'hidden', label: 'Hidden' }]}
           value={{ value: elementsData.cardOptions.actionButtonPosition, label: elementsData.cardOptions.actionButtonPosition }}
           onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonPosition: selectedOption.value })}
           placeholder="Action Button Position"
@@ -1136,7 +1247,7 @@ console.log("elementsData",elementsData);
     suggestionHighlighted: 'bg-blue-500 text-black'
   }}
 />
-      <input
+      <textarea
         type="text"
         value={desc.paragraph}
         onChange={(e) => handleNestedChange('description', index, 'paragraph', e.target.value)}

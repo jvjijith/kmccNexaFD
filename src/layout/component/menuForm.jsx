@@ -5,6 +5,7 @@ import LoadingScreen from '../ui/loading/loading';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 
 function MenuForm({ menu }) {
   const navigate = useNavigate();
@@ -324,8 +325,8 @@ const handleAddItem = () => {
     return <LoadingScreen />;
   }
 
-  console.log(formData);
-  console.log(appData);
+  console.log("formData",formData);
+  console.log("appData",appData);
 
   return (
     <div>
@@ -337,7 +338,7 @@ const handleAddItem = () => {
           <label  className="block mb-2 text-text-color">App ID</label>
     <Select
             options={appOptions}
-            value={appOptions.find((opt) => opt.value === formData.appId)}
+            value={appOptions?.find((opt) => opt.value === formData.appId)}
             onChange={(opt) => setFormData((prev) => ({ ...prev, appId: opt.value }))}
             classNames={{
               control: ({ isFocused }) =>
@@ -367,7 +368,7 @@ const handleAddItem = () => {
           <label  className="block mb-2 text-text-color">Menu Type</label>
           <Select
             options={menuTypeOptions}
-            value={menuTypeOptions.find((opt) => opt.value === formData.menuType)}
+            value={menuTypeOptions?.find((opt) => opt.value === formData.menuType)}
             onChange={(opt) => setFormData((prev) => ({ ...prev, menuType: opt.value }))}
             classNames={{
               control: ({ isFocused }) =>
@@ -391,7 +392,7 @@ const handleAddItem = () => {
           <label  className="block mb-2 text-text-color">Layout Type</label>
           <Select
             options={layoutTypeOptions}
-            value={layoutTypeOptions.find((opt) => opt.value === formData.layoutType)}
+            value={layoutTypeOptions?.find((opt) => opt.value === formData.layoutType)}
             onChange={(opt) => setFormData((prev) => ({ ...prev, layoutType: opt.value }))}
             classNames={{
               control: ({ isFocused }) =>
@@ -855,7 +856,7 @@ const handleAddItem = () => {
         {/* Sub-Item Dropdown */}
         <Select
           options={itemSubMenuTypeOptions}
-          value={itemSubMenuTypeOptions.find((opt) => opt.value === subItem.menuType)}
+          value={itemSubMenuTypeOptions?.find((opt) => opt.value === subItem.menuType)}
           onChange={(opt) =>
             handleSectionChange(
               index,
