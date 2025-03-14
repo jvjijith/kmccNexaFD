@@ -1,6 +1,6 @@
 import Container from "../../layout/component/container";
 import EventCard from "../../layout/component/eventCard";
-import EventTable from "../../layout/component/EVENTtABLE.JSX";
+import EventTable from "../../layout/component/eventTable";
 
 function Event() {
 
