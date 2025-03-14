@@ -156,7 +156,7 @@ function ElementForm({ elementsDatas }) {
         // Update the state with response to reflect draft and publish status
         // console.log("response",response.data);
         // setElementsData(response.data);
-        // navigate('/store/appmanagement/element');
+        navigate('/store/appmanagement/element');
         toast.success('Layout saved successfully!');
       },
       onError: (error) => {
@@ -194,7 +194,7 @@ function ElementForm({ elementsDatas }) {
     saveLayout(cleanedData, {
       onSuccess: (response) => {
         // setElementsData(response.data);
-        // navigate('/store/appmanagement/element');
+        navigate('/store/appmanagement/element');
         toast.success('Layout saved as draft!');
       },
       onError: (error) => {
@@ -211,7 +211,7 @@ function ElementForm({ elementsDatas }) {
     saveLayout(cleanedData, {
       onSuccess: (response) => {
         // setElementsData(response.data);
-        // navigate('/store/appmanagement/element');
+        navigate('/store/appmanagement/element');
         toast.success('Layout published successfully!');
       },
       onError: (error) => {

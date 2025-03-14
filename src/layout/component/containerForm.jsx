@@ -318,7 +318,7 @@ function ContainerForm({ container }) {
     try {
       handleApiMutation({elementsData, draft: true, publish: false }, {
         onSuccess: () => {
-          navigate('/containers');
+          navigate('/store/appmanagement/container');
         },
         onError: (error) => {
           console.error('Error submitting form:', error);
@@ -336,8 +336,9 @@ function ContainerForm({ container }) {
     try {
       handleApiMutation({ ...cleanedContainer, draft: true, publish: false }, {
         onSuccess: (response) => {
-          setElementsData(response.data);
           toast.success('Saved as draft!');
+          navigate('/store/appmanagement/container');
+          setElementsData(response.data);
         },
         onError: (error) => {
           console.error('Error submitting form:', error);
@@ -355,8 +356,9 @@ function ContainerForm({ container }) {
     try {
       handleApiMutation({ ...cleanedContainer, draft: true, publish: true }, {
         onSuccess: (response) => {
-          setElementsData(response.data);
           toast.success('Published successfully!');
+          navigate('/store/appmanagement/container');
+          setElementsData(response.data);
         },
         onError: (error) => {
           console.error('Error submitting form:', error);

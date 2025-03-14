@@ -21,7 +21,7 @@ export default function NameCard({
         <div className="rounded-lg bg-card flex justify-between p-3 h-32">
           <div className="">
             <div className="flex items-center">
-              <Image path={`mock_faces_${imgId}`} className="w-10 h-10" />
+              <Image path='\placeholder.png' className="w-10 h-10" />
               <div className="ml-2">
                 <div className="flex items-center">
                   <div className="mr-2 font-bold text-text-color">{name}</div>

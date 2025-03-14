@@ -1,9 +1,9 @@
 export const employeeData = [
     {
       id: 1,
-      name: 'Esther Howard',
-      position: "Sale's manager USA",
-      transactions: 3490,
+      name: 'Live Events',
+      position: "15 March 2025",
+      transactions: 0,
       rise: true,
       tasksCompleted: 3,
       imgId: 0,
@@ -11,36 +11,43 @@ export const employeeData = [
   
     {
       id: 2,
-      name: 'Eleanor Pena',
-      position: "Sale's manager Europe",
-      transactions: 590,
-      rise: false,
+      name: 'Earnings',
+      position: "Total Earnings From Events",
+      transactions: 0,
+      rise: true,
       tasksCompleted: 5,
       imgId: 2,
     },
   
     {
       id: 3,
-      name: 'Robert Fox',
-      position: "Sale's manager Asia",
-      transactions: 2600,
+      name: 'Membership',
+      position: "Total Earnings",
+      transactions: 0,
       rise: true,
-      tasksCompleted: 1,
+      tasksCompleted: 3,
       imgId: 3,
     },
   ];
   
   export  const Countrydata = [
-    { name: 'USA', rise: true, value: 21942.83, id: 1 },
-    { name: 'Ireland', rise: false, value: 19710.0, id: 2 },
-    { name: 'Ukraine', rise: false, value: 12320.3, id: 3 },
-    { name: 'Sweden', rise: true, value: 9725.0, id: 4 },
+    { name: 'Australia', rise: true, value: 85, id: 1 },
+    { name: 'Qatar', rise: false, value: 40, id: 2 },
+    { name: 'India', rise: false, value: 35, id: 3 },
+    { name: 'Saudi', rise: true, value: 30, id: 4 },
   ];
   export const segmentationData = [
     { c1: 'Not Specified', c2: '800', c3: '#363636', color: '#535353' },
     { c1: 'Male', c2: '441', c3: '#818bb1', color: '#595f77' },
     { c1: 'Female', c2: '233', c3: '#2c365d', color: '#232942' },
     { c1: 'Other', c2: '126', c3: '#334ed8', color: '#2c3051' },
+  ];
+
+  export const segmentationData2 = [
+    { c1: 'Others', c2: '10', c3: '#363636', color: '#535353' },
+    { c1: 'Youth', c2: '25', c3: '#818bb1', color: '#595f77' },
+    { c1: 'Sports', c2: '30', c3: '#2c365d', color: '#232942' },
+    { c1: 'Religious', c2: '5', c3: '#334ed8', color: '#2c3051' },
   ];
   
   export const sidebarItems = [
