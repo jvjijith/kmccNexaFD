@@ -8,8 +8,11 @@ import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
 import { closestCenter, DndContext } from '@dnd-kit/core';
 import Autosuggest from 'react-autosuggest';
 import { languages } from '../../constant';
+import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 
 function SortableItem({ id, item, handleRemove }) {
+  const navigate = useNavigate();
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
   return (
@@ -69,6 +72,7 @@ function PageForm({ pageDatas }) {
     draft: false,
   }));
   const [suggestions, setSuggestions] = useState([]);
+  const limit = 100; // Set your desired limit value
 
   const mutationHook = pageDatas ? usePutData : usePostData;
   const api_url = pageDatas ? `/pages/${pageDatas._id}` : '/pages';
@@ -76,10 +80,13 @@ function PageForm({ pageDatas }) {
   const { mutate: saveLayout, isLoading, isError } = mutationHook(api_key, api_url);
 
   // Fetch app data
-  const { data: appData, isLoading: isAppLoading } = useGetData("appdata", "/app", {});
+  const { data: appData, isLoading: isAppLoading } = useGetData("appdata", `/app?limit=${limit}`, {});
 
   // Fetch container data
-  const { data: containerData, isLoading: isContainerLoading } = useGetData("containerdata", "/containers", {});
+  const { data: containerData, isLoading: isContainerLoading } = useGetData("containerdata", `/containers?limit=${limit}`, {});
+  
+  // const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
+  // const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
 
   const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
     if (Array.isArray(data)) {
@@ -147,11 +154,12 @@ function PageForm({ pageDatas }) {
     saveLayout(pageData, {
       onSuccess: (response) => {
         console.log("response",response);
-        setPageData(response.data);
+        // setPageData(response.data);
+        navigate('/store/appmanagement/page');
         toast.success('Layout saved successfully!');
       },
       onError: (error) => {
-        toast.error('Failed to save layout.');
+        toast.error('Failed to save page.');
         console.error(error);
       }
     });
@@ -317,7 +325,8 @@ function PageForm({ pageDatas }) {
     const dataToSave = { ...pageData, draft: true, publish: false };
     saveLayout(dataToSave, {
       onSuccess: (response) => {
-        setPageData(response.data);
+        // setPageData(response.data);
+        navigate('/store/appmanagement/page');
         toast.success('Draft saved successfully!');
       },
       onError: (error) => {
@@ -331,7 +340,8 @@ function PageForm({ pageDatas }) {
     const dataToSave = { ...pageData, draft: false, publish: true };
     saveLayout(dataToSave, {
       onSuccess: (response) => {
-        setPageData(response.data);
+        // setPageData(response.data);
+        navigate('/store/appmanagement/page');
         toast.success('Page published successfully!');
       },
       onError: (error) => {
@@ -381,6 +391,101 @@ function PageForm({ pageDatas }) {
       ...prevData,
       [field]: value,
     }));
+  };
+
+  const ImageUpload = ({ label, imageKey, pageData, setPageData }) => {
+    const [images, setImages] = useState([]);
+    const [uploadProgress, setUploadProgress] = useState({});
+    const [uploadedImage, setUploadedImage] = useState(pageData[imageKey] || null);
+      const [mediaId, setMediaId] = useState([]);
+  
+    const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
+    const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!uploadedImage });
+  
+    const { getRootProps, getInputProps } = useDropzone({
+      onDrop: (acceptedFiles) => setImages([...images, ...acceptedFiles])
+    });
+  
+    const handleRemoveImage = () => {
+      setUploadedImage(null);
+      setPageData((prev) => ({ ...prev, [imageKey]: null }));
+    };
+  
+    const handleUploadImage = async (index) => {
+      try {
+        const image = images[index];
+        const signedUrlResponse = await generateSignedUrl({
+          title: image.name,
+          mediaType: "image",
+          ext: image.name.split('.').pop(),
+          active: true,
+          uploadStatus: "progressing",
+          uploadProgress: 0,
+        });
+  
+        const signedUrl = signedUrlResponse.signedUrl;
+        const mediaId = signedUrlResponse.media._id;
+        setMediaId(mediaId);
+        await axios.put(signedUrl, image, {
+          headers: { 'Content-Type': image.type },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
+            if (progress === 100) {
+              updateMediaStatus({
+                mediaType: "image",
+                title: image.name,
+                ext: image.name.split('.').pop(),
+                active: true,
+                uploadStatus: "completed",
+                uploadProgress: 100,
+              });
+            }
+          }
+        });
+  
+        setUploadedImage(signedUrl.split("?")[0]);
+        setPageData((prev) => ({ ...prev, [imageKey]: signedUrl.split("?")[0] }));
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        toast.error("An error occurred while uploading the image. Please try again.");
+      }
+    };
+  
+    return (
+      <div className="w-full sm:w-1/2 p-4">
+        <label className="block w-full mb-2 text-text-color primary-text">{label}</label>
+        <div {...getRootProps({ className: 'dropzone' })} className="w-full p-4 bg-secondary-card text-text-color border-2 border-border rounded mb-4">
+          <input {...getInputProps()} />
+          <p className='text-text-color'>Drag & drop images here, or click to select files</p>
+  
+          {uploadedImage && (
+            <div className="flex items-center justify-between mb-2">
+              <img src={uploadedImage} alt={label} className="w-16 h-16 object-cover mr-4" />
+              <button type="button" className="ml-2 text-red-500" onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleRemoveImage()}}>X</button>
+            </div>
+          )}
+  
+          {images?.map((file, index) => (
+            <div key={index} className="flex items-center justify-between mb-2">
+              <img src={URL.createObjectURL(file)} alt={file.name} className="w-16 h-16 object-cover mr-4" />
+              <progress value={uploadProgress[file.name] || 0} max="100" className="flex-1 mx-2" />
+              <button type="button" className="ml-2 text-blue-500" onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleUploadImage(index)}}>Upload</button>
+              <button type="button" className="ml-2 text-red-500" onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setImages(images.filter((_, i) => i !== index))}}>X</button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
 
@@ -481,52 +586,15 @@ function PageForm({ pageDatas }) {
     </div>}
 
     {/* Banner Image URL */}
-    {((pageData.type!=="external") && (pageData.type!=="internal")) && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Banner Image URL</label>
-      <input
-        type="text"
-        name="bannerImage"
-        value={pageData.bannerImage}
-        onChange={handleChange}
-        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
-      />
-    </div>}
+    {((pageData.type !== "external") && (pageData.type !== "internal")) && (
+      <ImageUpload label="Banner Image" imageKey="bannerImage" pageData={pageData} setPageData={setPageData} />
+    )}
+    {((pageData.type === "external") || (pageData.type === "internal")) && (
+      <ImageUpload label="Banner Image" imageKey="bannerImage" pageData={pageData} setPageData={setPageData} />
+    )}
+    <ImageUpload label="Portrait Image" imageKey="portraitImage" pageData={pageData} setPageData={setPageData} />
+    <ImageUpload label="Landscape Image" imageKey="landscapeImage" pageData={pageData} setPageData={setPageData} />
 
-        {/* Banner Image URL */}
-    {((pageData.type==="external") || (pageData.type==="internal")) && <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Banner Image URL</label>
-      <input
-        type="text"
-        name="bannerImage"
-        value={pageData.bannerImage}
-        onChange={handleChange}
-        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
-      />
-    </div>}
-
- {/* Portrait Image URL */}
- {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Portrait Image URL</label>
-      <input
-        type="text"
-        name="portraitImage"
-        value={pageData.portraitImage}
-        onChange={handleChange}
-        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
-      />
-    </div>}
-
-     {/* Landscape Image URL */}
-     {<div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Landscape Image URL</label>
-      <input
-        type="text"
-        name="landscapeImage"
-        value={pageData.landscapeImage}
-        onChange={handleChange}
-        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
-      />
-    </div>}
 
     {/* <div className="mb-4"> */}
     <div className="w-full sm:w-1/2 p-4">
@@ -683,6 +751,55 @@ function PageForm({ pageDatas }) {
           </div>
         </div>
 
+
+ {/* Select Dropdown for Containers */}
+ <div className="w-full p-4">
+          <label className="block w-full mb-2 text-text-color primary-text">Items</label>
+          <Select
+            options={containerData?.containers.map((container) => ({
+              value: container._id,
+              label: container.referenceName,
+              description: container.description,
+            }))}
+            onChange={handleAddItem}
+            placeholder="Select an Element to Add"
+            className="mb-4"
+            classNames={{
+              control: ({ isFocused }) =>
+                `bg-primary border ${
+                  isFocused ? 'border-secondary' : 'border-focus-color'
+                } border-b-2 rounded-none h-10 px-2 text-text-color`,
+              singleValue: () => `text-focus-color`,
+              placeholder: () => `text-focus-color`,
+              menu: () => `bg-primary text-focus-color`,
+              option: ({ isSelected }) =>
+                `cursor-pointer ${
+                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                }`,
+            }}
+          />
+
+          {/* Drag-and-Drop Items */}
+          {pageData.items.length !== 0 && (
+            <div className="notes-container p-4 bg-secondary-card rounded-lg">
+              <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={pageData.items.map((_, index) => index)}>
+                  {pageData.items.map((item, index) => (
+                    <SortableItem
+                      key={index}
+                      id={index}
+                      item={
+                        containerData?.containers?.find((container) => container._id === item)?.referenceName || "Unknown"
+                      }
+                      
+                      handleRemove={handleRemoveItem}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
+            </div>
+          )}
+        </div>
 
  {/* Titles */}
  <div className="mb-4">
@@ -883,54 +1000,7 @@ function PageForm({ pageDatas }) {
   </div>
 </div>
 
- {/* Select Dropdown for Containers */}
- <div className="w-full p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Items</label>
-          <Select
-            options={containerData?.containers.map((container) => ({
-              value: container._id,
-              label: container.referenceName,
-              description: container.description,
-            }))}
-            onChange={handleAddItem}
-            placeholder="Select an Element to Add"
-            className="mb-4"
-            classNames={{
-              control: ({ isFocused }) =>
-                `bg-primary border ${
-                  isFocused ? 'border-secondary' : 'border-focus-color'
-                } border-b-2 rounded-none h-10 px-2 text-text-color`,
-              singleValue: () => `text-focus-color`,
-              placeholder: () => `text-focus-color`,
-              menu: () => `bg-primary text-focus-color`,
-              option: ({ isSelected }) =>
-                `cursor-pointer ${
-                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                }`,
-            }}
-          />
 
-          {/* Drag-and-Drop Items */}
-          {pageData.items.length !== 0 && (
-            <div className="notes-container p-4 bg-secondary-card rounded-lg">
-              <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={pageData.items.map((_, index) => index)}>
-                  {pageData.items.map((item, index) => (
-                    <SortableItem
-                      key={index}
-                      id={index}
-                      item={
-                        containerData?.containers?.find((container) => container._id === item)?.referenceName || "Unknown"
-                      }
-                      
-                      handleRemove={handleRemoveItem}
-                    />
-                  ))}
-                </SortableContext>
-              </DndContext>
-            </div>
-          )}
-        </div>
 
 
         {renderSubmitButtons()}

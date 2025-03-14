@@ -12,6 +12,7 @@ import { useNavigate } from "react-router";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { useGetData } from "../../common/api";
 import { useState } from "react";
+import Segmentation2 from "./segmentation2";
 
 export default function Content() {
   
@@ -167,7 +168,7 @@ const formattedDate = currentDate.toLocaleDateString('en-US', {
             ),
           )}
   
-          {/* <div className="w-full p-2 lg:w-2/3">
+          <div className="w-full p-2 lg:w-2/3">
             <div className="rounded-lg bg-card sm:h-80 h-60">
               <Graph />
             </div>
@@ -190,9 +191,10 @@ const formattedDate = currentDate.toLocaleDateString('en-US', {
           </div>
           <div className="w-full p-2 lg:w-1/3">
             <div className="rounded-lg bg-card overflow-hidden h-80">
-              <AddComponent />
+            <Segmentation2 />
+              {/* <AddComponent /> */}
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     );

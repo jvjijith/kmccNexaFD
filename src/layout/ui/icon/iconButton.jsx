@@ -7,7 +7,7 @@ export default function IconButton({
     return (
       <button onClick={onClick} type="button" className={className}>
         {icon==="res-react-dash-logo"? <img
-          src={`/nexa.png`}
+          src={`/icon.png`}
           alt=""
           className="w-full h-full"
           width={50}

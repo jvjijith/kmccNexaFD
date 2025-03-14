@@ -28,7 +28,7 @@ function SortableItem({ id, index, handleRemove, item, element }) {
         
         disabled
       />
-      <button type="button" className="bg-red-500 text-text-color px-4 py-2 rounded ml-2" onClick={() => handleRemove(index)}>
+      <button type="button" className="bg-primary-button-color text-btn-text-color-text-color px-4 py-2 rounded ml-2" onClick={() => handleRemove(index)}>
         Remove
       </button>
     </div>
@@ -41,6 +41,7 @@ function ContainerForm({ container }) {
   const [loading, setLoading] = useState(true);
   const [elementsData, setElementsData] = useState({
     referenceName: '',
+    title: '',
     description: '',
     layoutOptions: {
     layout: "tab",
@@ -51,25 +52,8 @@ function ContainerForm({ container }) {
       alignItems: "stretch",
       wrap: "wrap",
       columns: 1,
-      sizeData: [
-        {
-          column: 0,
-          size: {
-            xs: 12,
-            sm: 12,
-            md: 12,
-            lg: 12,
-            xl: 12
-          }
-        }
-      ],
-      defaultSize: {
-        xs: 12,
-        sm: 12,
-        md: 12,
-        lg: 12,
-        xl: 12
-      }
+      sizeData: [],
+      defaultSize: {}
     },
     stackOptions: {
       spacing: 2,
@@ -107,16 +91,17 @@ function ContainerForm({ container }) {
     draft: false,
     publish: false,
   });
+  const limit = 100; // Set your desired limit value
 
   
-  const mutationHook = container | elementsData.draft ? usePutData : usePostData;
-  const api_url = container | elementsData.draft ? `/containers/${container?._id}` : '/containers';
-  const api_key = container | elementsData.draft ? 'updateContainer' : 'addContainer';
+  const mutationHook = container  ? usePutData : usePostData;
+  const api_url = container  ? `/containers/${container?._id}` : '/containers';
+  const api_key = container  ? 'updateContainer' : 'addContainer';
   
   // Call the mutation hook at the top level
   const { mutate: handleApiMutation } = mutationHook(api_key, api_url, elementsData);
-  const { data: elementData, isLoading: isElementLoading } = useGetData("elementdata", "/elements", {});
-  const { data: appData, isLoading: isAppLoading } = useGetData("appdata", "/app", {});
+  const { data: elementData, isLoading: isElementLoading } = useGetData("elementdata", `/elements?limit=${limit}`, {});
+  const { data: appData, isLoading: isAppLoading } = useGetData("appdata", `/app?limit=${limit}`, {});
 
   const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
     if (Array.isArray(data)) {
@@ -148,6 +133,7 @@ function ContainerForm({ container }) {
 
       setElementsData({
         referenceName: cleanedContainer.referenceName || '',
+        title: cleanedContainer.title || '',
         description: cleanedContainer.description || '',
         layoutOptions: cleanedContainer.layoutOptions || {},
         items: transformedItems || [],
@@ -186,7 +172,112 @@ function ContainerForm({ container }) {
     }));
   };
 
+  const handleSettingsDefaultSizeChange = (category, subCategory, key, ...args) => {
+    setElementsData((prevData) => {
+      const newData = { ...prevData };
+  
+      if (category === "layoutOptions" && subCategory === "gridOptions") {
+        if (key === "sizeData") {
+          const [index, sizeKey, value] = args;
+          newData.layoutOptions.gridOptions.sizeData = newData.layoutOptions.gridOptions.sizeData.map((item, i) =>
+            i === index
+              ? {
+                  ...item,
+                  size: { ...item.size, [sizeKey]: Number(value) },
+                }
+              : item
+          );
+        } else if (key === "defaultSize") {
+          const [sizeKey, value] = args;
+          newData.layoutOptions.gridOptions.defaultSize = {
+            ...newData.layoutOptions.gridOptions.defaultSize,
+            [sizeKey]: Number(value),
+          };
+        } else {
+          // Handle other gridOptions changes
+          newData.layoutOptions.gridOptions[key] = args[0];
+        }
+      }
+  
+      return { ...newData };
+    });
+  };
+
+  const handleSettingsSizeChange = (index, sizeKey, value) => {
+    setElementsData((prevData) => {
+      const updatedSizeData = prevData?.layoutOptions?.gridOptions?.sizeData
+        ? [...prevData.layoutOptions.gridOptions.sizeData]
+        : [];
+  
+      // Ensure the entry exists at the given index
+      if (!updatedSizeData[index]) {
+        updatedSizeData[index] = { column: "", size: {} };
+      }
+  
+      // Update the specific sizeKey with the new value (clamped between 0 and 12)
+      updatedSizeData[index].size = {
+        ...updatedSizeData[index].size,
+        [sizeKey]: Math.min(Math.max(Number(value), 0), 12),
+      };
+  
+      return {
+        ...prevData,
+        layoutOptions: {
+          ...prevData.layoutOptions,
+          gridOptions: {
+            ...prevData.layoutOptions.gridOptions,
+            sizeData: updatedSizeData,
+          },
+        },
+      };
+    });
+  };
+  
+  
+  
+  const addSizeData = () => {
+    setElementsData((prevData) => ({
+      ...prevData,
+      layoutOptions: {
+        ...prevData.layoutOptions,
+        gridOptions: {
+          ...prevData.layoutOptions.gridOptions,
+          sizeData: [
+            ...prevData.layoutOptions.gridOptions.sizeData,
+            {
+              column: prevData.layoutOptions.gridOptions.sizeData.length, // Auto-increment column
+              size: { xs: 12, sm: 6, md: 4, lg: 3, xl: 3 },
+            },
+          ],
+        },
+      },
+    }));
+  };
+  
+  const removeSizeData = (index) => {
+    setElementsData((prevData) => {
+      const newSizeData = prevData.layoutOptions.gridOptions.sizeData.filter((_, i) => i !== index);
+  
+      return {
+        ...prevData,
+        layoutOptions: {
+          ...prevData.layoutOptions,
+          gridOptions: {
+            ...prevData.layoutOptions.gridOptions,
+            sizeData: newSizeData,
+          },
+        },
+      };
+    });
+  };
+  
+  
   const handleColorPickerChange = (value, field) => {
+    handleSettingsChange('style', null, field, value);
+  };
+  
+  const handleColorInputChange = (e, field) => {
+    const value = e.target.value;
     handleSettingsChange('style', null, field, value);
   };
 
@@ -200,11 +291,15 @@ function ContainerForm({ container }) {
   };
 
   const handleRemoveItem = (index) => {
-    setElementsData((prevState) => ({
-      ...prevState,
-      items: prevState.items.filter((_, i) => i !== index),
-    }));
+    setElementsData((prevState) => {
+      if (!prevState.items) return prevState; // Ensure items exist
+      return {
+        ...structuredClone(prevState), // Ensures state update triggers re-render
+        items: prevState.items.filter((_, i) => i !== index),
+      };
+    });
   };
+  
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -223,7 +318,7 @@ function ContainerForm({ container }) {
     try {
       handleApiMutation({elementsData, draft: true, publish: false }, {
         onSuccess: () => {
-          navigate('/containers');
+          navigate('/store/appmanagement/container');
         },
         onError: (error) => {
           console.error('Error submitting form:', error);
@@ -241,8 +336,9 @@ function ContainerForm({ container }) {
     try {
       handleApiMutation({ ...cleanedContainer, draft: true, publish: false }, {
         onSuccess: (response) => {
-          setElementsData(response.data);
           toast.success('Saved as draft!');
+          navigate('/store/appmanagement/container');
+          setElementsData(response.data);
         },
         onError: (error) => {
           console.error('Error submitting form:', error);
@@ -256,11 +352,13 @@ function ContainerForm({ container }) {
 
   const handlePublishSubmit = async () => {
     const cleanedContainer = removeUnwantedFields(elementsData);
+    console.log("cleanedContainer",cleanedContainer);
     try {
       handleApiMutation({ ...cleanedContainer, draft: true, publish: true }, {
         onSuccess: (response) => {
-          setElementsData(response.data);
           toast.success('Published successfully!');
+          navigate('/store/appmanagement/container');
+          setElementsData(response.data);
         },
         onError: (error) => {
           console.error('Error submitting form:', error);
@@ -313,6 +411,7 @@ function ContainerForm({ container }) {
   console.log("elementsData",elementsData);
   console.log("container",container);
   console.log("elementData",elementData);
+  console.log("elementsData.layoutOptions.gridOptions?.sizeData?",elementsData.layoutOptions.gridOptions?.sizeData);
 
   return (
     <div>
@@ -326,6 +425,18 @@ function ContainerForm({ container }) {
                 type="text"
                 value={elementsData.referenceName}
                 onChange={(e) => handleInputChange('referenceName', e.target.value)}
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
+              />
+            </div>
+          </div>
+
+          <div className="w-full sm:w-1/2 p-4">
+            <div className="mb-4">
+              <label className="block w-full mb-2 text-text-color primary-text">Title</label>
+              <input
+                type="text"
+                value={elementsData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
                 className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
               />
             </div>
@@ -563,7 +674,82 @@ function ContainerForm({ container }) {
             className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
           />
         </div>
+
+        {/* Size Data */}
+<div className="w-full p-4">
+  <div className="flex items-center justify-between mb-4">
+    <label className="block w-full mb-2 text-text-color primary-text">Size Data</label>
+    <button
+      type="button"
+      className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded"
+      onClick={addSizeData}
+    >
+      Add
+    </button>
+  </div>
+
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+    {elementsData.layoutOptions.gridOptions?.sizeData?.length === 0 && (
+      <p className="text-text-color">No Size Data available</p>
+    )}
+
+    {elementsData.layoutOptions.gridOptions?.sizeData?.map((item, index) => (
+      <div key={index} className="flex items-center mb-2">
+        <label className="block w-1/6 h-10 px-2 py-1 items-center text-text-color">
+          Column: {item.column}
+        </label>
+
+        {['xs', 'sm', 'md', 'lg', 'xl'].map((size) => (
+  <div key={size} className="flex flex-col mb-4">
+    <label className="block text-text-color mb-1 ml-20">{size.toUpperCase()}</label>
+    <input
+      type="number"
+      min="0"
+      max="12"
+      className="block w-full px-6 py-2 ml-12 text-text-color secondary-card border rounded"
+      placeholder={size.toUpperCase()}
+      value={item.size?.[size] || 0}
+      onChange={(e) => handleSettingsSizeChange(index, size, Number(e.target.value))}
+    />
+  </div>
+))}
+
+
+
+        <button
+          type="button"
+          className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded ml-14 mt-2"
+          onClick={() => removeSizeData(index)}
+        >
+          Remove
+        </button>
       </div>
+    ))}
+  </div>
+</div>
+
+
+
+        {/* Default Size */}
+        <div className="mb-4">
+          <label className="block mb-2 text-text-color">Default Size</label>
+          {['xs', 'sm', 'md', 'lg', 'xl'].map((size) => (
+            <div key={size} className="flex items-center space-x-2">
+              <label className="text-text-color w-10">{size.toUpperCase()}</label>
+              <input
+                type="number"
+                min="0"
+                max="12"
+                value={elementsData.layoutOptions.gridOptions?.defaultSize?.[size] || 0}
+                onChange={(e) => handleSettingsDefaultSizeChange('layoutOptions', 'gridOptions', 'defaultSize', size, e.target.value)}
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      
     )}
 
     {/* Stack Layout Options */}
@@ -880,43 +1066,56 @@ function ContainerForm({ container }) {
         </div>}
         </div>
 
-        {/* Style fields */}
-        <div className="p-4">
-        <label className="block w-full mb-2 text-text-color primary-text">Style</label>
-          <div className="notes-container p-4 bg-secondary-card rounded-lg">
-            <div className="flex flex-wrap">
-              {['backgroundColor', 'textColor', 'textMutedColor'].map((field) => (
+            {/* Style fields */}
+            <div className="p-4">
+  <label className="block w-full mb-2 text-text-color primary-text">Style</label>
+  <div className="notes-container p-4 bg-secondary-card rounded-lg">
+    <div className="flex flex-wrap">
+      {['backgroundColor', 'textColor', 'textMutedColor'].map((field) => (
+        <div key={field} className="w-full sm:w-1/2 p-4">
+          <label className="block mb-2 text-text-color capitalize">{field}</label>
+          <div className="flex items-center">
+            {/* Text Input for Manual Color Entry */}
+            <input
+              type="text"
+              className="block w-full h-10 px-2 py-1 secondary-card border-b border-border text-text-color"
+              placeholder={`Enter ${field}`}
+              value={elementsData.style[field] || ""}
+              onChange={(e) => handleColorInputChange(e, field)}
+            />
+            {/* Color Picker */}
+            <input
+              type="color"
+              value={elementsData.style[field] || "#ffffff"} // Default to white if undefined
+              onChange={(e) => handleColorPickerChange(e.target.value, field)}
+              className="w-10 h-10 ml-2 border-none"
+            />
+          </div>
+        </div>
+      ))}
+              {['headerFontFamily', 'textFontFamily', 'headerFontSize', 'textFontSize', 'borderRadius', 'padding', 'customCSS'].map((field) => (
                 <div key={field} className="w-full sm:w-1/2 p-4">
                   <label className="block mb-2 text-text-color capitalize">{field}</label>
-                  <div className="flex items-center">
+
+                  {field === 'customCSS' ? (
+                    <textarea
+                      className="block w-full h-24 px-2 py-1 secondary-card border border-border text-text-color resize-none"
+                      placeholder={`Enter ${field}`}
+                      value={elementsData.style[field]}
+                      onChange={(e) => handleSettingsChange('style', null, field, e.target.value)}
+                    />
+                  ) : (
                     <input
                       type="text"
                       className="block w-full h-10 px-2 py-1 secondary-card border-b border-border text-text-color"
                       placeholder={`Enter ${field}`}
                       value={elementsData.style[field]}
-                      onChange={(e) => handleSettingsChange('style', field, e.target.value)}
+                      onChange={(e) => handleSettingsChange('style', null, field, e.target.value)}
                     />
-                    <input
-                      type="color"
-                      value={elementsData.style[field]}
-                      onChange={(e) => handleColorPickerChange(e.target.value, field)}
-                      className="w-10 h-10 ml-2 border-none"
-                    />
-                  </div>
+                  )}
                 </div>
               ))}
-              {['headerFontFamily', 'textFontFamily', 'headerFontSize', 'textFontSize', 'borderRadius', 'padding', 'customCSS'].map((field) => (
-                <div key={field} className="w-full sm:w-1/2 p-4">
-                  <label className="block mb-2 text-text-color capitalize">{field}</label>
-                  <input
-                    type="text"
-                    className="block w-full h-10 px-2 py-1 secondary-card border-b border-border text-text-color"
-                    placeholder={`Enter ${field}`}
-                    value={elementsData.style[field]}
-                    onChange={(e) => handleSettingsChange('style', null, field, e.target.value)}
-                  />
-                </div>
-              ))}
+
             </div>
           </div>
         </div>

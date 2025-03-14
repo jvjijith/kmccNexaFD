@@ -11,10 +11,10 @@ export default function Satisfication() {
     return (
       <div className="p-4 h-full">
         <div className="flex justify-between items-center">
-          <div className="text-text-color font-bold">Satisfication</div>
+          <div className="text-text-color font-bold">Server Health</div>
           <Icon path="res-react-dash-options" className="w-2 h-2" />
         </div>
-        <div className="mt-3">From all projects</div>
+        <div className="mt-3">Backend Server Health</div>
         <div className="flex justify-center">
           <svg
             viewBox="0 0 700 380"
@@ -31,7 +31,7 @@ export default function Satisfication() {
             />
             <animated.path
               d="M100 350C100 283.696 126.339 220.107 173.223 173.223C220.107 126.339 283.696 100 350 100C416.304 100 479.893 126.339 526.777 173.223C573.661 220.107 600 283.696 600 350"
-              stroke="#ff4a17"
+              stroke="#19e36d"
               strokeWidth="40"
               strokeLinecap="round"
               strokeDasharray="785.4"
@@ -50,92 +50,98 @@ export default function Satisfication() {
               r="12"
               fill="#fff"
             />
-            <circle cx="140" cy="350" r="5" fill="#ff4a17" />
+            <circle cx="140" cy="350" r="5" fill="#19e36d" />
             <circle
               cx="144.5890038459008"
               cy="306.3385449282706"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="158.15545389505382"
               cy="264.58530495408195"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="180.10643118126103"
               cy="226.56509701858067"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="209.48257266463972"
               cy="193.93958664974724"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="244.9999999999999"
               cy="168.1346652052679"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="285.10643118126103"
               cy="150.27813157801776"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="328.0490227137926"
               cy="141.15040197266262"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="371.95097728620715"
               cy="141.1504019726626"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="414.8935688187389"
               cy="150.27813157801774"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="454.9999999999999"
               cy="168.1346652052678"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="490.51742733536014"
               cy="193.93958664974713"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="519.8935688187389"
               cy="226.5650970185806"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="541.8445461049462"
               cy="264.58530495408183"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
             <circle
               cx="555.4109961540992"
               cy="306.33854492827044"
               r="5"
-              fill="#ff4a17"
+              fill="#19e36d"
             />
-            <circle cx="560" cy="349.99999999999994" r="5" fill="#ff4a17" />
+            <circle
+              cx="555.4109961540992"
+              cy="306.33854492827044"
+              r="5"
+              fill="#19e36d"
+            />
+            <circle cx="560" cy="349.99999999999994" r="5" fill="#19e36d" />
             <path
               d="M349.292 375C395.845 375 433.583 337.261 433.583 290.708C433.583 244.155 395.845 206.417 349.292 206.417C302.739 206.417 265 244.155 265 290.708C265 337.261 302.739 375 349.292 375Z"
               fill="white"
@@ -189,11 +195,11 @@ export default function Satisfication() {
             >
               <div
                 className="font-bold"
-                style={{ color: '#ff4a17', fontSize: '18px' }}
+                style={{ color: '#19e36d', fontSize: '18px' }}
               >
                 97.78%
               </div>
-              <div className="">Based on Likes</div>
+              {/* <div className="">Based on Likes</div> */}
             </div>
             <div className="" style={{ width: '50px' }}>
               100%

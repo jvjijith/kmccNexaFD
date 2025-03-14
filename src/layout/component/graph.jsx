@@ -32,9 +32,9 @@ export default function Graph() {
   
             <Icon path="res-react-dash-graph-range" className="w-4 h-4" />
             <div className="ml-2">Last 9 Months</div>
-            <div className="ml-6 w-5 h-5 flex justify-center items-center rounded-full icon-background">
+            {/* <div className="ml-6 w-5 h-5 flex justify-center items-center rounded-full icon-background">
               ?
-            </div>
+            </div> */}
           </div>
           <div className="font-bold ml-5">Nov - July</div>
         </div>
@@ -60,7 +60,7 @@ export default function Graph() {
                 tickMargin={10}
               />
               <YAxis axisLine={false} tickLine={false} tickMargin={10} />
-              <Tooltip content={<CustomTooltip />} cursor={false} />
+              <Tooltip content={<CustomTooltip />} cursor={false} className="secondary" />
               <Line
                 activeDot={false}
                 type="monotone"

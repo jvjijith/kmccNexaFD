@@ -8,9 +8,9 @@ export default function TopCountries() {
       <div className="flex p-4 flex-col h-full">
         <div className="flex justify-between items-center">
           <div className="text-text-color font-bold">Top Countries</div>
-          <Icon path="res-react-dash-plus" className="w-5 h-5" />
+          {/* <Icon path="res-react-dash-plus" className="w-5 h-5" /> */}
         </div>
-        <div className="">favourites</div>
+        <div className="">Page Views By Country</div>
         {Countrydata.map(({ name, rise, value, id }) => (
           <div className="flex items-center mt-3" key={id}>
             <div className="">{id}</div>

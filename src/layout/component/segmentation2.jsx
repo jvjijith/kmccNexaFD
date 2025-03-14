@@ -1,15 +1,15 @@
-import { segmentationData } from "../../constant";
+import { segmentationData2 } from "../../constant";
 import Icon from "../ui/icon/icon";
-export default function Segmentation() {
+export default function Segmentation2() {
     return (
       <div className="p-4 h-full">
         <div className="flex justify-between items-center">
-          <div className="text-text-color font-bold">Page Views By Gender</div>
+          <div className="text-text-color font-bold">Events By Category</div>
   
           <Icon path="res-react-dash-options" className="w-2 h-2" />
         </div>
-        <div className="mt-3">All users</div>
-        {segmentationData.map(({ c1, c2, c3, color }) => (
+        <div className="mt-3">All Categories</div>
+        {segmentationData2.map(({ c1, c2, c3, color }) => (
           <div className="flex items-center" key={c1}>
             <div
               className="w-2 h-2 rounded-full"

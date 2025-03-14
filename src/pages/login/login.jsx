@@ -255,7 +255,7 @@ const Login = () => {
               {/* Sign In Button */}
               <button
                 type="submit"
-                className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="w-full bg-primary-button-color text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Sign In
               </button>
@@ -312,20 +312,20 @@ const Login = () => {
       </div>
 
       {/* Right Side - Decorative Image */}
-      <div className="px-10 lg:flex flex-col flex-1 justify-between hidden rounded-3xl items-end relative max-w-[600px] 2xl:max-w-[800px] ml-auto mr-0">
+      <div className=" lg:flex flex-col flex-1 justify-between hidden rounded-3xl items-end relative  ml-auto mr-0">
         <div className="h-[calc(100vh-1px)] w-full relative">
-          <div className="absolute inset-0 mx-8 my-12">
+          <div className="absolute inset-0">
             <div className="w-full h-full rounded-3xl overflow-hidden">
               <img 
-                className="absolute h-full w-full top-0 left-0 rounded-3xl"
-                src="https://ecme-react.themenate.net/img/others/auth-side-bg.png"
+                className="absolute h-full w-full top-0 left-0"
+                src="/ECommerce.jpg"
                 alt="Decorative background"
               />
             </div>
           </div>
         </div>
       </div>
-    </div>
+     </div>
   );
 };
 
