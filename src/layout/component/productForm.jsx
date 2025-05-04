@@ -58,6 +58,11 @@ function ProductForm({ typeData, product }) {
   
   useEffect(() => {
     if (typeData === 'update' && product) {
+      
+    const cleanedUploadedImages = product?.images.map((item) => {
+      const { _id, ...rest } = item;
+      return rest;
+    })
       setProductData({
         ...productData,
         name: product.name || '',
@@ -70,12 +75,13 @@ function ProductForm({ typeData, product }) {
         category: product.category?._id || '',
         brand: product.brand?._id || '',
         subBrand: product.subBrand?._id || '',
+        images: product.images || []
         // Populate other fields as necessary
       });
       setImages([]);
       setNotes(product.notes || []);
       setRFQ(product.RFQ || false);
-      setUploadedImages(product.images || []);
+      setUploadedImages(cleanedUploadedImages || []);
     }
   }, [typeData, product]);
 
@@ -247,7 +253,7 @@ function ProductForm({ typeData, product }) {
       // subBrand: isSubrand ? productData.subBrand : productData.subBrand._id,
       // brand: isBrand ? productData.brand : productData.brand._id,
       // subCategory: isSubCategories ? productData.subCategory : productData.subCategory._id,
-      images: cleanedUploadedImages,
+      images: uploadedImages ? uploadedImages : cleanedUploadedImages,
       RFQ: isRFQ,
       notes: cleanedNotes,
       // identificationNumbers: cleanedIdentificationNumbers,
@@ -259,6 +265,8 @@ function ProductForm({ typeData, product }) {
       notes,
     };
 
+    console.log("payload",payload);
+
     saveProduct(
       payload
     );
@@ -266,6 +274,8 @@ function ProductForm({ typeData, product }) {
   };
 
   if (isLoading||loading) return <LoadingScreen />;
+
+  console.log("productData",productData);
 
   return (
     <div>

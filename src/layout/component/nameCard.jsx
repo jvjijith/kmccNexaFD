@@ -31,7 +31,7 @@ export default function NameCard({
               </div>
             </div>
   
-            <div className="text-sm  mt-2">{`${tasksCompleted} from 5 tasks completed`}</div>
+            {/* <div className="text-sm  mt-2">{`${tasksCompleted} from 5 tasks completed`}</div> */}
             <svg
               className="w-44 mt-3"
               height="6"
