@@ -89,7 +89,7 @@ function PageTable() {
             onClick={() => handlePageChange(index + 1)}
             className={`mx-1 px-3 py-1 rounded ${
               currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
-            } text-text-color`}
+            } text-btn-text-color`}
           >
             {index + 1}
           </button>

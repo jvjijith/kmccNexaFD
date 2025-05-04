@@ -242,7 +242,8 @@ const App = () => {
       <Route path="permission" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"view"} page={<UserTeamPermission />} />} />
       <Route path="permission/add" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"create"} page={<AddUserTeamPermission />} />} />
       <Route path="permission/edit" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"update"} page={<EditUserTeamPermission />} />} />
-      <Route path="event" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"update"} page={<Event />} />} />
+      <Route path="event/catalog" element={<UserTeamPermissionsPage requiredModule={"catalogues"} permission={"view"} page={<CatalogList />} />} />
+      <Route path="event/list" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"view"} page={<Event />} />} />
       <Route path="event/add" element={<AddEvent />} />
       <Route path="event/edit" element={<EditEvent />} />
       <Route path="error" element={<ErrorPage />} />

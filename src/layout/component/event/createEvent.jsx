@@ -77,7 +77,7 @@ function CreateEvent({ formData, handleChange, isSubmitting }) {
                     <label className="block text-sm font-medium mb-1">Total Registered Seats</label>
                     <input
                         type="number"
-                        name="totalRegisteredSeats"
+                        name="totalregisteredSeats"
                         value={formData.totalregisteredSeats}
                         onChange={handleChange}
                         className="p-2 bg-secondary-card border border-border rounded w-full"

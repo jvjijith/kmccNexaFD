@@ -8,16 +8,18 @@ import EventPermissions from './eventPermission';
 import RegistrationDetails from './registrationDetails';
 import EventRegistrationDates from './scheduleEvent';
 import { toast } from 'react-toastify';
+import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 
 function EventForm({ event }) {
-
     const [formData, setFormData] = useState({
-        name:  null,
+        name: null,
         description: null,
         type: 'public',
         metadata: {
             name: null,
             description: null,
+            imageUrl: null, // Add imageUrl to metadata
         },
         location: null,
         GeoAllow: {
@@ -26,9 +28,9 @@ function EventForm({ event }) {
         },
         allowGuest: false,
         allowLogin: false,
-        allowMemberLogin:  false,
-        seatsAvailable:  0,
-        totalregisteredSeats:  0,
+        allowMemberLogin: false,
+        seatsAvailable: 0,
+        totalregisteredSeats: 0,
         registrationFields: [],
         eventStatus: 'Draft',
         startingDate: null,
@@ -37,18 +39,24 @@ function EventForm({ event }) {
         priceConfig: {
             type: 'fixed',
             amount: 0,
-            dependantField: null,
+            dependantField: "",
         },
         registrationStartDate: null,
         registrationEndDate: null,
     });
     
-
+    // Add state variables for image handling
+    const [images, setImages] = useState([]);
+    const [uploadedImages, setUploadedImages] = useState(null);
+    const [uploadProgress, setUploadProgress] = useState({});
+    const [mediaId, setMediaId] = useState(null);
 
     const mutationHook = event ? usePutData : usePostData;
     const api_url = event ? `/events/${event._id}` : '/events';
     const api_key = event ? 'updateEvent' : 'addEvent';
     const { mutate: saveEvent, isLoading, isError } = mutationHook(api_key, api_url);
+    const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
+    const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [activeTab, setActiveTab] = useState(0);
 
@@ -64,48 +72,52 @@ function EventForm({ event }) {
           }, {});
         }
         return data;
-      };
+    };
 
     useEffect(() => {
         if (event) {
-
-            
-      // Remove unwanted fields
-      const cleanedContainer = removeUnwantedFields(event);
-    
+            // Remove unwanted fields
+            const cleanedContainer = removeUnwantedFields(event);
+        
             setFormData({
-            name: event?.name || null,
-            description: event?.description || null,
-            type: event?.type || 'public',
-            metadata: {
-                name: event?.metadata?.name || null,
-                description: event?.metadata?.description || null,
-            },
-            location: event?.location || null,
-            GeoAllow: {
-                location: event?.GeoAllow?.location || null,
-                coordinates: event?.GeoAllow?.coordinates || [null, null],
-            },
-            allowGuest: event?.allowGuest ?? false,
-            allowLogin: event?.allowLogin ?? false,
-            allowMemberLogin: event?.allowMemberLogin ?? false,
-            seatsAvailable: event?.seatsAvailable || 0,
-            totalregisteredSeats: event?.totalRegisteredSeats || 0,
-            registrationFields: cleanedContainer?.registrationFields || [],
-            eventStatus: event?.eventStatus || 'Draft',
-            startingDate: formatDate(event?.startingDate) || null,
-            endingDate: formatDate(event?.endingDate) || null,
-            paymentType: event?.paymentType || 'Free',
-            priceConfig: {
-                type: event?.priceConfig?.type || 'fixed',
-                amount: event?.priceConfig?.amount || 0,
-                dependantField: event?.priceConfig?.dependantField || null,
-            },
-            registrationStartDate: formatDate(event?.registrationStartDate) || null,
-            registrationEndDate: formatDate(event?.registrationEndDate) || null,
-        });
+                name: event?.name || null,
+                description: event?.description || null,
+                type: event?.type || 'public',
+                metadata: {
+                    name: event?.metadata?.name || null,
+                    description: event?.metadata?.description || null,
+                    imageUrl: event?.metadata?.imageUrl || null, // Get from metadata
+                },
+                location: event?.location || null,
+                GeoAllow: {
+                    location: event?.GeoAllow?.location || null,
+                    coordinates: event?.GeoAllow?.coordinates || [null, null],
+                },
+                allowGuest: event?.allowGuest ?? false,
+                allowLogin: event?.allowLogin ?? false,
+                allowMemberLogin: event?.allowMemberLogin ?? false,
+                seatsAvailable: event?.seatsAvailable || 0,
+                totalregisteredSeats: event?.totalregisteredSeats || 0,
+                registrationFields: cleanedContainer?.registrationFields || [],
+                eventStatus: event?.eventStatus || 'Draft',
+                startingDate: formatDate(event?.startingDate) || null,
+                endingDate: formatDate(event?.endingDate) || null,
+                paymentType: event?.paymentType || 'Free',
+                priceConfig: {
+                    type: event?.priceConfig?.type || 'fixed',
+                    amount: event?.priceConfig?.amount || 0,
+                    dependantField: event?.priceConfig?.dependantField || null,
+                },
+                registrationStartDate: formatDate(event?.registrationStartDate) || null,
+                registrationEndDate: formatDate(event?.registrationEndDate) || null,
+            });
+            
+            // Set uploaded image if it exists in metadata
+            if (event?.metadata?.imageUrl) {
+                setUploadedImages(event.metadata.imageUrl);
+            }
         }
-      }, []);
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -151,9 +163,8 @@ function EventForm({ event }) {
         const minutes = String(date.getMinutes()).padStart(2, "0");
       
         return `${year}-${month}-${day}T${hours}:${minutes}`;
-      }
+    }
       
-
     const addField = () => {
         setFormData((prev) => ({
             ...prev,
@@ -193,7 +204,6 @@ function EventForm({ event }) {
         });
     };
     
-    
     const deleteOption = (fieldIndex, optionIndex) => {
         setFormData((prev) => {
             const updatedFields = [...prev.registrationFields];
@@ -201,7 +211,6 @@ function EventForm({ event }) {
             return { ...prev, registrationFields: updatedFields };
         });
     };
-    
     
     const deleteField = (fieldIndex, optionIndex = null, type = null) => {
         setFormData((prevState) => {
@@ -248,8 +257,6 @@ function EventForm({ event }) {
         });
     };
 
-    
-
     const handleLocationChange = (event) => {
         const { name, value } = event.target;
     
@@ -280,8 +287,6 @@ function EventForm({ event }) {
         });
     };
     
-    
-
     function handlePriceConfigChange(event) {
         const { name, value } = event.target;
     
@@ -295,8 +300,6 @@ function EventForm({ event }) {
         }));
     }
     
-    
-
     const addFormulaField = (fieldIndex) => {
         setFormData((prev) => {
             const updatedFields = prev.registrationFields.map((field, index) => {
@@ -315,8 +318,7 @@ function EventForm({ event }) {
         });
     };
     
-      
-      const deleteFormula = (fieldIndex, formulaIndex) => {
+    const deleteFormula = (fieldIndex, formulaIndex) => {
         setFormData((prev) => {
           const updatedFields = [...prev.registrationFields];
           const updatedFormula = [...(updatedFields[fieldIndex]?.formula || [])];
@@ -326,9 +328,9 @@ function EventForm({ event }) {
       
           return { ...prev, registrationFields: updatedFields };
         });
-      };
+    };
 
-      const handleFormulaChange = (fieldIndex, formulaIndex, value, key) => {
+    const handleFormulaChange = (fieldIndex, formulaIndex, value, key) => {
         setFormData((prev) => {
           const updatedFields = [...prev.registrationFields];
           const updatedFormula = [...(updatedFields[fieldIndex]?.formula || [])];
@@ -342,19 +344,114 @@ function EventForm({ event }) {
       
           return { ...prev, registrationFields: updatedFields };
         });
-      };
+    };
       
+    // Corrected image upload functions
+    const { getRootProps, getInputProps } = useDropzone({
+        onDrop: (acceptedFiles) => {
+            setImages([...images, ...acceptedFiles]);
+            console.log("images", images);
+        }
+    });
+    
+    const handleRemoveImage = (index) => {
+        setImages(images.filter((_, i) => i !== index));
+    };
+    
+    const handleRemoveExistingImage = () => {
+        setUploadedImages(null);
+        setFormData((prev) => ({
+            ...prev,
+            metadata: {
+                ...prev.metadata,
+                imageUrl: null, // Remove the image URL from metadata
+            }
+        }));
+    };
+    
+    const handleUploadImages = async (index) => {
+        try {
+            const image = images[index];
+            console.log(`Generating signed URL for ${image.name}`);
+    
+            // Generate signed URL for the image upload
+            const signedUrlResponse = await generateSignedUrl({
+                title: image.name,
+                mediaType: "image",
+                ext: image.name.split('.').pop(), // Extract the file extension
+                active: true,
+                uploadStatus: "progressing",
+                uploadProgress: 0,
+            });
+    
+            if (!signedUrlResponse) {
+                throw new Error('Signed URL data is undefined');
+            }
+    
+            const signedUrl = signedUrlResponse.signedUrl;
+            const mediaId = signedUrlResponse.media._id;
+    
+            console.log("Signed URL generated:", signedUrl);
+            console.log("Media ID generated:", mediaId);
+    
+            setMediaId(mediaId);
+    
+            // Proceed with uploading the image to the signed URL
+            await axios.put(signedUrl, image, {
+                headers: {
+                    'Content-Type': image.type
+                },
+                onUploadProgress: (progressEvent) => {
+                    const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
+    
+                    // Update media status when the upload is complete
+                    if (progress === 100) {
+                        updateMediaStatus({
+                            mediaType: "image",
+                            title: image.name,
+                            ext: image.name.split('.').pop(), // Extract the file extension
+                            active: true,
+                            uploadStatus: "completed",
+                            uploadProgress: 100,
+                        });
+                    }
+                }
+            });
+    
+            // Add the uploaded image's URL to the list
+            const imageUrl = `https://media.nexalogics.in/${mediaId}.${image.name.split('.').pop()}`;
+            console.log("Image URL:", imageUrl);
+            setUploadedImages(imageUrl);
+            
+            // Update formData with the image URL in metadata
+            setFormData(prev => ({
+                ...prev,
+                metadata: {
+                    ...prev.metadata,
+                    imageUrl: imageUrl
+                }
+            }));
+    
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            toast.error('An error occurred while uploading the image. Please try again.');
+        }
+    };
 
     const validateCreateEvent = () => {
-        return formData.name.trim() !== '' && formData.description.trim() !== '' && formData.type.trim() !== '';
+        return formData.name && formData.name.trim() !== '' && formData.description && formData.description.trim() !== '' && formData.type && formData.type.trim() !== '';
     };
+    
     const validateEventDetails = () => {
-        return formData.metadata.name.trim() !== '' && formData.metadata.description.trim() !== '' && formData.paymentType.trim() !== '';
+        return formData.metadata.name && formData.metadata.name.trim() !== '' && formData.metadata.description && formData.metadata.description.trim() !== '' && formData.paymentType && formData.paymentType.trim() !== '';
     };
+    
     const validateLocationDetails = () => {
         console.log("formData.GeoAllow.coordinates.length",formData.GeoAllow.coordinates.length);
-        return formData.location.trim() !== '' && formData.GeoAllow.coordinates.length === 2;
+        return formData.location && formData.location.trim() !== '' && formData.GeoAllow.coordinates.length === 2;
     };
+    
     const validateRegistrationDetails = () => {
         return (
             formData.registrationStartDate !== null &&
@@ -369,8 +466,9 @@ function EventForm({ event }) {
             )
         );
     };    
+    
     const validateScheduleEvent = () => {
-        return formData.startingDate.trim() !== '' && formData.endingDate.trim() !== '';
+        return formData.startingDate && formData.startingDate.trim() !== '' && formData.endingDate && formData.endingDate.trim() !== '';
     };
 
     const handleContinue = () => {
@@ -395,8 +493,10 @@ function EventForm({ event }) {
         setIsSubmitting(true);
         try {
             await saveEvent(formData);
+            toast.success('Event updated successfully!');
         } catch (err) {
             console.error('Error submitting form:', err);
+            toast.error('Error submitting form. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -404,7 +504,22 @@ function EventForm({ event }) {
 
     const tabs = [
         { name: 'Basic Details', component: <CreateEvent formData={formData} handleChange={handleChange} isSubmitting={isSubmitting} /> },
-        { name: 'Advanced Details', component: <EventDetails formData={formData} handleChange={handleChange} handleMetadataChange={handleMetadataChange} handlePriceConfigChange={handlePriceConfigChange} isSubmitting={isSubmitting} /> },
+        { name: 'Advanced Details', component: <EventDetails 
+            formData={formData} 
+            handleChange={handleChange} 
+            handleMetadataChange={handleMetadataChange} 
+            handlePriceConfigChange={handlePriceConfigChange} 
+            isSubmitting={isSubmitting}
+            // Pass image upload functions and state
+            images={images}
+            uploadedImages={uploadedImages}
+            uploadProgress={uploadProgress}
+            getRootProps={getRootProps}
+            getInputProps={getInputProps}
+            handleRemoveImage={handleRemoveImage}
+            handleRemoveExistingImage={handleRemoveExistingImage}
+            handleUploadImages={handleUploadImages}
+        /> },
         { name: 'Registration Details', component: <RegistrationDetails formData={formData} handleChange={handleChange} handleOptionChange={handleOptionChange}
         handleRegistrationChange={handleRegistrationChange} handleFormulaChange={handleFormulaChange} addField={addField} deleteField={deleteField} addOption={addOption} 
         deleteOption={deleteOption} addFormulaField={addFormulaField} deleteFormula={deleteFormula} isSubmitting={isSubmitting} /> },
@@ -415,9 +530,9 @@ function EventForm({ event }) {
 
     if (isSubmitting || isLoading){
         return <LoadingScreen />;
-      }
+    }
 
-    console.log("formData",formData);
+    console.log("formData", formData);
 
     return (
         <div className="flex flex-col w-full p-5 bg-card text-text-color rounded-lg shadow-lg">
@@ -442,7 +557,6 @@ function EventForm({ event }) {
                 </ul>
             </nav>
 
-
             {tabs[activeTab].component}
 
             <div className="flex items-center justify-between mt-5">
@@ -465,7 +579,6 @@ function EventForm({ event }) {
                     {activeTab < tabs.length - 1 ? 'Continue' : 'Submit'}
                 </button>
             </div>
-
         </div>
     );
 }

@@ -15,10 +15,10 @@ export default function TopCountries() {
           <div className="flex items-center mt-3" key={id}>
             <div className="">{id}</div>
   
-            <Image path={`res-react-dash-flag-${id}`} className="ml-2 w-6 h-6" />
+            {/* <Image path={`res-react-dash-flag-${id}`} className="ml-2 w-6 h-6" /> */}
             <div className="ml-2">{name}</div>
             <div className="flex-grow" />
-            <div className="">{`$${value.toLocaleString()}`}</div>
+            <div className="">{`${value.toLocaleString()} views`}</div>
             <Icon
               path={
                 rise ? 'res-react-dash-country-up' : 'res-react-dash-country-down'

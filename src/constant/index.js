@@ -5,7 +5,7 @@ export const employeeData = [
       position: "15 March 2025",
       transactions: 0,
       rise: true,
-      tasksCompleted: 3,
+      tasksCompleted: 5,
       imgId: 0,
     },
   
@@ -25,7 +25,7 @@ export const employeeData = [
       position: "Total Earnings",
       transactions: 0,
       rise: true,
-      tasksCompleted: 3,
+      tasksCompleted: 5,
       imgId: 3,
     },
   ];
@@ -75,7 +75,7 @@ export const employeeData = [
           { id: '1-1', title: "Add Customer", route: "/customer/add", requiredModule: "customers", permission: "create" },
           { id: '1-2', title: "List Customer", route: "/customer/list", requiredModule: "customers", permission: "view" },
           { id: '1-3', title: "Customer Category", route: "/customer/category", requiredModule: "categories", permission: "view" },
-          { id: '1-4', title: "Contacts", route: "/contacts", requiredModule: "contacts", permission: "view" }
+          // { id: '1-4', title: "Contacts", route: "/contacts", requiredModule: "contacts", permission: "view" }
         ]
       },
       {
@@ -108,6 +108,20 @@ export const employeeData = [
           { id: '3-4', title: "Catalog", route: "/product/catalog", requiredModule: "catalogues", permission: "view" },
           { id: '3-4', title: "Prices", route: "/product/prices", requiredModule: "pricing", permission: "view" },
           { id: '3-5', title: "Inventory", route: "/product/inventory", requiredModule: "comingsoon", permission: "view" }
+        ]
+      },
+      {
+        id: '3', 
+        title: 'Event', 
+        notifications: false, 
+        route: "/event", 
+        parent: "/event", 
+        requiredModule: "Events", 
+        permission: "view",
+        dropdownItems: [
+          { id: '3-1', title: "Add Event", route: "/event/add", requiredModule: "Events", permission: "create" },
+          { id: '3-2', title: "List Event", route: "/event/list", requiredModule: "Events", permission: "view" },
+          { id: '3-4', title: "Catalog", route: "/event/catalog", requiredModule: "Events", permission: "view" },
         ]
       },
       {
@@ -212,6 +226,7 @@ export const employeeData = [
               { id: '7-3-1', title: "Element", route: "/store/appmanagement/element", requiredModule: "elements", permission: "view" },
               { id: '7-3-1', title: "Container", route: "/store/appmanagement/container", requiredModule: "containers", permission: "view" },
               { id: '7-3-1', title: "Page", route: "/store/appmanagement/page", requiredModule: "pages", permission: "view" },
+              // { id: '7-3-1', title: "Event", route: "/event", requiredModule: "Events", permission: "view" },
               { id: '7-3-2', title: "Layout", route: "/store/appmanagement/layout", requiredModule: "layoutsettings", permission: "view" },
               { id: '7-3-3', title: "Menu", route: "/store/appmanagement/menu", requiredModule: "menu", permission: "view" },
               { id: '7-3-4', title: "Payment Configuration", route: "/store/appmanagement/paymentconfig", requiredModule: "comingsoon", permission: "view" },
@@ -268,7 +283,7 @@ export const employeeData = [
         permission: "view",
         dropdownItems: [
           { id: '9-1', title: "Organization", route: "/admin/organization", requiredModule: "organizations", permission: "view" },
-          { id: '9-2', title: "Teams", route: "/admin/teams", requiredModule: "teams", permission: "view" },
+          // { id: '9-2', title: "Teams", route: "/admin/teams", requiredModule: "teams", permission: "view" },
           { id: '9-3', title: "Add User", route: "/admin/adduser", requiredModule: "authentication", permission: "create" },
           { id: '9-4', title: "View User", route: "/admin/viewuser", requiredModule: "authentication", permission: "view" },
           { id: '9-5', title: "User Permission", route: "/admin/userpermission", requiredModule: "comingsoon", permission: "view" },
