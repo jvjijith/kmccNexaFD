@@ -436,8 +436,7 @@ function UserForm() {
         </div>
 
         <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-primary-butt
-          olor px-6 py-2 rounded">Add Employee</button>
+          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">Add Employee</button>
         </div>
       </form>
       <ToastContainer />

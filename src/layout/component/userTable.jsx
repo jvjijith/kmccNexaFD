@@ -180,8 +180,7 @@ function UserTable() {
                   {employee.activeUser ? "Active" : "Inactive"}
                 </Table.Cell>
                 <Table.Cell className="border-bordertext-text-color">
-                  <Dropdown label="Actions" inline className="bg-secondary-ca
-                  order-black">
+                  <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
                   {employee.superAdmin !== true && (
                     <Dropdown.Item
                       className="text-text-color hover:!bg-orange-600"
