@@ -216,7 +216,7 @@ const App = () => {
       <Route path="admin/viewuser" element={<UserTeamPermissionsPage requiredModule={"authentication"} permission={"view"} page={<User></User>} />}></Route>
       <Route path="profile/:userId/details" element={<UserTeamPermissionsPage requiredModule={"authentication"} permission={"view"} page={<Profile />} />} />
       <Route path="admin/edituser" element={<UserTeamPermissionsPage requiredModule={"authentication"} permission={"update"} page={<AddUser />} />} />
-      <Route path="admin/userpermission" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
+      <Route path="admin/userpermission" element={<UserTeamPermissionsPage requiredModule={"User Team Permissions"} permission={"view"} page={<UserTeamPermission />} />} />
       <Route path="admin/logininfo" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
       <Route path="admin/logs" element={<UserTeamPermissionsPage requiredModule={"comingsoon"} page={<ComingSoonPage />} />} />
       <Route path="loading" element={<Loading></Loading>}></Route>
