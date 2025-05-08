@@ -4,6 +4,7 @@ import LoadingScreen from "../../ui/loading/loading";
 function RegistrationDetails({ formData, handleChange, handleRegistrationChange, handleOptionChange, handleFormulaChange, addField, deleteField, addOption, deleteOption, addFormulaField, deleteFormula, isSubmitting }) {
     const [activeDrawer, setActiveDrawer] = useState(null);
     const [drawerData, setDrawerData] = useState({});
+    const [expandedAccordion, setExpandedAccordion] = useState(null);
   
     const openDrawer = (type, index) => {
       setActiveDrawer(type);
@@ -14,7 +15,10 @@ function RegistrationDetails({ formData, handleChange, handleRegistrationChange,
       setActiveDrawer(null);
       setDrawerData({});
     };
-
+    
+    const toggleAccordion = (index) => {
+      setExpandedAccordion(expandedAccordion === index ? null : index);
+    };
             
     if (isSubmitting){
       return <LoadingScreen />;
@@ -77,134 +81,170 @@ function RegistrationDetails({ formData, handleChange, handleRegistrationChange,
         {formData.registrationFields?.map((field, index) => (
             <div
                 key={index}
-                className="p-4 bg-gray-50 border-gray-200 rounded-md mb-4"
+                className="bg-gray-50 border-gray-200 rounded-md mb-4 overflow-hidden"
             >
-                <div className="flex flex-wrap">
-                    {/* Name */}
-                    <div className="w-full sm:w-1/2 p-4">
-                        <label className="block text-sm font-medium mb-1">
-                            Name<span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name={`field-name-${index}`}
-                            value={field.name}
-                            onChange={(e) =>
-                                handleRegistrationChange(index, e.target.value, "name")
-                            }
-                            className="p-3 border-border border rounded w-full"
-                            required
-                        />
-                    </div>
-                    {/* Display Name */}
-                    <div className="w-full sm:w-1/2 p-4">
-                        <label className="block text-sm font-medium mb-1">
-                            Display Name<span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name={`field-displayName-${index}`}
-                            value={field.displayName}
-                            onChange={(e) =>
-                                handleRegistrationChange(index, e.target.value, "displayName")
-                            }
-                            className="p-3 border-border border rounded w-full"
-                            required
-                        />
-                    </div>
-                </div>
-
-
-                <div className="mb-4 flex flex-wrap">
-                    {/* Field Type */}
-                    <div className="w-full md:w-1/2 p-4 flex items-center space-x-4">
-                      <div className="w-full">
-                        <label className="block text-sm font-medium mb-1">
-                          Field Type<span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          name={`field-type-${index}`}
-                          value={field.type}
-                          onChange={(e) => {
-                            const newValue = e.target.value;
-                            handleRegistrationChange(index, newValue, "type");
-                          
-                            // Automatically open the drawer for specific field types
-                            if (["radioButtonGroup", "checkBoxGroup", "option", "boolean"].includes(newValue)) {
-                              openDrawer("fieldTypeDrawer", null);
-                            }
-                          }}
-                          className="p-3 border border-border rounded w-full focus:ring-2 focus:ring-primary focus:outline-none"
-                          required
-                        >
-                          <option value="">Select Type</option>
-                          <option value="text">Text</option>
-                          <option value="boolean">Boolean</option>
-                          <option value="number">Number</option>
-                          <option value="option">Option</option>
-                          <option value="checkBoxGroup">CheckBox Group</option>
-                          <option value="radioButtonGroup">RadioButton Group</option>
-                        </select>
-                      </div>
-                        
-                      <button
-                        type="button"
-                        onClick={() => openDrawer("fieldTypeDrawer", null)}
-                        className="bg-secondary-card text-text-color p-3 mt-5 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={!["radioButtonGroup", "checkBoxGroup", "option", "boolean"].includes(field.type)}
-                      >
-                        Configure
-                      </button>
-                    </div>
-
-                        
-                    {/* Value Type */}
-                    <div className="w-full md:w-1/2 p-4 flex items-center space-x-4">
-                    <div className="w-full">
-                        <label className="block text-sm font-medium mb-1">
-                            Value Type<span className="text-red-500">*</span>
-                        </label>
-                        <select
-                            name={`field-valueType-${index}`}
-                            value={field.valueType}
-                            onChange={(e) => {
-                              const newValue = e.target.value;
-                                handleRegistrationChange(index, newValue, "valueType")
-                          
-                                // Automatically open the drawer for specific field types
-                                if (["dynamic", "fixed", "userInput"].includes(newValue)) {
-                                  openDrawer("valueTypeDrawer", null);
-                                }
-                            }}
-                            className="p-3 border-border border rounded w-full focus:ring-2 focus:ring-primary focus:outline-none"
-                            required
-                        >
-                            <option value="">Select Value Type</option>
-                            <option value="dynamic">Dynamic</option>
-                            <option value="fixed">Fixed</option>
-                            <option value="userInput">User Input</option>
-                        </select>
-                    </div>
-                <button
-                            type="button"
-                            onClick={() => openDrawer("valueTypeDrawer", null)}
-                            className="bg-secondary-card text-text-color p-3 mt-5 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={!["dynamic", "fixed", "userInput"].includes(field.valueType)}
-                        >
-                            Configure
-                        </button>
-                </div>
-                </div>
-                
-                
-                {/* Delete Field */}
-                <button
-                    type="button"
-                    onClick={() => deleteField(index)}
-                    className="bg-red-500 text-white px-4 py-2 rounded mt-4"
+                {/* Accordion Header */}
+                <div 
+                  className="p-4 bg-gray-100 flex justify-between items-center cursor-pointer border-b"
+                  onClick={() => toggleAccordion(index)}
                 >
-                    Delete Field
-                </button>
+                  <h3 className="font-medium text-lg">
+                    {field.displayName || `Field ${index + 1}`}
+                  </h3>
+                  <div className="flex items-center">
+                    <span className="mr-4 text-sm text-gray-600">{field.type || "No type selected"}</span>
+                    <svg 
+                      className={`w-5 h-5 transform transition-transform ${expandedAccordion === index ? 'rotate-180' : ''}`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24" 
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Accordion Content */}
+                {expandedAccordion === index && (
+                  <div className="p-4">
+                    <div className="flex flex-wrap">
+                        {/* Name */}
+                        <div className="w-full sm:w-1/2 p-4">
+                            <label className="block text-sm font-medium mb-1">
+                                Name<span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name={`field-name-${index}`}
+                                value={field.name}
+                                onChange={(e) =>
+                                    handleRegistrationChange(index, e.target.value, "name")
+                                }
+                                className="p-3 border-border border rounded w-full"
+                                required
+                            />
+                        </div>
+                        {/* Display Name */}
+                        <div className="w-full sm:w-1/2 p-4">
+                            <label className="block text-sm font-medium mb-1">
+                                Display Name<span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name={`field-displayName-${index}`}
+                                value={field.displayName}
+                                onChange={(e) =>
+                                    handleRegistrationChange(index, e.target.value, "displayName")
+                                }
+                                className="p-3 border-border border rounded w-full"
+                                required
+                            />
+                        </div>
+                    </div>
+
+
+                    <div className="mb-4 flex flex-wrap">
+                        {/* Field Type */}
+                        <div className="w-full md:w-1/2 p-4 flex items-center space-x-4">
+                          <div className="w-full">
+                            <label className="block text-sm font-medium mb-1">
+                              Field Type<span className="text-red-500">*</span>
+                            </label>
+                            <select
+                              name={`field-type-${index}`}
+                              value={field.type}
+                              onChange={(e) => {
+                                const newValue = e.target.value;
+                                handleRegistrationChange(index, newValue, "type");
+                              
+                                // Automatically open the drawer for specific field types
+                                if (["radioButtonGroup", "checkBoxGroup", "option", "boolean"].includes(newValue)) {
+                                  openDrawer("fieldTypeDrawer", index);
+                                }
+                              }}
+                              className="p-3 border border-border rounded w-full focus:ring-2 focus:ring-primary focus:outline-none"
+                              required
+                            >
+                              <option value="">Select Type</option>
+                              <option value="text">Text</option>
+                              <option value="boolean">Boolean</option>
+                              <option value="number">Number</option>
+                              <option value="option">Option</option>
+                              <option value="checkBoxGroup">CheckBox Group</option>
+                              <option value="radioButtonGroup">RadioButton Group</option>
+                            </select>
+                          </div>
+                            
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent accordion toggle
+                              openDrawer("fieldTypeDrawer", index);
+                            }}
+                            className="bg-secondary-card text-text-color p-3 mt-5 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={!["radioButtonGroup", "checkBoxGroup", "option", "boolean"].includes(field.type)}
+                          >
+                            Configure
+                          </button>
+                        </div>
+
+                            
+                        {/* Value Type */}
+                        <div className="w-full md:w-1/2 p-4 flex items-center space-x-4">
+                        <div className="w-full">
+                            <label className="block text-sm font-medium mb-1">
+                                Value Type<span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                name={`field-valueType-${index}`}
+                                value={field.valueType}
+                                onChange={(e) => {
+                                  const newValue = e.target.value;
+                                    handleRegistrationChange(index, newValue, "valueType")
+                              
+                                    // Automatically open the drawer for specific field types
+                                    if (["dynamic", "fixed", "userInput"].includes(newValue)) {
+                                      openDrawer("valueTypeDrawer", index);
+                                    }
+                                }}
+                                className="p-3 border-border border rounded w-full focus:ring-2 focus:ring-primary focus:outline-none"
+                                required
+                            >
+                                <option value="">Select Value Type</option>
+                                <option value="dynamic">Dynamic</option>
+                                <option value="fixed">Fixed</option>
+                                <option value="userInput">User Input</option>
+                            </select>
+                        </div>
+                    <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent accordion toggle
+                                  openDrawer("valueTypeDrawer", index);
+                                }}
+                                className="bg-secondary-card text-text-color p-3 mt-5 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={!["dynamic", "fixed", "userInput"].includes(field.valueType)}
+                            >
+                                Configure
+                            </button>
+                    </div>
+                    </div>
+                    
+                    
+                    {/* Delete Field */}
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent accordion toggle
+                          deleteField(index);
+                        }}
+                        className="bg-red-500 text-white px-4 py-2 rounded mt-4 ml-4"
+                    >
+                        Delete Field
+                    </button>
+                  </div>
+                )}
             </div>
         ))}
      </div>
@@ -227,260 +267,258 @@ function RegistrationDetails({ formData, handleChange, handleRegistrationChange,
     </button>
 
     {/* Field Type Drawer */}
-    {activeDrawer === "fieldTypeDrawer" && (
+    {activeDrawer === "fieldTypeDrawer" && drawerData.index !== undefined && (
       <div>
         <h3 className="text-lg font-bold mb-4">Configure Field Type</h3>
-        {formData?.registrationFields?.map((field, index) => (
-          <div key={index} className="mb-4 p-4 border-b">
-            {/* Options for Selectable Fields */}
-            {["option", "checkBoxGroup", "radioButtonGroup"].includes(field.type) && (
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-4">
-                        <label className="block text-sm font-medium mb-1">
-                            Options
-                        </label>
-                        <button
-                            type="button"
-                            onClick={() => addOption(index)}
-                            className="bg-secondary-card text-text-color px-4 py-2 rounded"
-                        >
-                            Add
-                        </button>
-                    </div>
-                            
-                  <div className="notes-container p-4 bg-secondary-card rounded-lg">
-                    {formData?.registrationFields[index]?.options?.length === 0 && (
-                      <p className="text-text-color">No Options added</p>
-                    )}
-                        {field.options?.map((option, optIndex) => (
-                            <div key={optIndex} className="flex items-center mb-2">
-                                <input
-                                    type="text"
-                                    value={option.fieldName}
-                                    onChange={(e) =>
-                                        handleOptionChange(index, optIndex, e.target.value, "fieldName")
-                                    }
-                                    className="p-2 border-border border rounded w-full mr-2"
-                                    placeholder="Field Name"
-                                />
-                                <input
-                                    type="text"
-                                    value={option.parentName}
-                                    onChange={(e) =>
-                                        handleOptionChange(index, optIndex, e.target.value, "parentName")
-                                    }
-                                    className="p-2 border-border border rounded w-full mr-2"
-                                    placeholder="Parent Name"
-                                />
-                                <input
-                                    type="text"
-                                    value={option.labelName}
-                                    onChange={(e) =>
-                                        handleOptionChange(index, optIndex, e.target.value, "labelName")
-                                    }
-                                    className="p-2 border-border border rounded w-full mr-2"
-                                    placeholder="Label Name"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => deleteOption(index, optIndex)}
-                                    className="bg-red-500 text-white px-2 py-1 rounded"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                    </div>
-                )}
-
-            {/* Boolean / Checkbox / Radio Group */}
-            {["boolean", "checkBoxGroup", "radioButtonGroup"].includes(field.type) && (
-              <div>
-                <label className="block text-sm font-medium mb-1">Truth Value</label>
-                <input
-                  type="text"
-                  name={`field-truthValue-${index}`}
-                  value={field.truthValue || ""}
-                  onChange={(e) =>
-                    handleRegistrationChange(index, e.target.value, "truthValue")
-                  }
-                  className="p-3 border border-gray-300 rounded w-full"
-                />
-
-                <label className="block text-sm font-medium mb-1 mt-2">False Value</label>
-                <input
-                  type="text"
-                  name={`field-falseValue-${index}`}
-                  value={field.falseValue || ""}
-                  onChange={(e) =>
-                    handleRegistrationChange(index, e.target.value, "falseValue")
-                  }
-                  className="p-3 border border-gray-300 rounded w-full"
-                />
+        {/* Only render the selected field instead of all fields */}
+        <div className="mb-4 p-4 border-b">
+          {/* Access the specific field using the index from drawerData */}
+          {["option", "checkBoxGroup", "radioButtonGroup"].includes(formData.registrationFields[drawerData.index].type) && (
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <label className="block text-sm font-medium mb-1">
+                  Options
+                </label>
+                <button
+                  type="button"
+                  onClick={() => addOption(drawerData.index)}
+                  className="bg-secondary-card text-text-color px-4 py-2 rounded"
+                >
+                  Add
+                </button>
               </div>
-            )}
-          </div>
-        ))}
+                        
+              <div className="notes-container p-4 bg-secondary-card rounded-lg">
+                {formData.registrationFields[drawerData.index]?.options?.length === 0 && (
+                  <p className="text-text-color">No Options added</p>
+                )}
+                {formData.registrationFields[drawerData.index]?.options?.map((option, optIndex) => (
+                  <div key={optIndex} className="flex items-center mb-2">
+                    <input
+                      type="text"
+                      value={option.fieldName}
+                      onChange={(e) =>
+                        handleOptionChange(drawerData.index, optIndex, e.target.value, "fieldName")
+                      }
+                      className="p-2 border-border border rounded w-full mr-2"
+                      placeholder="Field Name"
+                    />
+                    <input
+                      type="text"
+                      value={option.parentName}
+                      onChange={(e) =>
+                        handleOptionChange(drawerData.index, optIndex, e.target.value, "parentName")
+                      }
+                      className="p-2 border-border border rounded w-full mr-2"
+                      placeholder="Parent Name"
+                    />
+                    <input
+                      type="text"
+                      value={option.labelName}
+                      onChange={(e) =>
+                        handleOptionChange(drawerData.index, optIndex, e.target.value, "labelName")
+                      }
+                      className="p-2 border-border border rounded w-full mr-2"
+                      placeholder="Label Name"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => deleteOption(drawerData.index, optIndex)}
+                      className="bg-red-500 text-white px-2 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Boolean / Checkbox / Radio Group */}
+          {["boolean", "checkBoxGroup", "radioButtonGroup"].includes(formData.registrationFields[drawerData.index].type) && (
+            <div>
+              <label className="block text-sm font-medium mb-1">Truth Value</label>
+              <input
+                type="text"
+                name={`field-truthValue-${drawerData.index}`}
+                value={formData.registrationFields[drawerData.index].truthValue || ""}
+                onChange={(e) =>
+                  handleRegistrationChange(drawerData.index, e.target.value, "truthValue")
+                }
+                className="p-3 border border-gray-300 rounded w-full"
+              />
+
+              <label className="block text-sm font-medium mb-1 mt-2">False Value</label>
+              <input
+                type="text"
+                name={`field-falseValue-${drawerData.index}`}
+                value={formData.registrationFields[drawerData.index].falseValue || ""}
+                onChange={(e) =>
+                  handleRegistrationChange(drawerData.index, e.target.value, "falseValue")
+                }
+                className="p-3 border border-gray-300 rounded w-full"
+              />
+            </div>
+          )}
+        </div>
       </div>
     )}
 
     {/* Value Type Drawer */}
-    {activeDrawer === "valueTypeDrawer" && (
+    {activeDrawer === "valueTypeDrawer" && drawerData.index !== undefined && (
       <div>
         <h3 className="text-lg font-bold mb-4">Configure Value Type</h3>
-        {formData?.registrationFields?.map((field, index) => (
-          <div key={index} className="mb-4 p-4 border-b">
-            {/* User Input Value */}
-            {field.valueType === "userInput" && (
-              <div>
-                <label className="block text-sm font-medium mb-1">User Value</label>
-                <input
-                  type="text"
-                  name={`field-userValue-${index}`}
-                  value={field.userValue || ""}
-                  onChange={(e) =>
-                    handleRegistrationChange(index, e.target.value, "userValue")
-                  }
-                  className="p-3 border border-gray-300 rounded w-full"
-                />
-              </div>
-            )}
+        {/* Only render the selected field instead of all fields */}
+        <div className="mb-4 p-4 border-b">
+          {/* Access the specific field using the index from drawerData */}
+          {/* User Input Value */}
+          {formData.registrationFields[drawerData.index].valueType === "userInput" && (
+            <div>
+              <label className="block text-sm font-medium mb-1">User Value</label>
+              <input
+                type="text"
+                name={`field-userValue-${drawerData.index}`}
+                value={formData.registrationFields[drawerData.index].userValue || ""}
+                onChange={(e) =>
+                  handleRegistrationChange(drawerData.index, e.target.value, "userValue")
+                }
+                className="p-3 border border-gray-300 rounded w-full"
+              />
+            </div>
+          )}
 
-            {/* Fixed Value */}
-            {field.valueType === "fixed" && (
-              <div>
-                <label className="block text-sm font-medium mb-1">Fixed Value</label>
-                <input
-                  type="text"
-                  name={`field-fixedValue-${index}`}
-                  value={field.fixedValue || ""}
-                  onChange={(e) =>
-                    handleRegistrationChange(index, e.target.value, "fixedValue")
-                  }
-                  className="p-3 border border-gray-300 rounded w-full"
-                />
-              </div>
-            )}
+          {/* Fixed Value */}
+          {formData.registrationFields[drawerData.index].valueType === "fixed" && (
+            <div>
+              <label className="block text-sm font-medium mb-1">Fixed Value</label>
+              <input
+                type="text"
+                name={`field-fixedValue-${drawerData.index}`}
+                value={formData.registrationFields[drawerData.index].fixedValue || ""}
+                onChange={(e) =>
+                  handleRegistrationChange(drawerData.index, e.target.value, "fixedValue")
+                }
+                className="p-3 border border-gray-300 rounded w-full"
+              />
+            </div>
+          )}
 
-{["dynamic", "userInput"].includes(field.valueType) && (
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <label className="block w-full mb-2 text-text-color primary-text">
-                      Formula Settings
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => addFormulaField(index)}
-                      className="bg-secondary-card text-text-color px-4 py-2 rounded"
-                    >
-                      Add
-                    </button>
-                  </div>
-                            
-                  <div className="notes-container p-4 bg-secondary-card rounded-lg">
-                    {formData?.registrationFields[index]?.formula?.length === 0 && (
-                      <p className="text-text-color">No Formula added</p>
-                    )}
-                    {formData?.registrationFields[index]?.formula?.map((formulaItem, formulaIndex) => (
-                      <div
-                        key={formulaIndex}
-                        className="flex flex-wrap p-4 mb-4 border-rounded-lg"
-                      >
-                        {/* Type Selector */}
-                        <div className="w-full sm:w-1/3 p-4">
-                          <label className="block text-sm font-medium mb-1">Formula Type</label>
-                          <select
-                            value={formulaItem.type}
-                            onChange={(e) =>
-                              handleFormulaChange(index, formulaIndex, e.target.value, "type")
-                            }
-                            className="block w-full h-10 px-2 py-1 border-b border-border border focus:outline-none focus:border-white transition text-text-color"
-                          >
-                            <option value="">Select Type</option>
-                            {/* <option value="symbol">Symbol</option> */}
-                            <option value="operation">Operation</option>
-                            <option value="customField">Custom Field</option>
-                            <option value="number">Number</option>
-                          </select>
-                        </div>
+          {["dynamic", "userInput"].includes(formData.registrationFields[drawerData.index].valueType) && (
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <label className="block w-full mb-2 text-text-color primary-text">
+                  Formula Settings
+                </label>
+                <button
+                  type="button"
+                  onClick={() => addFormulaField(drawerData.index)}
+                  className="bg-secondary-card text-text-color px-4 py-2 rounded"
+                >
+                  Add
+                </button>
+              </div>
                         
-                        {/* Field/Value Selector */}
-                        {formulaItem.type === "customField" && (
-                          <div className="w-full sm:w-1/3 p-4">
-                            <label className="block text-sm font-medium mb-1">Custom Field</label>
-                            <select
-                              value={formulaItem.fieldName}
-                              onChange={(e) =>
-                                handleFormulaChange(index, formulaIndex, e.target.value, "fieldName")
-                              }
-                              className="block w-full h-10 px-2 py-1 border-b border-border border focus:outline-none focus:border-white transition text-text-color"
-                            >
-                              <option value="">Select Field</option>
-                              {formData.registrationFields.map((field, fieldIndex) => (
-                                <option key={fieldIndex} value={field.name}>
-                                  {field.displayName}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        )}
-                
-                        {/* Operation Selector */}
-                        {formulaItem.type === "operation" && (
-                          <div className="w-full sm:w-1/3 p-4">
-                            <label className="block text-sm font-medium mb-1">Operation</label>
-                            <select
-                              value={formulaItem.operationName}
-                              onChange={(e) =>
-                                handleFormulaChange(index, formulaIndex, e.target.value, "operationName")
-                              }
-                              className="block w-full h-10 px-2 py-1 border-b border-border border focus:outline-none focus:border-white transition text-text-color"
-                            >
-                              <option value="">Select Operation</option>
-                              <option value="add">Add (+)</option>
-                              <option value="subtract">Subtract (-)</option>
-                              <option value="multiply">Multiply (*)</option>
-                              <option value="divide">Divide (/)</option>
-                              <option value="modulus">Modulus (%)</option>
-                            </select>
-                          </div>
-                        )}
-                
-                        {/* Number Input */}
-                        {formulaItem.type === "number" && (
-                          <div className="w-full sm:w-1/3 p-4">
-                            <label className="block text-sm font-medium mb-1">Number</label>
-                            <input
-                              type="number"
-                              value={formulaItem.fieldName}
-                              onChange={(e) =>
-                                handleFormulaChange(index, formulaIndex, e.target.value, "fieldName")
-                              }
-                              className="block w-full h-10 px-2 py-1 border-b border-border border focus:outline-none focus:border-white transition text-text-color"
-                              placeholder="Enter Number"
-                            />
-                          </div>
-                        )}
-                
-                        {/* Delete Formula Item */}
-                        <div className="w-full sm:w-1/3 p-4 mt-6">
-                          <button
-                            type="button"
-                            onClick={() => deleteFormula(index, formulaIndex)}
-                            className="bg-red-500 text-white px-4 py-2 rounded"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              <div className="notes-container p-4 bg-secondary-card rounded-lg">
+                {formData.registrationFields[drawerData.index]?.formula?.length === 0 && (
+                  <p className="text-text-color">No Formula added</p>
                 )}
-
-          </div>
-        ))}
+                {formData.registrationFields[drawerData.index]?.formula?.map((formulaItem, formulaIndex) => (
+                  <div
+                    key={formulaIndex}
+                    className="flex flex-wrap p-4 mb-4 border-rounded-lg"
+                  >
+                    {/* Type Selector */}
+                    <div className="w-full sm:w-1/3 p-4">
+                      <label className="block text-sm font-medium mb-1">Formula Type</label>
+                      <select
+                        value={formulaItem.type}
+                        onChange={(e) =>
+                          handleFormulaChange(drawerData.index, formulaIndex, e.target.value, "type")
+                        }
+                        className="block w-full h-10 px-2 py-1 border-b border-border border focus:outline-none focus:border-white transition text-text-color"
+                      >
+                        <option value="">Select Type</option>
+                        {/* <option value="symbol">Symbol</option> */}
+                        <option value="operation">Operation</option>
+                        <option value="customField">Custom Field</option>
+                        <option value="number">Number</option>
+                      </select>
+                    </div>
+                    
+                    {/* Field/Value Selector */}
+                    {formulaItem.type === "customField" && (
+                      <div className="w-full sm:w-1/3 p-4">
+                        <label className="block text-sm font-medium mb-1">Custom Field</label>
+                        <select
+                          value={formulaItem.fieldName}
+                          onChange={(e) =>
+                            handleFormulaChange(drawerData.index, formulaIndex, e.target.value, "fieldName")
+                          }
+                          className="block w-full h-10 px-2 py-1 border-b border-border border focus:outline-none focus:border-white transition text-text-color"
+                        >
+                          <option value="">Select Field</option>
+                          {formData.registrationFields.map((field, fieldIndex) => (
+                            <option key={fieldIndex} value={field.name}>
+                              {field.displayName}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+            
+                    {/* Operation Selector */}
+                    {formulaItem.type === "operation" && (
+                      <div className="w-full sm:w-1/3 p-4">
+                        <label className="block text-sm font-medium mb-1">Operation</label>
+                        <select
+                          value={formulaItem.operationName}
+                          onChange={(e) =>
+                            handleFormulaChange(drawerData.index, formulaIndex, e.target.value, "operationName")
+                          }
+                          className="block w-full h-10 px-2 py-1 border-b border-border border focus:outline-none focus:border-white transition text-text-color"
+                        >
+                          <option value="">Select Operation</option>
+                          <option value="add">Add (+)</option>
+                          <option value="subtract">Subtract (-)</option>
+                          <option value="multiply">Multiply (*)</option>
+                          <option value="divide">Divide (/)</option>
+                          <option value="modulus">Modulus (%)</option>
+                        </select>
+                      </div>
+                    )}
+            
+                    {/* Number Input */}
+                    {formulaItem.type === "number" && (
+                      <div className="w-full sm:w-1/3 p-4">
+                        <label className="block text-sm font-medium mb-1">Number</label>
+                        <input
+                          type="number"
+                          value={formulaItem.fieldName}
+                          onChange={(e) =>
+                            handleFormulaChange(drawerData.index, formulaIndex, e.target.value, "fieldName")
+                          }
+                          className="block w-full h-10 px-2 py-1 border-b border-border border focus:outline-none focus:border-white transition text-text-color"
+                          placeholder="Enter Number"
+                        />
+                      </div>
+                    )}
+            
+                    {/* Delete Formula Item */}
+                    <div className="w-full sm:w-1/3 p-4 mt-6">
+                      <button
+                        type="button"
+                        onClick={() => deleteFormula(drawerData.index, formulaIndex)}
+                        className="bg-red-500 text-white px-4 py-2 rounded"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     )}
   </div>
