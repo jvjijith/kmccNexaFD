@@ -286,7 +286,7 @@ export const employeeData = [
           // { id: '9-2', title: "Teams", route: "/admin/teams", requiredModule: "teams", permission: "view" },
           { id: '9-3', title: "Add User", route: "/admin/adduser", requiredModule: "authentication", permission: "create" },
           { id: '9-4', title: "View User", route: "/admin/viewuser", requiredModule: "authentication", permission: "view" },
-          { id: '9-5', title: "User Permission", route: "/admin/userpermission", requiredModule: "comingsoon", permission: "view" },
+          { id: '9-5', title: "User Permission", route: "/admin/userpermission", requiredModule: "User Team Permissions", permission: "view" },
           { id: '9-6', title: "Login Info", route: "/admin/logininfo", requiredModule: "comingsoon", permission: "view" },
           { id: '9-7', title: "Logs", route: "/admin/logs", requiredModule: "comingsoon", permission: "view" }
         ]
