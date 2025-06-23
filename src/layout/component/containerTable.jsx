@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useGetData, usePutData } from "../../common/api";
 import { toast } from "react-toastify";
 import LoadingScreen from "../ui/loading/loading";
+import Pagination from "../ui/pagination/Pagination";
 
 function ContainerTable() {
   const [loading, setLoading] = useState(true);
@@ -15,7 +16,6 @@ function ContainerTable() {
     `/containers?page=${currentPage}&limit=${limit}`,
     {}
   );
-
 
   const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ function ContainerTable() {
     return <div className="text-text-color">Error loading data</div>;
   }
 
-  const totalPages = Math.ceil(containerData.pagination.totalCount / limit);
+  const totalPages = Math.ceil((containerData?.pagination?.totalCount || 0) / limit);
 
   return (
     <div className="overflow-x-auto min-h-96">
@@ -56,8 +56,8 @@ function ContainerTable() {
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y divide-border">
-          {containerData?.containers.map((container, index) => (
-            <Table.Row key={index} className="border-gray-700 bg-secondary-card">
+          {containerData?.containers?.map((container, index) => (
+            <Table.Row key={container._id || index} className="border-gray-700 bg-secondary-card">
               <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">{container.referenceName}</Table.Cell>
               <Table.Cell className="border-bordertext-text-color">{container.description}</Table.Cell>
               <Table.Cell className="border-bordertext-text-color">{container.layoutOptions?.layout || "N/A"}</Table.Cell>
@@ -74,17 +74,12 @@ function ContainerTable() {
         </Table.Body>
       </Table>
 
-      <div className="flex justify-center mt-4">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

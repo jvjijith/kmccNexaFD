@@ -11,6 +11,263 @@ import Autosuggest from 'react-autosuggest';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 
+const validateElementData = (data) => {
+  const errors = {};
+
+  // Required field validations
+  if (!data.componentType || data.componentType.trim() === '') {
+    errors.componentType = 'Component Type is required';
+  } else if (!['swimlane', 'list', 'image', 'textParagraph', 'audio', 'video', 'card', 'banner'].includes(data.componentType)) {
+    errors.componentType = 'Invalid component type';
+  }
+
+  if (!data.referenceName || data.referenceName.trim() === '') {
+    errors.referenceName = 'Reference Name is required';
+  } else if (data.referenceName.length < 2) {
+    errors.referenceName = 'Reference Name must be at least 2 characters long';
+  } else if (data.referenceName.length > 100) {
+    errors.referenceName = 'Reference Name must not exceed 100 characters';
+  }
+
+  // Items validation
+  if (data.items && data.items.length > 0) {
+    data.items.forEach((item, index) => {
+      if (item.itemType && !['Catalogue', 'Page'].includes(item.itemType)) {
+        if (!errors.items) errors.items = {};
+        if (!errors.items[index]) errors.items[index] = {};
+        errors.items[index].itemType = 'Item type must be either Catalogue or Page';
+      }
+      if (item.itemType && (!item.itemId || item.itemId.trim() === '')) {
+        if (!errors.items) errors.items = {};
+        if (!errors.items[index]) errors.items[index] = {};
+        errors.items[index].itemId = 'Item ID is required when item type is selected';
+      }
+    });
+  }
+
+  // Availability validation
+  if (data.availability && data.availability.length > 0) {
+    data.availability.forEach((avail, index) => {
+      if (!avail.appId || avail.appId.trim() === '') {
+        if (!errors.availability) errors.availability = {};
+        errors.availability[index] = 'App ID is required for availability';
+      }
+    });
+  }
+
+  // Number Items validation
+  if (data.numberItems) {
+    ['web', 'android', 'iOS'].forEach(platform => {
+      if (data.numberItems[platform] !== undefined && data.numberItems[platform] !== null) {
+        const value = Number(data.numberItems[platform]);
+        if (isNaN(value) || value < 0) {
+          if (!errors.numberItems) errors.numberItems = {};
+          errors.numberItems[platform] = `${platform} number items must be a non-negative number`;
+        }
+      }
+    });
+  }
+
+  // Title validation
+  if (data.title && data.title.length > 0) {
+    data.title.forEach((titleItem, index) => {
+      if (!titleItem.lanCode || titleItem.lanCode.trim() === '') {
+        if (!errors.title) errors.title = {};
+        if (!errors.title[index]) errors.title[index] = {};
+        errors.title[index].lanCode = 'Language code is required';
+      }
+      if (!titleItem.name || titleItem.name.trim() === '') {
+        if (!errors.title) errors.title = {};
+        if (!errors.title[index]) errors.title[index] = {};
+        errors.title[index].name = 'Title name is required';
+      } else if (titleItem.name.length > 200) {
+        if (!errors.title) errors.title = {};
+        if (!errors.title[index]) errors.title[index] = {};
+        errors.title[index].name = 'Title name must not exceed 200 characters';
+      }
+    });
+  }
+
+  // Info validation
+  if (data.info && data.info.length > 0) {
+    data.info.forEach((infoItem, index) => {
+      if (!infoItem.lanCode || infoItem.lanCode.trim() === '') {
+        if (!errors.info) errors.info = {};
+        if (!errors.info[index]) errors.info[index] = {};
+        errors.info[index].lanCode = 'Language code is required';
+      }
+      if (!infoItem.infoCode || infoItem.infoCode.trim() === '') {
+        if (!errors.info) errors.info = {};
+        if (!errors.info[index]) errors.info[index] = {};
+        errors.info[index].infoCode = 'Info code is required';
+      }
+      if (!infoItem.infoName || infoItem.infoName.trim() === '') {
+        if (!errors.info) errors.info = {};
+        if (!errors.info[index]) errors.info[index] = {};
+        errors.info[index].infoName = 'Info name is required';
+      }
+      if (!infoItem.infoValue || infoItem.infoValue.trim() === '') {
+        if (!errors.info) errors.info = {};
+        if (!errors.info[index]) errors.info[index] = {};
+        errors.info[index].infoValue = 'Info value is required';
+      }
+    });
+  }
+
+  // Description validation
+  if (data.description && data.description.length > 0) {
+    data.description.forEach((descItem, index) => {
+      if (!descItem.lanCode || descItem.lanCode.trim() === '') {
+        if (!errors.description) errors.description = {};
+        if (!errors.description[index]) errors.description[index] = {};
+        errors.description[index].lanCode = 'Language code is required';
+      }
+      if (!descItem.paragraph || descItem.paragraph.trim() === '') {
+        if (!errors.description) errors.description = {};
+        if (!errors.description[index]) errors.description[index] = {};
+        errors.description[index].paragraph = 'Description paragraph is required';
+      } else if (descItem.paragraph.length > 1000) {
+        if (!errors.description) errors.description = {};
+        if (!errors.description[index]) errors.description[index] = {};
+        errors.description[index].paragraph = 'Description must not exceed 1000 characters';
+      }
+    });
+  }
+
+  // Swiper Options validation (for swimlane component type)
+  if (data.componentType === 'swimlane' && data.swiperOptions) {
+    const swiper = data.swiperOptions;
+
+    if (swiper.slidesPerView !== undefined && swiper.slidesPerView !== null && swiper.slidesPerView !== '') {
+      const slidesPerView = Number(swiper.slidesPerView);
+      if (isNaN(slidesPerView) || slidesPerView < 1) {
+        if (!errors.swiperOptions) errors.swiperOptions = {};
+        errors.swiperOptions.slidesPerView = 'Slides per view must be a positive number';
+      }
+    }
+
+    if (swiper.swiperType && !['portrait', 'landscape', 'hero', 'circle', 'square'].includes(swiper.swiperType)) {
+      if (!errors.swiperOptions) errors.swiperOptions = {};
+      errors.swiperOptions.swiperType = 'Invalid swiper type';
+    }
+
+    if (swiper.spaceBetween !== undefined && swiper.spaceBetween !== null && swiper.spaceBetween !== '') {
+      const spaceBetween = Number(swiper.spaceBetween);
+      if (isNaN(spaceBetween) || spaceBetween < 0) {
+        if (!errors.swiperOptions) errors.swiperOptions = {};
+        errors.swiperOptions.spaceBetween = 'Space between must be a non-negative number';
+      }
+    }
+
+    if (swiper.autoplay && swiper.autoplay.delay !== undefined && swiper.autoplay.delay !== null && swiper.autoplay.delay !== '') {
+      const delay = Number(swiper.autoplay.delay);
+      if (isNaN(delay) || delay < 0) {
+        if (!errors.swiperOptions) errors.swiperOptions = {};
+        if (!errors.swiperOptions.autoplay) errors.swiperOptions.autoplay = {};
+        errors.swiperOptions.autoplay.delay = 'Autoplay delay must be a non-negative number';
+      }
+    }
+
+    if (swiper.speed !== undefined && swiper.speed !== null && swiper.speed !== '') {
+      const speed = Number(swiper.speed);
+      if (isNaN(speed) || speed < 0) {
+        if (!errors.swiperOptions) errors.swiperOptions = {};
+        errors.swiperOptions.speed = 'Speed must be a non-negative number';
+      }
+    }
+  }
+
+  // Card Options validation (for card component type)
+  if (data.componentType === 'card' && data.cardOptions) {
+    const card = data.cardOptions;
+
+    const validPositions = ['top', 'bottom', 'left', 'right', 'none'];
+    const validActionPositions = ['top', 'bottom', 'inline', 'hidden', 'none'];
+
+    if (card.imagePosition && !validPositions.includes(card.imagePosition)) {
+      if (!errors.cardOptions) errors.cardOptions = {};
+      errors.cardOptions.imagePosition = 'Invalid image position';
+    }
+
+    if (card.titlePosition && !validPositions.includes(card.titlePosition)) {
+      if (!errors.cardOptions) errors.cardOptions = {};
+      errors.cardOptions.titlePosition = 'Invalid title position';
+    }
+
+    if (card.descriptionPosition && !validPositions.includes(card.descriptionPosition)) {
+      if (!errors.cardOptions) errors.cardOptions = {};
+      errors.cardOptions.descriptionPosition = 'Invalid description position';
+    }
+
+    if (card.actionButtonPosition && !validActionPositions.includes(card.actionButtonPosition)) {
+      if (!errors.cardOptions) errors.cardOptions = {};
+      errors.cardOptions.actionButtonPosition = 'Invalid action button position';
+    }
+
+    if (card.actionButtonUrl && card.actionButtonUrl.trim() !== '') {
+      try {
+        new URL(card.actionButtonUrl);
+      } catch {
+        if (!errors.cardOptions) errors.cardOptions = {};
+        errors.cardOptions.actionButtonUrl = 'Invalid URL format';
+      }
+    }
+  }
+
+  // Hover Effect validation
+  if (data.hoverEffect && !['none', 'shadow', 'scale', 'border', 'zoomIn', 'zoomOut'].includes(data.hoverEffect)) {
+    errors.hoverEffect = 'Invalid hover effect';
+  }
+
+  // URL validations for media fields
+  if (data.imageUrl && typeof data.imageUrl === 'string' && data.imageUrl.trim() !== '') {
+    try {
+      new URL(data.imageUrl);
+    } catch {
+      errors.imageUrl = 'Invalid image URL format';
+    }
+  }
+
+  if (data.audioUrl && data.audioUrl.trim() !== '') {
+    try {
+      new URL(data.audioUrl);
+    } catch {
+      errors.audioUrl = 'Invalid audio URL format';
+    }
+  }
+
+  if (data.videoUrl && data.videoUrl.trim() !== '') {
+    try {
+      new URL(data.videoUrl);
+    } catch {
+      errors.videoUrl = 'Invalid video URL format';
+    }
+  }
+
+  return errors;
+};
+
+// Error Message Component
+const ErrorMessage = ({ error }) => {
+  if (!error) return null;
+  return <div className="text-red-500 text-sm mt-1">{error}</div>;
+};
+
+// Form Field Component with validation
+const FormField = ({ label, required = false, error, children, className = "w-full sm:w-1/2 p-4", helpText }) => (
+  <div className={className}>
+    <div className="mb-4">
+      <label className="block w-full mb-2 text-text-color primary-text">
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </label>
+      {helpText && <div className="text-sm text-gray-500 mb-2">{helpText}</div>}
+      {children}
+      <ErrorMessage error={error} />
+    </div>
+  </div>
+);
+
 function ElementForm({ elementsDatas }) {
   const navigate = useNavigate();
   const [elementsData, setElementsData] = useState({
@@ -58,6 +315,7 @@ function ElementForm({ elementsDatas }) {
   const [info, setInfo ] = useState([]);
   const [mediaId, setMediaId] = useState([]);
   const [value, setValue] = useState("");
+  const [errors, setErrors] = useState({});
   const limit = 100; // Set your desired limit value
   const items = [
     { itemType: 'Catalogue' },
@@ -74,14 +332,14 @@ function ElementForm({ elementsDatas }) {
     { value: 'card', label: 'Card' },
     { value: 'banner', label: 'Banner' }
   ];
-  
+
   const mutationHook = elementsDatas ? usePutData : usePostData;
   const api_url = elementsDatas ? `/elements/${elementsDatas?elementsDatas._id:elementsData._id}` : '/elements';
   const api_key = elementsDatas  ? 'updateElement' : 'addElement';
   const { mutate: saveLayout, isLoading, isError } = mutationHook(api_key, api_url);
   const { data: pagesData, isLoading: isPagesLoading } = useGetData('pages', `/pages?limit=${limit}`, {});
   const { data: cataloguesData, isLoading: isCataloguesLoading } = useGetData('catalogues', `/catalogues?limit=${limit}`, {});
-  
+
     const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
     const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
   // Fetch app data
@@ -151,11 +409,20 @@ function ElementForm({ elementsDatas }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validate form data
+    const formData = { ...elementsData, imageUrl: uploadedImages, info: info };
+    const validationErrors = validateElementData(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      toast.error('Please fix the validation errors before submitting.');
+      return;
+    }
+
+    setErrors({});
     saveLayout({ ...elementsData, draft: true, publish: false, imageUrl: uploadedImages, info: info }, {
       onSuccess: (response) => {
-        // Update the state with response to reflect draft and publish status
-        // console.log("response",response.data);
-        // setElementsData(response.data);
         navigate('/store/appmanagement/element');
         toast.success('Layout saved successfully!');
       },
@@ -186,11 +453,22 @@ function ElementForm({ elementsDatas }) {
   
     return removeFields(clonedData);
   };
-  
+
   const handleDraftSubmit = () => {
+    // Validate form data
+    const formData = { ...elementsData, imageUrl: uploadedImages, info: info };
+    const validationErrors = validateElementData(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      toast.error('Please fix the validation errors before saving as draft.');
+      return;
+    }
+
+    setErrors({});
     const cleanedData = cleanData({ ...elementsData, draft: true, publish: false, imageUrl: uploadedImages, info: info  });
 
-  
+
     saveLayout(cleanedData, {
       onSuccess: (response) => {
         // setElementsData(response.data);
@@ -205,9 +483,20 @@ function ElementForm({ elementsDatas }) {
   };
   
   const handlePublishSubmit = () => {
+    // Validate form data
+    const formData = { ...elementsData, imageUrl: uploadedImages, info: info };
+    const validationErrors = validateElementData(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      toast.error('Please fix the validation errors before publishing.');
+      return;
+    }
+
+    setErrors({});
     const cleanedData = cleanData({ ...elementsData, draft: false, publish: true, imageUrl: uploadedImages, info: info  });
     console.log("cleanedData",cleanedData);
-  
+
     saveLayout(cleanedData, {
       onSuccess: (response) => {
         // setElementsData(response.data);
@@ -369,17 +658,26 @@ const renderSuggestion = (suggestion) => (
 
 
   const handleInputChange = (field, value) => {
+    // Clear errors for the field being changed
+    if (errors[field]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+
     // Check if the component type is changed to something other than "swimlane"
     if (field === 'componentType' && value !== 'swimlane') {
-      setElementsData((prevState) => ({ 
-        ...prevState, 
-        [field]: value, 
+      setElementsData((prevState) => ({
+        ...prevState,
+        [field]: value,
         swiperOptions: {} // Set swiperOptions to null if not swimlane
       }));
     } else if (field === 'componentType' && value !== 'card') {
-      setElementsData((prevState) => ({ 
-        ...prevState, 
-        [field]: value, 
+      setElementsData((prevState) => ({
+        ...prevState,
+        [field]: value,
         cardOptions: {} // Set cardOptions to null if not card
       }));
      } else {
@@ -525,97 +823,154 @@ console.log("uploadedImages",uploadedImages);
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-wrap">
-        <div className="w-full sm:w-1/2 p-4">
-      {/* Component Type as a Dropdown */}
-      <div className="mb-4">
-        <label className="block w-full mb-2 text-text-color primary-text">Component Type</label>
-        <Select
-          options={componentTypeOptions}
-          value={componentTypeOptions.find(option => option.value === elementsData.componentType) || null}
-          onChange={(selectedOption) => {
-            handleInputChange('componentType', selectedOption.value);
-            setChangeComponentType(true);
-          }}
-          classNames={{
-        control: ({ isFocused }) =>
-          `bg-primary border ${
-            isFocused ? 'border-secondary' : 'border-focus-color'
-          } border-b-2 rounded-none h-10 px-2 text-text-color`,
-        singleValue: () => `text-focus-color`,
-        placeholder: () => `text-focus-color`,
-        menu: () => `bg-primary text-focus-color`,
-        option: ({ isSelected }) =>
-          `cursor-pointer ${
-            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-          }`,
-      }}
-        />
-      </div>
-    </div>
-        {/* Reference Name */}
-        <div className="w-full sm:w-1/2 p-4">
-        <div className="mb-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Reference Name</label>
-          <input
-            type="text"
-            value={elementsData.referenceName}
-            onChange={(e) => handleInputChange('referenceName', e.target.value)}
-            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
-          />
+        {/* Validation Summary */}
+        {Object.keys(errors).length > 0 && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <h3 className="text-red-800 font-semibold mb-2 flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              Please fix the following errors:
+            </h3>
+            <ul className="text-red-700 text-sm space-y-1">
+              {errors.componentType && <li>• {errors.componentType}</li>}
+              {errors.referenceName && <li>• {errors.referenceName}</li>}
+              {errors.availability && <li>• Availability: {typeof errors.availability === 'string' ? errors.availability : 'Please check availability settings'}</li>}
+              {errors.numberItems && Object.keys(errors.numberItems).length > 0 && (
+                <li>• Number Items: {Object.values(errors.numberItems).filter(Boolean).join(', ')}</li>
+              )}
+              {errors.title && Object.keys(errors.title).length > 0 && (
+                <li>• Titles: Please check title entries for missing language codes or names</li>
+              )}
+              {errors.description && Object.keys(errors.description).length > 0 && (
+                <li>• Descriptions: Please check description entries for missing language codes or content</li>
+              )}
+              {errors.info && Object.keys(errors.info).length > 0 && (
+                <li>• Info: Please check info entries for missing required fields</li>
+              )}
+              {errors.swiperOptions && Object.keys(errors.swiperOptions).length > 0 && (
+                <li>• Swiper Options: {Object.values(errors.swiperOptions).filter(Boolean).join(', ')}</li>
+              )}
+              {errors.cardOptions && Object.keys(errors.cardOptions).length > 0 && (
+                <li>• Card Options: {Object.values(errors.cardOptions).filter(Boolean).join(', ')}</li>
+              )}
+              {errors.hoverEffect && <li>• {errors.hoverEffect}</li>}
+              {errors.imageUrl && <li>• {errors.imageUrl}</li>}
+              {errors.audioUrl && <li>• {errors.audioUrl}</li>}
+              {errors.videoUrl && <li>• {errors.videoUrl}</li>}
+            </ul>
           </div>
-        </div>
+        )}
+
+        <div className="flex flex-wrap">
+  <FormField
+            label="Component Type"
+            required={true}
+            error={errors.componentType}
+            helpText="Select the type of element you want to create"
+          >
+            <Select
+              options={componentTypeOptions}
+              value={componentTypeOptions.find(option => option.value === elementsData.componentType) || null}
+              onChange={(selectedOption) => {
+                handleInputChange('componentType', selectedOption.value);
+                setChangeComponentType(true);
+              }}
+              placeholder="Select component type..."
+              classNames={{
+                control: ({ isFocused }) =>
+                  `bg-primary border ${
+                    errors.componentType ? 'border-red-500' :
+                    isFocused ? 'border-secondary' : 'border-focus-color'
+                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                singleValue: () => `text-focus-color`,
+                placeholder: () => `text-focus-color`,
+                menu: () => `bg-primary text-focus-color`,
+                option: ({ isSelected }) =>
+                  `cursor-pointer ${
+                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                  }`,
+              }}
+            />
+          </FormField>
+
+          <FormField
+            label="Reference Name"
+            required={true}
+            error={errors.referenceName}
+            helpText="Enter a unique name to identify this element"
+          >
+            <input
+              type="text"
+              value={elementsData.referenceName}
+              onChange={(e) => handleInputChange('referenceName', e.target.value)}
+              placeholder="Enter reference name..."
+              className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
+                errors.referenceName ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+          </FormField>
         </div>
 
   <div className="flex flex-wrap">
   {/* Availability */}
   
-  <div className="w-full sm:w-1/2 p-4">
-  <div className="mb-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Availability</label>
-      {/* {elementsData?.availability?.map((avail, index) => ( */}
-        {/* <div key={index} className="mb-2"> */}
-        <Select
-    isMulti
-    options={
-      appData?.apps?.map((app) => ({
-        value: app._id,
-        label: app.title,
-      })) || []
-    }
-    onChange={(selectedOptions) => {
-      const selectedAppObjects = selectedOptions.map((option) => ({
-        appId: option.value,
-      }));
-      setElementsData((prevState) => ({
-        ...prevState,
-        availability: selectedAppObjects,
-      }));
-    }}
-    value={elementsData.availability.map((item) => ({
-      value: item.appId,
-      label: appData?.apps?.find((app) => app._id === item.appId)?.title || item.appId,
-    }))}
-    isLoading={isAppLoading}
-    classNames={{
-        control: ({ isFocused }) =>
-          `bg-primary border ${
-            isFocused ? 'border-secondary' : 'border-focus-color'
-          } border-b-2 rounded-none h-10 px-2 text-text-color`,
-        singleValue: () => `text-focus-color`,
-        placeholder: () => `text-focus-color`,
-        menu: () => `bg-primary text-focus-color`,
-        option: ({ isSelected }) =>
-          `cursor-pointer ${
-            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-          }`,
-      }}
-  />
-
-
-        {/* </div> */}
-      {/* // ))} */}
-    </div>
+  <div className="flex flex-wrap">
+    <FormField
+      label="Availability"
+      error={errors.availability}
+      helpText="Select which apps this element will be available in"
+    >
+      <Select
+        isMulti
+        options={
+          appData?.apps?.map((app) => ({
+            value: app._id,
+            label: app.title,
+          })) || []
+        }
+        onChange={(selectedOptions) => {
+          const selectedAppObjects = selectedOptions.map((option) => ({
+            appId: option.value,
+          }));
+          setElementsData((prevState) => ({
+            ...prevState,
+            availability: selectedAppObjects,
+          }));
+          // Clear availability errors
+          if (errors.availability) {
+            setErrors(prev => {
+              const newErrors = { ...prev };
+              delete newErrors.availability;
+              return newErrors;
+            });
+          }
+        }}
+        value={elementsData.availability.map((item) => ({
+          value: item.appId,
+          label: appData?.apps?.find((app) => app._id === item.appId)?.title || item.appId,
+        }))}
+        isLoading={isAppLoading}
+        placeholder="Select apps..."
+        classNames={{
+          control: ({ isFocused }) =>
+            `bg-primary border ${
+              errors.availability ? 'border-red-500' :
+              isFocused ? 'border-secondary' : 'border-focus-color'
+            } border-b-2 rounded-none h-10 px-2 text-text-color`,
+          singleValue: () => `text-focus-color`,
+          placeholder: () => `text-focus-color`,
+          menu: () => `bg-primary text-focus-color`,
+          option: ({ isSelected }) =>
+            `cursor-pointer ${
+              isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+            }`,
+          multiValue: () => `bg-primary-button-color text-btn-text-color rounded px-2 py-1 m-1`,
+          multiValueLabel: () => `text-btn-text-color`,
+          multiValueRemove: () => `text-btn-text-color hover:bg-red-500 rounded-r`,
+        }}
+      />
+    </FormField>
   </div>
   {/* View Text */}
   <div className="w-full sm:w-1/2 p-4">
@@ -642,26 +997,24 @@ console.log("uploadedImages",uploadedImages);
               value={pageOptions.find(option => option.value === elementsData.viewAll)}  // Set the current selected value
               onChange={handlePageSelection}  // Handle selection change
               className="block w-full"
-            classNames={{
-        control: ({ isFocused }) =>
-          `bg-primary border ${
-            isFocused ? 'border-secondary' : 'border-focus-color'
-          } border-b-2 rounded-none h-10 px-2 text-text-color`,
-        singleValue: () => `text-focus-color`,
-        placeholder: () => `text-focus-color`,
-        menu: () => `bg-primary text-focus-color`,
-        option: ({ isSelected }) =>
-          `cursor-pointer ${
-            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-          }`,
-      }}
+              classNames={{
+                control: ({ isFocused }) =>
+                  `bg-primary border ${
+                    isFocused ? 'border-secondary' : 'border-focus-color'
+                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                singleValue: () => `text-focus-color`,
+                placeholder: () => `text-focus-color`,
+                menu: () => `bg-primary text-focus-color`,
+                option: ({ isSelected }) =>
+                  `cursor-pointer ${
+                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                  }`,
+              }}
             />
           </div>
         </div>
-{/* </div> */}
 
  {/* Hover Effect */}
- {/* <div className="flex flex-wrap mb-4"> */}
  <div className="w-full sm:w-1/2 p-4">
           <label className="block w-full mb-2 text-text-color primary-text">Hover Effect</label>
         <Select
@@ -691,7 +1044,6 @@ console.log("uploadedImages",uploadedImages);
       }}
         />
  </div>
-        </div>
 
         {/* Audio URL */}
         {/* <div className="flex flex-wrap mb-4">
@@ -849,372 +1201,616 @@ console.log("uploadedImages",uploadedImages);
 )}
 
 
-{/* Swiper Options Settings */}
-{(elementsData.componentType === "swimlane" )&& <div className="mb-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Swiper Options</label>
-      <div className="notes-container p-4 bg-secondary-card rounded-lg">
-
-        {/* Slides Per View */}
-        <div className="flex flex-wrap mb-4">
-          <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Slides Per View</label>
-            <input
-              type="number"
-              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
-              placeholder="Slides Per View"
-              value={elementsData.swiperOptions.slidesPerView}
-              onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, slidesPerView: e.target.value })}
-            />
-          </div>
-
-          {/* Swiper Type Dropdown */}
-          <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Swiper Type</label>
-          <Select
-  options={[
-    { value: 'portrait', label: 'Portrait' },
-    { value: 'landscape', label: 'Landscape' },
-    { value: 'hero', label: 'Hero' },
-    { value: 'circle', label: 'Circle' },
-    { value: 'square', label: 'Square' }
-  ]}
-  value={{ value: elementsData.swiperOptions.swiperType, label: elementsData.swiperOptions.swiperType }}
-  onChange={(selectedOption) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, swiperType: selectedOption.value })}
-  placeholder="Swiper Type"
-  classNames={{
-    control: ({ isFocused }) =>
-      `bg-primary border ${
-        isFocused ? 'border-secondary' : 'border-focus-color'
-      } border-b-2 rounded-none h-10 px-2 text-text-color`,
-    singleValue: () => `text-focus-color`,
-    placeholder: () => `text-focus-color`,
-    menu: () => `bg-primary text-focus-color`,
-    option: ({ isSelected }) =>
-      `cursor-pointer ${
-        isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-      }`,
-  }}
-/>
-
-          </div>
         </div>
 
-        {/* Space Between */}
-        <div className="flex flex-wrap mb-4">
-          <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Space Between</label>
-            <input
-              type="number"
-              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
-              placeholder="Space Between"
-              value={elementsData.swiperOptions.spaceBetween}
-              onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, spaceBetween: e.target.value })}
-            />
-          </div>
-
-          {/* Autoplay Delay */}
-          <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Autoplay Delay</label>
-            <input
-              type="number"
-              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
-              placeholder="Autoplay Delay"
-              value={elementsData.swiperOptions.autoplay?.delay}
-              onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, autoplay: { ...elementsData.swiperOptions.autoplay, delay: e.target.value } })}
-            />
-          </div>
-        </div>
-
-        {/* Speed */}
-        <div className="flex flex-wrap mb-4">
-          <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Speed</label>
-            <input
-              type="number"
-              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
-              placeholder="Speed"
-              value={elementsData.swiperOptions.speed}
-              onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, speed: e.target.value })}
-            />
-          </div>
-
-          {/* Effect */}
-          <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Effect</label>
-            <input
-              type="text"
-              className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
-              placeholder="Effect"
-              value={elementsData.swiperOptions.effect}
-              onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, effect: e.target.value })}
-            />
-          </div>
-        </div>
-
-        {/* Loop Toggle */}
-        <div className="flex flex-wrap mb-4">
-          <div className="w-full sm:w-1/2 p-4">
-            <label className="relative inline-flex items-center cursor-pointer primary-text">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                checked={elementsData.swiperOptions.loop}
-                onChange={() => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, loop: !elementsData.swiperOptions.loop })}
-              />
-              <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-              <span className="ms-3 text-md font-medium text-text-color">Loop</span>
+        {/* Swiper Options Settings */}
+        {(elementsData.componentType === "swimlane") && (
+          <div className="mb-4">
+            <label className="block w-full mb-2 text-text-color primary-text">
+              Swiper Options
+              <span className="text-sm text-gray-500 ml-2">(Configure slider behavior)</span>
             </label>
-          </div>
+            <div className="notes-container p-4 bg-secondary-card rounded-lg">
+              {/* Slides Per View */}
+              <div className="flex flex-wrap mb-4">
+                <div className="w-full sm:w-1/2 p-4">
+                  <label className="block w-full mb-2 text-text-color primary-text">
+                    Slides Per View
+                    <span className="text-sm text-gray-500 ml-1">(Number of slides visible at once)</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    className={`block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color ${
+                      errors.swiperOptions?.slidesPerView ? 'border-red-500' : ''
+                    }`}
+                    placeholder="e.g., 3"
+                    value={elementsData.swiperOptions.slidesPerView}
+                    onChange={(e) => {
+                      handleInputChange('swiperOptions', { ...elementsData.swiperOptions, slidesPerView: e.target.value });
+                      // Clear specific error
+                      if (errors.swiperOptions?.slidesPerView) {
+                        setErrors(prev => ({
+                          ...prev,
+                          swiperOptions: {
+                            ...prev.swiperOptions,
+                            slidesPerView: undefined
+                          }
+                        }));
+                      }
+                    }}
+                  />
+                  {errors.swiperOptions?.slidesPerView && (
+                    <div className="text-red-500 text-xs mt-1">{errors.swiperOptions.slidesPerView}</div>
+                  )}
+                </div>
 
-          {/* Disable on Interaction */}
-          <div className="w-full sm:w-1/2 p-4">
-            <label className="relative inline-flex items-center cursor-pointer primary-text">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                checked={elementsData.swiperOptions.autoplay?.disableOnInteraction}
-                onChange={() => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, autoplay: { ...elementsData.swiperOptions.autoplay, disableOnInteraction: !elementsData.swiperOptions.autoplay?.disableOnInteraction } })}
-              />
-              <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-              <span className="ms-3 text-md font-medium text-text-color">Disable on Interaction</span>
-            </label>
-          </div>
-        </div>
+                {/* Swiper Type Dropdown */}
+                <div className="w-full sm:w-1/2 p-4">
+                  <label className="block w-full mb-2 text-text-color primary-text">
+                    Swiper Type
+                    <span className="text-sm text-gray-500 ml-1">(Slide layout style)</span>
+                  </label>
+                  <Select
+                    options={[
+                      { value: 'portrait', label: 'Portrait' },
+                      { value: 'landscape', label: 'Landscape' },
+                      { value: 'hero', label: 'Hero' },
+                      { value: 'circle', label: 'Circle' },
+                      { value: 'square', label: 'Square' }
+                    ]}
+                    value={elementsData.swiperOptions.swiperType ?
+                      { value: elementsData.swiperOptions.swiperType, label: elementsData.swiperOptions.swiperType } : null}
+                    onChange={(selectedOption) => {
+                      handleInputChange('swiperOptions', { ...elementsData.swiperOptions, swiperType: selectedOption.value });
+                      // Clear specific error
+                      if (errors.swiperOptions?.swiperType) {
+                        setErrors(prev => ({
+                          ...prev,
+                          swiperOptions: {
+                            ...prev.swiperOptions,
+                            swiperType: undefined
+                          }
+                        }));
+                      }
+                    }}
+                    placeholder="Select swiper type..."
+                    classNames={{
+                      control: ({ isFocused }) =>
+                        `bg-primary border ${
+                          errors.swiperOptions?.swiperType ? 'border-red-500' :
+                          isFocused ? 'border-secondary' : 'border-focus-color'
+                        } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                      singleValue: () => `text-focus-color`,
+                      placeholder: () => `text-focus-color`,
+                      menu: () => `bg-primary text-focus-color`,
+                      option: ({ isSelected }) =>
+                        `cursor-pointer ${
+                          isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                        }`,
+                    }}
+                  />
+                  {errors.swiperOptions?.swiperType && (
+                    <div className="text-red-500 text-xs mt-1">{errors.swiperOptions.swiperType}</div>
+                  )}
+                </div>
+              </div>
 
-      </div>
-    </div>}
+              {/* Space Between */}
+              <div className="flex flex-wrap mb-4">
+                <div className="w-full sm:w-1/2 p-4">
+                  <label className="block w-full mb-2 text-text-color primary-text">
+                    Space Between
+                    <span className="text-sm text-gray-500 ml-1">(Gap between slides in pixels)</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    className={`block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color ${
+                      errors.swiperOptions?.spaceBetween ? 'border-red-500' : ''
+                    }`}
+                    placeholder="e.g., 10"
+                    value={elementsData.swiperOptions.spaceBetween}
+                    onChange={(e) => {
+                      handleInputChange('swiperOptions', { ...elementsData.swiperOptions, spaceBetween: e.target.value });
+                      // Clear specific error
+                      if (errors.swiperOptions?.spaceBetween) {
+                        setErrors(prev => ({
+                          ...prev,
+                          swiperOptions: {
+                            ...prev.swiperOptions,
+                            spaceBetween: undefined
+                          }
+                        }));
+                      }
+                    }}
+                  />
+                  {errors.swiperOptions?.spaceBetween && (
+                    <div className="text-red-500 text-xs mt-1">{errors.swiperOptions.spaceBetween}</div>
+                  )}
+                </div>
+
+                {/* Autoplay Delay */}
+                <div className="w-full sm:w-1/2 p-4">
+                  <label className="block w-full mb-2 text-text-color primary-text">
+                    Autoplay Delay
+                    <span className="text-sm text-gray-500 ml-1">(Delay between slides in ms)</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    className={`block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color ${
+                      errors.swiperOptions?.autoplay?.delay ? 'border-red-500' : ''
+                    }`}
+                    placeholder="e.g., 3000"
+                    value={elementsData.swiperOptions.autoplay?.delay}
+                    onChange={(e) => {
+                      handleInputChange('swiperOptions', {
+                        ...elementsData.swiperOptions,
+                        autoplay: { ...elementsData.swiperOptions.autoplay, delay: e.target.value }
+                      });
+                      // Clear specific error
+                      if (errors.swiperOptions?.autoplay?.delay) {
+                        setErrors(prev => ({
+                          ...prev,
+                          swiperOptions: {
+                            ...prev.swiperOptions,
+                            autoplay: {
+                              ...prev.swiperOptions?.autoplay,
+                              delay: undefined
+                            }
+                          }
+                        }));
+                      }
+                    }}
+                  />
+                  {errors.swiperOptions?.autoplay?.delay && (
+                    <div className="text-red-500 text-xs mt-1">{errors.swiperOptions.autoplay.delay}</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Speed */}
+              <div className="flex flex-wrap mb-4">
+                <div className="w-full sm:w-1/2 p-4">
+                  <label className="block w-full mb-2 text-text-color primary-text">
+                    Speed
+                    <span className="text-sm text-gray-500 ml-1">(Transition speed in ms)</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    className={`block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color ${
+                      errors.swiperOptions?.speed ? 'border-red-500' : ''
+                    }`}
+                    placeholder="e.g., 300"
+                    value={elementsData.swiperOptions.speed}
+                    onChange={(e) => {
+                      handleInputChange('swiperOptions', { ...elementsData.swiperOptions, speed: e.target.value });
+                      // Clear specific error
+                      if (errors.swiperOptions?.speed) {
+                        setErrors(prev => ({
+                          ...prev,
+                          swiperOptions: {
+                            ...prev.swiperOptions,
+                            speed: undefined
+                          }
+                        }));
+                      }
+                    }}
+                  />
+                  {errors.swiperOptions?.speed && (
+                    <div className="text-red-500 text-xs mt-1">{errors.swiperOptions.speed}</div>
+                  )}
+                </div>
+
+                {/* Effect */}
+                <div className="w-full sm:w-1/2 p-4">
+                  <label className="block w-full mb-2 text-text-color primary-text">
+                    Effect
+                    <span className="text-sm text-gray-500 ml-1">(Transition effect)</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+                    placeholder="e.g., slide, fade, cube"
+                    value={elementsData.swiperOptions.effect}
+                    onChange={(e) => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, effect: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              {/* Toggle Options */}
+              <div className="flex flex-wrap mb-4">
+                {/* Loop Toggle */}
+                <div className="w-full sm:w-1/2 p-4">
+                  <label className="relative inline-flex items-center cursor-pointer primary-text">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={elementsData.swiperOptions.loop}
+                      onChange={() => handleInputChange('swiperOptions', { ...elementsData.swiperOptions, loop: !elementsData.swiperOptions.loop })}
+                    />
+                    <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                    <span className="ms-3 text-md font-medium text-text-color">
+                      Loop
+                      <span className="text-sm text-gray-500 ml-1">(Continuous loop)</span>
+                    </span>
+                  </label>
+                </div>
+
+                {/* Disable on Interaction */}
+                <div className="w-full sm:w-1/2 p-4">
+                  <label className="relative inline-flex items-center cursor-pointer primary-text">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={elementsData.swiperOptions.autoplay?.disableOnInteraction}
+                      onChange={() => handleInputChange('swiperOptions', {
+                        ...elementsData.swiperOptions,
+                        autoplay: {
+                          ...elementsData.swiperOptions.autoplay,
+                          disableOnInteraction: !elementsData.swiperOptions.autoplay?.disableOnInteraction
+                        }
+                      })}
+                    />
+                    <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                    <span className="ms-3 text-md font-medium text-text-color">
+                      Disable on Interaction
+                      <span className="text-sm text-gray-500 ml-1">(Stop autoplay on user interaction)</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
 
     {/* Card Options Settings */}
-{(elementsData.componentType === "card")&&<div className="mb-4">
-  <label className="block w-full mb-2 text-text-color primary-text">Card Options</label>
-  <div className="notes-container p-4 bg-secondary-card rounded-lg">
-    
-    {/* Image Position Dropdown */}
-    <div className="flex flex-wrap mb-4">
-      <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Image Position</label>
-        <Select
-          options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }, { value: 'none', label: 'None' }]}
-          value={{ value: elementsData.cardOptions.imagePosition, label: elementsData.cardOptions.imagePosition }}
-          onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, imagePosition: selectedOption.value })}
-          placeholder="Image Position"
-          classNames={{
-        control: ({ isFocused }) =>
-          `bg-primary border ${
-            isFocused ? 'border-secondary' : 'border-focus-color'
-          } border-b-2 rounded-none h-10 px-2 text-text-color`,
-        singleValue: () => `text-focus-color`,
-        placeholder: () => `text-focus-color`,
-        menu: () => `bg-primary text-focus-color`,
-        option: ({ isSelected }) =>
-          `cursor-pointer ${
-            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-          }`,
-      }}
-        />
+{(elementsData.componentType === "card") && (
+  <div className="mb-4">
+    <label className="block w-full mb-2 text-text-color primary-text">Card Options</label>
+    <div className="notes-container p-4 bg-secondary-card rounded-lg">
+
+      {/* Image Position Dropdown */}
+      <div className="flex flex-wrap mb-4">
+        <div className="w-full sm:w-1/2 p-4">
+        <label className="block w-full mb-2 text-text-color primary-text">Image Position</label>
+          <Select
+            options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }, { value: 'none', label: 'None' }]}
+            value={{ value: elementsData.cardOptions.imagePosition, label: elementsData.cardOptions.imagePosition }}
+            onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, imagePosition: selectedOption.value })}
+            placeholder="Image Position"
+            classNames={{
+          control: ({ isFocused }) =>
+            `bg-primary border ${
+              isFocused ? 'border-secondary' : 'border-focus-color'
+            } border-b-2 rounded-none h-10 px-2 text-text-color`,
+          singleValue: () => `text-focus-color`,
+          placeholder: () => `text-focus-color`,
+          menu: () => `bg-primary text-focus-color`,
+          option: ({ isSelected }) =>
+            `cursor-pointer ${
+              isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+            }`,
+        }}
+          />
+        </div>
+
+        {/* Title Position Dropdown */}
+        <div className="w-full sm:w-1/2 p-4">
+        <label className="block w-full mb-2 text-text-color primary-text">Title Position</label>
+          <Select
+            options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }, { value: 'none', label: 'None' }]}
+            value={{ value: elementsData.cardOptions.titlePosition, label: elementsData.cardOptions.titlePosition }}
+            onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, titlePosition: selectedOption.value })}
+            placeholder="Title Position"
+            classNames={{
+          control: ({ isFocused }) =>
+            `bg-primary border ${
+              isFocused ? 'border-secondary' : 'border-focus-color'
+            } border-b-2 rounded-none h-10 px-2 text-text-color`,
+          singleValue: () => `text-focus-color`,
+          placeholder: () => `text-focus-color`,
+          menu: () => `bg-primary text-focus-color`,
+          option: ({ isSelected }) =>
+            `cursor-pointer ${
+              isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+            }`,
+        }}
+          />
+        </div>
       </div>
 
-      {/* Title Position Dropdown */}
-      <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Title Position</label>
-        <Select
-          options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }, { value: 'none', label: 'None' }]}
-          value={{ value: elementsData.cardOptions.titlePosition, label: elementsData.cardOptions.titlePosition }}
-          onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, titlePosition: selectedOption.value })}
-          placeholder="Title Position"
-          classNames={{
-        control: ({ isFocused }) =>
-          `bg-primary border ${
-            isFocused ? 'border-secondary' : 'border-focus-color'
-          } border-b-2 rounded-none h-10 px-2 text-text-color`,
-        singleValue: () => `text-focus-color`,
-        placeholder: () => `text-focus-color`,
-        menu: () => `bg-primary text-focus-color`,
-        option: ({ isSelected }) =>
-          `cursor-pointer ${
-            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-          }`,
-      }}
-        />
+      {/* Description Position Dropdown */}
+      <div className="flex flex-wrap mb-4">
+        <div className="w-full sm:w-1/2 p-4">
+        <label className="block w-full mb-2 text-text-color primary-text">Description Position</label>
+          <Select
+            options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }, { value: 'none', label: 'None' }]}
+            value={{ value: elementsData.cardOptions.descriptionPosition, label: elementsData.cardOptions.descriptionPosition }}
+            onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, descriptionPosition: selectedOption.value })}
+            placeholder="Description Position"
+            classNames={{
+          control: ({ isFocused }) =>
+            `bg-primary border ${
+              isFocused ? 'border-secondary' : 'border-focus-color'
+            } border-b-2 rounded-none h-10 px-2 text-text-color`,
+          singleValue: () => `text-focus-color`,
+          placeholder: () => `text-focus-color`,
+          menu: () => `bg-primary text-focus-color`,
+          option: ({ isSelected }) =>
+            `cursor-pointer ${
+              isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+            }`,
+        }}
+          />
+        </div>
+
+        {/* Action Button Position Dropdown */}
+        <div className="w-full sm:w-1/2 p-4">
+        <label className="block w-full mb-2 text-text-color primary-text">Action Button Position</label>
+          <Select
+            options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'inline', label: 'Inline' }, { value: 'hidden', label: 'Hidden' }]}
+            value={{ value: elementsData.cardOptions.actionButtonPosition, label: elementsData.cardOptions.actionButtonPosition }}
+            onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonPosition: selectedOption.value })}
+            placeholder="Action Button Position"
+            classNames={{
+          control: ({ isFocused }) =>
+            `bg-primary border ${
+              isFocused ? 'border-secondary' : 'border-focus-color'
+            } border-b-2 rounded-none h-10 px-2 text-text-color`,
+          singleValue: () => `text-focus-color`,
+          placeholder: () => `text-focus-color`,
+          menu: () => `bg-primary text-focus-color`,
+          option: ({ isSelected }) =>
+            `cursor-pointer ${
+              isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+            }`,
+        }}
+          />
+        </div>
       </div>
+
+      {/* Action Button Text */}
+      <div className="flex flex-wrap mb-4">
+        <div className="w-full sm:w-1/2 p-4">
+        <label className="block w-full mb-2 text-text-color primary-text">Action Button Text</label>
+          <input
+            type="text"
+            className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+            placeholder="Action Button Text"
+            value={elementsData.cardOptions.actionButtonText}
+            onChange={(e) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonText: e.target.value })}
+          />
+        </div>
+
+        {/* Action Button URL */}
+        <div className="w-full sm:w-1/2 p-4">
+        <label className="block w-full mb-2 text-text-color primary-text">Action Button URL</label>
+          <input
+            type="text"
+            className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+            placeholder="Action Button URL"
+            value={elementsData.cardOptions.actionButtonUrl}
+            onChange={(e) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonUrl: e.target.value })}
+          />
+        </div>
+      </div>
+
+      {/* Card Aspect Ratio */}
+      <div className="flex flex-wrap mb-4">
+        <div className="w-full sm:w-1/2 p-4">
+        <label className="block w-full mb-2 text-text-color primary-text">Card Aspect Ratio</label>
+          <input
+            type="text"
+            className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
+            placeholder="Card Aspect Ratio"
+            value={elementsData.cardOptions.cardAspectRatio}
+            onChange={(e) => handleInputChange('cardOptions', { ...elementsData.cardOptions, cardAspectRatio: e.target.value })}
+          />
+        </div>
+      </div>
+
     </div>
-
-    {/* Description Position Dropdown */}
-    <div className="flex flex-wrap mb-4">
-      <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Description Position</label>
-        <Select
-          options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'left', label: 'Left' }, { value: 'right', label: 'Right' }, { value: 'none', label: 'None' }]}
-          value={{ value: elementsData.cardOptions.descriptionPosition, label: elementsData.cardOptions.descriptionPosition }}
-          onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, descriptionPosition: selectedOption.value })}
-          placeholder="Description Position"
-          classNames={{
-        control: ({ isFocused }) =>
-          `bg-primary border ${
-            isFocused ? 'border-secondary' : 'border-focus-color'
-          } border-b-2 rounded-none h-10 px-2 text-text-color`,
-        singleValue: () => `text-focus-color`,
-        placeholder: () => `text-focus-color`,
-        menu: () => `bg-primary text-focus-color`,
-        option: ({ isSelected }) =>
-          `cursor-pointer ${
-            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-          }`,
-      }}
-        />
-      </div>
-
-      {/* Action Button Position Dropdown */}
-      <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Action Button Position</label>
-        <Select
-          options={[{ value: 'top', label: 'Top' }, { value: 'bottom', label: 'Bottom' }, { value: 'inline', label: 'Inline' }, { value: 'hidden', label: 'Hidden' }]}
-          value={{ value: elementsData.cardOptions.actionButtonPosition, label: elementsData.cardOptions.actionButtonPosition }}
-          onChange={(selectedOption) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonPosition: selectedOption.value })}
-          placeholder="Action Button Position"
-          classNames={{
-        control: ({ isFocused }) =>
-          `bg-primary border ${
-            isFocused ? 'border-secondary' : 'border-focus-color'
-          } border-b-2 rounded-none h-10 px-2 text-text-color`,
-        singleValue: () => `text-focus-color`,
-        placeholder: () => `text-focus-color`,
-        menu: () => `bg-primary text-focus-color`,
-        option: ({ isSelected }) =>
-          `cursor-pointer ${
-            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-          }`,
-      }}
-        />
-      </div>
-    </div>
-
-    {/* Action Button Text */}
-    <div className="flex flex-wrap mb-4">
-      <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Action Button Text</label>
-        <input
-          type="text"
-          className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
-          placeholder="Action Button Text"
-          value={elementsData.cardOptions.actionButtonText}
-          onChange={(e) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonText: e.target.value })}
-        />
-      </div>
-
-      {/* Action Button URL */}
-      <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Action Button URL</label>
-        <input
-          type="text"
-          className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
-          placeholder="Action Button URL"
-          value={elementsData.cardOptions.actionButtonUrl}
-          onChange={(e) => handleInputChange('cardOptions', { ...elementsData.cardOptions, actionButtonUrl: e.target.value })}
-        />
-      </div>
-    </div>
-
-    {/* Card Aspect Ratio */}
-    <div className="flex flex-wrap mb-4">
-      <div className="w-full sm:w-1/2 p-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Card Aspect Ratio</label>
-        <input
-          type="text"
-          className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color"
-          placeholder="Card Aspect Ratio"
-          value={elementsData.cardOptions.cardAspectRatio}
-          onChange={(e) => handleInputChange('cardOptions', { ...elementsData.cardOptions, cardAspectRatio: e.target.value })}
-        />
-      </div>
-    </div>
-
   </div>
-</div>}
+)}
 
 
 
         {/* Number Items */}
         <div className="mb-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Number of Items (Web, Android, iOS)</label>
-          
+          <label className="block w-full mb-2 text-text-color primary-text">
+            Number of Items (Web, Android, iOS)
+          </label>
+          {errors.numberItems && (
+            <div className="text-red-500 text-sm mb-2">
+              {Object.values(errors.numberItems).join(', ')}
+            </div>
+          )}
+
           <div className="notes-container p-4 bg-secondary-card rounded-lg">
-          <div className="flex gap-4">
-            <input
-              type="number"
-              value={elementsData.numberItems.web}
-              onChange={(e) => handleInputChange('numberItems', { ...elementsData.numberItems, web: e.target.value })}
-              className="block w-1/3 px-3 py-2 text-text-color secondary-card border rounded"
-              placeholder="Web"
-            />
-            <input
-              type="number"
-              value={elementsData.numberItems.android}
-              onChange={(e) => handleInputChange('numberItems', { ...elementsData.numberItems, android: e.target.value })}
-              className="block w-1/3 px-3 py-2 text-text-color secondary-card border rounded"
-              placeholder="Android"
-            />
-            <input
-              type="number"
-              value={elementsData.numberItems.iOS}
-              onChange={(e) => handleInputChange('numberItems', { ...elementsData.numberItems, iOS: e.target.value })}
-              className="block w-1/3 px-3 py-2 text-text-color secondary-card border rounded"
-              placeholder="iOS"
-            />
+            <div className="flex gap-4">
+              <div className="w-1/3">
+                <input
+                  type="number"
+                  min="0"
+                  value={elementsData.numberItems.web}
+                  onChange={(e) => {
+                    handleInputChange('numberItems', { ...elementsData.numberItems, web: e.target.value });
+                    // Clear specific platform error
+                    if (errors.numberItems?.web) {
+                      setErrors(prev => ({
+                        ...prev,
+                        numberItems: {
+                          ...prev.numberItems,
+                          web: undefined
+                        }
+                      }));
+                    }
+                  }}
+                  className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
+                    errors.numberItems?.web ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Web"
+                />
+                {errors.numberItems?.web && (
+                  <div className="text-red-500 text-xs mt-1">{errors.numberItems.web}</div>
+                )}
+              </div>
+              <div className="w-1/3">
+                <input
+                  type="number"
+                  min="0"
+                  value={elementsData.numberItems.android}
+                  onChange={(e) => {
+                    handleInputChange('numberItems', { ...elementsData.numberItems, android: e.target.value });
+                    // Clear specific platform error
+                    if (errors.numberItems?.android) {
+                      setErrors(prev => ({
+                        ...prev,
+                        numberItems: {
+                          ...prev.numberItems,
+                          android: undefined
+                        }
+                      }));
+                    }
+                  }}
+                  className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
+                    errors.numberItems?.android ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Android"
+                />
+                {errors.numberItems?.android && (
+                  <div className="text-red-500 text-xs mt-1">{errors.numberItems.android}</div>
+                )}
+              </div>
+              <div className="w-1/3">
+                <input
+                  type="number"
+                  min="0"
+                  value={elementsData.numberItems.iOS}
+                  onChange={(e) => {
+                    handleInputChange('numberItems', { ...elementsData.numberItems, iOS: e.target.value });
+                    // Clear specific platform error
+                    if (errors.numberItems?.iOS) {
+                      setErrors(prev => ({
+                        ...prev,
+                        numberItems: {
+                          ...prev.numberItems,
+                          iOS: undefined
+                        }
+                      }));
+                    }
+                  }}
+                  className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
+                    errors.numberItems?.iOS ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="iOS"
+                />
+                {errors.numberItems?.iOS && (
+                  <div className="text-red-500 text-xs mt-1">{errors.numberItems.iOS}</div>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
         </div>
 
         {/* Titles */}
         <div className="mb-4">
-  <div className="flex items-center justify-between mb-4">
-    <label className="block w-full mb-2 text-text-color primary-text">Titles</label>
-    <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTitle}>Add</button>
-  </div>
-  <div className="notes-container p-4 bg-secondary-card rounded-lg">
-    {elementsData.title.length === 0 && <p className='text-text-color'>No Titles added</p>}
-    {elementsData.title?.map((title, index) => (
-      <div className="flex gap-4 mb-2">
-        <Autosuggest
-  suggestions={suggestions}
-  onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
-  onSuggestionsClearRequested={handleSuggestionsClearRequested}
-  getSuggestionValue={getSuggestionValue}
-  renderSuggestion={renderSuggestion}
-  inputProps={{
-    placeholder: 'Enter Language',
-    value: title.lanCode,
-    onChange: (e, { newValue }) =>
-      handleNestedChange('title', index, 'lanCode', newValue),
-    className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded'
-  }}
-  theme={{
-    container: 'relative', // Make sure the container is relatively positioned
-    suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
-    suggestion: 'p-2 cursor-pointer',
-    suggestionHighlighted: 'bg-blue-500 text-black'
-  }}
-/>
-<input
-  type="text"
-  value={title.name}
-  onChange={(e) => handleNestedChange('title', index, 'name', e.target.value)}
-  className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
-  placeholder="Title Name"
-/>
-
-        <button
-          type="button"
-          className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
-          onClick={() => removeTitle(index)}
-        >
-          Remove
-        </button>
-      </div>
-    ))}
-  </div>
-  </div>
+          <div className="flex items-center justify-between mb-4">
+            <label className="block w-full mb-2 text-text-color primary-text">Titles</label>
+            <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTitle}>Add</button>
+          </div>
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
+            {elementsData.title.length === 0 && <p className='text-text-color'>No Titles added</p>}
+            {elementsData.title?.map((title, index) => (
+              <div key={index} className="mb-4">
+                <div className="flex gap-4 mb-2">
+                  <div className="w-1/3">
+                    <Autosuggest
+                      suggestions={suggestions}
+                      onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
+                      onSuggestionsClearRequested={handleSuggestionsClearRequested}
+                      getSuggestionValue={getSuggestionValue}
+                      renderSuggestion={renderSuggestion}
+                      inputProps={{
+                        placeholder: 'Enter Language',
+                        value: title.lanCode,
+                        onChange: (e, { newValue }) => {
+                          handleNestedChange('title', index, 'lanCode', newValue);
+                          // Clear specific title error
+                          if (errors.title?.[index]?.lanCode) {
+                            setErrors(prev => ({
+                              ...prev,
+                              title: {
+                                ...prev.title,
+                                [index]: {
+                                  ...prev.title[index],
+                                  lanCode: undefined
+                                }
+                              }
+                            }));
+                          }
+                        },
+                        className: `block w-full px-3 py-2 text-text-color secondary-card border rounded ${
+                          errors.title?.[index]?.lanCode ? 'border-red-500' : 'border-gray-300'
+                        }`
+                      }}
+                      theme={{
+                        container: 'relative',
+                        suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
+                        suggestion: 'p-2 cursor-pointer text-gray-900',
+                        suggestionHighlighted: 'bg-blue-500 text-white'
+                      }}
+                    />
+                    {errors.title?.[index]?.lanCode && (
+                      <div className="text-red-500 text-xs mt-1">{errors.title[index].lanCode}</div>
+                    )}
+                  </div>
+                  <div className="w-2/3">
+                    <input
+                      type="text"
+                      value={title.name}
+                      onChange={(e) => {
+                        handleNestedChange('title', index, 'name', e.target.value);
+                        // Clear specific title error
+                        if (errors.title?.[index]?.name) {
+                          setErrors(prev => ({
+                            ...prev,
+                            title: {
+                              ...prev.title,
+                              [index]: {
+                                ...prev.title[index],
+                                name: undefined
+                              }
+                            }
+                          }));
+                        }
+                      }}
+                      className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
+                        errors.title?.[index]?.name ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder="Title Name"
+                    />
+                    {errors.title?.[index]?.name && (
+                      <div className="text-red-500 text-xs mt-1">{errors.title[index].name}</div>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                    onClick={() => removeTitle(index)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
 
         {/* Description */}
@@ -1410,16 +2006,15 @@ const SortableRow = ({ index, item }) => {
 
   return (
     <tr
-  ref={setNodeRef}
-  style={style}
-  {...attributes}
-  {...listeners}
-  className="border-gray-700 bg-secondary-card text-center"
->
-  <td className="whitespace-nowrap font-medium text-text-color rounded-l-lg">{item.itemType}</td>
-  <td className="whitespace-nowrap font-medium text-text-color rounded-r-lg">{item.itemId}</td>
-</tr>
-
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="border-gray-700 bg-secondary-card text-center"
+    >
+      <td className="whitespace-nowrap font-medium text-text-color rounded-l-lg">{item.itemType}</td>
+      <td className="whitespace-nowrap font-medium text-text-color rounded-r-lg">{item.itemId}</td>
+    </tr>
   );
 };
 
