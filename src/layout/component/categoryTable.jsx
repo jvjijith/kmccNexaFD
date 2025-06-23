@@ -8,6 +8,7 @@ import PopUpModal from "../ui/modal/modal";
 import { useNavigate } from "react-router";
 import SubCategoryForm from "./subCategoryForm";
 import UserTeamPermissionsPage from "../../routes/userPermission";
+import Pagination from "../ui/pagination/Pagination";
 
 function CategoryTable({nav}) {
   
@@ -17,19 +18,34 @@ function CategoryTable({nav}) {
   const [isSubModalOpen, setSubModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
+  const { data, isLoading, error, refetch } = useGetData(
+    "categoryData", 
+    `/category?page=${currentPage}&limit=${limit}`, 
+    {}
+  );
 
-  const { data, isLoading, error, refetch } = useGetData("categoryData", "/category", {});
+  // Simulate loading for 3 seconds before showing content
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
 
-    // Simulate loading for 10 seconds before showing content
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 3000); // 10 seconds delay
-  
-      return () => clearTimeout(timer); // Cleanup timeout on unmount
-    }, []);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Pagination handler
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Fetch new data when currentPage changes
+  useEffect(() => {
+    refetch();
+  }, [currentPage, refetch]);
 
   const openModal = (team) => {
     setSelectedTeam(team);
@@ -51,13 +67,15 @@ function CategoryTable({nav}) {
     setSubModalOpen(false);
   };
 
-  if ( isLoading|| loading ) {
+  if (isLoading || loading) {
     return <LoadingScreen />;
   }
 
   if (error) {
     return <div className="text-text-color">Error loading data</div>;
   }
+
+  const totalPages = Math.ceil((data?.pagination?.totalCount || 0) / limit);
 
   return (
     <div className="overflow-x-auto min-h-96">
@@ -103,6 +121,13 @@ function CategoryTable({nav}) {
           ))}
         </Table.Body>
       </Table>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Edit Category"}>
         <UserTeamPermissionsPage requiredModule={"categories"} permission={"update"} page={<CategoryForm id={selectedTeam?._id} name={selectedTeam?.categoryName} industry={selectedTeam?.categoryType} closeModal={closeModal} />} />

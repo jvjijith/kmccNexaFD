@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useGetData, usePutData } from "../../common/api";
 import { toast } from "react-toastify";
 import LoadingScreen from "../ui/loading/loading";
+import Pagination from "../ui/pagination/Pagination";
 
 function ColorTable() {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ function ColorTable() {
     return <div className="text-text-color">Error loading data</div>;
   }
 
-  const totalPages = Math.ceil(colorData.pagination.totalCount / limit); 
+  const totalPages = Math.ceil((colorData?.pagination?.totalCount || 0) / limit); 
 
   return (
     <div className="overflow-x-auto min-h-96">
@@ -57,17 +58,17 @@ function ColorTable() {
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y divide-border">
-          {colorData?.colorSchemes.map((scheme, index) => (
-            <Table.Row key={index} className="border-gray-700 bg-secondary-card">
+          {colorData?.colorSchemes?.map((scheme, index) => (
+            <Table.Row key={scheme._id || index} className="border-gray-700 bg-secondary-card">
               <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
-                {scheme.appId.title}
+                {scheme.appId?.title || "N/A"}
               </Table.Cell>
               <Table.Cell className="border-bordertext-text-color">{scheme.mode}</Table.Cell>
               <Table.Cell className="border-bordertext-text-color">
-                {scheme.theme.palette.primary.main}
+                {scheme.theme?.palette?.primary?.main || "N/A"}
               </Table.Cell>
               <Table.Cell className="border-bordertext-text-color">
-                {scheme.theme.palette.secondary.main}
+                {scheme.theme?.palette?.secondary?.main || "N/A"}
               </Table.Cell>
               <Table.Cell className="border-bordertext-text-color">
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
@@ -80,17 +81,11 @@ function ColorTable() {
       </Table>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-4">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

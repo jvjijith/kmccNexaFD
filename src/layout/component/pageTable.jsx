@@ -3,6 +3,7 @@ import { Dropdown, Table } from "flowbite-react";
 import { useNavigate } from "react-router";
 import { useGetData } from "../../common/api";
 import LoadingScreen from "../ui/loading/loading";
+import Pagination from "../ui/pagination/Pagination";
 
 function PageTable() {
   const navigate = useNavigate();
@@ -39,7 +40,13 @@ function PageTable() {
     return <div className="text-text-color">Error loading data</div>;
   }
 
-  const totalPages = pageData.pagination.totalPages;
+  // Calculate totalPages properly using totalCount and limit
+  const totalPages = Math.ceil((pageData?.pagination?.totalCount || 0) / limit);
+
+  console.log("PageData:", pageData);
+  console.log("Total Count:", pageData?.pagination?.totalCount);
+  console.log("Calculated Total Pages:", totalPages);
+  console.log("Current Page:", currentPage);
 
   return (
     <div className="overflow-x-auto min-h-96">
@@ -54,7 +61,7 @@ function PageTable() {
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y divide-border">
-          {pageData.pages.map((page) => (
+          {pageData?.pages?.map((page) => (
             <Table.Row key={page._id} className="border-gray-700 bg-secondary-card">
               <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">
                 {page.slug}
@@ -82,19 +89,11 @@ function PageTable() {
       </Table>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-4">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${
-              currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"
-            } text-btn-text-color`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

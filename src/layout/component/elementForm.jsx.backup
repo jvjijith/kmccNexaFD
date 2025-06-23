@@ -254,18 +254,14 @@ const ErrorMessage = ({ error }) => {
   return <div className="text-red-500 text-sm mt-1">{error}</div>;
 };
 
-// Form Field Component with validation
 const FormField = ({ label, required = false, error, children, className = "w-full sm:w-1/2 p-4", helpText }) => (
   <div className={className}>
-    <div className="mb-4">
-      <label className="block w-full mb-2 text-text-color primary-text">
-        {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      {helpText && <div className="text-sm text-gray-500 mb-2">{helpText}</div>}
-      {children}
-      <ErrorMessage error={error} />
-    </div>
+    <label className="block w-full mb-2 text-text-color primary-text">
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    {helpText && <div className="text-sm text-gray-500 mb-2">{helpText}</div>}
+    {children}
+    <ErrorMessage error={error} />
   </div>
 );
 
@@ -855,7 +851,11 @@ console.log("elementsData",elementsData);
 console.log("uploadedImages",uploadedImages);
 
   return (
-    <div>
+    <div className=" mx-auto">
+      <h2 className="text-2xl font-bold text-text-color mb-6">
+        {elementsDatas ? 'Edit Element' : 'Create New Element'}
+      </h2>
+
       <form onSubmit={handleSubmit}>
         {/* Validation Summary */}
         {Object.keys(errors).length > 0 && (
@@ -896,8 +896,14 @@ console.log("uploadedImages",uploadedImages);
           </div>
         )}
 
-        <div className="flex flex-wrap">
-  <FormField
+        {/* Basic Information Section */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-text-color mb-4 border-b border-border pb-2">
+            Basic Information
+          </h3>
+          <div className="flex flex-wrap -mx-2">
+
+          <FormField
             label="Component Type"
             required={true}
             error={errors.componentType}
@@ -944,80 +950,84 @@ console.log("uploadedImages",uploadedImages);
               }`}
             />
           </FormField>
+          </div>
         </div>
 
-        <div className="flex flex-wrap">
-          {/* Availability */}
-          <FormField
-            label="Availability"
-            error={errors.availability}
-            helpText="Select which apps this element will be available in"
-          >
-            <Select
-              isMulti
-              options={
-                appData?.apps?.map((app) => ({
-                  value: app._id,
-                  label: app.title,
-                })) || []
-              }
-              onChange={(selectedOptions) => {
-                const selectedAppObjects = selectedOptions.map((option) => ({
-                  appId: option.value,
-                }));
-                setElementsData((prevState) => ({
-                  ...prevState,
-                  availability: selectedAppObjects,
-                }));
-                // Clear availability errors
-                if (errors.availability) {
-                  setErrors(prev => {
-                    const newErrors = { ...prev };
-                    delete newErrors.availability;
-                    return newErrors;
-                  });
-                }
-              }}
-              value={elementsData.availability.map((item) => ({
-                value: item.appId,
-                label: appData?.apps?.find((app) => app._id === item.appId)?.title || item.appId,
-              }))}
-              isLoading={isAppLoading}
-              placeholder="Select apps..."
-              classNames={{
-                control: ({ isFocused }) =>
-                  `bg-primary border ${
-                    errors.availability ? 'border-red-500' :
-                    isFocused ? 'border-secondary' : 'border-focus-color'
-                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
-                singleValue: () => `text-focus-color`,
-                placeholder: () => `text-focus-color`,
-                menu: () => `bg-primary text-focus-color`,
-                option: ({ isSelected }) =>
-                  `cursor-pointer ${
-                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                  }`,
-                multiValue: () => `bg-primary-button-color text-btn-text-color rounded px-2 py-1 m-1`,
-                multiValueLabel: () => `text-btn-text-color`,
-                multiValueRemove: () => `text-btn-text-color hover:bg-red-500 rounded-r`,
-              }}
-            />
-          </FormField>
-
-          {/* View Text */}
-          <FormField
-            label="View Text"
-            helpText="Text to display for 'view more' or similar actions"
-          >
-            <input
-              type="text"
-              value={elementsData.viewText}
-              onChange={(e) => handleInputChange('viewText', e.target.value)}
-              placeholder="Enter view text..."
-              className="block w-full px-3 py-2 text-text-color secondary-card border border-gray-300 rounded"
-            />
-          </FormField>
+        {/* Availability Section */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-text-color mb-4 border-b border-border pb-2">
+            Availability & Settings
+          </h3>
+          <div className="flex flex-wrap -mx-2">
+            <FormField
+              label="Availability"
+              error={errors.availability}
+              helpText="Select which apps this element will be available in"
+            >
+      <Select
+        isMulti
+        options={
+          appData?.apps?.map((app) => ({
+            value: app._id,
+            label: app.title,
+          })) || []
+        }
+        onChange={(selectedOptions) => {
+          const selectedAppObjects = selectedOptions.map((option) => ({
+            appId: option.value,
+          }));
+          setElementsData((prevState) => ({
+            ...prevState,
+            availability: selectedAppObjects,
+          }));
+          // Clear availability errors
+          if (errors.availability) {
+            setErrors(prev => {
+              const newErrors = { ...prev };
+              delete newErrors.availability;
+              return newErrors;
+            });
+          }
+        }}
+        value={elementsData.availability.map((item) => ({
+          value: item.appId,
+          label: appData?.apps?.find((app) => app._id === item.appId)?.title || item.appId,
+        }))}
+        isLoading={isAppLoading}
+        placeholder="Select apps..."
+        classNames={{
+          control: ({ isFocused }) =>
+            `bg-primary border ${
+              errors.availability ? 'border-red-500' :
+              isFocused ? 'border-secondary' : 'border-focus-color'
+            } border-b-2 rounded-none h-10 px-2 text-text-color`,
+          singleValue: () => `text-focus-color`,
+          placeholder: () => `text-focus-color`,
+          menu: () => `bg-primary text-focus-color`,
+          option: ({ isSelected }) =>
+            `cursor-pointer ${
+              isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+            }`,
+          multiValue: () => `bg-primary-button-color text-btn-text-color rounded px-2 py-1 m-1`,
+          multiValueLabel: () => `text-btn-text-color`,
+          multiValueRemove: () => `text-btn-text-color hover:bg-red-500 rounded-r`,
+        }}
+      />
+    </FormField>
+  </div>
+  {/* View Text */}
+  <div className="w-full sm:w-1/2 p-4">
+        <div className="mb-4">
+          <label className="block w-full mb-2 text-text-color primary-text">View Text</label>
+          <input
+            type="text"
+            value={elementsData.viewText}
+            onChange={(e) => handleInputChange('viewText', e.target.value)}
+            className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
+          />
+          </div>
         </div>
+</div>
 
 
 <div className="flex flex-wrap">
@@ -1653,17 +1663,19 @@ console.log("uploadedImages",uploadedImages);
 
 
 
-        {/* Number Items */}
-        <div className="mb-4">
-          <label className="block w-full mb-2 text-text-color primary-text">
-            Number of Items (Web, Android, iOS)
-          </label>
-          {errors.numberItems && (
-            <div className="text-red-500 text-sm mb-2">
-              {Object.values(errors.numberItems).join(', ')}
-            </div>
-          )}
+        {/* Display Settings Section */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-text-color mb-4 border-b border-border pb-2">
+            Display Settings
+          </h3>
+          <div className="flex flex-wrap -mx-2">
 
+        {/* Number Items */}
+        <FormField
+          label="Number of Items (Web, Android, iOS)"
+          error={errors.numberItems && Object.values(errors.numberItems).join(', ')}
+          className="w-full p-4"
+        >
           <div className="notes-container p-4 bg-secondary-card rounded-lg">
             <div className="flex gap-4">
               <div className="w-1/3">
@@ -1749,10 +1761,19 @@ console.log("uploadedImages",uploadedImages);
               </div>
             </div>
           </div>
+        </FormField>
         </div>
+      </div>
+
+      {/* Content Section */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-text-color mb-4 border-b border-border pb-2">
+          Content
+        </h3>
+        <div className="flex flex-wrap -mx-2">
 
         {/* Titles */}
-        <div className="mb-4">
+        <div className="mb-4 w-full">
           <div className="flex items-center justify-between mb-4">
             <label className="block w-full mb-2 text-text-color primary-text">Titles</label>
             <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTitle}>Add</button>
@@ -1845,55 +1866,54 @@ console.log("uploadedImages",uploadedImages);
           </div>
         </div>
 
-
         {/* Description */}
-        <div className="mb-4">
-<div className="flex items-center justify-between mb-4">
-  <label className="block w-full mb-2 text-text-color primary-text">Description</label>
-  <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addDescription}>Add</button>
-</div>
-<div className="notes-container p-4 bg-secondary-card rounded-lg">
-  {elementsData.description.length === 0 && <p className='text-text-color'>No Descriptions added</p>}
-  {elementsData.description?.map((desc, index) => (
-    <div className="flex gap-4 mb-2" key={index}>
-      <Autosuggest
-  suggestions={suggestions}
-  onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
-  onSuggestionsClearRequested={handleSuggestionsClearRequested}
-  getSuggestionValue={getSuggestionValue}
-  renderSuggestion={renderSuggestion}
-  inputProps={{
-    placeholder: 'Enter Language',
-    value: desc.lanCode,
-    onChange: (e, { newValue }) =>
-      handleNestedChange('description', index, 'lanCode', newValue),
-    className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded'
-  }}
-  theme={{
-    container: 'relative', // Make sure the container is relatively positioned
-    suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
-    suggestion: 'p-2 cursor-pointer',
-    suggestionHighlighted: 'bg-blue-500 text-black'
-  }}
-/>
-      <textarea
-        type="text"
-        value={desc.paragraph}
-        onChange={(e) => handleNestedChange('description', index, 'paragraph', e.target.value)}
-        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
-        placeholder="Description"
-      />
-      <button
-        type="button"
-        className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
-        onClick={() => removeDescription(index)}
-      >
-        Remove
-      </button>
-    </div>
-  ))}
-</div>
-</div>
+        <div className="mb-4 w-full">
+          <div className="flex items-center justify-between mb-4">
+            <label className="block w-full mb-2 text-text-color primary-text">Description</label>
+            <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addDescription}>Add</button>
+          </div>
+          <div className="notes-container p-4 bg-secondary-card rounded-lg">
+            {elementsData.description.length === 0 && <p className='text-text-color'>No Descriptions added</p>}
+            {elementsData.description?.map((desc, index) => (
+              <div className="flex gap-4 mb-2" key={index}>
+                <Autosuggest
+                  suggestions={suggestions}
+                  onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
+                  onSuggestionsClearRequested={handleSuggestionsClearRequested}
+                  getSuggestionValue={getSuggestionValue}
+                  renderSuggestion={renderSuggestion}
+                  inputProps={{
+                    placeholder: 'Enter Language',
+                    value: desc.lanCode,
+                    onChange: (e, { newValue }) =>
+                      handleNestedChange('description', index, 'lanCode', newValue),
+                    className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded'
+                  }}
+                  theme={{
+                    container: 'relative', // Make sure the container is relatively positioned
+                    suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
+                    suggestion: 'p-2 cursor-pointer',
+                    suggestionHighlighted: 'bg-blue-500 text-black'
+                  }}
+                />
+                <textarea
+                  type="text"
+                  value={desc.paragraph}
+                  onChange={(e) => handleNestedChange('description', index, 'paragraph', e.target.value)}
+                  className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
+                  placeholder="Description"
+                />
+                <button
+                  type="button"
+                  className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
+                  onClick={() => removeDescription(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Items */}
         <div className="mb-4">

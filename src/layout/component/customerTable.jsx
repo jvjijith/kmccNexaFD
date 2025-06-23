@@ -4,14 +4,15 @@ import { useNavigate } from "react-router";
 import { useGetData, usePutData } from "../../common/api";
 import { toast } from "react-toastify";
 import LoadingScreen from "../ui/loading/loading";
+import Pagination from "../ui/pagination/Pagination";
 
 function CustomerTable() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
-  const [loading, setLoading] = useState(true); // Loading state
-  const [currentPage, setCurrentPage] = useState(1); // Pagination: current page
-  const limit = 10; // Limit: items per page
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
   
   // Fetch customer data with pagination
   const { data: customerData, isLoading, error, refetch } = useGetData(
@@ -100,13 +101,13 @@ function CustomerTable() {
 
   // Pagination handler
   const handlePageChange = (page) => {
-    setCurrentPage(page);  // Update the current page state
+    setCurrentPage(page);
   };
 
   // Fetch new data when currentPage changes
   useEffect(() => {
-    refetch();  // Refetch data after currentPage is updated
-  }, [currentPage, refetch]);  // Refetch when currentPage changes
+    refetch();
+  }, [currentPage, refetch]);
 
   if (isLoading || loading) {
     return <LoadingScreen />;
@@ -116,7 +117,7 @@ function CustomerTable() {
     return <div className="text-text-color">Error loading data</div>;
   }
 
-  const totalPages = Math.ceil(customerData.pagination.totalCount / limit); // Calculate total pages
+  const totalPages = Math.ceil((customerData?.pagination?.totalCount || 0) / limit);
 
   console.log(customerData);
 
@@ -134,8 +135,8 @@ function CustomerTable() {
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y divide-border">
-          {customerData?.customers.map((customer, index) => (
-            <Table.Row key={index} className="border-gray-700 bg-secondary-card">
+          {customerData?.customers?.map((customer) => (
+            <Table.Row key={customer._id} className="border-gray-700 bg-secondary-card">
               <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">{customer.name}</Table.Cell>
               <Table.Cell className="border-bordertext-text-color">{customer.country}</Table.Cell>
               <Table.Cell className="border-bordertext-text-color">{customer.category?.categoryName || "N/A"}</Table.Cell>
@@ -162,17 +163,11 @@ function CustomerTable() {
       </Table>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-4">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

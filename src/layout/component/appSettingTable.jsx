@@ -4,14 +4,15 @@ import { useNavigate } from "react-router";
 import { useGetData, usePutData } from "../../common/api";
 import { toast } from "react-toastify";
 import LoadingScreen from "../ui/loading/loading";
+import Pagination from "../ui/pagination/Pagination";
 
 function AppTable() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
-  const [loading, setLoading] = useState(true); // Loading state
-  const [currentPage, setCurrentPage] = useState(1); // Pagination: current page
-  const limit = 10; // Limit: items per page
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
   
   // Fetch app data with pagination
   const { data: AppData, isLoading, error, refetch } = useGetData(
@@ -96,13 +97,13 @@ function AppTable() {
 
   // Pagination handler
   const handlePageChange = (page) => {
-    setCurrentPage(page);  // Update the current page state
+    setCurrentPage(page);
   };
 
   // Fetch new data when currentPage changes
   useEffect(() => {
-    refetch();  // Refetch data after currentPage is updated
-  }, [currentPage, refetch]);  // Refetch when currentPage changes
+    refetch();
+  }, [currentPage, refetch]);
 
   if (isLoading || loading) {
     return <LoadingScreen />;
@@ -112,7 +113,7 @@ function AppTable() {
     return <div className="text-text-color">Error loading data</div>;
   }
 
-  const totalPages = Math.ceil(AppData.pagination.totalCount / limit); // Calculate total pages
+  const totalPages = Math.ceil((AppData?.pagination?.totalCount || 0) / limit);
 
   console.log(AppData);
 
@@ -130,13 +131,13 @@ function AppTable() {
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y divide-border">
-          {AppData?.apps.map((app, index) => (
-            <Table.Row key={index} className="border-gray-700 bg-secondary-card">
+          {AppData?.apps?.map((app) => (
+            <Table.Row key={app._id} className="border-gray-700 bg-secondary-card">
               <Table.Cell className="border-borderwhitespace-nowrap font-medium text-text-color">{app.title}</Table.Cell>
               <Table.Cell className="border-bordertext-text-color">{app.appType}</Table.Cell>
-              <Table.Cell className="border-bordertext-text-color">{app.settings.geo?.map(geo => geo.location).join(', ')}</Table.Cell>
-              <Table.Cell className="border-bordertext-text-color">{app.settings.domain?.map(domain => domain.domain).join(', ')}</Table.Cell>
-              <Table.Cell className="border-bordertext-text-color">{app.settings.language?.map(language => language.langName).join(', ')}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{app.settings?.geo?.map(geo => geo.location).join(', ') || "N/A"}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{app.settings?.domain?.map(domain => domain.domain).join(', ') || "N/A"}</Table.Cell>
+              <Table.Cell className="border-bordertext-text-color">{app.settings?.language?.map(language => language.langName).join(', ') || "N/A"}</Table.Cell>
               <Table.Cell className={`whitespace-nowrap ${app.active ? "text-green-500" : "text-red-500"}`}>
                 {app.active ? "Active" : "Inactive"}
               </Table.Cell>
@@ -156,17 +157,11 @@ function AppTable() {
       </Table>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-4">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1 ? "bg-primary-button-color" : "bg-gray-700"} text-btn-text-color`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }
