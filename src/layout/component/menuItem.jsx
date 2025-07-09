@@ -2,8 +2,6 @@ import { useState } from "react";
 import SidebarIcons from "../ui/icon/sidebarIcons";
 import clsx from "clsx";
 import { useLocation, useNavigate } from "react-router";
-import LoadingScreen from "../ui/loading/loading";
-
 export default function MenuItem({ item }) {
   const { id, title, notifications, route, parent, dropdownItems } = item;
   const location = useLocation();
@@ -11,13 +9,18 @@ export default function MenuItem({ item }) {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleItemClick = () => {
+  const handleItemClick = (e) => {
     if (dropdownItems && dropdownItems.length > 0) {
+      e.preventDefault();
       setIsDropdownOpen(!isDropdownOpen);
     } else {
-      navigate(route);
-      sessionStorage.setItem('hasReloaded', '');
-      // return<LoadingScreen/>
+      // Only prevent default if it's a left click and not modified
+      if (e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+        e.preventDefault();
+        navigate(route);
+        sessionStorage.setItem('hasReloaded', '');
+      }
+      // For right-click, ctrl+click, cmd+click, etc., let the browser handle it naturally
     }
   };
 
@@ -25,17 +28,17 @@ export default function MenuItem({ item }) {
 
   return (
     <div className="relative w-full">
-      <div
-        className={clsx(
-          'w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer',
-          isSelected ? 'sidebar-item-selected' : 'sidebar-item text-text-color'
-        )}
-        onClick={handleItemClick}
-      >
-        <SidebarIcons id={id} />
-        <div className="block sm:hidden xl:block ml-2">{title}</div>
-        <div className="block sm:hidden xl:block flex-grow" />
-        {dropdownItems && dropdownItems.length > 0 && (
+      {dropdownItems && dropdownItems.length > 0 ? (
+        <div
+          className={clsx(
+            'w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer',
+            isSelected ? 'sidebar-item-selected' : 'sidebar-item text-text-color'
+          )}
+          onClick={handleItemClick}
+        >
+          <SidebarIcons id={id} />
+          <div className="block sm:hidden xl:block ml-2">{title}</div>
+          <div className="block sm:hidden xl:block flex-grow" />
           <div className="flex sm:hidden xl:flex items-center justify-center ml-2">
             <svg
               className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'transform rotate-180' : ''}`}
@@ -47,13 +50,32 @@ export default function MenuItem({ item }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </div>
-        )}
-        {notifications && !dropdownItems && (
-          <div className="flex sm:hidden xl:flex bg-pink-600 w-5 h-5 flex items-center justify-center rounded-full mr-2">
-            <div className="text-text-color text-sm">{notifications}</div>
-          </div>
-        )}
-      </div>
+          {notifications && (
+            <div className="flex sm:hidden xl:flex bg-pink-600 w-5 h-5 flex items-center justify-center rounded-full mr-2">
+              <div className="text-text-color text-sm">{notifications}</div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <a
+          href={route}
+          className={clsx(
+            'w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer no-underline',
+            isSelected ? 'sidebar-item-selected' : 'sidebar-item text-text-color'
+          )}
+          onClick={handleItemClick}
+          onMouseDown={handleItemClick}
+        >
+          <SidebarIcons id={id} />
+          <div className="block sm:hidden xl:block ml-2">{title}</div>
+          <div className="block sm:hidden xl:block flex-grow" />
+          {notifications && (
+            <div className="flex sm:hidden xl:flex bg-pink-600 w-5 h-5 flex items-center justify-center rounded-full mr-2">
+              <div className="text-text-color text-sm">{notifications}</div>
+            </div>
+          )}
+        </a>
+      )}
       {isDropdownOpen && dropdownItems && (
         <div className="mt-2 w-full bg-secondary-card shadow-lg z-10">
           {dropdownItems.map((dropdownItem) => (

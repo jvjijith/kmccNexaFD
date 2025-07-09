@@ -94,6 +94,7 @@ import Event from "./pages/events/events";
 import AddEvent from "./pages/events/addEvents";
 import CreateEvent from "./layout/component/event/createEvent";
 import EditEvent from "./pages/events/editEvents";
+import Membership from "./pages/membership/membership";
 
 const App = () => {
   return (
@@ -244,6 +245,7 @@ const App = () => {
       <Route path="permission/edit" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"update"} page={<EditUserTeamPermission />} />} />
       <Route path="event/catalog" element={<UserTeamPermissionsPage requiredModule={"catalogues"} permission={"view"} page={<CatalogList />} />} />
       <Route path="event/list" element={<UserTeamPermissionsPage requiredModule={"menu"} permission={"view"} page={<Event />} />} />
+      <Route path="membership" element={<UserTeamPermissionsPage requiredModule={"membership"} permission={"view"} page={<Membership />} />} />
       <Route path="event/add" element={<AddEvent />} />
       <Route path="event/edit" element={<EditEvent />} />
       <Route path="error" element={<ErrorPage />} />
