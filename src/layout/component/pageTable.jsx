@@ -56,7 +56,7 @@ function PageTable() {
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Slug</Table.HeadCell>
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Reference Name</Table.HeadCell>
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Type</Table.HeadCell>
-          <Table.HeadCell className="border-border bg-table-heading text-text-color">Internal Type</Table.HeadCell>
+          {/* <Table.HeadCell className="border-border bg-table-heading text-text-color">Internal Type</Table.HeadCell> */}
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Created At</Table.HeadCell>
           <Table.HeadCell className="border-border bg-table-heading text-text-color">Actions</Table.HeadCell>
         </Table.Head>
@@ -68,7 +68,7 @@ function PageTable() {
               </Table.Cell>
               <Table.Cell className="border-bordertext-text-color">{page.referenceName}</Table.Cell>
               <Table.Cell className="border-bordertext-text-color">{page.type}</Table.Cell>
-              <Table.Cell className="border-bordertext-text-color">{page.internalType}</Table.Cell>
+              {/* <Table.Cell className="border-bordertext-text-color">{page.internalType}</Table.Cell> */}
               <Table.Cell className="border-bordertext-text-color">
                 {new Date(page.created_at).toLocaleString()}
               </Table.Cell>

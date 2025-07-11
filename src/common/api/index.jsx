@@ -2,7 +2,6 @@
 
 import axios from 'axios';
 import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { B2 } from 'backblaze-b2';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { jwtDecode } from "jwt-decode";
@@ -94,7 +93,7 @@ const useInvalidateQueries = () => {
 const useApiQuery = (key, url, options = {}) => {
   console.log(options);
  return useQuery({
-    queryKey: [key],
+    queryKey: [key, url], // Include URL in query key to refetch when URL changes
     queryFn: async () => {
       try {
       const { data } = await api.get(url, options);
@@ -104,7 +103,7 @@ const useApiQuery = (key, url, options = {}) => {
         console.error('Error in API Call:', error);
         throw error;
       }
-        
+
     },
   });
   // return useQuery({key, async ()  {
@@ -119,9 +118,18 @@ const useApiMutation = (key, url, method) => {
   const invalidateQueries = useInvalidateQueries();
 
   return useMutation({
-    mutationFn: async (postData) => {
+    mutationFn: async (payload) => {
       try {
-        const response = await api[method](url, postData);
+        // Support both simple data and { url, data } structure
+        let actualUrl = url;
+        let postData = payload;
+
+        if (payload && typeof payload === 'object' && payload.url && payload.data) {
+          actualUrl = payload.url;
+          postData = payload.data;
+        }
+
+        const response = await api[method](actualUrl, postData);
         console.log('API Response:', response);  // Log the full response
         const { data } = response;
         if (!data) {

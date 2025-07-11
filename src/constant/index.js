@@ -247,15 +247,22 @@ export const employeeData = [
             ]
           },
           {
-            id: '7-4', 
-            title: "Color Scheme", 
-            route: "/store/color",   
-            requiredModule: "colorschemes", 
-            permission: "view", 
+            id: '7-4',
+            title: "Color Scheme",
+            route: "/store/color",
+            requiredModule: "colorschemes",
+            permission: "view",
             dropdownItems: [
               { id: '7-4-1', title: "Add Color Scheme", route: "/store/color/add", requiredModule: "colorschemes", permission: "create" },
               { id: '7-4-2', title: "List Color Scheme", route: "/store/color/list", requiredModule: "colorschemes", permission: "view" }
             ]
+          },
+          {
+            id: '10',
+            title: "Membership",
+            route: "/membership",
+            requiredModule: "membership",
+            permission: "view"
           }
         ]
       }
