@@ -7,35 +7,220 @@ import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 
+// Validation schema based on the provided API schema
+const validateMenuData = (data) => {
+  const errors = {};
+
+  // Required fields validation
+  if (!data.appId || data.appId.trim() === '') {
+    errors.appId = 'App ID is required';
+  }
+
+  if (!data.menuName || data.menuName.trim() === '') {
+    errors.menuName = 'Menu name is required';
+  } else if (data.menuName.length < 2) {
+    errors.menuName = 'Menu name must be at least 2 characters long';
+  } else if (data.menuName.length > 50) {
+    errors.menuName = 'Menu name must be less than 50 characters';
+  }
+
+  if (!data.menuType) {
+    errors.menuType = 'Menu type is required';
+  } else if (!['single', 'multiple', 'mega'].includes(data.menuType)) {
+    errors.menuType = 'Menu type must be single, multiple, or mega';
+  }
+
+  if (!data.layoutType) {
+    errors.layoutType = 'Layout type is required';
+  } else if (!['left drawer', 'right drawer', 'top', 'left hamBurger', 'right hamBurger'].includes(data.layoutType)) {
+    errors.layoutType = 'Invalid layout type';
+  }
+
+  // Validate items array
+  if (data.items && data.items.length > 0) {
+    data.items.forEach((item, index) => {
+      if (!item.menuName || item.menuName.trim() === '') {
+        errors[`item_${index}_menuName`] = `Item ${index + 1}: Menu name is required`;
+      } else if (item.menuName.length < 2) {
+        errors[`item_${index}_menuName`] = `Item ${index + 1}: Menu name must be at least 2 characters long`;
+      }
+
+      if (!item.menuType) {
+        errors[`item_${index}_menuType`] = `Item ${index + 1}: Menu type is required`;
+      } else if (!['single', 'multiple'].includes(item.menuType)) {
+        errors[`item_${index}_menuType`] = `Item ${index + 1}: Menu type must be single or multiple`;
+      }
+
+      // Validate multiItems if they exist
+      if (item.multiItems && item.multiItems.length > 0) {
+        item.multiItems.forEach((subItem, subIndex) => {
+          if (!subItem.menuName || subItem.menuName.trim() === '') {
+            errors[`item_${index}_subitem_${subIndex}_menuName`] = `Item ${index + 1}, Sub-item ${subIndex + 1}: Menu name is required`;
+          } else if (subItem.menuName.length < 2) {
+            errors[`item_${index}_subitem_${subIndex}_menuName`] = `Item ${index + 1}, Sub-item ${subIndex + 1}: Menu name must be at least 2 characters long`;
+          }
+
+          if (!subItem.menuType) {
+            errors[`item_${index}_subitem_${subIndex}_menuType`] = `Item ${index + 1}, Sub-item ${subIndex + 1}: Menu type is required`;
+          } else if (subItem.menuType !== 'single') {
+            errors[`item_${index}_subitem_${subIndex}_menuType`] = `Item ${index + 1}, Sub-item ${subIndex + 1}: Menu type must be single`;
+          }
+        });
+      }
+    });
+  }
+
+  return errors;
+};
+
+// Error display component
+const ErrorMessage = ({ error }) => {
+  if (!error) return null;
+  return <div className="text-red-500 text-sm mt-1">{error}</div>;
+};
+
+// Form field wrapper component
+const FormField = ({ label, required = false, error, children, className = "w-full sm:w-1/2 p-4" }) => (
+  <div className={className}>
+    <label className="block w-full mb-2 text-text-color primary-text">
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    {children}
+    <ErrorMessage error={error} />
+  </div>
+);
+
+// Image upload component
+const ImageUploadField = ({ 
+  label, 
+  images, 
+  uploadedImage, 
+  onDrop, 
+  onRemoveNew, 
+  onRemoveExisting, 
+  onUpload, 
+  uploadProgress, 
+  className = "w-full sm:w-1/2 p-4" 
+}) => {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp']
+    },
+    multiple: false
+  });
+
+  return (
+    <FormField label={label} className={className}>
+      <div className="space-y-4">
+        {/* Existing uploaded image */}
+        {uploadedImage && (
+          <div className="relative">
+            <img 
+              src={uploadedImage} 
+              alt="Uploaded" 
+              className="w-32 h-32 object-cover rounded border"
+            />
+            <button
+              type="button"
+              onClick={onRemoveExisting}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
+        {/* New images to upload */}
+        {images.map((image, index) => (
+          <div key={index} className="relative">
+            <div className="flex items-center space-x-4">
+              <img 
+                src={URL.createObjectURL(image)} 
+                alt="Preview" 
+                className="w-20 h-20 object-cover rounded border"
+              />
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 truncate">{image.name}</p>
+                {uploadProgress[image.name] && (
+                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${uploadProgress[image.name]}%` }}
+                    ></div>
+                  </div>
+                )}
+                <div className="flex space-x-2 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => onUpload(index)}
+                    disabled={uploadProgress[image.name] === 100}
+                    className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 disabled:opacity-50"
+                  >
+                    {uploadProgress[image.name] === 100 ? 'Uploaded' : 'Upload'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onRemoveNew(index)}
+                    className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Upload dropzone */}
+        {!uploadedImage && images.length === 0 && (
+          <div
+            {...getRootProps()}
+            className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+              isDragActive ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+            }`}
+          >
+            <input {...getInputProps()} />
+            <div className="text-gray-500">
+              <svg className="mx-auto h-12 w-12 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {isDragActive ? (
+                <p>Drop the image here...</p>
+              ) : (
+                <p>Drag & drop an image here, or click to select</p>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </FormField>
+  );
+};
+
 function MenuForm({ menu }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Fixed: Added missing state variables
+  // Image states
   const [images, setImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
-  const [itemImage, setItemImage] = useState([]);
-  const [subItemImage, setSubItemImage] = useState([]);
-  const [mediaId, setMediaId] = useState([]);
+  const [itemImages, setItemImages] = useState({});
+  const [subItemImages, setSubItemImages] = useState({});
+  const [mediaId, setMediaId] = useState(null);
+  
+  // Accordion states
   const [activeIndex, setActiveIndex] = useState(null);
-  const [activeSubIndex, setActiveSubIndex] = useState(null);
-  const [uploadedImages, setUploadedImages] = useState(null);
-
-  const toggleAccordion = (index, field) => {
-    if(field==="menu"){
-      setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
-    }
-    else{
-      setActiveSubIndex((prevIndex) => (prevIndex === index ? null : index));
-    }
-  };
+  const [activeSubIndex, setActiveSubIndex] = useState({});
 
   const mutationHook = menu ? usePutData : usePostData;
   const api_url = menu ? `/menu/${menu._id}` : '/menu';
   const api_key = menu ? 'updateMenu' : 'addMenu';
   const { mutate: saveMenu, isLoading } = mutationHook(api_key, api_url);
 
-  const { data: pageData, isLoading: isPageLoading } = useGetData('page', '/pages', {});
+  const { data: pageData, isLoading: isPageLoading } = useGetData('page', '/pages?limit=100', {});
   const { data: appData, isLoading: isAppLoading } = useGetData('app', '/app', {});
 
   const { mutateAsync: generateSignedUrl } = usePostData('signedUrl', '/media/generateSignedUrl');
@@ -53,30 +238,35 @@ function MenuForm({ menu }) {
     active: true,
   });
 
-  // Generate dropdown options
-  const pageOptions = pageData?.pages.map((page) => ({
-    value: page._id,
-    label: page.title[0]?.title || 'Untitled Page',
-  }));
-
-  const appOptions = appData?.apps?.map((page) => ({
-    value: page._id,
-    label: page.title || 'Untitled Page',
-  }));
-
   const menuTypeOptions = [
     { value: 'single', label: 'Single' },
     { value: 'multiple', label: 'Multiple' },
+    { value: 'mega', label: 'Mega' },
   ];
 
-  const subMenuTypeOptions = [
+  const itemMenuTypeOptions = [
     { value: 'single', label: 'Single' },
     { value: 'multiple', label: 'Multiple' },
   ];
 
-  const itemSubMenuTypeOptions = [
-    { value: 'single', label: 'Single' },
-  ];
+  // Generate dropdown options
+  const pageOptions = pageData?.pages?.map((page) => ({
+    value: page._id,
+    label: page.title?.[0]?.title || 'Untitled Page',
+    slug: page.slug,
+  })) || [];
+
+  // Generate page slug options for menu items
+  const pageSlugOptions = pageData?.pages?.map((page) => ({
+    value: page.slug,
+    label: page.slug,
+    pageId: page._id,
+  })) || [];
+
+  const appOptions = appData?.apps?.map((app) => ({
+    value: app._id,
+    label: app.title || 'Untitled App',
+  })) || [];
 
   const layoutTypeOptions = [
     { value: 'left drawer', label: 'Left Drawer' },
@@ -88,55 +278,93 @@ function MenuForm({ menu }) {
 
   useEffect(() => {
     if (menu) {
-      const cleanedMenu = removeUnwantedFields(menu);
       setFormData({
-        appId: menu?.appId?._id,
-        menuName: menu.menuName,
-        menuType: menu.menuType,
-        layoutType: menu.layoutType,
-        menuPage: menu.menuPage,
-        imageUrl: menu.imageUrl,
-        allowImage: menu.allowImage,
-        items: cleanedMenu.items,
-        active: menu.active,
+        appId: menu?.appId?._id || menu?.appId || '',
+        menuName: menu.menuName || '',
+        menuType: menu.menuType || 'single',
+        layoutType: menu.layoutType || 'left drawer',
+        menuPage: menu.menuPage || '',
+        imageUrl: menu.imageUrl || null,
+        allowImage: menu.allowImage || false,
+        items: menu.items || [],
+        active: menu.active !== undefined ? menu.active : true,
       });
-      
-      // Fixed: Set uploaded image if it exists
-      if (menu.imageUrl) {
-        setUploadedImages(menu.imageUrl);
-      }
     }
     setTimeout(() => setLoading(false), 1000);
   }, [menu]);
 
-  const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v']) => {
-    if (Array.isArray(data)) {
-      return data.map((item) => removeUnwantedFields(item, fields));
-    } else if (typeof data === 'object' && data !== null) {
-      return Object.keys(data).reduce((acc, key) => {
-        if (!fields.includes(key)) {
-          acc[key] = removeUnwantedFields(data[key], fields);
-        }
-        return acc;
-      }, {});
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
     }
-    return data;
   };
 
-  const handleNestedChange = (field, index, nestedField, value) => {
-    setFormData((prevData) => {
-      const updatedField = [...prevData[field]];
-      updatedField[index][nestedField] = value;
-      return { ...prevData, [field]: updatedField };
-    });
+  const handleSelectChange = (name, selectedOption) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: selectedOption?.value || '',
+    }));
+    
+    // Clear error when user makes selection
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
   };
 
-  const handleSectionChange = (templateIndex, sectionIndex, field, value) => {
+  const handleNestedChange = (itemIndex, field, value) => {
     setFormData((prevData) => {
-      const updatedTemplates = [...prevData.items];
-      updatedTemplates[templateIndex].multiItems[sectionIndex][field] = value;
-      return { ...prevData, items: updatedTemplates };
+      const updatedItems = [...prevData.items];
+      updatedItems[itemIndex][field] = value;
+
+      // If menuName (slug) is changed, automatically set the menuPage
+      if (field === 'menuName') {
+        const selectedPage = pageSlugOptions.find(option => option.value === value);
+        if (selectedPage) {
+          updatedItems[itemIndex].menuPage = selectedPage.pageId;
+        }
+      }
+
+      return { ...prevData, items: updatedItems };
     });
+
+    // Clear related errors
+    const errorKey = `item_${itemIndex}_${field}`;
+    if (errors[errorKey]) {
+      setErrors(prev => ({ ...prev, [errorKey]: undefined }));
+    }
+  };
+
+  const handleSubItemChange = (itemIndex, subItemIndex, field, value) => {
+    setFormData((prevData) => {
+      const updatedItems = [...prevData.items];
+      if (!updatedItems[itemIndex].multiItems) {
+        updatedItems[itemIndex].multiItems = [];
+      }
+      updatedItems[itemIndex].multiItems[subItemIndex][field] = value;
+
+      // If menuName (slug) is changed, automatically set the menuPage
+      if (field === 'menuName') {
+        const selectedPage = pageSlugOptions.find(option => option.value === value);
+        if (selectedPage) {
+          updatedItems[itemIndex].multiItems[subItemIndex].menuPage = selectedPage.pageId;
+        }
+      }
+
+      return { ...prevData, items: updatedItems };
+    });
+
+    // Clear related errors
+    const errorKey = `item_${itemIndex}_subitem_${subItemIndex}_${field}`;
+    if (errors[errorKey]) {
+      setErrors(prev => ({ ...prev, [errorKey]: undefined }));
+    }
   };
 
   const handleAddItem = () => {
@@ -159,6 +387,9 @@ function MenuForm({ menu }) {
 
   const handleAddSubItem = (itemIndex) => {
     const updatedItems = [...formData.items];
+    if (!updatedItems[itemIndex].multiItems) {
+      updatedItems[itemIndex].multiItems = [];
+    }
     updatedItems[itemIndex].multiItems.push({
       menuName: '',
       menuType: 'single',
@@ -174,42 +405,56 @@ function MenuForm({ menu }) {
     const updatedItems = [...formData.items];
     updatedItems[itemIndex].multiItems.splice(subItemIndex, 1);
     setFormData((prev) => ({ ...prev, items: updatedItems }));
+    
+    // Clear related errors
+    const errorKeys = Object.keys(errors).filter(key => 
+      key.startsWith(`item_${itemIndex}_subitem_${subItemIndex}_`)
+    );
+    if (errorKeys.length > 0) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        errorKeys.forEach(key => delete newErrors[key]);
+        return newErrors;
+      });
+    }
   };
 
   const handleRemoveItem = (index) => {
     const updatedItems = [...formData.items];
     updatedItems.splice(index, 1);
     setFormData((prev) => ({ ...prev, items: updatedItems }));
-  };
-
-  // Fixed: Main menu image upload
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      setImages([...images, ...acceptedFiles]);
+    
+    // Clear related errors
+    const errorKeys = Object.keys(errors).filter(key => 
+      key.startsWith(`item_${index}_`)
+    );
+    if (errorKeys.length > 0) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        errorKeys.forEach(key => delete newErrors[key]);
+        return newErrors;
+      });
     }
-  });
-
-  const handleRemoveImage = (index) => {
-    setImages(images.filter((_, i) => i !== index));
   };
 
-  const handleRemoveExistingImage = () => {
-    setUploadedImages(null);
-    setFormData((prev) => ({
-      ...prev,
-      imageUrl: null,
-    }));
+  const toggleAccordion = (index, field) => {
+    if (field === "menu") {
+      setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
+    } else {
+      setActiveSubIndex(prev => ({
+        ...prev,
+        [field]: prev[field] === index ? null : index
+      }));
+    }
   };
 
-  const handleUploadImages = async (index) => {
+  // Image upload functions
+  const handleUploadAttachment = async (file) => {
     try {
-      const image = images[index];
-      console.log(`Generating signed URL for ${image.name}`);
-
       const signedUrlResponse = await generateSignedUrl({
-        title: image.name,
+        title: file.name,
         mediaType: "image",
-        ext: image.name.split('.').pop(),
+        ext: file.name.split('.').pop() || "",
         active: true,
         uploadStatus: "progressing",
         uploadProgress: 0,
@@ -224,19 +469,19 @@ function MenuForm({ menu }) {
 
       setMediaId(mediaId);
 
-      await axios.put(signedUrl, image, {
+      await axios.put(signedUrl, file, {
         headers: {
-          'Content-Type': image.type
+          'Content-Type': file.type
         },
         onUploadProgress: (progressEvent) => {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          setUploadProgress(prev => ({ ...prev, [image.name]: progress }));
+          setUploadProgress(prev => ({ ...prev, [file.name]: progress }));
 
           if (progress === 100) {
             updateMediaStatus({
               mediaType: "image",
-              title: image.name,
-              ext: image.name.split('.').pop(),
+              title: file.name,
+              ext: file.name.split('.').pop(),
               active: true,
               uploadStatus: "completed",
               uploadProgress: 100,
@@ -245,180 +490,114 @@ function MenuForm({ menu }) {
         }
       });
 
-      // Fixed: Use environment variable properly
-      const imageUrl = `${import.meta.env.VITE_MEDIA_BASE_URL}${mediaId}.${image.name.split('.').pop()}`;
-      setUploadedImages(imageUrl);
-      
-      setFormData(prev => ({
-        ...prev,
-        imageUrl: imageUrl
-      }));
-
-      // Remove uploaded image from pending list
-      setImages(prev => prev.filter((_, i) => i !== index));
-      toast.success('Image uploaded successfully!');
+      const imageUrl = `${import.meta.env.VITE_MEDIA_BASE_URL}${mediaId}.${file.name.split('.').pop()}`;
+      return imageUrl;
 
     } catch (error) {
       console.error('Error uploading image:', error);
-      toast.error('An error occurred while uploading the image. Please try again.');
+      toast.error('Failed to upload image');
+      return null;
     }
   };
 
-  // Fixed: Item image upload
-  const { getRootProps: getRootProps2, getInputProps: getInputProps2 } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        setItemImage([acceptedFiles[0]]);
-      } else {
-        toast.error('Only one image can be uploaded at a time.');
-      }
-    },
-  });
-
-  // Fixed: Sub-item image upload
-  const { getRootProps: getRootProps3, getInputProps: getInputProps3 } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        setSubItemImage([acceptedFiles[0]]);
-      } else {
-        toast.error('Only one image can be uploaded at a time.');
-      }
-    },
-  });
-
-  // Fixed: Generic upload function
-  const handleUploadAttachment = async (file, callback) => {
-    try {
-      console.log(`Generating signed URL for ${file.name}`);
-
-      const signedUrlResponse = await generateSignedUrl({
-        title: file.name,
-        mediaType: "image",
-        ext: file.name.split('.').pop() || "",
-        active: true,
-        uploadStatus: "progressing",
-        uploadProgress: 0,
-      });
-
-      if (!signedUrlResponse || !signedUrlResponse.signedUrl) {
-        throw new Error('Invalid signed URL response');
-      }
-
-      const { signedUrl, media } = signedUrlResponse;
-      const mediaId = media._id;
-
-      setMediaId(mediaId);
-
-      await axios.put(signedUrl, file, {
-        headers: { 'Content-Type': file.type },
-        onUploadProgress: (progressEvent) => {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          console.log(`Upload progress: ${progress}%`);
-
-          if (progress === 100) {
-            updateMediaStatus({
-              mediaType: "image",
-              title: file.name,
-              ext: file.name.split('.').pop() || "",
-              active: true,
-              uploadStatus: "completed",
-              uploadProgress: 100,
-            });
-          }
-        },
-      });
-
-      const imageUrl = `${import.meta.env.VITE_MEDIA_BASE_URL}${mediaId}.${file.name.split('.').pop()}`;
-      
-      if (callback) {
-        callback(imageUrl);
-      }
-
-      toast.success('Image uploaded successfully!');
-      return imageUrl;
-    } catch (error) {
-      console.error("Upload error:", error);
-      toast.error('Failed to upload the image. Please try again.');
-      throw error;
+  const handleMainImageUpload = async (imageIndex) => {
+    const file = images[imageIndex];
+    const imageUrl = await handleUploadAttachment(file);
+    if (imageUrl) {
+      setFormData(prev => ({ ...prev, imageUrl }));
+      setImages(prev => prev.filter((_, i) => i !== imageIndex));
+      toast.success('Image uploaded successfully');
     }
   };
 
-  // Fixed: Item image upload handler
-  const handleUploadImageForItem = async (itemIndex) => {
-    if (itemImage.length === 0) {
-      toast.error('Please select an image first.');
-      return;
-    }
-
-    try {
-      const imageUrl = await handleUploadAttachment(itemImage[0]);
-      const updatedItems = [...formData.items];
-      updatedItems[itemIndex].imageUrl = imageUrl;
-      setFormData((prev) => ({ ...prev, items: updatedItems }));
-      setItemImage([]); // Clear after upload
-    } catch (error) {
-      console.error('Error uploading item image:', error);
+  const handleItemImageUpload = async (itemIndex, imageIndex) => {
+    const file = itemImages[itemIndex][imageIndex];
+    const imageUrl = await handleUploadAttachment(file);
+    if (imageUrl) {
+      handleNestedChange(itemIndex, 'imageUrl', imageUrl);
+      setItemImages(prev => ({
+        ...prev,
+        [itemIndex]: prev[itemIndex].filter((_, i) => i !== imageIndex)
+      }));
+      toast.success('Item image uploaded successfully');
     }
   };
 
-  // Fixed: Sub-item image upload handler
-  const handleUploadImageForSubItem = async (itemIndex, subItemIndex) => {
-    if (subItemImage.length === 0) {
-      toast.error('Please select an image first.');
-      return;
-    }
-
-    try {
-      const imageUrl = await handleUploadAttachment(subItemImage[0]);
-      const updatedItems = [...formData.items];
-      updatedItems[itemIndex].multiItems[subItemIndex].imageUrl = imageUrl;
-      setFormData((prev) => ({ ...prev, items: updatedItems }));
-      setSubItemImage([]); // Clear after upload
-    } catch (error) {
-      console.error('Error uploading sub-item image:', error);
+  const handleSubItemImageUpload = async (itemIndex, subItemIndex, imageIndex) => {
+    const file = subItemImages[`${itemIndex}_${subItemIndex}`][imageIndex];
+    const imageUrl = await handleUploadAttachment(file);
+    if (imageUrl) {
+      handleSubItemChange(itemIndex, subItemIndex, 'imageUrl', imageUrl);
+      setSubItemImages(prev => ({
+        ...prev,
+        [`${itemIndex}_${subItemIndex}`]: prev[`${itemIndex}_${subItemIndex}`].filter((_, i) => i !== imageIndex)
+      }));
+      toast.success('Sub-item image uploaded successfully');
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    saveMenu(formData, {
-      onSuccess: () => {
-        toast.success('Menu saved successfully!');
-        navigate('/menu');
-      },
-      onError: (error) => {
-        toast.error('Failed to save the menu.');
-        console.error(error);
-      },
-    });
+    setIsSubmitting(true);
+
+    // Validate form data
+    const validationErrors = validateMenuData(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setIsSubmitting(false);
+      toast.error('Please fix the validation errors');
+      return;
+    }
+
+    try {
+      // Clean the data by removing _id fields from items and multiItems
+      const cleanedFormData = {
+        ...formData,
+        items: formData.items.map(item => {
+          const { _id, ...cleanItem } = item;
+          return {
+            ...cleanItem,
+            multiItems: (item.multiItems || []).map(subItem => {
+              const { _id: subId, ...cleanSubItem } = subItem;
+              return cleanSubItem;
+            })
+          };
+        })
+      };
+
+      await saveMenu(cleanedFormData);
+      toast.success(menu ? 'Menu updated successfully!' : 'Menu created successfully!');
+      navigate('/menu');
+    } catch (error) {
+      console.error('Error saving menu:', error);
+      toast.error('Failed to save menu');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  if (isLoading || loading) {
+  if (isLoading || loading || isPageLoading || isAppLoading) {
     return <LoadingScreen />;
   }
 
-  console.log("image",images);
-
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-wrap">
-          {/* App ID Dropdown */}
-          <div className="w-full sm:w-1/2 p-4">
-            <div className="mb-4">
-              <label className="block mb-2 text-text-color">App ID</label>
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="bg-white rounded-lg shadow-lg">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {menu ? 'Edit Menu' : 'Create New Menu'}
+          </h1>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6">
+          <div className="flex flex-wrap -mx-4">
+            {/* App ID */}
+            <FormField label="App" required error={errors.appId}>
               <Select
                 options={appOptions}
-                value={appOptions?.find((opt) => opt.value === formData.appId)}
-                onChange={(opt) => setFormData((prev) => ({ ...prev, appId: opt.value }))}
+                value={appOptions.find((opt) => opt.value === formData.appId)}
+                onChange={(opt) => handleSelectChange('appId', opt)}
+                placeholder="Select an app..."
                 classNames={{
                   control: ({ isFocused }) =>
                     `bg-primary border ${
@@ -433,32 +612,26 @@ function MenuForm({ menu }) {
                     }`,
                 }}
               />
-            </div>
-          </div>
+            </FormField>
 
-          {/* Menu Name */}
-          <div className="w-full sm:w-1/2 p-4">
-            <div className="mb-4">
-              <label className="float-left inline-block mb-2 text-text-color primary-text">Menu Name</label>
+            {/* Menu Name */}
+            <FormField label="Menu Name" required error={errors.menuName}>
               <input 
                 type="text" 
                 className="block w-full h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white-500 transition text-text-color" 
                 name="menuName" 
                 value={formData.menuName} 
-                onChange={handleInputChange} 
-                required 
+                onChange={handleInputChange}
+                placeholder="Enter menu name..."
               />
-            </div>
-          </div>
+            </FormField>
 
-          {/* Menu Type */}
-          <div className="w-full sm:w-1/2 p-4">
-            <div className="mb-4">
-              <label className="block mb-2 text-text-color">Menu Type</label>
+            {/* Menu Type */}
+            <FormField label="Menu Type" required error={errors.menuType}>
               <Select
                 options={menuTypeOptions}
-                value={menuTypeOptions?.find((opt) => opt.value === formData.menuType)}
-                onChange={(opt) => setFormData((prev) => ({ ...prev, menuType: opt.value }))}
+                value={menuTypeOptions.find((opt) => opt.value === formData.menuType)}
+                onChange={(opt) => handleSelectChange('menuType', opt)}
                 classNames={{
                   control: ({ isFocused }) =>
                     `bg-primary border ${
@@ -473,17 +646,14 @@ function MenuForm({ menu }) {
                     }`,
                 }}
               />
-            </div>
-          </div>
+            </FormField>
 
-          {/* Layout Type */}
-          <div className="w-full sm:w-1/2 p-4">
-            <div className="mb-4">
-              <label className="block mb-2 text-text-color">Layout Type</label>
+            {/* Layout Type */}
+            <FormField label="Layout Type" required error={errors.layoutType}>
               <Select
                 options={layoutTypeOptions}
-                value={layoutTypeOptions?.find((opt) => opt.value === formData.layoutType)}
-                onChange={(opt) => setFormData((prev) => ({ ...prev, layoutType: opt.value }))}
+                value={layoutTypeOptions.find((opt) => opt.value === formData.layoutType)}
+                onChange={(opt) => handleSelectChange('layoutType', opt)}
                 classNames={{
                   control: ({ isFocused }) =>
                     `bg-primary border ${
@@ -498,685 +668,362 @@ function MenuForm({ menu }) {
                     }`,
                 }}
               />
-            </div>
-          </div>
+            </FormField>
 
-          {/* Menu Page */}
-          <div className="w-full sm:w-1/2 p-4">
-            <label className="block mb-2 text-text-color">Menu Page</label>
-            <Select
-              options={pageOptions}
-              value={pageOptions?.find((opt) => opt.value === formData.menuPage)}
-              onChange={(opt) => setFormData((prev) => ({ ...prev, menuPage: opt.value }))}
-              classNames={{
-                control: ({ isFocused }) =>
-                  `bg-primary border ${
-                    isFocused ? 'border-secondary' : 'border-focus-color'
-                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
-                singleValue: () => `text-focus-color`,
-                placeholder: () => `text-focus-color`,
-                menu: () => `bg-primary text-focus-color`,
-                option: ({ isSelected }) =>
-                  `cursor-pointer ${
-                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                  }`,
-              }}
-            />
-          </div>
+            {/* Menu Page */}
+            <FormField label="Menu Page" error={errors.menuPage}>
+              <Select
+                options={pageOptions}
+                value={pageOptions.find((opt) => opt.value === formData.menuPage)}
+                onChange={(opt) => handleSelectChange('menuPage', opt)}
+                placeholder="Select a page (optional)..."
+                isClearable
+                classNames={{
+                  control: ({ isFocused }) =>
+                    `bg-primary border ${
+                      isFocused ? 'border-secondary' : 'border-focus-color'
+                    } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                  singleValue: () => `text-focus-color`,
+                  placeholder: () => `text-focus-color`,
+                  menu: () => `bg-primary text-focus-color`,
+                  option: ({ isSelected }) =>
+                    `cursor-pointer ${
+                      isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                    }`,
+                }}
+              />
+            </FormField>
 
-          {/* Main Image Upload */}
-          <div className="w-full p-4">
-            <label className="block w-full mb-2 text-text-color primary-text">Upload Image</label>
-
-            {/* Display existing image */}
-            {uploadedImages && (
-              <div className="mb-4">
-                <div className="relative inline-block">
-                  <img 
-                    src={uploadedImages} 
-                    alt="Menu" 
-                    className="w-full max-w-md h-auto rounded-lg border border-border"
+            {/* Settings */}
+            <FormField label="Settings" className="w-full p-4">
+              <div className="flex items-center space-x-6">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="allowImage"
+                    checked={formData.allowImage}
+                    onChange={handleInputChange}
+                    className="mr-2"
                   />
-                  <button
-                    type="button"
-                    onClick={handleRemoveExistingImage}
-                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
-                    title="Remove image"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                </div>
+                  <span className="text-text-color">Allow Image</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="active"
+                    checked={formData.active}
+                    onChange={handleInputChange}
+                    className="mr-2"
+                  />
+                  <span className="text-text-color">Active</span>
+                </label>
               </div>
-            )}
-            
-            {/* Upload new image */}
-            {!uploadedImages && (
-              <div className="space-y-4">
-                <div 
-                  {...getRootProps()} 
-                  className="border-2 border-dashed border-border p-6 rounded-lg text-center cursor-pointer hover:bg-secondary-card transition-colors"
-                >
-                  <input {...getInputProps()} />
-                  <p className="text-sm text-gray-500">Drag & drop an image here, or click to select</p>
-                  <p className="text-xs text-gray-500 mt-1">Recommended size: 1200x630 pixels</p>
-                </div>
-                
-                {/* Display selected images */}
-                {images.length > 0 && (
-                  <div className="mt-4">
-                    <h4 className="text-sm font-medium mb-2">Selected Images:</h4>
-                    <div className="space-y-3">
-                      {images.map((image, index) => (
-                        <div key={index} className="flex items-center justify-between bg-secondary-card p-2 rounded">
-                          <div className="flex items-center">
-                            <span className="text-sm truncate text-gray-500 max-w-xs">{image.name}</span>
-                            {uploadProgress[image.name] && (
-                              <div className="ml-2 w-24 bg-gray-200 rounded-full h-2.5">
-                                <div 
-                                  className="bg-primary-button-color h-2.5 rounded-full" 
-                                  style={{ width: `${uploadProgress[image.name]}%` }}
-                                ></div>
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex space-x-2">
-                            {!uploadProgress[image.name] && (
-                              <button
-                                type="button"
-                                onClick={() => handleUploadImages(index)}
-                                className="text-primary-button-color hover:text-primary-button-hover p-1"
-                                title="Upload"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                                </svg>
-                              </button>
-                            )}
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveImage(index)}
-                              className="text-red-500 hover:text-red-700 p-1"
-                              title="Remove"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+            </FormField>
+
+            {/* Main Image Upload */}
+            {formData.allowImage && (
+              <ImageUploadField
+                label="Menu Image"
+                images={images}
+                uploadedImage={formData.imageUrl}
+                onDrop={(acceptedFiles) => setImages([...images, ...acceptedFiles])}
+                onRemoveNew={(index) => setImages(images.filter((_, i) => i !== index))}
+                onRemoveExisting={() => setFormData(prev => ({ ...prev, imageUrl: null }))}
+                onUpload={(imageIndex) => handleMainImageUpload(imageIndex)}
+                uploadProgress={uploadProgress}
+                className="w-full"
+              />
             )}
           </div>
 
-          {/* Allow Image Toggle */}
-          <div className="w-full sm:w-1/2 p-4">
-            <div className="mb-4">
-              <label className="relative inline-flex items-center cursor-pointer primary-text">
-                <input
-                  type="checkbox"
-                  name="allowImage"
-                  checked={formData.allowImage}
-                  onChange={handleInputChange}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
-                <span className="ml-3 text-sm font-medium text-text-color">Allow Image</span>
-              </label>
+          {/* Menu Items Section */}
+          <div className="mt-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">Menu Items</h2>
+              <button
+                type="button"
+                onClick={handleAddItem}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              >
+                Add Item
+              </button>
             </div>
-          </div>
 
-          {/* Menu Items Section - Only show if not single */}
-          {(formData?.menuType !== "single") && (
-            <div className="w-full p-4">
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-4">
-                  <label className="block w-full mb-2 text-text-color primary-text">Menu Items</label>
-                  <button
-                    type="button"
-                    className="bg-secondary-card text-text-color px-4 py-2 rounded"
-                    onClick={handleAddItem}
-                  >
-                    Add
-                  </button>
+            {formData.items.map((item, itemIndex) => (
+              <div key={itemIndex} className="mb-6 border border-gray-200 rounded-lg">
+                <div 
+                  className="flex justify-between items-center p-4 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+                  onClick={() => toggleAccordion(itemIndex, "menu")}
+                >
+                  <h3 className="font-medium text-gray-900">
+                    Item {itemIndex + 1}: {item.menuName ? `/${item.menuName}` : 'No Page Selected'}
+                  </h3>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveItem(itemIndex);
+                      }}
+                      className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
+                    >
+                      Remove
+                    </button>
+                    <span className="text-gray-500 text-lg">
+                      {activeIndex === itemIndex ? '−' : '+'}
+                    </span>
+                  </div>
                 </div>
-                
-                <div className="accordion-container">
-                  {formData.items.length === 0 && (
-                    <div className="mb-4 border p-4 rounded border-border">
-                      <p className='text-text-color'>No Menu Items added</p>
-                    </div>
-                  )}
-                  
-                  {formData.items.map((item, index) => (
-                    <div key={index} className="border border-border rounded-lg mb-4">
-                      <div
-                        className="accordion-header secondary-card text-text-color px-4 py-2 flex justify-between items-center cursor-pointer"
-                        onClick={() => toggleAccordion(index, "menu")}
-                      >
-                        <span>{item.menuName || `Menu Item ${index + 1}`}</span>
-                        <div className="flex items-center space-x-2">
-                          <span>{activeIndex === index ? "-" : "+"}</span>
-                          <button
-                            type="button"
-                            className="bg-secondary-card text-text-color px-6 py-2 rounded"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleRemoveItem(index);
-                            }}
-                          >
-                            x
-                          </button>
-                        </div>
+
+                {activeIndex === itemIndex && (
+                  <div className="p-4 space-y-4 bg-white">
+                    <div className="flex flex-wrap -mx-2">
+                      <div className="w-full sm:w-1/2 px-2">
+                        <label className="block mb-2 text-text-color">
+                          Menu Name (Page Slug) <span className="text-red-500">*</span>
+                        </label>
+                        <Select
+                          options={pageSlugOptions}
+                          value={pageSlugOptions.find((opt) => opt.value === item.menuName)}
+                          onChange={(opt) => handleNestedChange(itemIndex, 'menuName', opt?.value || '')}
+                          placeholder="Select a page slug..."
+                          isClearable
+                          classNames={{
+                            control: ({ isFocused }) =>
+                              `bg-primary border ${
+                                isFocused ? 'border-secondary' : 'border-focus-color'
+                              } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                            singleValue: () => `text-focus-color`,
+                            placeholder: () => `text-focus-color`,
+                            menu: () => `bg-primary text-focus-color`,
+                            option: ({ isSelected }) =>
+                              `cursor-pointer ${
+                                isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                              }`,
+                          }}
+                        />
+                        <ErrorMessage error={errors[`item_${itemIndex}_menuName`]} />
                       </div>
 
-                      <div className={`accordion-content overflow-hidden transition-all ${
-                        activeIndex === index ? "max-h-screen" : "max-h-0"
-                      }`}>
-                        <div className="flex justify-between items-center mb-2 mt-2">
-                          <input
-                            type="text"
-                            placeholder="Menu Name"
-                            value={item.menuName}
-                            onChange={(e) => handleNestedChange('items', index, 'menuName', e.target.value)}
-                            className="block w-1/2 h-10 px-2 py-1 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color ml-2"
-                          />
-                          <Select
-                            options={subMenuTypeOptions}
-                            value={{ value: item.menuType, label: item.menuType }}
-                            onChange={(option) =>
-                              handleNestedChange('items', index, 'menuType', option.value)
-                            }
-                            className="w-1/2 ml-2 mr-2"
-                            classNames={{
-                              control: ({ isFocused }) =>
-                                `bg-primary border ${
-                                  isFocused ? 'border-secondary' : 'border-focus-color'
-                                } border-b-2 rounded-none h-10 px-2 text-text-color`,
-                              singleValue: () => `text-focus-color`,
-                              placeholder: () => `text-focus-color`,
-                              menu: () => `bg-primary text-focus-color`,
-                              option: ({ isSelected }) =>
-                                `cursor-pointer ${
-                                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                                }`,
-                            }}
-                          />
+                      <div className="w-full sm:w-1/2 px-2">
+                        <label className="block mb-2 text-text-color">
+                          Menu Type <span className="text-red-500">*</span>
+                        </label>
+                        <Select
+                          options={itemMenuTypeOptions}
+                          value={itemMenuTypeOptions.find((opt) => opt.value === item.menuType)}
+                          onChange={(opt) => handleNestedChange(itemIndex, 'menuType', opt?.value || '')}
+                          classNames={{
+                            control: ({ isFocused }) =>
+                              `bg-primary border ${
+                                isFocused ? 'border-secondary' : 'border-focus-color'
+                              } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                            singleValue: () => `text-focus-color`,
+                            placeholder: () => `text-focus-color`,
+                            menu: () => `bg-primary text-focus-color`,
+                            option: ({ isSelected }) =>
+                              `cursor-pointer ${
+                                isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                              }`,
+                          }}
+                        />
+                        <ErrorMessage error={errors[`item_${itemIndex}_menuType`]} />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap -mx-2">
+                      <div className="w-full sm:w-1/2 px-2">
+                        <label className="block mb-2 text-text-color">Settings</label>
+                        <div className="flex items-center space-x-4">
+                          <label className="flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={item.allowImage || false}
+                              onChange={(e) => handleNestedChange(itemIndex, 'allowImage', e.target.checked)}
+                              className="mr-2"
+                            />
+                            <span className="text-text-color">Allow Image</span>
+                          </label>
+                          <label className="flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={item.active !== undefined ? item.active : true}
+                              onChange={(e) => handleNestedChange(itemIndex, 'active', e.target.checked)}
+                              className="mr-2"
+                            />
+                            <span className="text-text-color">Active</span>
+                          </label>
                         </div>
-                        
-                        <div className="flex items-center justify-between mb-2">
-                          <Select
-                            options={pageOptions}
-                            value={pageOptions?.find((opt) => opt.value === item.menuPage)}
-                            onChange={(opt) =>
-                              handleNestedChange('items', index, 'menuPage', opt.value)
-                            }
-                            className="w-1/2 ml-2"
-                            classNames={{
-                              control: ({ isFocused }) =>
-                                `bg-primary border ${
-                                  isFocused ? 'border-secondary' : 'border-focus-color'
-                                } border-b-2 rounded-none h-10 px-2 text-text-color`,
-                              singleValue: () => `text-focus-color`,
-                              placeholder: () => `text-focus-color`,
-                              menu: () => `bg-primary text-focus-color`,
-                              option: ({ isSelected }) =>
-                                `cursor-pointer ${
-                                  isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                                }`,
-                            }}
-                          />
+                      </div>
+                    </div>
+
+                    {/* Item Image Upload */}
+                    {item.allowImage && (
+                      <ImageUploadField
+                        label={`Item ${itemIndex + 1} Image`}
+                        images={itemImages[itemIndex] || []}
+                        uploadedImage={item.imageUrl}
+                        onDrop={(acceptedFiles) => setItemImages(prev => ({
+                          ...prev,
+                          [itemIndex]: [...(prev[itemIndex] || []), ...acceptedFiles]
+                        }))}
+                        onRemoveNew={(imageIndex) => setItemImages(prev => ({
+                          ...prev,
+                          [itemIndex]: prev[itemIndex].filter((_, i) => i !== imageIndex)
+                        }))}
+                        onRemoveExisting={() => handleNestedChange(itemIndex, 'imageUrl', null)}
+                        onUpload={(imageIndex) => handleItemImageUpload(itemIndex, imageIndex)}
+                        uploadProgress={uploadProgress}
+                        className="w-full"
+                      />
+                    )}
+
+                    {/* Sub Items */}
+                    {item.menuType === 'multiple' && (
+                      <div className="mt-6">
+                        <div className="flex justify-between items-center mb-4">
+                          <h4 className="text-lg font-medium text-gray-900">Sub Items</h4>
+                          <button
+                            type="button"
+                            onClick={() => handleAddSubItem(itemIndex)}
+                            className="px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600"
+                          >
+                            Add Sub Item
+                          </button>
                         </div>
 
-                        {/* Item Image Upload */}
-                        <div className="w-full p-4">
-                          <label className="block w-full mb-2 text-text-color primary-text">Upload image</label>
-
-                          {/* Show existing image if available */}
-                          {item.imageUrl && (
-                            <div className="mb-4">
-                              <div className="relative inline-block">
-                                <img 
-                                  src={item.imageUrl} 
-                                  alt="Item" 
-                                  className="w-32 h-32 object-cover rounded-lg border border-border"
-                                />
+                        {item.multiItems?.map((subItem, subItemIndex) => (
+                          <div key={subItemIndex} className="mb-4 border border-gray-300 rounded">
+                            <div 
+                              className="flex justify-between items-center p-3 bg-gray-100 cursor-pointer hover:bg-gray-200 transition-colors"
+                              onClick={() => toggleAccordion(subItemIndex, `subitem_${itemIndex}`)}
+                            >
+                              <h5 className="font-medium text-gray-800">
+                                Sub Item {subItemIndex + 1}: {subItem.menuName ? `/${subItem.menuName}` : 'No Page Selected'}
+                              </h5>
+                              <div className="flex items-center space-x-2">
                                 <button
                                   type="button"
-                                  onClick={() => {
-                                    const updatedItems = [...formData.items];
-                                    updatedItems[index].imageUrl = null;
-                                    setFormData((prev) => ({ ...prev, items: updatedItems }));
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemoveSubItem(itemIndex, subItemIndex);
                                   }}
-                                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
-                                  title="Remove image"
+                                  className="px-2 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600"
                                 >
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                  </svg>
+                                  Remove
                                 </button>
+                                <span className="text-gray-500">
+                                  {activeSubIndex[`subitem_${itemIndex}`] === subItemIndex ? '−' : '+'}
+                                </span>
                               </div>
                             </div>
-                          )}
 
-                          {/* Upload new image if no existing image */}
-                          {!item.imageUrl && (
-                            <>
-                              <div
-                                {...getRootProps2({
-                                  className: "dropzone",
-                                })}
-                                className="w-full p-4 border-dashed border-2 border-gray-300 rounded-lg text-center mb-4"
-                              >
-                                <input {...getInputProps2()} />
-                                <p className="text-gray-600">
-                                  <span className="font-semibold">Drop items here</span> or{" "}
-                                  <span className="text-black font-semibold cursor-pointer">
-                                    Browse files
-                                  </span>
-                                </p>
-                                <p className="text-sm text-gray-400 mt-2">
-                                  Only one image allowed 
-                                </p>
-                              </div>
+                            {activeSubIndex[`subitem_${itemIndex}`] === subItemIndex && (
+                              <div className="p-3 space-y-3 bg-white">
+                                <div className="flex flex-wrap -mx-2">
+                                  <div className="w-full sm:w-1/2 px-2">
+                                    <label className="block mb-2 text-text-color">
+                                      Menu Name (Page Slug) <span className="text-red-500">*</span>
+                                    </label>
+                                    <Select
+                                      options={pageSlugOptions}
+                                      value={pageSlugOptions.find((opt) => opt.value === subItem.menuName)}
+                                      onChange={(opt) => handleSubItemChange(itemIndex, subItemIndex, 'menuName', opt?.value || '')}
+                                      placeholder="Select a page slug..."
+                                      isClearable
+                                      classNames={{
+                                        control: ({ isFocused }) =>
+                                          `bg-primary border ${
+                                            isFocused ? 'border-secondary' : 'border-focus-color'
+                                          } border-b-2 rounded-none h-10 px-2 text-text-color`,
+                                        singleValue: () => `text-focus-color`,
+                                        placeholder: () => `text-focus-color`,
+                                        menu: () => `bg-primary text-focus-color`,
+                                        option: ({ isSelected }) =>
+                                          `cursor-pointer ${
+                                            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
+                                          }`,
+                                      }}
+                                    />
+                                    <ErrorMessage error={errors[`item_${itemIndex}_subitem_${subItemIndex}_menuName`]} />
+                                  </div>
 
-                              {/* File List */}
-                              <div className="space-y-2">
-                                {itemImage.map((file, fileIndex) => (
-                                  <div
-                                    key={fileIndex}
-                                    className="flex items-center justify-between p-3 border rounded-md bg-secondary-card"
-                                  >
-                                    <div className="flex items-center">
-                                      {file.type.startsWith("image/") ? (
-                                        <img
-                                          src={URL.createObjectURL(file)}
-                                          alt="preview"
-                                          className="w-10 h-10 object-cover rounded-md mr-8"
+                                  <div className="w-full sm:w-1/2 px-2">
+                                    <label className="block mb-2 text-text-color">Settings</label>
+                                    <div className="flex items-center space-x-4">
+                                      <label className="flex items-center">
+                                        <input
+                                          type="checkbox"
+                                          checked={subItem.allowImage || false}
+                                          onChange={(e) => handleSubItemChange(itemIndex, subItemIndex, 'allowImage', e.target.checked)}
+                                          className="mr-2"
                                         />
-                                      ) : (
-                                        <div className="w-10 h-10 bg-gray-300 rounded flex items-center justify-center mr-4">
-                                          <svg
-                                            className="w-5 h-5 text-gray-600"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              strokeWidth="2"
-                                              d="M7 8h10M7 12h4m1 8h.01M5 12a7 7 0 117 7A7 7 0 015 12z"
-                                            ></path>
-                                          </svg>
-                                        </div>
-                                      )}
-
-                                      <div>
-                                        <span className="block font-medium gray-300">{file.name}</span>
-                                        <span className="text-xs text-gray-500">
-                                          {Math.round(file.size / (1024 * 1024))} MB
-                                        </span>
-                                      </div>
-                                    </div>
-
-                                    <div className="flex items-center">
-                                      <button
-                                        className="mr-2 text-blue-500 hover:text-blue-700"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          e.preventDefault();
-                                          handleUploadImageForItem(index);
-                                        }}
-                                      >
-                                        Upload
-                                      </button>
-                                      <button
-                                        className="text-gray-600 hover:text-red-500"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setItemImage([]);
-                                        }}
-                                      >
-                                        <svg
-                                          className="w-6 h-6"
-                                          fill="none"
-                                          stroke="currentColor"
-                                          viewBox="0 0 24 24"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M6 18L18 6M6 6l12 12"
-                                          ></path>
-                                        </svg>
-                                      </button>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </>
-                          )}
-                        </div>
-
-                        {/* Allow Image Toggle for Item */}
-                        <div className="w-full sm:w-1/2 p-4">
-                          <div className="mb-4">
-                            <label className="relative inline-flex items-center cursor-pointer primary-text">
-                              <input
-                                type="checkbox"
-                                checked={item.allowImage}
-                                onChange={(e) =>
-                                  handleNestedChange('items', index, 'allowImage', e.target.checked)
-                                }
-                                className="sr-only peer"
-                              />
-                              <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
-                              <span className="ml-3 text-sm font-medium text-text-color">Allow Image</span>
-                            </label>
-                          </div>
-                        </div>
-
-                        {/* Sub-items */}
-                        {(formData?.items[index]?.menuType !== "single") && (
-                          <div className="mb-4">
-                            <div className="flex items-center justify-between mb-4 ml-2 mr-2">
-                              <label className="block w-full mb-2 text-text-color primary-text">Sub-Menu</label>
-                              <button
-                                type="button"
-                                className="bg-secondary-card text-text-color px-4 py-2 rounded"
-                                onClick={() => handleAddSubItem(index)}
-                              >
-                                Add
-                              </button>
-                            </div>
-                            
-                            {item.multiItems.length === 0 && (
-                              <div className="mb-4 ml-2 mr-2 border p-4 rounded border-border">
-                                <p className="text-text-color">No Sub-Menu added</p>
-                              </div>
-                            )}
-                            
-                            <div className={`accordion-container ${
-                              item.multiItems.length > 8 ? "max-h-96 overflow-y-auto" : ""
-                            }`}>
-                              {item.multiItems.map((subItem, subIndex) => (
-                                <div key={subIndex} className="border border-border rounded-lg ml-2 mr-2">
-                                  <div
-                                    className="accordion-header secondary-card text-text-color px-4 py-2 flex justify-between items-center cursor-pointer"
-                                    onClick={() => toggleAccordion(subIndex, "sub")}
-                                  >
-                                    <span>{subItem.menuName || `Sub-Menu Item ${subIndex + 1}`}</span>
-                                    <div className="flex items-center space-x-2">
-                                      <span>{activeSubIndex === subIndex ? "-" : "+"}</span>
-                                      <button
-                                        type="button"
-                                        className="bg-secondary-card text-text-color px-4 py-2 rounded"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleRemoveSubItem(index, subIndex);
-                                        }}
-                                      >
-                                        x
-                                      </button>
-                                    </div>
-                                  </div>
-
-                                  <div className={`accordion-content overflow-hidden transition-all ${
-                                    activeSubIndex === subIndex ? "max-h-screen" : "max-h-0"
-                                  }`}>
-                                    <div className="flex items-center gap-4">
-                                      <input
-                                        type="text"
-                                        placeholder="Sub-Item Name"
-                                        value={subItem.menuName}
-                                        onChange={(e) =>
-                                          handleSectionChange(
-                                            index,
-                                            subIndex,
-                                            'menuName',
-                                            e.target.value
-                                          )
-                                        }
-                                        className="block w-1/2 h-10 px-2 py-1 ml-2 mt-2 border-b border-border secondary-card rounded-none focus:outline-none focus:border-white transition text-text-color"
-                                      />
-                                      <Select
-                                        options={itemSubMenuTypeOptions}
-                                        value={itemSubMenuTypeOptions?.find((opt) => opt.value === subItem.menuType)}
-                                        onChange={(opt) =>
-                                          handleSectionChange(
-                                            index,
-                                            subIndex,
-                                            'menuType',
-                                            opt.value
-                                          )
-                                        }
-                                        className="w-1/2 mr-2 mt-2"
-                                        classNames={{
-                                          control: ({ isFocused }) =>
-                                            `bg-primary border ${
-                                              isFocused ? 'border-secondary' : 'border-focus-color'
-                                            } border-b-2 rounded-none h-10 px-2 text-text-color`,
-                                          singleValue: () => `text-focus-color`,
-                                          placeholder: () => `text-focus-color`,
-                                          menu: () => `bg-primary text-focus-color`,
-                                          option: ({ isSelected }) =>
-                                            `cursor-pointer ${
-                                              isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                                            }`,
-                                        }}
-                                      />
-                                    </div>
-                                    
-                                    <div className="flex items-center gap-4 mt-2">
-                                      <Select
-                                        options={pageOptions}
-                                        value={pageOptions?.find((opt) => opt.value === subItem.menuPage)}
-                                        onChange={(opt) =>
-                                          handleSectionChange(
-                                            index,
-                                            subIndex,
-                                            'menuPage',
-                                            opt.value
-                                          )
-                                        }
-                                        className="w-1/2 ml-2 mr-2 mt-2"
-                                        classNames={{
-                                          control: ({ isFocused }) =>
-                                            `bg-primary border ${
-                                              isFocused ? 'border-secondary' : 'border-focus-color'
-                                            } border-b-2 rounded-none h-10 px-2 text-text-color`,
-                                          singleValue: () => `text-focus-color`,
-                                          placeholder: () => `text-focus-color`,
-                                          menu: () => `bg-primary text-focus-color`,
-                                          option: ({ isSelected }) =>
-                                            `cursor-pointer ${
-                                              isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                                            }`,
-                                        }}
-                                      />
-                                    </div>
-
-                                    {/* Sub-Item Image Upload */}
-                                    <div className="w-full p-4">
-                                      <label className="block w-full mb-2 text-text-color primary-text">Upload image</label>
-
-                                      {/* Show existing image if available */}
-                                      {subItem.imageUrl && (
-                                        <div className="mb-4">
-                                          <div className="relative inline-block">
-                                            <img 
-                                              src={subItem.imageUrl} 
-                                              alt="Sub-Item" 
-                                              className="w-32 h-32 object-cover rounded-lg border border-border"
-                                            />
-                                            <button
-                                              type="button"
-                                              onClick={() => {
-                                                const updatedItems = [...formData.items];
-                                                updatedItems[index].multiItems[subIndex].imageUrl = null;
-                                                setFormData((prev) => ({ ...prev, items: updatedItems }));
-                                              }}
-                                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
-                                              title="Remove image"
-                                            >
-                                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                              </svg>
-                                            </button>
-                                          </div>
-                                        </div>
-                                      )}
-
-                                      {/* Upload new image if no existing image */}
-                                      {!subItem.imageUrl && (
-                                        <>
-                                          <div
-                                            {...getRootProps3({
-                                              className: "dropzone",
-                                            })}
-                                            className="w-full p-4 border-dashed border-2 border-gray-300 rounded-lg text-center mb-4"
-                                          >
-                                            <input {...getInputProps3()} />
-                                            <p className="text-gray-600">
-                                              <span className="font-semibold">Drop items here</span> or{" "}
-                                              <span className="text-black font-semibold cursor-pointer">
-                                                Browse files
-                                              </span>
-                                            </p>
-                                            <p className="text-sm text-gray-400 mt-2">
-                                              Only one image allowed 
-                                            </p>
-                                          </div>
-
-                                          {/* File List */}
-                                          <div className="space-y-2">
-                                            {subItemImage.map((file, fileIndex) => (
-                                              <div
-                                                key={fileIndex}
-                                                className="flex items-center justify-between p-3 border rounded-md bg-secondary-card"
-                                              >
-                                                <div className="flex items-center">
-                                                  {file.type.startsWith("image/") ? (
-                                                    <img
-                                                      src={URL.createObjectURL(file)}
-                                                      alt="preview"
-                                                      className="w-10 h-10 object-cover rounded-md mr-8"
-                                                    />
-                                                  ) : (
-                                                    <div className="w-10 h-10 bg-gray-300 rounded flex items-center justify-center mr-4">
-                                                      <svg
-                                                        className="w-5 h-5 text-gray-600"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                      >
-                                                        <path
-                                                          strokeLinecap="round"
-                                                          strokeLinejoin="round"
-                                                          strokeWidth="2"
-                                                          d="M7 8h10M7 12h4m1 8h.01M5 12a7 7 0 117 7A7 7 0 015 12z"
-                                                        ></path>
-                                                      </svg>
-                                                    </div>
-                                                  )}
-
-                                                  <div>
-                                                    <span className="block font-medium gray-300">{file.name}</span>
-                                                    <span className="text-xs text-gray-500">
-                                                      {Math.round(file.size / (1024 * 1024))} MB
-                                                    </span>
-                                                  </div>
-                                                </div>
-
-                                                <div className="flex items-center">
-                                                  <button
-                                                    className="mr-2 text-blue-500 hover:text-blue-700"
-                                                    onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      e.preventDefault();
-                                                      handleUploadImageForSubItem(index, subIndex);
-                                                    }}
-                                                  >
-                                                    Upload
-                                                  </button>
-                                                  <button
-                                                    className="text-gray-600 hover:text-red-500"
-                                                    onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      setSubItemImage([]);
-                                                    }}
-                                                  >
-                                                    <svg
-                                                      className="w-6 h-6"
-                                                      fill="none"
-                                                      stroke="currentColor"
-                                                      viewBox="0 0 24 24"
-                                                      xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                      <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M6 18L18 6M6 6l12 12"
-                                                      ></path>
-                                                    </svg>
-                                                  </button>
-                                                </div>
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </>
-                                      )}
-                                    </div>
-
-                                    {/* Allow Image Toggle for Sub-Item */}
-                                    <div className="w-full sm:w-1/2 p-4">
-                                      <div className="mb-4">
-                                        <label className="relative inline-flex items-center cursor-pointer primary-text">
-                                          <input
-                                            type="checkbox"
-                                            checked={subItem.allowImage}
-                                            onChange={(e) =>
-                                              handleSectionChange(index, subIndex, 'allowImage', e.target.checked)
-                                            }
-                                            className="sr-only peer"
-                                          />
-                                          <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600 border border-gray-300 dark:black"></div>
-                                          <span className="ml-3 text-sm font-medium text-text-color">Allow Image</span>
-                                        </label>
-                                      </div>
+                                        <span className="text-text-color">Allow Image</span>
+                                      </label>
+                                      <label className="flex items-center">
+                                        <input
+                                          type="checkbox"
+                                          checked={subItem.active !== undefined ? subItem.active : true}
+                                          onChange={(e) => handleSubItemChange(itemIndex, subItemIndex, 'active', e.target.checked)}
+                                          className="mr-2"
+                                        />
+                                        <span className="text-text-color">Active</span>
+                                      </label>
                                     </div>
                                   </div>
                                 </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
 
-        <div className="flex flex-wrap justify-end p-4">
-          <button type="submit" className="bg-primary-button-color text-btn-text-color px-6 py-2 rounded">
-            {isLoading ? 'Saving...' : 'Save'}
-          </button>
-        </div>
-      </form>
+                                {/* Sub Item Image Upload */}
+                                {subItem.allowImage && (
+                                  <ImageUploadField
+                                    label={`Sub Item ${subItemIndex + 1} Image`}
+                                    images={subItemImages[`${itemIndex}_${subItemIndex}`] || []}
+                                    uploadedImage={subItem.imageUrl}
+                                    onDrop={(acceptedFiles) => setSubItemImages(prev => ({
+                                      ...prev,
+                                      [`${itemIndex}_${subItemIndex}`]: [...(prev[`${itemIndex}_${subItemIndex}`] || []), ...acceptedFiles]
+                                    }))}
+                                    onRemoveNew={(imageIndex) => setSubItemImages(prev => ({
+                                      ...prev,
+                                      [`${itemIndex}_${subItemIndex}`]: prev[`${itemIndex}_${subItemIndex}`].filter((_, i) => i !== imageIndex)
+                                    }))}
+                                    onRemoveExisting={() => handleSubItemChange(itemIndex, subItemIndex, 'imageUrl', null)}
+                                    onUpload={(imageIndex) => handleSubItemImageUpload(itemIndex, subItemIndex, imageIndex)}
+                                    uploadProgress={uploadProgress}
+                                    className="w-full"
+                                  />
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Submit Buttons */}
+          <div className="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
+            <button
+              type="button"
+              onClick={() => navigate('/menu')}
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting || isLoading}
+              className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSubmitting || isLoading ? 'Saving...' : (menu ? 'Update Menu' : 'Create Menu')}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
