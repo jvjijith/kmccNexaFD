@@ -243,6 +243,7 @@ function MembershipTable() {
       <div className="overflow-x-auto min-h-96">
         <Table theme={{ dark: true }} className="border border-border rounded-lg">
           <Table.Head className="bg-secondary-card text-text-color">
+          <Table.HeadCell className="border-border bg-table-heading text-text-color">ID</Table.HeadCell>
             <Table.HeadCell className="border-border bg-table-heading text-text-color">Name</Table.HeadCell>
             <Table.HeadCell className="border-border bg-table-heading text-text-color">Email</Table.HeadCell>
             <Table.HeadCell className="border-border bg-table-heading text-text-color">Application Type</Table.HeadCell>
@@ -256,6 +257,9 @@ function MembershipTable() {
           <Table.Body className="divide-y divide-border">
             {members.map((member) => (
               <Table.Row key={member._id} className="border-gray-700 bg-secondary-card">
+                <Table.Cell className="border-border whitespace-nowrap font-medium text-text-color">
+                  {member.memberNumber}
+                </Table.Cell>
                 <Table.Cell className="border-border whitespace-nowrap font-medium text-text-color">
                   {member.firstName} {member.lastName}
                 </Table.Cell>
