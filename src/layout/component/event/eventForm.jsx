@@ -13,36 +13,36 @@ import axios from 'axios';
 
 function EventForm({ event }) {
     const [formData, setFormData] = useState({
-        name: null,
-        description: null,
+        name: '',
+        description: '',
         type: 'public',
         metadata: {
-            name: null,
-            description: null,
-            imageUrl: null, // Add imageUrl to metadata
+            name: '',
+            description: '',
+            imageUrl: null,
         },
-        location: null,
+        location: '',
         GeoAllow: {
-            location: null,
+            location: '',
             coordinates: [null, null],
         },
         allowGuest: false,
-        allowLogin: false,
+        allowLogin: true,
         allowMemberLogin: false,
         seatsAvailable: 0,
         totalregisteredSeats: 0,
         registrationFields: [],
         eventStatus: 'Draft',
-        startingDate: null,
-        endingDate: null,
+        startingDate: '',
+        endingDate: '',
         paymentType: 'Free',
         priceConfig: {
             type: 'fixed',
             amount: 0,
             dependantField: "",
         },
-        registrationStartDate: null,
-        registrationEndDate: null,
+        registrationStartDate: '',
+        registrationEndDate: '',
     });
     
     // Add state variables for image handling
@@ -50,6 +50,10 @@ function EventForm({ event }) {
     const [uploadedImages, setUploadedImages] = useState(null);
     const [uploadProgress, setUploadProgress] = useState({});
     const [mediaId, setMediaId] = useState(null);
+    
+    // Add validation state
+    const [errors, setErrors] = useState({});
+    const [touchedFields, setTouchedFields] = useState({});
 
     const mutationHook = event ? usePutData : usePostData;
     const api_url = event ? `/events/${event._id}` : '/events';
@@ -59,6 +63,214 @@ function EventForm({ event }) {
     const { mutateAsync: updateMediaStatus } = usePutData('updateMediaStatus', `/media/update/${mediaId}`, { enabled: !!mediaId });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [activeTab, setActiveTab] = useState(0);
+
+    // Validation functions
+    const validateField = (fieldName, value, formData) => {
+        const errors = {};
+
+        switch (fieldName) {
+            case 'name':
+                if (!value || value.trim() === '') {
+                    errors.name = 'Event name is required';
+                } else if (value.length < 3) {
+                    errors.name = 'Event name must be at least 3 characters long';
+                } else if (value.length > 100) {
+                    errors.name = 'Event name must be less than 100 characters';
+                }
+                break;
+
+            case 'description':
+                if (!value || value.trim() === '') {
+                    errors.description = 'Event description is required';
+                } else if (value.length < 10) {
+                    errors.description = 'Event description must be at least 10 characters long';
+                } else if (value.length > 1000) {
+                    errors.description = 'Event description must be less than 1000 characters';
+                }
+                break;
+
+            case 'type':
+                if (!value || !['public', 'members'].includes(value)) {
+                    errors.type = 'Please select a valid event type';
+                }
+                break;
+
+            case 'seatsAvailable':
+                const seats = parseInt(value);
+                if (isNaN(seats) || seats < 1) {
+                    errors.seatsAvailable = 'Seats available must be at least 1';
+                } else if (seats > 10000) {
+                    errors.seatsAvailable = 'Seats available cannot exceed 10,000';
+                }
+                break;
+
+            case 'totalregisteredSeats':
+                const registeredSeats = parseInt(value);
+                const availableSeats = parseInt(formData.seatsAvailable);
+                if (isNaN(registeredSeats) || registeredSeats < 0) {
+                    errors.totalregisteredSeats = 'Registered seats cannot be negative';
+                } else if (registeredSeats > availableSeats) {
+                    errors.totalregisteredSeats = 'Registered seats cannot exceed available seats';
+                }
+                break;
+
+            case 'metadata.name':
+                if (!value || value.trim() === '') {
+                    errors['metadata.name'] = 'Event category is required';
+                } else if (value.length < 2) {
+                    errors['metadata.name'] = 'Event category must be at least 2 characters long';
+                }
+                break;
+
+            case 'metadata.description':
+                if (!value || value.trim() === '') {
+                    errors['metadata.description'] = 'Event description is required';
+                } else if (value.length < 20) {
+                    errors['metadata.description'] = 'Event description must be at least 20 characters long';
+                } else if (value.length > 2000) {
+                    errors['metadata.description'] = 'Event description must be less than 2000 characters';
+                }
+                break;
+
+            case 'location':
+                if (!value || value.trim() === '') {
+                    errors.location = 'Event location is required';
+                } else if (value.length < 5) {
+                    errors.location = 'Location must be at least 5 characters long';
+                }
+                break;
+
+            case 'startingDate':
+                if (!value) {
+                    errors.startingDate = 'Event start date is required';
+                } else {
+                    const startDate = new Date(value);
+                    const now = new Date();
+                    if (startDate <= now) {
+                        errors.startingDate = 'Event start date must be in the future';
+                    }
+                }
+                break;
+
+            case 'endingDate':
+                if (!value) {
+                    errors.endingDate = 'Event end date is required';
+                } else if (formData.startingDate) {
+                    const startDate = new Date(formData.startingDate);
+                    const endDate = new Date(value);
+                    if (endDate <= startDate) {
+                        errors.endingDate = 'Event end date must be after start date';
+                    }
+                }
+                break;
+
+            case 'registrationStartDate':
+                if (!value) {
+                    errors.registrationStartDate = 'Registration start date is required';
+                } else {
+                    const regStartDate = new Date(value);
+                    const now = new Date();
+                    if (regStartDate <= now) {
+                        errors.registrationStartDate = 'Registration start date must be in the future';
+                    }
+                }
+                break;
+
+            case 'registrationEndDate':
+                if (!value) {
+                    errors.registrationEndDate = 'Registration end date is required';
+                } else if (formData.registrationStartDate) {
+                    const regStartDate = new Date(formData.registrationStartDate);
+                    const regEndDate = new Date(value);
+                    if (regEndDate <= regStartDate) {
+                        errors.registrationEndDate = 'Registration end date must be after registration start date';
+                    }
+                    if (formData.startingDate) {
+                        const eventStartDate = new Date(formData.startingDate);
+                        if (regEndDate >= eventStartDate) {
+                            errors.registrationEndDate = 'Registration must end before event starts';
+                        }
+                    }
+                }
+                break;
+
+            case 'paymentType':
+                if (!value || !['Free', 'Fixed Price', 'registration Payment'].includes(value)) {
+                    errors.paymentType = 'Please select a valid payment type';
+                }
+                break;
+
+            case 'priceConfig.amount':
+                if (formData.paymentType !== 'Free' && formData.priceConfig?.type === 'fixed') {
+                    const amount = parseFloat(value);
+                    if (isNaN(amount) || amount < 0) {
+                        errors['priceConfig.amount'] = 'Amount must be a valid positive number';
+                    } else if (amount > 10000) {
+                        errors['priceConfig.amount'] = 'Amount cannot exceed $10,000';
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        return errors;
+    };
+
+    const validateAllFields = () => {
+        let allErrors = {};
+
+        // Validate basic fields
+        const fieldsToValidate = [
+            'name', 'description', 'type', 'seatsAvailable', 'totalregisteredSeats',
+            'metadata.name', 'metadata.description', 'location', 'startingDate', 
+            'endingDate', 'registrationStartDate', 'registrationEndDate', 'paymentType'
+        ];
+
+        fieldsToValidate.forEach(fieldName => {
+            let value;
+            if (fieldName.includes('.')) {
+                const [parent, child] = fieldName.split('.');
+                value = formData[parent]?.[child];
+            } else {
+                value = formData[fieldName];
+            }
+            
+            const fieldErrors = validateField(fieldName, value, formData);
+            allErrors = { ...allErrors, ...fieldErrors };
+        });
+
+        // Validate price config if needed
+        if (formData.paymentType !== 'Free' && formData.priceConfig?.type === 'fixed') {
+            const priceErrors = validateField('priceConfig.amount', formData.priceConfig.amount, formData);
+            allErrors = { ...allErrors, ...priceErrors };
+        }
+
+        // Validate registration fields
+        formData.registrationFields.forEach((field, index) => {
+            if (!field.name || field.name.trim() === '') {
+                allErrors[`registrationField.${index}.name`] = 'Field name is required';
+            }
+            if (!field.displayName || field.displayName.trim() === '') {
+                allErrors[`registrationField.${index}.displayName`] = 'Display name is required';
+            }
+            if (!field.type || field.type.trim() === '') {
+                allErrors[`registrationField.${index}.type`] = 'Field type is required';
+            }
+            if (!field.valueType || field.valueType.trim() === '') {
+                allErrors[`registrationField.${index}.valueType`] = 'Value type is required';
+            }
+        });
+
+        // Validate coordinates
+        if (!formData.GeoAllow.coordinates || formData.GeoAllow.coordinates.length !== 2 || 
+            formData.GeoAllow.coordinates.some(coord => coord === null || coord === undefined)) {
+            allErrors.coordinates = 'Valid coordinates are required';
+        }
+
+        return allErrors;
+    };
 
     const removeUnwantedFields = (data, fields = ['_id', 'updated_at', 'created_at', '__v' ]) => {
         if (Array.isArray(data)) {
@@ -80,36 +292,36 @@ function EventForm({ event }) {
             const cleanedContainer = removeUnwantedFields(event);
         
             setFormData({
-                name: event?.name || null,
-                description: event?.description || null,
+                name: event?.name || '',
+                description: event?.description || '',
                 type: event?.type || 'public',
                 metadata: {
-                    name: event?.metadata?.name || null,
-                    description: event?.metadata?.description || null,
-                    imageUrl: event?.metadata?.imageUrl || null, // Get from metadata
+                    name: event?.metadata?.name || '',
+                    description: event?.metadata?.description || '',
+                    imageUrl: event?.metadata?.imageUrl || null,
                 },
-                location: event?.location || null,
+                location: event?.location || '',
                 GeoAllow: {
-                    location: event?.GeoAllow?.location || null,
+                    location: event?.GeoAllow?.location || '',
                     coordinates: event?.GeoAllow?.coordinates || [null, null],
                 },
                 allowGuest: event?.allowGuest ?? false,
-                allowLogin: event?.allowLogin ?? false,
+                allowLogin: event?.allowLogin ?? true,
                 allowMemberLogin: event?.allowMemberLogin ?? false,
                 seatsAvailable: event?.seatsAvailable || 0,
                 totalregisteredSeats: event?.totalregisteredSeats || 0,
                 registrationFields: cleanedContainer?.registrationFields || [],
                 eventStatus: event?.eventStatus || 'Draft',
-                startingDate: formatDate(event?.startingDate) || null,
-                endingDate: formatDate(event?.endingDate) || null,
+                startingDate: formatDate(event?.startingDate) || '',
+                endingDate: formatDate(event?.endingDate) || '',
                 paymentType: event?.paymentType || 'Free',
                 priceConfig: {
                     type: event?.priceConfig?.type || 'fixed',
                     amount: event?.priceConfig?.amount || 0,
-                    dependantField: event?.priceConfig?.dependantField || null,
+                    dependantField: event?.priceConfig?.dependantField || '',
                 },
-                registrationStartDate: formatDate(event?.registrationStartDate) || null,
-                registrationEndDate: formatDate(event?.registrationEndDate) || null,
+                registrationStartDate: formatDate(event?.registrationStartDate) || '',
+                registrationEndDate: formatDate(event?.registrationEndDate) || '',
             });
             
             // Set uploaded image if it exists in metadata
@@ -117,11 +329,26 @@ function EventForm({ event }) {
                 setUploadedImages(event.metadata.imageUrl);
             }
         }
-    }, []);
+    }, [event]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        const fieldValue = type === 'checkbox' ? checked : value;
+        
+        setFormData((prev) => ({ ...prev, [name]: fieldValue }));
+        
+        // Mark field as touched
+        setTouchedFields(prev => ({ ...prev, [name]: true }));
+        
+        // Validate field and update errors
+        const fieldErrors = validateField(name, fieldValue, { ...formData, [name]: fieldValue });
+        setErrors(prev => {
+            const newErrors = { ...prev };
+            // Remove existing errors for this field
+            delete newErrors[name];
+            // Add new errors if any
+            return { ...newErrors, ...fieldErrors };
+        });
     };
 
     const handleRegistrationChange = (index, value, fieldPath) => {
@@ -152,9 +379,18 @@ function EventForm({ event }) {
             updatedFields[index] = field;
             return { ...prevState, registrationFields: updatedFields };
         });
+        
+        // Clear related errors
+        const errorKey = `registrationField.${index}.${fieldPath}`;
+        setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[errorKey];
+            return newErrors;
+        });
     };
     
     function formatDate(dateString) {
+        if (!dateString) return '';
         const date = new Date(dateString);
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -193,7 +429,7 @@ function EventForm({ event }) {
                     return {
                         ...field,
                         options: [
-                            ...(field.options || []), // Ensure options exist or initialize as an empty array
+                            ...(field.options || []),
                             { fieldName: "", parentName: "", labelName: "" },
                         ],
                     };
@@ -221,6 +457,17 @@ function EventForm({ event }) {
                 updatedFields.splice(fieldIndex, 1);
             }
             return { ...prevState, registrationFields: updatedFields };
+        });
+        
+        // Clear related errors
+        setErrors(prev => {
+            const newErrors = { ...prev };
+            Object.keys(newErrors).forEach(key => {
+                if (key.startsWith(`registrationField.${fieldIndex}.`)) {
+                    delete newErrors[key];
+                }
+            });
+            return newErrors;
         });
     };
 
@@ -251,9 +498,20 @@ function EventForm({ event }) {
                 ...prevData,
                 metadata: {
                     ...prevData.metadata,
-                    [name]: value, // Dynamically update the field (name or description) in metadata
+                    [name]: value,
                 },
             };
+        });
+        
+        // Mark field as touched and validate
+        const fieldName = `metadata.${name}`;
+        setTouchedFields(prev => ({ ...prev, [fieldName]: true }));
+        
+        const fieldErrors = validateField(fieldName, value, formData);
+        setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[fieldName];
+            return { ...newErrors, ...fieldErrors };
         });
     };
 
@@ -285,6 +543,17 @@ function EventForm({ event }) {
     
             return prevData;
         });
+        
+        // Validate location field
+        if (name === "location") {
+            setTouchedFields(prev => ({ ...prev, location: true }));
+            const fieldErrors = validateField('location', value, formData);
+            setErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors.location;
+                return { ...newErrors, ...fieldErrors };
+            });
+        }
     };
     
     function handlePriceConfigChange(event) {
@@ -295,9 +564,20 @@ function EventForm({ event }) {
             ...prevFormData,
             priceConfig: {
                 ...prevFormData.priceConfig,
-                [name.replace('priceConfig.', '')]: value, // Extract the specific key
+                [name]: value,
             },
         }));
+        
+        // Validate price config fields
+        const fieldName = `priceConfig.${name}`;
+        setTouchedFields(prev => ({ ...prev, [fieldName]: true }));
+        
+        const fieldErrors = validateField(fieldName, value, formData);
+        setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors[fieldName];
+            return { ...newErrors, ...fieldErrors };
+        });
     }
     
     const addFormulaField = (fieldIndex) => {
@@ -307,7 +587,7 @@ function EventForm({ event }) {
                     return {
                         ...field,
                         formula: [
-                            ...(field.formula || []), // Ensure formula exists or initialize as an empty array
+                            ...(field.formula || []),
                             { type: "", fieldName: "", operationName: "" },
                         ],
                     };
@@ -346,12 +626,32 @@ function EventForm({ event }) {
         });
     };
       
-    // Corrected image upload functions
+    // Image upload functions
     const { getRootProps, getInputProps } = useDropzone({
         onDrop: (acceptedFiles) => {
-            setImages([...images, ...acceptedFiles]);
-            console.log("images", images);
-        }
+            // Validate file types and sizes
+            const validFiles = acceptedFiles.filter(file => {
+                const isValidType = file.type.startsWith('image/');
+                const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB
+                
+                if (!isValidType) {
+                    toast.error(`${file.name} is not a valid image file`);
+                    return false;
+                }
+                if (!isValidSize) {
+                    toast.error(`${file.name} is too large. Maximum size is 10MB`);
+                    return false;
+                }
+                return true;
+            });
+            
+            setImages([...images, ...validFiles]);
+        },
+        accept: {
+            'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp']
+        },
+        maxSize: 10 * 1024 * 1024, // 10MB
+        multiple: false
     });
     
     const handleRemoveImage = (index) => {
@@ -364,7 +664,7 @@ function EventForm({ event }) {
             ...prev,
             metadata: {
                 ...prev.metadata,
-                imageUrl: null, // Remove the image URL from metadata
+                imageUrl: null,
             }
         }));
     };
@@ -378,7 +678,7 @@ function EventForm({ event }) {
             const signedUrlResponse = await generateSignedUrl({
                 title: image.name,
                 mediaType: "image",
-                ext: image.name.split('.').pop(), // Extract the file extension
+                ext: image.name.split('.').pop(),
                 active: true,
                 uploadStatus: "progressing",
                 uploadProgress: 0,
@@ -410,7 +710,7 @@ function EventForm({ event }) {
                         updateMediaStatus({
                             mediaType: "image",
                             title: image.name,
-                            ext: image.name.split('.').pop(), // Extract the file extension
+                            ext: image.name.split('.').pop(),
                             active: true,
                             uploadStatus: "completed",
                             uploadProgress: 100,
@@ -420,7 +720,7 @@ function EventForm({ event }) {
             });
     
             // Add the uploaded image's URL to the list
-            const imageUrl = `https://media.nexalogics.in/${mediaId}.${image.name.split('.').pop()}`;
+            const imageUrl = `${import.meta.env.VITE_MEDIA_BASE_URL || 'https://media.nexalogics.in/'}${mediaId}.${image.name.split('.').pop()}`;
             console.log("Image URL:", imageUrl);
             setUploadedImages(imageUrl);
             
@@ -432,6 +732,11 @@ function EventForm({ event }) {
                     imageUrl: imageUrl
                 }
             }));
+            
+            // Remove uploaded image from pending list
+            setImages(prev => prev.filter((_, i) => i !== index));
+            
+            toast.success('Image uploaded successfully!');
     
         } catch (error) {
             console.error('Error uploading image:', error);
@@ -439,47 +744,128 @@ function EventForm({ event }) {
         }
     };
 
+    // Enhanced validation functions for each tab
     const validateCreateEvent = () => {
-        return formData.name && formData.name.trim() !== '' && formData.description && formData.description.trim() !== '' && formData.type && formData.type.trim() !== '';
+        const requiredFields = ['name', 'description', 'type', 'seatsAvailable'];
+        const tabErrors = {};
+        
+        requiredFields.forEach(field => {
+            const fieldErrors = validateField(field, formData[field], formData);
+            Object.assign(tabErrors, fieldErrors);
+        });
+        
+        return Object.keys(tabErrors).length === 0;
     };
     
     const validateEventDetails = () => {
-        return formData.metadata.name && formData.metadata.name.trim() !== '' && formData.metadata.description && formData.metadata.description.trim() !== '' && formData.paymentType && formData.paymentType.trim() !== '';
+        const requiredFields = ['metadata.name', 'metadata.description', 'paymentType'];
+        const tabErrors = {};
+        
+        requiredFields.forEach(field => {
+            let value;
+            if (field.includes('.')) {
+                const [parent, child] = field.split('.');
+                value = formData[parent]?.[child];
+            } else {
+                value = formData[field];
+            }
+            const fieldErrors = validateField(field, value, formData);
+            Object.assign(tabErrors, fieldErrors);
+        });
+        
+        // Validate price config for paid events
+        if (formData.paymentType !== 'Free' && formData.priceConfig?.type === 'fixed') {
+            const priceErrors = validateField('priceConfig.amount', formData.priceConfig.amount, formData);
+            Object.assign(tabErrors, priceErrors);
+        }
+        
+        return Object.keys(tabErrors).length === 0;
     };
     
     const validateLocationDetails = () => {
-        console.log("formData.GeoAllow.coordinates.length",formData.GeoAllow.coordinates.length);
-        return formData.location && formData.location.trim() !== '' && formData.GeoAllow.coordinates.length === 2;
+        const locationErrors = validateField('location', formData.location, formData);
+        const hasValidCoordinates = formData.GeoAllow.coordinates && 
+            formData.GeoAllow.coordinates.length === 2 && 
+            formData.GeoAllow.coordinates.every(coord => coord !== null && coord !== undefined);
+        
+        return Object.keys(locationErrors).length === 0 && hasValidCoordinates;
     };
     
     const validateRegistrationDetails = () => {
-        return (
-            formData.registrationStartDate !== null &&
-            formData.registrationEndDate !== null &&
-            // formData.registrationFields.length !== 0 &&
-            !formData.registrationFields.some(
-                (field) =>
-                    field.name.trim() === '' ||
-                    field.displayName.trim() === '' ||
-                    field.type.trim() === '' ||
-                    field.valueType.trim() === ''
-            )
+        const dateFields = ['registrationStartDate', 'registrationEndDate'];
+        const tabErrors = {};
+        
+        dateFields.forEach(field => {
+            const fieldErrors = validateField(field, formData[field], formData);
+            Object.assign(tabErrors, fieldErrors);
+        });
+        
+        // Validate registration fields
+        const hasInvalidFields = formData.registrationFields.some(
+            (field) =>
+                !field.name || field.name.trim() === '' ||
+                !field.displayName || field.displayName.trim() === '' ||
+                !field.type || field.type.trim() === '' ||
+                !field.valueType || field.valueType.trim() === ''
         );
+        
+        return Object.keys(tabErrors).length === 0 && !hasInvalidFields;
     };    
     
     const validateScheduleEvent = () => {
-        return formData.startingDate && formData.startingDate.trim() !== '' && formData.endingDate && formData.endingDate.trim() !== '';
+        const dateFields = ['startingDate', 'endingDate'];
+        const tabErrors = {};
+        
+        dateFields.forEach(field => {
+            const fieldErrors = validateField(field, formData[field], formData);
+            Object.assign(tabErrors, fieldErrors);
+        });
+        
+        return Object.keys(tabErrors).length === 0;
     };
 
     const handleContinue = () => {
-        if (activeTab === 0 && !validateCreateEvent() || activeTab === 1 && !validateEventDetails() || activeTab === 2 && !validateRegistrationDetails() || activeTab === 3 && !validateLocationDetails() || activeTab === 4 && !validateScheduleEvent() ) {
-            toast.error('Please complete all required fields in the tab before continuing.');
+        let isValid = false;
+        let errorMessage = 'Please complete all required fields before continuing.';
+        
+        switch (activeTab) {
+            case 0:
+                isValid = validateCreateEvent();
+                errorMessage = 'Please complete all required basic details.';
+                break;
+            case 1:
+                isValid = validateEventDetails();
+                errorMessage = 'Please complete all required advanced details.';
+                break;
+            case 2:
+                isValid = validateRegistrationDetails();
+                errorMessage = 'Please complete all required registration details.';
+                break;
+            case 3:
+                isValid = validateLocationDetails();
+                errorMessage = 'Please provide valid location and coordinates.';
+                break;
+            case 4:
+                // Event permissions - no specific validation needed
+                isValid = true;
+                break;
+            case 5:
+                isValid = validateScheduleEvent();
+                errorMessage = 'Please provide valid event dates.';
+                break;
+            default:
+                isValid = true;
+        }
+        
+        if (!isValid) {
+            toast.error(errorMessage);
             return;
         }
+        
         if (activeTab < tabs.length - 1) {
             setActiveTab((prev) => prev + 1);
         } else {
-            handleSubmit(); // Submit if on the last tab
+            handleSubmit();
         }
     };
 
@@ -490,10 +876,37 @@ function EventForm({ event }) {
     };
 
     const handleSubmit = async () => {
+        // Final validation
+        const allErrors = validateAllFields();
+        if (Object.keys(allErrors).length > 0) {
+            setErrors(allErrors);
+            toast.error('Please fix all validation errors before submitting.');
+            return;
+        }
+        
         setIsSubmitting(true);
         try {
-            await saveEvent(formData);
-            toast.success('Event updated successfully!');
+            // Clean the form data before submission
+            const cleanedFormData = {
+                ...formData,
+                // Ensure coordinates are properly formatted
+                GeoAllow: {
+                    ...formData.GeoAllow,
+                    coordinates: formData.GeoAllow.coordinates.map(coord => 
+                        coord === null || coord === undefined ? 0 : parseFloat(coord)
+                    )
+                },
+                // Ensure numeric fields are properly typed
+                seatsAvailable: parseInt(formData.seatsAvailable),
+                totalregisteredSeats: parseInt(formData.totalregisteredSeats),
+                priceConfig: {
+                    ...formData.priceConfig,
+                    amount: parseFloat(formData.priceConfig.amount) || 0
+                }
+            };
+            
+            await saveEvent(cleanedFormData);
+            toast.success(event ? 'Event updated successfully!' : 'Event created successfully!');
         } catch (err) {
             console.error('Error submitting form:', err);
             toast.error('Error submitting form. Please try again.');
@@ -503,29 +916,81 @@ function EventForm({ event }) {
     };
 
     const tabs = [
-        { name: 'Basic Details', component: <CreateEvent formData={formData} handleChange={handleChange} isSubmitting={isSubmitting} /> },
-        { name: 'Advanced Details', component: <EventDetails 
-            formData={formData} 
-            handleChange={handleChange} 
-            handleMetadataChange={handleMetadataChange} 
-            handlePriceConfigChange={handlePriceConfigChange} 
-            isSubmitting={isSubmitting}
-            // Pass image upload functions and state
-            images={images}
-            uploadedImages={uploadedImages}
-            uploadProgress={uploadProgress}
-            getRootProps={getRootProps}
-            getInputProps={getInputProps}
-            handleRemoveImage={handleRemoveImage}
-            handleRemoveExistingImage={handleRemoveExistingImage}
-            handleUploadImages={handleUploadImages}
-        /> },
-        { name: 'Registration Details', component: <RegistrationDetails formData={formData} handleChange={handleChange} handleOptionChange={handleOptionChange}
-        handleRegistrationChange={handleRegistrationChange} handleFormulaChange={handleFormulaChange} addField={addField} deleteField={deleteField} addOption={addOption} 
-        deleteOption={deleteOption} addFormulaField={addFormulaField} deleteFormula={deleteFormula} isSubmitting={isSubmitting} /> },
-        { name: 'Event Location', component: <GeoAllowForm formData={formData} handleLocationChange={handleLocationChange} handleChange={handleChange} isSubmitting={isSubmitting} /> },
-        { name: 'Access and Login Options', component: <EventPermissions formData={formData} handleChange={handleChange} isSubmitting={isSubmitting} /> },
-        { name: 'Schedule', component: <EventRegistrationDates formData={formData} handleChange={handleChange} isSubmitting={isSubmitting} /> },
+        { 
+            name: 'Basic Details', 
+            component: <CreateEvent 
+                formData={formData} 
+                handleChange={handleChange} 
+                isSubmitting={isSubmitting}
+                errors={errors}
+            /> 
+        },
+        { 
+            name: 'Advanced Details', 
+            component: <EventDetails 
+                formData={formData} 
+                handleChange={handleChange} 
+                handleMetadataChange={handleMetadataChange} 
+                handlePriceConfigChange={handlePriceConfigChange} 
+                isSubmitting={isSubmitting}
+                errors={errors}
+                // Pass image upload functions and state
+                images={images}
+                uploadedImages={uploadedImages}
+                uploadProgress={uploadProgress}
+                getRootProps={getRootProps}
+                getInputProps={getInputProps}
+                handleRemoveImage={handleRemoveImage}
+                handleRemoveExistingImage={handleRemoveExistingImage}
+                handleUploadImages={handleUploadImages}
+            /> 
+        },
+        { 
+            name: 'Registration Details', 
+            component: <RegistrationDetails 
+                formData={formData} 
+                handleChange={handleChange} 
+                handleOptionChange={handleOptionChange}
+                handleRegistrationChange={handleRegistrationChange} 
+                handleFormulaChange={handleFormulaChange} 
+                addField={addField} 
+                deleteField={deleteField} 
+                addOption={addOption} 
+                deleteOption={deleteOption} 
+                addFormulaField={addFormulaField} 
+                deleteFormula={deleteFormula} 
+                isSubmitting={isSubmitting}
+                errors={errors}
+            /> 
+        },
+        { 
+            name: 'Event Location', 
+            component: <GeoAllowForm 
+                formData={formData} 
+                handleLocationChange={handleLocationChange} 
+                handleChange={handleChange} 
+                isSubmitting={isSubmitting}
+                errors={errors}
+            /> 
+        },
+        { 
+            name: 'Access and Login Options', 
+            component: <EventPermissions 
+                formData={formData} 
+                handleChange={handleChange} 
+                isSubmitting={isSubmitting}
+                errors={errors}
+            /> 
+        },
+        { 
+            name: 'Schedule', 
+            component: <EventRegistrationDates 
+                formData={formData} 
+                handleChange={handleChange} 
+                isSubmitting={isSubmitting}
+                errors={errors}
+            /> 
+        },
     ];
 
     if (isSubmitting || isLoading){
@@ -533,50 +998,76 @@ function EventForm({ event }) {
     }
 
     console.log("formData", formData);
+    console.log("errors", errors);
 
     return (
-        <div className="flex flex-col w-full p-5 bg-card text-text-color rounded-lg shadow-lg">
-            <h1 className="text-2xl font-bold mb-5">{event ? 'Edit Event' : 'Create Event'}</h1>
+        <div className="flex flex-col w-full p-6 bg-card text-text-color rounded-lg shadow-lg">
+            <div className="mb-6">
+                <h1 className="text-3xl font-bold text-text-color mb-2">
+                    {event ? 'Edit Event' : 'Create Event'}
+                </h1>
+                <p className="text-gray-600">
+                    {event ? 'Update your event details' : 'Create a new event by filling out the information below'}
+                </p>
+            </div>
 
-            <nav className="mb-5">
-                <ul className="flex justify-center list-none p-0 m-0 bg-secondary-card border-b border-border">
+            {/* Progress indicator */}
+            <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-600">Progress</span>
+                    <span className="text-sm text-gray-600">{activeTab + 1} of {tabs.length}</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                        className="bg-secondary h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${((activeTab + 1) / tabs.length) * 100}%` }}
+                    ></div>
+                </div>
+            </div>
+
+            <nav className="mb-6">
+                <ul className="flex flex-wrap justify-center list-none p-0 m-0 bg-secondary-card border-b border-border rounded-t-lg">
                     {tabs.map((tab, index) => (
-                        <li key={index} className="mr-5">
+                        <li key={index} className="flex-1 min-w-0">
                             <button
-                                className={`py-2 px-4 block ${
+                                className={`py-3 px-2 block w-full text-center text-sm font-medium transition-colors ${
                                     activeTab === index
-                                        ? 'text-primary-button-color border-b-2 border-primary-button-color'
-                                        : 'text-text-color hover:border-b-2 hover:border-primary-button-color hover:text-primary-button-color'
+                                        ? 'text-secondary border-b-2 border-secondary bg-primary'
+                                        : 'text-text-color hover:border-b-2 hover:border-secondary hover:text-secondary hover:bg-primary'
                                 }`}
-                                onClick={() => setActiveTab(index)} // Allow free navigation
+                                onClick={() => setActiveTab(index)}
                             >
-                                {tab.name}
+                                <span className="truncate">{tab.name}</span>
                             </button>
                         </li>
                     ))}
                 </ul>
             </nav>
 
-            {tabs[activeTab].component}
+            <div className="flex-1 mb-6">
+                {tabs[activeTab].component}
+            </div>
 
-            <div className="flex items-center justify-between mt-5">
+            <div className="flex items-center justify-between pt-4 border-t border-border">
                 {/* Previous Button */}
                 {activeTab > 0 ? (
                     <button
-                        className="bg-primary-button-color text-white py-2 px-4 rounded"
+                        className="bg-secondary-button-color hover:bg-gray-600 text-white py-2 px-6 rounded-lg transition-colors font-medium"
                         onClick={handlePrevious}
                     >
                         Previous
                     </button>
                 ) : (
-                    <div></div> // Placeholder to maintain alignment
+                    <div></div>
                 )}
+                
                 {/* Continue/Submit Button */}
                 <button
-                    className="bg-primary-button-color text-white py-2 px-4 rounded ml-auto"
+                    className="bg-secondary-button-color hover:bg-secondary-hover text-white py-2 px-6 rounded-lg transition-colors font-medium ml-auto"
                     onClick={handleContinue}
+                    disabled={isSubmitting}
                 >
-                    {activeTab < tabs.length - 1 ? 'Continue' : 'Submit'}
+                    {isSubmitting ? 'Submitting...' : (activeTab < tabs.length - 1 ? 'Continue' : 'Submit')}
                 </button>
             </div>
         </div>
