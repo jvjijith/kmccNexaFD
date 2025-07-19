@@ -6,14 +6,17 @@ import PopUpModal from "../ui/modal/modal";
 import TeamForm from "./teamForm";
 import LoadingScreen from "../ui/loading/loading";
 import { ToastContainer, toast } from 'react-toastify';
+import Pagination from "../ui/pagination/Pagination";
 
 function CatalogTable() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isApiLoading, setApiLoading] = useState(false);
   const [loading, setLoading] = useState(true); // Loading state
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
-  const { data, isLoading, error, refetch } = useGetData("teamData", "/catalogues", {});
+  const { data, isLoading, error, refetch } = useGetData("teamData", `/catalogues?page=${currentPage}&limit=${limit}`, {});
 
     // Simulate loading for 10 seconds before showing content
     useEffect(() => {
@@ -23,6 +26,10 @@ function CatalogTable() {
   
       return () => clearTimeout(timer); // Cleanup timeout on unmount
     }, []);
+
+    const handlePageChange = (page) => {
+      setCurrentPage(page);
+    };
 
   const navigate = useNavigate();
 
@@ -36,6 +43,7 @@ function CatalogTable() {
     setModalOpen(false);
   };
 
+  const totalPages = Math.ceil((data?.pagination?.totalCount || 0) / limit);
   
   
 
@@ -82,6 +90,13 @@ function CatalogTable() {
           ))}
         </Table.Body>
       </Table>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       <PopUpModal isOpen={isModalOpen} onClose={closeModal} title={"Edit Team"}>
         <TeamForm id={selectedTeam?.teamId} name={selectedTeam?.name} closeModal={closeModal} />
