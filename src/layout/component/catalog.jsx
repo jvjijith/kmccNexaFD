@@ -123,14 +123,10 @@ function Catalog({ catalogId }) {
     }
   }, [isEditingTitle]);
 
+  
   // API hooks
-  const { data: productData, isLoading: productLoading } = useGetData("products", "/product", {
-    params: { page: currentPage, limit: productsPerPage, search: search },
-  });
-
-  const { data: eventData, isLoading: eventLoading } = useGetData("event", `/events`, {
-    params: { page: currentPage, limit: productsPerPage, search: search },
-  });
+  const { data: productData, isLoading: productLoading } = useGetData("products", `/product?page=${currentPage}&limit=100`, {});
+  const { data: eventData, isLoading: eventLoading } = useGetData("event", `/events?page=${currentPage}&limit=100`, {});
 
   const { data: catalogData, isLoading: catalogLoading } = useGetData("catalog", `/catalogues/${catalogId}`);
   const { mutate: editCatalog, isPending: isEditing } = usePutData("editCatalog", `/catalogues/update/${catalogId}`);
@@ -317,10 +313,12 @@ function Catalog({ catalogId }) {
   };
 
   const selectedItems = dataType === "product" ? selectedProducts : selectedEvents;
-  const selectedItemsData = selectedItems.map(id => {
-    const items = dataType === "product" ? productData?.products : eventData?.events;
-    return items?.find(item => item._id === id);
-  }).filter(Boolean);
+  // Use the full list of products or events, not just currentItems
+const allItems = dataType === "product" ? productData?.products : eventData?.events;
+
+const selectedItemsData = selectedItems
+  .map(id => allItems.find(item => item._id === id))
+  .filter(Boolean);
 
   return (
     <div className="flex min-h-screen text-text-color">
@@ -555,7 +553,7 @@ function Catalog({ catalogId }) {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Catalog Preview</h2>
               <span className="text-sm text-gray-400">
-                {selectedItems.length} {dataType}(s) selected
+                {selectedItems.length-1} {dataType}(s) selected
               </span>
             </div>
             
