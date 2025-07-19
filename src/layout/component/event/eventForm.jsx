@@ -10,6 +10,7 @@ import EventRegistrationDates from './scheduleEvent';
 import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 function EventForm({ event }) {
     const [formData, setFormData] = useState({
@@ -54,6 +55,8 @@ function EventForm({ event }) {
     // Add validation state
     const [errors, setErrors] = useState({});
     const [touchedFields, setTouchedFields] = useState({});
+
+    const navigate = useNavigate();
 
     const mutationHook = event ? usePutData : usePostData;
     const api_url = event ? `/events/${event._id}` : '/events';
@@ -907,6 +910,7 @@ function EventForm({ event }) {
             
             await saveEvent(cleanedFormData);
             toast.success(event ? 'Event updated successfully!' : 'Event created successfully!');
+            navigate(`/event/list`);
         } catch (err) {
             console.error('Error submitting form:', err);
             toast.error('Error submitting form. Please try again.');
