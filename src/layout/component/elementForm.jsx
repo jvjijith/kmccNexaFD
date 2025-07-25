@@ -257,15 +257,12 @@ const ErrorMessage = ({ error }) => {
 // Form Field Component with validation
 const FormField = ({ label, required = false, error, children, className = "w-full sm:w-1/2 p-4", helpText }) => (
   <div className={className}>
-    <div className="mb-4">
-      <label className="block w-full mb-2 text-text-color primary-text">
-        {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      {helpText && <div className="text-sm text-gray-500 mb-2">{helpText}</div>}
-      {children}
-      <ErrorMessage error={error} />
-    </div>
+    <label className="block w-full mb-2 text-text-color primary-text">
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    {helpText && <div className="text-sm text-gray-500 mb-2">{helpText}</div>}
+    {children}
+    <ErrorMessage error={error} />
   </div>
 );
 
@@ -579,13 +576,13 @@ function ElementForm({ elementsDatas }) {
     setSuggestions([]);
   };
 
-  const getSuggestionValue = (suggestion) => suggestion.name;
+  const getSuggestionValue = (suggestion) => suggestion.code;
 
-const renderSuggestion = (suggestion) => (
-  <div>
-    {suggestion.name}
-  </div>
-);
+  const renderSuggestion = (suggestion) => (
+    <div className="p-2 hover:bg-gray-100 cursor-pointer text-gray-900">
+      {suggestion.name} ({suggestion.code})
+    </div>
+  );
 
   const addTitle = () => {
     const newTitle = {
@@ -855,7 +852,11 @@ console.log("elementsData",elementsData);
 console.log("uploadedImages",uploadedImages);
 
   return (
-    <div>
+    <div className="mx-auto">
+      <h2 className="text-2xl font-bold text-text-color mb-6">
+        {elementsDatas ? 'Edit Element' : 'Create New Element'}
+      </h2>
+
       <form onSubmit={handleSubmit}>
         {/* Validation Summary */}
         {Object.keys(errors).length > 0 && (
@@ -896,187 +897,222 @@ console.log("uploadedImages",uploadedImages);
           </div>
         )}
 
-        <div className="flex flex-wrap">
-  <FormField
-            label="Component Type"
-            required={true}
-            error={errors.componentType}
-            helpText="Select the type of element you want to create"
-          >
-            <Select
-              options={componentTypeOptions}
-              value={componentTypeOptions.find(option => option.value === elementsData.componentType) || null}
-              onChange={(selectedOption) => {
-                handleInputChange('componentType', selectedOption.value);
-                setChangeComponentType(true);
-              }}
-              placeholder="Select component type..."
-              classNames={{
-                control: ({ isFocused }) =>
-                  `bg-primary border ${
-                    errors.componentType ? 'border-red-500' :
-                    isFocused ? 'border-secondary' : 'border-focus-color'
-                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
-                singleValue: () => `text-focus-color`,
-                placeholder: () => `text-focus-color`,
-                menu: () => `bg-primary text-focus-color`,
-                option: ({ isSelected }) =>
-                  `cursor-pointer ${
-                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                  }`,
-              }}
-            />
-          </FormField>
+        {/* Basic Information Section */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-text-color mb-4 border-b border-border pb-2">
+            Basic Information
+          </h3>
+          <div className="flex flex-wrap -mx-2">
+            <FormField
+              label="Component Type"
+              required={true}
+              error={errors.componentType}
+              helpText="Select the type of element you want to create"
+            >
+              <Select
+                options={componentTypeOptions}
+                value={componentTypeOptions.find(option => option.value === elementsData.componentType) || null}
+                onChange={(selectedOption) => {
+                  handleInputChange('componentType', selectedOption.value);
+                  setChangeComponentType(true);
+                }}
+                placeholder="Select component type..."
+                classNames={{
+                  control: ({ isFocused }) =>
+                    `bg-white border-2 ${
+                      errors.componentType ? 'border-red-500' :
+                      isFocused ? 'border-blue-500' : 'border-gray-300'
+                    } rounded-md px-3 py-2 text-gray-900 shadow-sm hover:border-gray-400 transition-colors`,
+                  singleValue: () => `text-gray-900`,
+                  placeholder: () => `text-gray-500`,
+                  menu: () => `bg-white border border-gray-200 text-gray-900 rounded-md shadow-lg mt-1`,
+                  option: ({ isSelected, isFocused }) =>
+                    `cursor-pointer px-3 py-2 ${
+                      isSelected
+                        ? 'bg-blue-600 text-white'
+                        : isFocused
+                          ? 'bg-blue-50 text-gray-900'
+                          : 'text-gray-900 hover:bg-gray-50'
+                    }`,
+                }}
+              />
+            </FormField>
 
-          <FormField
-            label="Reference Name"
-            required={true}
-            error={errors.referenceName}
-            helpText="Enter a unique name to identify this element"
-          >
-            <input
-              type="text"
-              value={elementsData.referenceName}
-              onChange={(e) => handleInputChange('referenceName', e.target.value)}
-              placeholder="Enter reference name..."
-              className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
-                errors.referenceName ? 'border-red-500' : 'border-gray-300'
-              }`}
-            />
-          </FormField>
-        </div>
-
-        <div className="flex flex-wrap">
-          {/* Availability */}
-          <FormField
-            label="Availability"
-            error={errors.availability}
-            helpText="Select which apps this element will be available in"
-          >
-            <Select
-              isMulti
-              options={
-                appData?.apps?.map((app) => ({
-                  value: app._id,
-                  label: app.title,
-                })) || []
-              }
-              onChange={(selectedOptions) => {
-                const selectedAppObjects = selectedOptions.map((option) => ({
-                  appId: option.value,
-                }));
-                setElementsData((prevState) => ({
-                  ...prevState,
-                  availability: selectedAppObjects,
-                }));
-                // Clear availability errors
-                if (errors.availability) {
-                  setErrors(prev => {
-                    const newErrors = { ...prev };
-                    delete newErrors.availability;
-                    return newErrors;
-                  });
-                }
-              }}
-              value={elementsData.availability.map((item) => ({
-                value: item.appId,
-                label: appData?.apps?.find((app) => app._id === item.appId)?.title || item.appId,
-              }))}
-              isLoading={isAppLoading}
-              placeholder="Select apps..."
-              classNames={{
-                control: ({ isFocused }) =>
-                  `bg-primary border ${
-                    errors.availability ? 'border-red-500' :
-                    isFocused ? 'border-secondary' : 'border-focus-color'
-                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
-                singleValue: () => `text-focus-color`,
-                placeholder: () => `text-focus-color`,
-                menu: () => `bg-primary text-focus-color`,
-                option: ({ isSelected }) =>
-                  `cursor-pointer ${
-                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                  }`,
-                multiValue: () => `bg-primary-button-color text-btn-text-color rounded px-2 py-1 m-1`,
-                multiValueLabel: () => `text-btn-text-color`,
-                multiValueRemove: () => `text-btn-text-color hover:bg-red-500 rounded-r`,
-              }}
-            />
-          </FormField>
-
-          {/* View Text */}
-          <FormField
-            label="View Text"
-            helpText="Text to display for 'view more' or similar actions"
-          >
-            <input
-              type="text"
-              value={elementsData.viewText}
-              onChange={(e) => handleInputChange('viewText', e.target.value)}
-              placeholder="Enter view text..."
-              className="block w-full px-3 py-2 text-text-color secondary-card border border-gray-300 rounded"
-            />
-          </FormField>
-        </div>
-
-
-<div className="flex flex-wrap">
-{/* View All */}
-<div className="w-full sm:w-1/2 p-4">
-          <div className="mb-4">
-            <label className="block w-full mb-2 text-text-color primary-text">View All</label>
-            <Select
-              options={pageOptions}  // Dropdown options populated with page names
-              value={pageOptions.find(option => option.value === elementsData.viewAll)}  // Set the current selected value
-              onChange={handlePageSelection}  // Handle selection change
-              className="block w-full"
-              classNames={{
-                control: ({ isFocused }) =>
-                  `bg-primary border ${
-                    isFocused ? 'border-secondary' : 'border-focus-color'
-                  } border-b-2 rounded-none h-10 px-2 text-text-color`,
-                singleValue: () => `text-focus-color`,
-                placeholder: () => `text-focus-color`,
-                menu: () => `bg-primary text-focus-color`,
-                option: ({ isSelected }) =>
-                  `cursor-pointer ${
-                    isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-                  }`,
-              }}
-            />
+            <FormField
+              label="Reference Name"
+              required={true}
+              error={errors.referenceName}
+              helpText="Enter a unique name to identify this element"
+            >
+              <input
+                type="text"
+                value={elementsData.referenceName}
+                onChange={(e) => handleInputChange('referenceName', e.target.value)}
+                placeholder="Enter reference name..."
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded focus:border-primary-button-color focus:outline-none"
+              />
+            </FormField>
           </div>
         </div>
 
- {/* Hover Effect */}
- <div className="w-full sm:w-1/2 p-4">
-          <label className="block w-full mb-2 text-text-color primary-text">Hover Effect</label>
-        <Select
-          options={[
-            { value: 'none', label: 'None' },
-            { value: 'shadow', label: 'Shadow' },
-            { value: 'scale', label: 'Scale' },
-            { value: 'border', label: 'Border' },
-            { value: 'zoomIn', label: 'Zoom In' },
-            { value: 'zoomOut', label: 'Zoom Out' }
-          ]}
-          value={{ value: elementsData.hoverEffect, label: elementsData.hoverEffect }}
-          onChange={(selectedOption) => handleInputChange('hoverEffect', selectedOption.value )}
-          placeholder="Hover Effect"
-          classNames={{
-        control: ({ isFocused }) =>
-          `bg-primary border ${
-            isFocused ? 'border-secondary' : 'border-focus-color'
-          } border-b-2 rounded-none h-10 px-2 text-text-color`,
-        singleValue: () => `text-focus-color`,
-        placeholder: () => `text-focus-color`,
-        menu: () => `bg-primary text-focus-color`,
-        option: ({ isSelected }) =>
-          `cursor-pointer ${
-            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-          }`,
-      }}
-        />
- </div>
+        {/* Configuration Section */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-text-color mb-4 border-b border-border pb-2">
+            Configuration
+          </h3>
+          <div className="flex flex-wrap -mx-2">
+            {/* Availability */}
+            <FormField
+              label="Availability"
+              error={errors.availability}
+              helpText="Select which apps this element will be available in"
+            >
+              <Select
+                isMulti
+                options={
+                  appData?.apps?.map((app) => ({
+                    value: app._id,
+                    label: app.title,
+                  })) || []
+                }
+                onChange={(selectedOptions) => {
+                  const selectedAppObjects = selectedOptions.map((option) => ({
+                    appId: option.value,
+                  }));
+                  setElementsData((prevState) => ({
+                    ...prevState,
+                    availability: selectedAppObjects,
+                  }));
+                  // Clear availability errors
+                  if (errors.availability) {
+                    setErrors(prev => {
+                      const newErrors = { ...prev };
+                      delete newErrors.availability;
+                      return newErrors;
+                    });
+                  }
+                }}
+                value={elementsData.availability.map((item) => ({
+                  value: item.appId,
+                  label: appData?.apps?.find((app) => app._id === item.appId)?.title || item.appId,
+                }))}
+                isLoading={isAppLoading}
+                placeholder="Select apps..."
+                classNames={{
+                  control: ({ isFocused }) =>
+                    `bg-white border-2 ${
+                      errors.availability ? 'border-red-500' :
+                      isFocused ? 'border-blue-500' : 'border-gray-300'
+                    } rounded-md px-3 py-2 text-gray-900 shadow-sm hover:border-gray-400 transition-colors`,
+                  singleValue: () => `text-gray-900`,
+                  placeholder: () => `text-gray-500`,
+                  menu: () => `bg-white border border-gray-200 text-gray-900 rounded-md shadow-lg mt-1`,
+                  option: ({ isSelected, isFocused }) =>
+                    `cursor-pointer px-3 py-2 ${
+                      isSelected
+                        ? 'bg-blue-600 text-white'
+                        : isFocused
+                          ? 'bg-blue-50 text-gray-900'
+                          : 'text-gray-900 hover:bg-gray-50'
+                    }`,
+                  multiValue: () => `bg-blue-100 text-blue-800 rounded px-2 py-1 m-1`,
+                  multiValueLabel: () => `text-blue-800`,
+                  multiValueRemove: () => `text-blue-800 hover:bg-red-500 hover:text-white rounded-r`,
+                }}
+              />
+            </FormField>
+
+            {/* View Text */}
+            <FormField
+              label="View Text"
+              helpText="Text to display for 'view more' or similar actions"
+            >
+              <input
+                type="text"
+                value={elementsData.viewText}
+                onChange={(e) => handleInputChange('viewText', e.target.value)}
+                placeholder="Enter view text..."
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded focus:border-primary-button-color focus:outline-none"
+              />
+            </FormField>
+          </div>
+        </div>
+
+
+        {/* Additional Settings Section */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-text-color mb-4 border-b border-border pb-2">
+            Additional Settings
+          </h3>
+          <div className="flex flex-wrap -mx-2">
+            {/* View All */}
+            <FormField
+              label="View All"
+              helpText="Select a page to redirect to when 'view all' is clicked"
+            >
+              <Select
+                options={pageOptions}
+                value={pageOptions.find(option => option.value === elementsData.viewAll)}
+                onChange={handlePageSelection}
+                placeholder="Select a page..."
+                classNames={{
+                  control: ({ isFocused }) =>
+                    `bg-white border-2 ${
+                      isFocused ? 'border-blue-500' : 'border-gray-300'
+                    } rounded-md px-3 py-2 text-gray-900 shadow-sm hover:border-gray-400 transition-colors`,
+                  singleValue: () => `text-gray-900`,
+                  placeholder: () => `text-gray-500`,
+                  menu: () => `bg-white border border-gray-200 text-gray-900 rounded-md shadow-lg mt-1`,
+                  option: ({ isSelected, isFocused }) =>
+                    `cursor-pointer px-3 py-2 ${
+                      isSelected
+                        ? 'bg-blue-600 text-white'
+                        : isFocused
+                          ? 'bg-blue-50 text-gray-900'
+                          : 'text-gray-900 hover:bg-gray-50'
+                    }`,
+                }}
+              />
+            </FormField>
+
+            {/* Hover Effect */}
+            <FormField
+              label="Hover Effect"
+              helpText="Select the hover effect for this element"
+            >
+              <Select
+                options={[
+                  { value: 'none', label: 'None' },
+                  { value: 'shadow', label: 'Shadow' },
+                  { value: 'scale', label: 'Scale' },
+                  { value: 'border', label: 'Border' },
+                  { value: 'zoomIn', label: 'Zoom In' },
+                  { value: 'zoomOut', label: 'Zoom Out' }
+                ]}
+                value={{ value: elementsData.hoverEffect, label: elementsData.hoverEffect }}
+                onChange={(selectedOption) => handleInputChange('hoverEffect', selectedOption.value )}
+                placeholder="Select hover effect..."
+                classNames={{
+                  control: ({ isFocused }) =>
+                    `bg-white border-2 ${
+                      isFocused ? 'border-blue-500' : 'border-gray-300'
+                    } rounded-md px-3 py-2 text-gray-900 shadow-sm hover:border-gray-400 transition-colors`,
+                  singleValue: () => `text-gray-900`,
+                  placeholder: () => `text-gray-500`,
+                  menu: () => `bg-white border border-gray-200 text-gray-900 rounded-md shadow-lg mt-1`,
+                  option: ({ isSelected, isFocused }) =>
+                    `cursor-pointer px-3 py-2 ${
+                      isSelected
+                        ? 'bg-blue-600 text-white'
+                        : isFocused
+                          ? 'bg-blue-50 text-gray-900'
+                          : 'text-gray-900 hover:bg-gray-50'
+                    }`,
+                }}
+              />
+            </FormField>
+          </div>
+        </div>
 
         {/* Audio URL */}
         {/* <div className="flex flex-wrap mb-4">
@@ -1232,9 +1268,6 @@ console.log("uploadedImages",uploadedImages);
     </div>
   </div>
 )}
-
-
-        </div>
 
         {/* Swiper Options Settings */}
         {(elementsData.componentType === "swimlane") && (
@@ -1653,373 +1686,404 @@ console.log("uploadedImages",uploadedImages);
 
 
 
-        {/* Number Items */}
-        <div className="mb-4">
-          <label className="block w-full mb-2 text-text-color primary-text">
-            Number of Items (Web, Android, iOS)
-          </label>
+        {/* Number Items Section */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-text-color mb-4 border-b border-border pb-2">
+            Number of Items
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Specify how many items to display on each platform
+          </p>
           {errors.numberItems && (
-            <div className="text-red-500 text-sm mb-2">
+            <div className="text-red-500 text-sm mb-4">
               {Object.values(errors.numberItems).join(', ')}
             </div>
           )}
+          <div className="flex flex-wrap -mx-2">
+            <FormField label="Web Items" error={errors.numberItems?.web} className="w-full sm:w-1/3 p-4">
+              <input
+                type="number"
+                min="0"
+                value={elementsData.numberItems.web}
+                onChange={(e) => {
+                  handleInputChange('numberItems', { ...elementsData.numberItems, web: e.target.value });
+                  // Clear specific platform error
+                  if (errors.numberItems?.web) {
+                    setErrors(prev => ({
+                      ...prev,
+                      numberItems: {
+                        ...prev.numberItems,
+                        web: undefined
+                      }
+                    }));
+                  }
+                }}
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded focus:border-primary-button-color focus:outline-none"
+                placeholder="Number of items for web"
+              />
+            </FormField>
 
-          <div className="notes-container p-4 bg-secondary-card rounded-lg">
-            <div className="flex gap-4">
-              <div className="w-1/3">
-                <input
-                  type="number"
-                  min="0"
-                  value={elementsData.numberItems.web}
-                  onChange={(e) => {
-                    handleInputChange('numberItems', { ...elementsData.numberItems, web: e.target.value });
-                    // Clear specific platform error
-                    if (errors.numberItems?.web) {
-                      setErrors(prev => ({
-                        ...prev,
-                        numberItems: {
-                          ...prev.numberItems,
-                          web: undefined
-                        }
-                      }));
-                    }
-                  }}
-                  className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
-                    errors.numberItems?.web ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Web"
-                />
-                {errors.numberItems?.web && (
-                  <div className="text-red-500 text-xs mt-1">{errors.numberItems.web}</div>
-                )}
-              </div>
-              <div className="w-1/3">
-                <input
-                  type="number"
-                  min="0"
-                  value={elementsData.numberItems.android}
-                  onChange={(e) => {
-                    handleInputChange('numberItems', { ...elementsData.numberItems, android: e.target.value });
-                    // Clear specific platform error
-                    if (errors.numberItems?.android) {
-                      setErrors(prev => ({
-                        ...prev,
-                        numberItems: {
-                          ...prev.numberItems,
-                          android: undefined
-                        }
-                      }));
-                    }
-                  }}
-                  className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
-                    errors.numberItems?.android ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Android"
-                />
-                {errors.numberItems?.android && (
-                  <div className="text-red-500 text-xs mt-1">{errors.numberItems.android}</div>
-                )}
-              </div>
-              <div className="w-1/3">
-                <input
-                  type="number"
-                  min="0"
-                  value={elementsData.numberItems.iOS}
-                  onChange={(e) => {
-                    handleInputChange('numberItems', { ...elementsData.numberItems, iOS: e.target.value });
-                    // Clear specific platform error
-                    if (errors.numberItems?.iOS) {
-                      setErrors(prev => ({
-                        ...prev,
-                        numberItems: {
-                          ...prev.numberItems,
-                          iOS: undefined
-                        }
-                      }));
-                    }
-                  }}
-                  className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
-                    errors.numberItems?.iOS ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="iOS"
-                />
-                {errors.numberItems?.iOS && (
-                  <div className="text-red-500 text-xs mt-1">{errors.numberItems.iOS}</div>
-                )}
-              </div>
-            </div>
+            <FormField label="Android Items" error={errors.numberItems?.android} className="w-full sm:w-1/3 p-4">
+              <input
+                type="number"
+                min="0"
+                value={elementsData.numberItems.android}
+                onChange={(e) => {
+                  handleInputChange('numberItems', { ...elementsData.numberItems, android: e.target.value });
+                  // Clear specific platform error
+                  if (errors.numberItems?.android) {
+                    setErrors(prev => ({
+                      ...prev,
+                      numberItems: {
+                        ...prev.numberItems,
+                        android: undefined
+                      }
+                    }));
+                  }
+                }}
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded focus:border-primary-button-color focus:outline-none"
+                placeholder="Number of items for Android"
+              />
+            </FormField>
+
+            <FormField label="iOS Items" error={errors.numberItems?.iOS} className="w-full sm:w-1/3 p-4">
+              <input
+                type="number"
+                min="0"
+                value={elementsData.numberItems.iOS}
+                onChange={(e) => {
+                  handleInputChange('numberItems', { ...elementsData.numberItems, iOS: e.target.value });
+                  // Clear specific platform error
+                  if (errors.numberItems?.iOS) {
+                    setErrors(prev => ({
+                      ...prev,
+                      numberItems: {
+                        ...prev.numberItems,
+                        iOS: undefined
+                      }
+                    }));
+                  }
+                }}
+                className="block w-full px-3 py-2 text-text-color secondary-card border rounded focus:border-primary-button-color focus:outline-none"
+                placeholder="Number of items for iOS"
+              />
+            </FormField>
           </div>
         </div>
 
         {/* Titles */}
-        <div className="mb-4">
+        <div className="mb-8 bg-gray-50 p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <label className="block w-full mb-2 text-text-color primary-text">Titles</label>
-            <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addTitle}>Add</button>
+            <h3 className="text-lg font-semibold text-text-color border-b border-border pb-2">Titles</h3>
+            <button
+              type="button"
+              className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded hover:bg-primary-button-hover transition-colors"
+              onClick={addTitle}
+            >
+              Add Title
+            </button>
           </div>
-          <div className="notes-container p-4 bg-secondary-card rounded-lg">
-            {elementsData.title.length === 0 && <p className='text-text-color'>No Titles added</p>}
+          <div className="space-y-3">
+            {elementsData.title.length === 0 && (
+              <p className='text-gray-400 text-sm'>No titles added</p>
+            )}
             {elementsData.title?.map((title, index) => (
-              <div key={index} className="mb-4">
-                <div className="flex gap-4 mb-2">
-                  <div className="w-1/3">
-                    <Autosuggest
-                      suggestions={suggestions}
-                      onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
-                      onSuggestionsClearRequested={handleSuggestionsClearRequested}
-                      getSuggestionValue={getSuggestionValue}
-                      renderSuggestion={renderSuggestion}
-                      inputProps={{
-                        placeholder: 'Enter Language',
-                        value: title.lanCode,
-                        onChange: (e, { newValue }) => {
-                          handleNestedChange('title', index, 'lanCode', newValue);
-                          // Clear specific title error
-                          if (errors.title?.[index]?.lanCode) {
-                            setErrors(prev => ({
-                              ...prev,
-                              title: {
-                                ...prev.title,
-                                [index]: {
-                                  ...prev.title[index],
-                                  lanCode: undefined
-                                }
-                              }
-                            }));
-                          }
-                        },
-                        className: `block w-full px-3 py-2 text-text-color secondary-card border rounded ${
-                          errors.title?.[index]?.lanCode ? 'border-red-500' : 'border-gray-300'
-                        }`
-                      }}
-                      theme={{
-                        container: 'relative',
-                        suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
-                        suggestion: 'p-2 cursor-pointer text-gray-900',
-                        suggestionHighlighted: 'bg-blue-500 text-white'
-                      }}
-                    />
-                    {errors.title?.[index]?.lanCode && (
-                      <div className="text-red-500 text-xs mt-1">{errors.title[index].lanCode}</div>
-                    )}
-                  </div>
-                  <div className="w-2/3">
-                    <input
-                      type="text"
-                      value={title.name}
-                      onChange={(e) => {
-                        handleNestedChange('title', index, 'name', e.target.value);
+              <div key={index} className="flex gap-3 items-start">
+                <div className="flex-1">
+                  <Autosuggest
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={handleSuggestionsClearRequested}
+                    getSuggestionValue={getSuggestionValue}
+                    renderSuggestion={renderSuggestion}
+                    inputProps={{
+                      placeholder: 'Language Code (e.g., en, es)',
+                      value: title.lanCode,
+                      onChange: (e, { newValue }) => {
+                        handleNestedChange('title', index, 'lanCode', newValue);
                         // Clear specific title error
-                        if (errors.title?.[index]?.name) {
+                        if (errors.title?.[index]?.lanCode) {
                           setErrors(prev => ({
                             ...prev,
                             title: {
                               ...prev.title,
                               [index]: {
                                 ...prev.title[index],
-                                name: undefined
+                                lanCode: undefined
                               }
                             }
                           }));
                         }
+                      },
+                      className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded focus:border-primary-button-color focus:outline-none'
+                    }}
+                    theme={{
+                      container: 'relative',
+                      suggestionsContainer: 'absolute w-full bg-secondary-card border rounded-md z-10 mt-1',
+                      suggestion: 'p-2 cursor-pointer hover:bg-gray-700 text-gray-900',
+                      suggestionHighlighted: 'bg-primary-button-color text-btn-text-color'
+                    }}
+                  />
+                  {errors.title?.[index]?.lanCode && (
+                    <div className="text-red-500 text-sm mt-1">{errors.title[index].lanCode}</div>
+                  )}
+                </div>
+                <div className="flex-2">
+                  <input
+                    type="text"
+                    value={title.name}
+                    onChange={(e) => {
+                      handleNestedChange('title', index, 'name', e.target.value);
+                      // Clear specific title error
+                      if (errors.title?.[index]?.name) {
+                        setErrors(prev => ({
+                          ...prev,
+                          title: {
+                            ...prev.title,
+                            [index]: {
+                              ...prev.title[index],
+                              name: undefined
+                            }
+                          }
+                        }));
+                        }
                       }}
-                      className={`block w-full px-3 py-2 text-text-color secondary-card border rounded ${
-                        errors.title?.[index]?.name ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className="block w-full px-3 py-2 text-text-color secondary-card border rounded focus:border-primary-button-color focus:outline-none"
                       placeholder="Title Name"
                     />
                     {errors.title?.[index]?.name && (
-                      <div className="text-red-500 text-xs mt-1">{errors.title[index].name}</div>
+                      <div className="text-red-500 text-sm mt-1">{errors.title[index].name}</div>
                     )}
                   </div>
                   <button
                     type="button"
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                    className="bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700"
                     onClick={() => removeTitle(index)}
                   >
                     Remove
                   </button>
                 </div>
+              ))}
+            </div>
+          </div>
+
+
+        {/* Description */}
+        <div className="mb-8 bg-gray-50 p-6 rounded-lg border border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-text-color border-b border-border pb-2">Description</h3>
+            <button
+              type="button"
+              className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded hover:bg-primary-button-hover transition-colors"
+              onClick={addDescription}
+            >
+              Add Description
+            </button>
+          </div>
+          <div className="space-y-3">
+            {elementsData.description.length === 0 && (
+              <p className='text-gray-400 text-sm'>No descriptions added</p>
+            )}
+            {elementsData.description?.map((desc, index) => (
+              <div key={index} className="flex gap-3 items-start">
+                <div className="flex-1">
+                  <Autosuggest
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={handleSuggestionsClearRequested}
+                    getSuggestionValue={getSuggestionValue}
+                    renderSuggestion={renderSuggestion}
+                    inputProps={{
+                      placeholder: 'Language Code (e.g., en, es)',
+                      value: desc.lanCode,
+                      onChange: (e, { newValue }) =>
+                        handleNestedChange('description', index, 'lanCode', newValue),
+                      className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded focus:border-primary-button-color focus:outline-none'
+                    }}
+                    theme={{
+                      container: 'relative',
+                      suggestionsContainer: 'absolute w-full bg-secondary-card border rounded-md z-10 mt-1',
+                      suggestion: 'p-2 cursor-pointer hover:bg-gray-700 text-gray-900',
+                      suggestionHighlighted: 'bg-primary-button-color text-btn-text-color'
+                    }}
+                  />
+                </div>
+                <div className="flex-2">
+                  <textarea
+                    value={desc.paragraph}
+                    onChange={(e) => handleNestedChange('description', index, 'paragraph', e.target.value)}
+                    className="block w-full px-3 py-2 text-text-color secondary-card border rounded focus:border-primary-button-color focus:outline-none"
+                    placeholder="Description"
+                    rows="3"
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700"
+                  onClick={() => removeDescription(index)}
+                >
+                  Remove
+                </button>
               </div>
             ))}
           </div>
         </div>
 
-
-        {/* Description */}
-        <div className="mb-4">
-<div className="flex items-center justify-between mb-4">
-  <label className="block w-full mb-2 text-text-color primary-text">Description</label>
-  <button type="button" className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded" onClick={addDescription}>Add</button>
-</div>
-<div className="notes-container p-4 bg-secondary-card rounded-lg">
-  {elementsData.description.length === 0 && <p className='text-text-color'>No Descriptions added</p>}
-  {elementsData.description?.map((desc, index) => (
-    <div className="flex gap-4 mb-2" key={index}>
-      <Autosuggest
-  suggestions={suggestions}
-  onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
-  onSuggestionsClearRequested={handleSuggestionsClearRequested}
-  getSuggestionValue={getSuggestionValue}
-  renderSuggestion={renderSuggestion}
-  inputProps={{
-    placeholder: 'Enter Language',
-    value: desc.lanCode,
-    onChange: (e, { newValue }) =>
-      handleNestedChange('description', index, 'lanCode', newValue),
-    className: 'block w-full px-3 py-2 text-text-color secondary-card border rounded'
-  }}
-  theme={{
-    container: 'relative', // Make sure the container is relatively positioned
-    suggestionsContainer: 'absolute w-full secondary-card rounded-md z-10',
-    suggestion: 'p-2 cursor-pointer',
-    suggestionHighlighted: 'bg-blue-500 text-black'
-  }}
-/>
-      <textarea
-        type="text"
-        value={desc.paragraph}
-        onChange={(e) => handleNestedChange('description', index, 'paragraph', e.target.value)}
-        className="block w-full px-3 py-2 text-text-color secondary-card border rounded"
-        placeholder="Description"
-      />
-      <button
-        type="button"
-        className="bg-secondary-card text-text-color px-4 py-2 rounded ml-2"
-        onClick={() => removeDescription(index)}
-      >
-        Remove
-      </button>
-    </div>
-  ))}
-</div>
-</div>
-
         {/* Items */}
-        <div className="mb-4">
-        <div className="flex items-center justify-between mb-4">
-      <label className="block w-full mb-2 text-text-color primary-text">Items</label>
-      <button type="button" onClick={handleAddItem} className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded">Add</button>
-      </div>
-      <div className="notes-container p-4 bg-secondary-card rounded-lg">
-          {(elementsData?.items?.length===0)&&<p className='text-text-color'>No Items added</p>}
-      {elementsData.items.map((item, index) => (
-        <div key={index} className="flex gap-4 mb-2">
-          <Select
-  options={[
-    { value: 'Catalogue', label: 'Catalogue' },
-    { value: 'Page', label: 'Page' },
-  ].filter((option) => {
-    // Filter out 'Catalogue' if it's already added
-    const isCatalogueAdded = elementsData?.items.some((existingItem) => existingItem.itemType === 'Catalogue');
-    return !(isCatalogueAdded && option.value === 'Catalogue');
-  })}
-  value={{ value: item.itemType, label: item.itemType.charAt(0).toUpperCase() + item.itemType.slice(1) }}
-  onChange={(selectedOption) => handleNestedChange('items', index, 'itemType', selectedOption.value)}
-  className="block w-1/2"
-  classNames={{
-    control: ({ isFocused }) =>
-      `bg-primary border ${
-        isFocused ? 'border-secondary' : 'border-focus-color'
-      } border-b-2 rounded-none h-10 px-2 text-text-color`,
-    singleValue: () => `text-focus-color`,
-    placeholder: () => `text-focus-color`,
-    menu: () => `bg-primary text-focus-color`,
-    option: ({ isSelected }) =>
-      `cursor-pointer ${
-        isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-      }`,
-  }}
-/>
-
-          <Select
-            options={getItemOptions(item.itemType)}
-            value={getItemOptions(item.itemType)?.find(option => option.value === item.itemId)}
-            onChange={(selectedOption) => handleNestedChange('items', index, 'itemId', selectedOption.value)}
-            className="block w-1/2"
-            classNames={{
-        control: ({ isFocused }) =>
-          `bg-primary border ${
-            isFocused ? 'border-secondary' : 'border-focus-color'
-          } border-b-2 rounded-none h-10 px-2 text-text-color`,
-        singleValue: () => `text-focus-color`,
-        placeholder: () => `text-focus-color`,
-        menu: () => `bg-primary text-focus-color`,
-        option: ({ isSelected }) =>
-          `cursor-pointer ${
-            isSelected ? 'bg-focus-color text-primary' : 'bg-primary text-focus-color'
-          }`,
-      }}
-          />
-           <button
-           type="button"
-            onClick={() => handleRemoveItem(index)}
-            className="bg-secondary-card text-text-color px-4 py-2 rounded"
-          >
-            Remove
-          </button>
-        </div>
-      ))}
-      
-
-      {/* DnD kit implementation */}
-      {!(elementsData?.items?.length===0)&&
-      <DndContext onDragEnd={onDragEnd}>
-        <SortableContext items={elementsData.items.map((_, index) => index)}>
-          <table className="mt-4 w-full">
-            <thead>
-              <tr className="border-gray-700 bg-secondary-card text-text-color">
-                <th className="border-gray-700 bg-secondary-card text-text-color rounded-l-lg">Item Type</th>
-                <th className="border-gray-700 bg-secondary-card text-text-color rounded-r-lg">Item ID</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {elementsData?.items?.map((item, index) => (
-                <SortableRow key={index} index={index} item={item} />
-              ))}
-            </tbody>
-          </table>
-        </SortableContext>
-      </DndContext>}
-    </div>
-    
-    </div>
-
-
-
-
-        {/* With Text */}
-        <div className="flex flex-wrap mb-4">
-          <div className="w-full sm:w-1/2 p-4">
-            <label className="relative inline-flex items-center cursor-pointer primary-text">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                checked={elementsData.withText}
-                onChange={() => handleInputChange('withText', !elementsData.withText )}
-              />
-              <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-              <span className="ms-3 text-md font-medium text-text-color">With Text</span>
-            </label>
+        <div className="mb-8 bg-gray-50 p-6 rounded-lg border border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-text-color border-b border-border pb-2">Items</h3>
+            <button
+              type="button"
+              onClick={handleAddItem}
+              className="bg-primary-button-color text-btn-text-color px-4 py-2 rounded hover:bg-primary-button-hover transition-colors"
+            >
+              Add Item
+            </button>
           </div>
+          <p className="text-sm text-gray-600 mb-4">
+            Select items to include in this element. You can drag and drop to reorder them.
+          </p>
 
+          {elementsData.items.length > 0 ? (
+            <div>
+              <h4 className="text-md font-medium text-gray-700 mb-3">
+                Selected Items ({elementsData.items.length})
+              </h4>
+              <div className="space-y-3 mb-6">
+                {elementsData.items.map((item, index) => (
+                  <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                    <div className="flex gap-3 items-center">
+                      <div className="flex-1">
+                        <Select
+                          options={[
+                            { value: 'Catalogue', label: 'Catalogue' },
+                            { value: 'Page', label: 'Page' },
+                          ].filter((option) => {
+                            // Filter out 'Catalogue' if it's already added
+                            const isCatalogueAdded = elementsData?.items.some((existingItem) => existingItem.itemType === 'Catalogue');
+                            return !(isCatalogueAdded && option.value === 'Catalogue');
+                          })}
+                          value={{ value: item.itemType, label: item.itemType.charAt(0).toUpperCase() + item.itemType.slice(1) }}
+                          onChange={(selectedOption) => handleNestedChange('items', index, 'itemType', selectedOption.value)}
+                          placeholder="Select item type..."
+                          classNames={{
+                            control: ({ isFocused }) =>
+                              `bg-white border-2 ${
+                                isFocused ? 'border-blue-500' : 'border-gray-300'
+                              } rounded-md px-3 py-2 text-gray-900 shadow-sm hover:border-gray-400 transition-colors`,
+                            singleValue: () => `text-gray-900`,
+                            placeholder: () => `text-gray-500`,
+                            menu: () => `bg-white border border-gray-200 text-gray-900 rounded-md shadow-lg mt-1`,
+                            option: ({ isSelected, isFocused }) =>
+                              `cursor-pointer px-3 py-2 ${
+                                isSelected
+                                  ? 'bg-blue-600 text-white'
+                                  : isFocused
+                                    ? 'bg-blue-50 text-gray-900'
+                                    : 'text-gray-900 hover:bg-gray-50'
+                              }`,
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <Select
+                          options={getItemOptions(item.itemType)}
+                          value={getItemOptions(item.itemType)?.find(option => option.value === item.itemId)}
+                          onChange={(selectedOption) => handleNestedChange('items', index, 'itemId', selectedOption.value)}
+                          placeholder="Select item..."
+                          classNames={{
+                            control: ({ isFocused }) =>
+                              `bg-white border-2 ${
+                                isFocused ? 'border-blue-500' : 'border-gray-300'
+                              } rounded-md px-3 py-2 text-gray-900 shadow-sm hover:border-gray-400 transition-colors`,
+                            singleValue: () => `text-gray-900`,
+                            placeholder: () => `text-gray-500`,
+                            menu: () => `bg-white border border-gray-200 text-gray-900 rounded-md shadow-lg mt-1`,
+                            option: ({ isSelected, isFocused }) =>
+                              `cursor-pointer px-3 py-2 ${
+                                isSelected
+                                  ? 'bg-blue-600 text-white'
+                                  : isFocused
+                                    ? 'bg-blue-50 text-gray-900'
+                                    : 'text-gray-900 hover:bg-gray-50'
+                              }`,
+                          }}
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveItem(index)}
+                        className="ml-3 px-3 py-1 text-sm bg-red-50 text-red-600 border border-red-200 rounded-md hover:bg-red-100 hover:border-red-300 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-          {/* With Description */}
-          <div className="w-full sm:w-1/2 p-4">
-            <label className="relative inline-flex items-center cursor-pointer primary-text">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                checked={elementsData.withDescription}
-                onChange={() => handleInputChange('withDescription',  !elementsData.withDescription )}
-              />
-              <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-              <span className="ms-3 text-md font-medium text-text-color">With Description</span>
-            </label>
-          </div>
+              {/* DnD kit implementation for reordering */}
+              {elementsData.items.length > 1 && (
+                <div className="mt-4">
+                  <h4 className="text-md font-medium text-gray-700 mb-3">Drag to Reorder</h4>
+                  <DndContext onDragEnd={onDragEnd}>
+                    <SortableContext items={elementsData.items.map((_, index) => index)}>
+                      <div className="space-y-2">
+                        {elementsData?.items?.map((item, index) => (
+                          <SortableItemRow key={index} index={index} item={item} />
+                        ))}
+                      </div>
+                    </SortableContext>
+                  </DndContext>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500 bg-white rounded-lg border-2 border-dashed border-gray-300">
+              <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              <p className="text-sm">No items selected</p>
+              <p className="text-xs text-gray-400 mt-1">Use the button above to add items to this element</p>
+            </div>
+          )}
         </div>
 
-
+        {/* Display Options Section */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-text-color mb-4 border-b border-border pb-2">
+            Display Options
+          </h3>
+          <div className="flex flex-wrap -mx-2">
+            {/* With Text */}
+            <FormField label="With Text" className="w-full sm:w-1/2 p-4">
+              <label className="relative inline-flex items-center cursor-pointer primary-text">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={elementsData.withText}
+                  onChange={() => handleInputChange('withText', !elementsData.withText )}
+                />
+                <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                <span className="ms-3 text-md font-medium text-text-color">With Text</span>
+              </label>
+            </FormField>
+            {/* With Description */}
+            <FormField label="With Description" className="w-full sm:w-1/2 p-4">
+              <label className="relative inline-flex items-center cursor-pointer primary-text">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={elementsData.withDescription}
+                  onChange={() => handleInputChange('withDescription',  !elementsData.withDescription )}
+                />
+                <div className="w-11 h-6 secondary-card peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-600 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-orange after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                <span className="ms-3 text-md font-medium text-text-color">With Description</span>
+              </label>
+            </FormField>
+          </div>
+        </div>
 
         {/* Submit Button */}
         {renderSubmitButtons()}
@@ -2027,28 +2091,58 @@ console.log("uploadedImages",uploadedImages);
       <ToastContainer />
     </div>
   );
+
+  // SortableItemRow component moved inside ElementForm to access data
+  function SortableItemRow({ index, item }) {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: index });
+
+    const style = {
+      transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
+      transition,
+    };
+
+    // Helper function to get item name from ID
+    const getItemName = (itemType, itemId) => {
+      if (!itemId) return 'Not selected';
+
+      if (itemType === 'Catalogue') {
+        const catalogue = cataloguesData?.catalogues?.find(cat => cat._id === itemId);
+        return catalogue?.name || itemId;
+      } else if (itemType === 'Page') {
+        const page = pagesData?.pages?.find(page => page._id === itemId);
+        return page?.title?.[0]?.title || page?.slug || itemId;
+      }
+      return itemId;
+    };
+
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3 flex-1">
+            <div
+              {...attributes}
+              {...listeners}
+              className="cursor-grab hover:cursor-grabbing p-1 text-gray-400 hover:text-gray-600"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M2 4h2v2H2V4zm4 0h2v2H6V4zm4 0h2v2h-2V4zM2 8h2v2H2V8zm4 0h2v2H6V8zm4 0h2v2h-2V8zM2 12h2v2H2v-2zm4 0h2v2H6v-2zm4 0h2v2h-2v-2z"/>
+              </svg>
+            </div>
+            <div className="flex-1">
+              <div className="font-medium text-gray-900">
+                {item.itemType}: {getItemName(item.itemType, item.itemId)}
+              </div>
+              <div className="text-sm text-gray-500">Drag to reorder</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
-
-const SortableRow = ({ index, item }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: index });
-
-  const style = {
-    transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
-    transition,
-  };
-
-  return (
-    <tr
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="border-gray-700 bg-secondary-card text-center"
-    >
-      <td className="whitespace-nowrap font-medium text-text-color rounded-l-lg">{item.itemType}</td>
-      <td className="whitespace-nowrap font-medium text-text-color rounded-r-lg">{item.itemId}</td>
-    </tr>
-  );
-};
 
 export default ElementForm;
