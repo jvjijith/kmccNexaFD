@@ -17,6 +17,8 @@ function EventForm({ event }) {
         name: '',
         description: '',
         type: 'public',
+        eventType: '',
+        customAttendance: false,
         metadata: {
             name: '',
             description: '',
@@ -95,6 +97,15 @@ function EventForm({ event }) {
             case 'type':
                 if (!value || !['public', 'members'].includes(value)) {
                     errors.type = 'Please select a valid event type';
+                }
+                break;
+
+            case 'eventType':
+                const validEventTypes = ['donation', 'conference', 'workshop', 'seminar', 'meetup', 'webinar', 'fundraiser', 'networking', 'training'];
+                if (!value || value.trim() === '') {
+                    errors.eventType = 'Event category is required';
+                } else if (!validEventTypes.includes(value)) {
+                    errors.eventType = 'Please select a valid event category';
                 }
                 break;
 
@@ -226,8 +237,8 @@ function EventForm({ event }) {
 
         // Validate basic fields
         const fieldsToValidate = [
-            'name', 'description', 'type', 'seatsAvailable', 'totalregisteredSeats',
-            'metadata.name', 'metadata.description', 'location', 'startingDate', 
+            'name', 'description', 'type', 'eventType', 'seatsAvailable', 'totalregisteredSeats',
+            'metadata.name', 'metadata.description', 'location', 'startingDate',
             'endingDate', 'registrationStartDate', 'registrationEndDate', 'paymentType'
         ];
 
@@ -294,10 +305,12 @@ function EventForm({ event }) {
             // Remove unwanted fields
             const cleanedContainer = removeUnwantedFields(event);
         
-            setFormData({
+            const newFormData = {
                 name: event?.name || '',
                 description: event?.description || '',
                 type: event?.type || 'public',
+                eventType: event?.eventType || '',
+                customAttendance: event?.customAttendance ?? false,
                 metadata: {
                     name: event?.metadata?.name || '',
                     description: event?.metadata?.description || '',
@@ -325,7 +338,8 @@ function EventForm({ event }) {
                 },
                 registrationStartDate: formatDate(event?.registrationStartDate) || '',
                 registrationEndDate: formatDate(event?.registrationEndDate) || '',
-            });
+            };
+            setFormData(newFormData);
             
             // Set uploaded image if it exists in metadata
             if (event?.metadata?.imageUrl) {
@@ -369,13 +383,18 @@ function EventForm({ event }) {
             } else {
                 // Handle top-level updates
                 field[fieldPath] = value;
-    
+
                 // Reset options if the field type changes to non-option types
                 if (
                     fieldPath === "type" &&
                     !["option", "checkBoxGroup", "radioButtonGroup"].includes(value)
                 ) {
                     field.options = [];
+                }
+
+                // Automatically set type to "number" when valueType is "attendanceInput"
+                if (fieldPath === "valueType" && value === "attendanceInput") {
+                    field.type = "number";
                 }
             }
     
@@ -749,14 +768,14 @@ function EventForm({ event }) {
 
     // Enhanced validation functions for each tab
     const validateCreateEvent = () => {
-        const requiredFields = ['name', 'description', 'type', 'seatsAvailable'];
+        const requiredFields = ['name', 'description', 'type', 'eventType', 'seatsAvailable'];
         const tabErrors = {};
-        
+
         requiredFields.forEach(field => {
             const fieldErrors = validateField(field, formData[field], formData);
             Object.assign(tabErrors, fieldErrors);
         });
-        
+
         return Object.keys(tabErrors).length === 0;
     };
     

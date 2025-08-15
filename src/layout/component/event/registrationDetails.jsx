@@ -494,6 +494,9 @@ function RegistrationDetails({
                                                                 <option value="userInput">User Input - User fills this field</option>
                                                                 <option value="fixed">Fixed - Predefined constant value</option>
                                                                 <option value="dynamic">Dynamic - Calculated from other fields</option>
+                                                                {formData.customAttendance && (
+                                                                    <option value="attendanceInput">Attendance Input - Number input for attendance tracking</option>
+                                                                )}
                                                             </select>
                                                             {errors[`registrationField.${actualIndex}.valueType`] && (
                                                                 <p className="text-red-500 text-sm mt-1">{errors[`registrationField.${actualIndex}.valueType`]}</p>

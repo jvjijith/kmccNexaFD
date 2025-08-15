@@ -120,6 +120,7 @@ export const employeeData = [
         permission: "view",
         dropdownItems: [
           { id: '3-1', title: "Add Event", route: "/event/add", requiredModule: "Events", permission: "create" },
+          { id: '3-1', title: "Add Donation", route: "/event/donation/add", requiredModule: "Events", permission: "create" },
           { id: '3-2', title: "List Event", route: "/event/list", requiredModule: "Events", permission: "view" },
           { id: '3-4', title: "Catalog", route: "/event/catalog", requiredModule: "Events", permission: "view" },
         ]
@@ -297,6 +298,15 @@ export const employeeData = [
           { id: '9-6', title: "Login Info", route: "/admin/logininfo", requiredModule: "comingsoon", permission: "view" },
           { id: '9-7', title: "Logs", route: "/admin/logs", requiredModule: "comingsoon", permission: "view" }
         ]
+      },
+      { 
+        id: '10', 
+        title: 'Scanner', 
+        notifications: false, 
+        route: "/scanner", 
+        parent: "/scanner",
+        requiredModule: "dashboard", 
+        permission: "view" 
       }
     ]
   ];

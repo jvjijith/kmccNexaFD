@@ -17,6 +17,7 @@ function EventForm({ event }) {
         name: '',
         description: '',
         type: 'public',
+        eventType: 'donation',
         metadata: {
             name: '',
             description: '',
@@ -229,6 +230,7 @@ function EventForm({ event }) {
                 name: event?.name || '',
                 description: event?.description || '',
                 type: event?.type || 'public',
+                eventType: 'donation',
                 metadata: {
                     name: 'donation',
                     description: event?.metadata?.description || '',
@@ -851,6 +853,7 @@ function EventForm({ event }) {
     }
 
     console.log("formData", formData);
+    console.log("event", event);
     console.log("errors", errors);
 
     return (

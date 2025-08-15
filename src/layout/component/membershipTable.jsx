@@ -111,6 +111,116 @@ function MembershipTable() {
     setShowRejectModal(true);
   };
 
+  const handleSuspend = async (member) => {
+    try {
+      const updateData = {
+        firstName: member.firstName,
+        lastName: member.lastName,
+        email: member.email,
+        memberStatus: "suspended",
+        rejectionNotes: "",
+        paymentStatus: member.paymentStatus
+      };
+
+      await updateMemberMutation.mutateAsync({
+        url: `/members/${member._id}`,
+        data: updateData
+      });
+
+      refetch();
+    } catch (error) {
+      console.error("Error suspending member:", error);
+    }
+  };
+
+  const handleDismiss = async (member) => {
+    try {
+      const updateData = {
+        firstName: member.firstName,
+        lastName: member.lastName,
+        email: member.email,
+        memberStatus: "dismissed",
+        rejectionNotes: "",
+        paymentStatus: member.paymentStatus
+      };
+
+      await updateMemberMutation.mutateAsync({
+        url: `/members/${member._id}`,
+        data: updateData
+      });
+
+      refetch();
+    } catch (error) {
+      console.error("Error dismissing member:", error);
+    }
+  };
+
+  const handleExpire = async (member) => {
+    try {
+      const updateData = {
+        firstName: member.firstName,
+        lastName: member.lastName,
+        email: member.email,
+        memberStatus: "expired",
+        rejectionNotes: "",
+        paymentStatus: member.paymentStatus
+      };
+
+      await updateMemberMutation.mutateAsync({
+        url: `/members/${member._id}`,
+        data: updateData
+      });
+
+      refetch();
+    } catch (error) {
+      console.error("Error expiring member:", error);
+    }
+  };
+
+  const handleEnquire = async (member) => {
+    try {
+      const updateData = {
+        firstName: member.firstName,
+        lastName: member.lastName,
+        email: member.email,
+        memberStatus: "enquired",
+        rejectionNotes: "",
+        paymentStatus: member.paymentStatus
+      };
+
+      await updateMemberMutation.mutateAsync({
+        url: `/members/${member._id}`,
+        data: updateData
+      });
+
+      refetch();
+    } catch (error) {
+      console.error("Error setting member to enquired:", error);
+    }
+  };
+
+  const handleReactivate = async (member) => {
+    try {
+      const updateData = {
+        firstName: member.firstName,
+        lastName: member.lastName,
+        email: member.email,
+        memberStatus: "accepted",
+        rejectionNotes: "",
+        paymentStatus: member.paymentStatus
+      };
+
+      await updateMemberMutation.mutateAsync({
+        url: `/members/${member._id}`,
+        data: updateData
+      });
+
+      refetch();
+    } catch (error) {
+      console.error("Error reactivating member:", error);
+    }
+  };
+
   const confirmReject = async () => {
     if (!selectedMember || !rejectionNotes.trim()) return;
 
@@ -161,12 +271,16 @@ function MembershipTable() {
       pending: 'bg-yellow-500',
       accepted: 'bg-green-500',
       rejected: 'bg-red-500',
+      suspended: 'bg-orange-600',
+      dismissed: 'bg-red-700',
+      expired: 'bg-gray-600',
+      enquired: 'bg-blue-500',
       paid: 'bg-green-500',
       unpaid: 'bg-red-500',
       refund: 'bg-orange-500',
       canceled: 'bg-gray-500'
     };
-    
+
     return (
       <span className={`px-2 py-1 rounded text-white text-xs ${statusColors[status] || 'bg-gray-500'}`}>
         {status}
@@ -206,9 +320,13 @@ function MembershipTable() {
           className="text-text-color"
         >
           <option value="">All Member Status</option>
+          <option value="pending">Pending</option>
           <option value="accepted">Accepted</option>
           <option value="rejected">Rejected</option>
-          <option value="pending">Pending</option>
+          <option value="suspended">Suspended</option>
+          <option value="dismissed">Dismissed</option>
+          <option value="expired">Expired</option>
+          <option value="enquired">Enquired</option>
         </Select>
 
         <Select
@@ -246,6 +364,7 @@ function MembershipTable() {
           <Table.HeadCell className="border-border bg-table-heading text-text-color">ID</Table.HeadCell>
             <Table.HeadCell className="border-border bg-table-heading text-text-color">Name</Table.HeadCell>
             <Table.HeadCell className="border-border bg-table-heading text-text-color">Email</Table.HeadCell>
+            <Table.HeadCell className="border-border bg-table-heading text-text-color">Phone</Table.HeadCell>
             <Table.HeadCell className="border-border bg-table-heading text-text-color">Application Type</Table.HeadCell>
             <Table.HeadCell className="border-border bg-table-heading text-text-color">Payment Status</Table.HeadCell>
             <Table.HeadCell className="border-border bg-table-heading text-text-color">Member Status</Table.HeadCell>
@@ -264,6 +383,7 @@ function MembershipTable() {
                   {member.firstName} {member.lastName}
                 </Table.Cell>
                 <Table.Cell className="border-border text-text-color">{member.email}</Table.Cell>
+                <Table.Cell className="border-border text-text-color">{member.mobileNumber}</Table.Cell>
                 <Table.Cell className="border-border text-text-color">
                   <span className="capitalize">{member.applicationFor}</span>
                 </Table.Cell>
@@ -283,6 +403,8 @@ function MembershipTable() {
                     <Dropdown.Item onClick={() => handleViewForm(member)}>
                       View Form
                     </Dropdown.Item>
+
+                    {/* Actions for pending members */}
                     {member.memberStatus === 'pending' && (
                       <>
                         <Dropdown.Item
@@ -297,7 +419,103 @@ function MembershipTable() {
                         >
                           {updateMemberMutation.isPending ? 'Processing...' : 'Reject'}
                         </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() => handleEnquire(member)}
+                          disabled={updateMemberMutation.isPending}
+                        >
+                          {updateMemberMutation.isPending ? 'Processing...' : 'Mark as Enquired'}
+                        </Dropdown.Item>
                       </>
+                    )}
+
+                    {/* Actions for accepted members */}
+                    {member.memberStatus === 'accepted' && (
+                      <>
+                        <Dropdown.Item
+                          onClick={() => handleSuspend(member)}
+                          disabled={updateMemberMutation.isPending}
+                        >
+                          {updateMemberMutation.isPending ? 'Processing...' : 'Suspend'}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() => handleDismiss(member)}
+                          disabled={updateMemberMutation.isPending}
+                        >
+                          {updateMemberMutation.isPending ? 'Processing...' : 'Dismiss'}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() => handleExpire(member)}
+                          disabled={updateMemberMutation.isPending}
+                        >
+                          {updateMemberMutation.isPending ? 'Processing...' : 'Mark as Expired'}
+                        </Dropdown.Item>
+                      </>
+                    )}
+
+                    {/* Actions for suspended members */}
+                    {member.memberStatus === 'suspended' && (
+                      <>
+                        <Dropdown.Item
+                          onClick={() => handleReactivate(member)}
+                          disabled={updateMemberMutation.isPending}
+                        >
+                          {updateMemberMutation.isPending ? 'Processing...' : 'Reactivate'}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() => handleDismiss(member)}
+                          disabled={updateMemberMutation.isPending}
+                        >
+                          {updateMemberMutation.isPending ? 'Processing...' : 'Dismiss'}
+                        </Dropdown.Item>
+                      </>
+                    )}
+
+                    {/* Actions for dismissed members */}
+                    {member.memberStatus === 'dismissed' && (
+                      <Dropdown.Item
+                        onClick={() => handleReactivate(member)}
+                        disabled={updateMemberMutation.isPending}
+                      >
+                        {updateMemberMutation.isPending ? 'Processing...' : 'Reactivate'}
+                      </Dropdown.Item>
+                    )}
+
+                    {/* Actions for expired members */}
+                    {member.memberStatus === 'expired' && (
+                      <Dropdown.Item
+                        onClick={() => handleReactivate(member)}
+                        disabled={updateMemberMutation.isPending}
+                      >
+                        {updateMemberMutation.isPending ? 'Processing...' : 'Renew/Reactivate'}
+                      </Dropdown.Item>
+                    )}
+
+                    {/* Actions for enquired members */}
+                    {member.memberStatus === 'enquired' && (
+                      <>
+                        <Dropdown.Item
+                          onClick={() => handleAccept(member)}
+                          disabled={updateMemberMutation.isPending}
+                        >
+                          {updateMemberMutation.isPending ? 'Processing...' : 'Accept'}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() => handleReject(member)}
+                          disabled={updateMemberMutation.isPending}
+                        >
+                          {updateMemberMutation.isPending ? 'Processing...' : 'Reject'}
+                        </Dropdown.Item>
+                      </>
+                    )}
+
+                    {/* Actions for rejected members */}
+                    {member.memberStatus === 'rejected' && (
+                      <Dropdown.Item
+                        onClick={() => handleReactivate(member)}
+                        disabled={updateMemberMutation.isPending}
+                      >
+                        {updateMemberMutation.isPending ? 'Processing...' : 'Reconsider/Accept'}
+                      </Dropdown.Item>
                     )}
                   </Dropdown>
                 </Table.Cell>

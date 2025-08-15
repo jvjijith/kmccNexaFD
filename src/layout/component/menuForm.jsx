@@ -229,6 +229,7 @@ function MenuForm({ menu }) {
   const [formData, setFormData] = useState({
     appId: '',
     menuName: '',
+    menuSlug: '',
     menuType: 'single',
     layoutType: 'left drawer',
     menuPage: '',
@@ -249,18 +250,20 @@ function MenuForm({ menu }) {
     { value: 'multiple', label: 'Multiple' },
   ];
 
-  // Generate dropdown options
+  // Generate dropdown options - combining page title and slug for better UX
   const pageOptions = pageData?.pages?.map((page) => ({
     value: page._id,
-    label: page.title?.[0]?.title || 'Untitled Page',
+    label: `${page.title?.[0]?.title || 'Untitled Page'} (/${page.slug})`,
     slug: page.slug,
+    title: page.title?.[0]?.title || 'Untitled Page',
   })) || [];
 
-  // Generate page slug options for menu items
+  // Generate page slug options for menu items - now showing both title and slug
   const pageSlugOptions = pageData?.pages?.map((page) => ({
     value: page.slug,
-    label: page.slug,
+    label: `${page.referenceName || 'Untitled Page'} (/${page.slug})`,
     pageId: page._id,
+    title: page.referenceName || 'Untitled Page',
   })) || [];
 
   const appOptions = appData?.apps?.map((app) => ({
@@ -281,6 +284,7 @@ function MenuForm({ menu }) {
       setFormData({
         appId: menu?.appId?._id || menu?.appId || '',
         menuName: menu.menuName || '',
+        menuSlug: menu.menuSlug || '',
         menuType: menu.menuType || 'single',
         layoutType: menu.layoutType || 'left drawer',
         menuPage: menu.menuPage || '',
@@ -307,11 +311,21 @@ function MenuForm({ menu }) {
   };
 
   const handleSelectChange = (name, selectedOption) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: selectedOption?.value || '',
-    }));
-    
+    if (name === 'menuPage') {
+      // When selecting a page, set both menuName (title) and menuSlug (slug)
+      setFormData((prev) => ({
+        ...prev,
+        menuPage: selectedOption?.value || '',
+        menuName: selectedOption?.title || '',
+        menuSlug: selectedOption?.slug || '',
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: selectedOption?.value || '',
+      }));
+    }
+
     // Clear error when user makes selection
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
@@ -321,14 +335,19 @@ function MenuForm({ menu }) {
   const handleNestedChange = (itemIndex, field, value) => {
     setFormData((prevData) => {
       const updatedItems = [...prevData.items];
-      updatedItems[itemIndex][field] = value;
 
-      // If menuName (slug) is changed, automatically set the menuPage
-      if (field === 'menuName') {
+      if (field === 'menuSlug') {
+        // When selecting a page slug, set both menuName (title) and menuSlug (slug)
         const selectedPage = pageSlugOptions.find(option => option.value === value);
         if (selectedPage) {
+          updatedItems[itemIndex].menuName = selectedPage.title;
+          updatedItems[itemIndex].menuSlug = selectedPage.value;
           updatedItems[itemIndex].menuPage = selectedPage.pageId;
+        } else {
+          updatedItems[itemIndex][field] = value;
         }
+      } else {
+        updatedItems[itemIndex][field] = value;
       }
 
       return { ...prevData, items: updatedItems };
@@ -347,14 +366,19 @@ function MenuForm({ menu }) {
       if (!updatedItems[itemIndex].multiItems) {
         updatedItems[itemIndex].multiItems = [];
       }
-      updatedItems[itemIndex].multiItems[subItemIndex][field] = value;
 
-      // If menuName (slug) is changed, automatically set the menuPage
-      if (field === 'menuName') {
+      if (field === 'menuSlug') {
+        // When selecting a page slug, set both menuName (title) and menuSlug (slug)
         const selectedPage = pageSlugOptions.find(option => option.value === value);
         if (selectedPage) {
+          updatedItems[itemIndex].multiItems[subItemIndex].menuName = selectedPage.title;
+          updatedItems[itemIndex].multiItems[subItemIndex].menuSlug = selectedPage.value;
           updatedItems[itemIndex].multiItems[subItemIndex].menuPage = selectedPage.pageId;
+        } else {
+          updatedItems[itemIndex].multiItems[subItemIndex][field] = value;
         }
+      } else {
+        updatedItems[itemIndex].multiItems[subItemIndex][field] = value;
       }
 
       return { ...prevData, items: updatedItems };
@@ -375,6 +399,7 @@ function MenuForm({ menu }) {
         {
           menuName: '',
           menuType: 'single',
+          menuSlug: '',
           menuPage: '',
           imageUrl: null,
           allowImage: false,
@@ -393,6 +418,7 @@ function MenuForm({ menu }) {
     updatedItems[itemIndex].multiItems.push({
       menuName: '',
       menuType: 'single',
+      menuSlug: '',
       menuPage: '',
       imageUrl: null,
       allowImage: false,
@@ -670,13 +696,13 @@ function MenuForm({ menu }) {
               />
             </FormField>
 
-            {/* Menu Page */}
-            <FormField label="Menu Page" error={errors.menuPage}>
+            {/* Menu Page (Sets Menu Name & Slug) */}
+            <FormField label="Menu Page (Sets Menu Name & Slug)" error={errors.menuPage}>
               <Select
                 options={pageOptions}
                 value={pageOptions.find((opt) => opt.value === formData.menuPage)}
                 onChange={(opt) => handleSelectChange('menuPage', opt)}
-                placeholder="Select a page (optional)..."
+                placeholder="Select a page (will set menu name and slug)..."
                 isClearable
                 classNames={{
                   control: ({ isFocused }) =>
@@ -692,6 +718,12 @@ function MenuForm({ menu }) {
                     }`,
                 }}
               />
+              {formData.menuName && formData.menuSlug && (
+                <div className="mt-2 text-sm text-gray-600">
+                  <div>Menu Name: <span className="font-medium">{formData.menuName}</span></div>
+                  <div>Menu Slug: <span className="font-medium">/{formData.menuSlug}</span></div>
+                </div>
+              )}
             </FormField>
 
             {/* Settings */}
@@ -756,7 +788,7 @@ function MenuForm({ menu }) {
                   onClick={() => toggleAccordion(itemIndex, "menu")}
                 >
                   <h3 className="font-medium text-gray-900">
-                    Item {itemIndex + 1}: {item.menuName ? `/${item.menuName}` : 'No Page Selected'}
+                    Item {itemIndex + 1}: {item.menuName ? `${item.menuName} (/${item.menuSlug})` : 'No Page Selected'}
                   </h3>
                   <div className="flex items-center space-x-2">
                     <button
@@ -780,13 +812,13 @@ function MenuForm({ menu }) {
                     <div className="flex flex-wrap -mx-2">
                       <div className="w-full sm:w-1/2 px-2">
                         <label className="block mb-2 text-text-color">
-                          Menu Name (Page Slug) <span className="text-red-500">*</span>
+                          Select Page (Sets Name & Slug) <span className="text-red-500">*</span>
                         </label>
                         <Select
                           options={pageSlugOptions}
-                          value={pageSlugOptions.find((opt) => opt.value === item.menuName)}
-                          onChange={(opt) => handleNestedChange(itemIndex, 'menuName', opt?.value || '')}
-                          placeholder="Select a page slug..."
+                          value={pageSlugOptions.find((opt) => opt.value === item.menuSlug)}
+                          onChange={(opt) => handleNestedChange(itemIndex, 'menuSlug', opt?.value || '')}
+                          placeholder="Select a page..."
                           isClearable
                           classNames={{
                             control: ({ isFocused }) =>
@@ -803,6 +835,12 @@ function MenuForm({ menu }) {
                           }}
                         />
                         <ErrorMessage error={errors[`item_${itemIndex}_menuName`]} />
+                        {item.menuName && item.menuSlug && (
+                          <div className="mt-2 text-sm text-gray-600">
+                            <div>Name: <span className="font-medium">{item.menuName}</span></div>
+                            <div>Slug: <span className="font-medium">/{item.menuSlug}</span></div>
+                          </div>
+                        )}
                       </div>
 
                       <div className="w-full sm:w-1/2 px-2">
@@ -899,7 +937,7 @@ function MenuForm({ menu }) {
                               onClick={() => toggleAccordion(subItemIndex, `subitem_${itemIndex}`)}
                             >
                               <h5 className="font-medium text-gray-800">
-                                Sub Item {subItemIndex + 1}: {subItem.menuName ? `/${subItem.menuName}` : 'No Page Selected'}
+                                Sub Item {subItemIndex + 1}: {subItem.menuName ? `${subItem.menuName} (/${subItem.menuSlug})` : 'No Page Selected'}
                               </h5>
                               <div className="flex items-center space-x-2">
                                 <button
@@ -923,13 +961,13 @@ function MenuForm({ menu }) {
                                 <div className="flex flex-wrap -mx-2">
                                   <div className="w-full sm:w-1/2 px-2">
                                     <label className="block mb-2 text-text-color">
-                                      Menu Name (Page Slug) <span className="text-red-500">*</span>
+                                      Select Page (Sets Name & Slug) <span className="text-red-500">*</span>
                                     </label>
                                     <Select
                                       options={pageSlugOptions}
-                                      value={pageSlugOptions.find((opt) => opt.value === subItem.menuName)}
-                                      onChange={(opt) => handleSubItemChange(itemIndex, subItemIndex, 'menuName', opt?.value || '')}
-                                      placeholder="Select a page slug..."
+                                      value={pageSlugOptions.find((opt) => opt.value === subItem.menuSlug)}
+                                      onChange={(opt) => handleSubItemChange(itemIndex, subItemIndex, 'menuSlug', opt?.value || '')}
+                                      placeholder="Select a page..."
                                       isClearable
                                       classNames={{
                                         control: ({ isFocused }) =>
@@ -946,6 +984,12 @@ function MenuForm({ menu }) {
                                       }}
                                     />
                                     <ErrorMessage error={errors[`item_${itemIndex}_subitem_${subItemIndex}_menuName`]} />
+                                    {subItem.menuName && subItem.menuSlug && (
+                                      <div className="mt-2 text-sm text-gray-600">
+                                        <div>Name: <span className="font-medium">{subItem.menuName}</span></div>
+                                        <div>Slug: <span className="font-medium">/{subItem.menuSlug}</span></div>
+                                      </div>
+                                    )}
                                   </div>
 
                                   <div className="w-full sm:w-1/2 px-2">

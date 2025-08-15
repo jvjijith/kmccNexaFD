@@ -138,8 +138,17 @@ function Catalog({ catalogId }) {
       setDescription(catalogData?.description || "");
       setCatType(catalogData?.catType || "manual");
       setDataType(catalogData?.dataType || "product");
-      setSelectedProducts(catalogData?.productIds || []);
-      setSelectedEvents(catalogData?.eventIds || []);
+
+      // Extract only _id values from productIds and eventIds
+      const productIds = (catalogData?.productIds || []).map(product =>
+        typeof product === 'string' ? product : product._id
+      );
+      const eventIds = (catalogData?.eventIds || []).map(event =>
+        typeof event === 'string' ? event : event._id
+      );
+
+      setSelectedProducts(productIds);
+      setSelectedEvents(eventIds);
       setCustomParams(catalogData?.customParams || []);
       setHasUnsavedChanges(false);
     }
@@ -249,25 +258,36 @@ function Catalog({ catalogId }) {
       return;
     }
 
+    // Extract only _id values from selected items
+    const productIds = dataType === "product"
+      ? selectedProducts.map(product => typeof product === 'string' ? product : product._id)
+      : [];
+
+    const eventIds = dataType === "event"
+      ? selectedEvents.map(event => typeof event === 'string' ? event : event._id)
+      : [];
+
     editCatalog({
       name: catalogName.trim(),
       description: description.trim(),
       catType,
       dataType,
-      productIds: dataType === "product" ? selectedProducts : [],
-      eventIds: dataType === "event" ? selectedEvents : [],
+      productIds,
+      eventIds,
       customParams: customParams.map(param => ({
         ...param,
         fieldName: param.fieldName.trim(),
         fieldValue: param.fieldValue.trim()
       })),
     }, {
-      onSuccess: () => {
+      onSuccess: (sucess) => {
         setShowSuccess(true);
         setHasUnsavedChanges(false);
         setTimeout(() => {
           navigate(`/product/catalog`);
         }, 1500);
+
+        console.error('sucess updating catalog:', sucess);
       },
       onError: (error) => {
         console.error('Error updating catalog:', error);
@@ -553,7 +573,7 @@ const selectedItemsData = selectedItems
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Catalog Preview</h2>
               <span className="text-sm text-gray-400">
-                {selectedItems.length-1} {dataType}(s) selected
+                {selectedItems.length} {dataType}(s) selected
               </span>
             </div>
             
