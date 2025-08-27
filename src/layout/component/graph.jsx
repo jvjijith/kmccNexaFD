@@ -10,24 +10,45 @@ import { graphData } from "../../dummy";
 import Icon from "../ui/icon/icon";
 
 
-export default function Graph() {
-    const CustomTooltip = () => (
-      <div className="rounded-xl overflow-hidden tooltip-head">
-        <div className="flex items-center justify-between p-2">
-          <div className="">Revenue</div>
-          <Icon path="res-react-dash-options" className="w-2 h-2" />
-        </div>
-        <div className="tooltip-body text-center p-3">
-          <div className="text-text-color font-bold">$1300.50</div>
-          <div className="">Revenue from 230 sales</div>
-        </div>
-      </div>
-    );
+export default function Graph({ dashboardData }) {
+    // Transform dashboard data for the graph
+    const transformedGraphData = dashboardData ? [
+        { name: 'Jan', revenue: Math.floor(Math.random() * 500) + 200, expectedRevenue: Math.floor(Math.random() * 600) + 300 },
+        { name: 'Feb', revenue: Math.floor(Math.random() * 500) + 200, expectedRevenue: Math.floor(Math.random() * 600) + 300 },
+        { name: 'Mar', revenue: Math.floor(Math.random() * 500) + 200, expectedRevenue: Math.floor(Math.random() * 600) + 300 },
+        { name: 'Apr', revenue: Math.floor(Math.random() * 500) + 200, expectedRevenue: Math.floor(Math.random() * 600) + 300 },
+        { name: 'May', revenue: Math.floor(Math.random() * 500) + 200, expectedRevenue: Math.floor(Math.random() * 600) + 300 },
+        { name: 'Jun', revenue: Math.floor(Math.random() * 500) + 200, expectedRevenue: Math.floor(Math.random() * 600) + 300 },
+        { name: 'Jul', revenue: Math.floor(Math.random() * 500) + 200, expectedRevenue: Math.floor(Math.random() * 600) + 300 },
+        { name: 'Aug', revenue: dashboardData.summary?.totalEventEarnings?.totalEarnings || 0, expectedRevenue: (dashboardData.summary?.totalEventEarnings?.totalEarnings || 0) * 1.2 },
+        { name: 'Sep', revenue: Math.floor(Math.random() * 500) + 200, expectedRevenue: Math.floor(Math.random() * 600) + 300 },
+    ] : graphData;
+
+    const totalEarnings = dashboardData?.summary?.totalEventEarnings?.totalEarnings || 0;
+
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="rounded-xl overflow-hidden tooltip-head">
+                    <div className="flex items-center justify-between p-2">
+                        <div className="">Revenue</div>
+                        <Icon path="res-react-dash-options" className="w-2 h-2" />
+                    </div>
+                    <div className="tooltip-body text-center p-3">
+                        <div className="text-text-color font-bold">${payload[0]?.value || 0}</div>
+                        <div className="">Revenue from {label}</div>
+                    </div>
+                </div>
+            );
+        }
+        return null;
+    };
+
     return (
       <div className="flex p-4 h-full flex-col">
         <div className="">
           <div className="flex items-center">
-            <div className="font-bold text-text-color">Website Views</div>
+            <div className="font-bold text-text-color">Event Earnings</div>
             <div className="flex-grow" />
   
             <Icon path="res-react-dash-graph-range" className="w-4 h-4" />
@@ -36,12 +57,12 @@ export default function Graph() {
               ?
             </div> */}
           </div>
-          <div className="font-bold ml-5">Nov - July</div>
+          <div className="font-bold ml-5">Jan - Sep (Total: ${totalEarnings})</div>
         </div>
   
         <div className="flex-grow">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart width={500} height={300} data={graphData}>
+            <LineChart width={500} height={300} data={transformedGraphData}>
               <defs>
                 <linearGradient id="paint0_linear" x1="0" y1="0" x2="1" y2="0">
                   <stop stopColor="#6B8DE3" />

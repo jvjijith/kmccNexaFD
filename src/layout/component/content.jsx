@@ -5,7 +5,6 @@ import Satisfication from "./satisfaction";
 import Graph from "./graph";
 import TopCountries from "./topCountries";
 import Segmentation from "./segmentation";
-import AddComponent from "./addComponent";
 import { employeeData } from "../../constant";
 import { useSidebar } from "../../context/sidebar.context";
 import { useNavigate } from "react-router";
@@ -18,14 +17,46 @@ export default function Content() {
   
 const {toggleSidebar} = useSidebar();
 const navigate = useNavigate();
-const [userObj, setUserObj, clearUser] = useLocalStorage("user", null);
-const { data: employeeDatas, refetch: refetchEmployees } = useGetData("employee", `/employee/user/${userObj?.uid}`);
+const [userObj, , clearUser] = useLocalStorage("user", null);
+const { data: employeeDatas } = useGetData("employee", `/employee/user/${userObj?.uid}`);
+const { data: dashboardData } = useGetData("dashboard", `/dashboard/overview`);
 const [isDropdownOpen, setDropdownOpen] = useState(false); // State to toggle dropdown
 const currentDate = new Date();
 const formattedDate = currentDate.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
   });
+
+  // Transform dashboard data for components
+  const transformedEmployeeData = dashboardData?.data ? [
+    {
+      id: 1,
+      name: 'Live Events',
+      position: `${dashboardData.data.events.active} Active Events`,
+      transactions: dashboardData.data.events.active,
+      rise: dashboardData.data.events.active > 0,
+      tasksCompleted: Math.round((dashboardData.data.events.active / dashboardData.data.events.total) * 100) || 0,
+      imgId: 0,
+    },
+    {
+      id: 2,
+      name: 'Earnings',
+      position: "Total Earnings From Events",
+      transactions: dashboardData.data.summary.totalEventEarnings.totalEarnings,
+      rise: dashboardData.data.summary.totalEventEarnings.totalEarnings > 0,
+      tasksCompleted: dashboardData.data.summary.totalEventEarnings.totalPaidRegistrations || 0,
+      imgId: 2,
+    },
+    {
+      id: 3,
+      name: 'Membership',
+      position: "Total Members",
+      transactions: dashboardData.data.members.total,
+      rise: dashboardData.data.members.active > dashboardData.data.members.inactive,
+      tasksCompleted: Math.round((dashboardData.data.members.active / dashboardData.data.members.total) * 100) || 0,
+      imgId: 3,
+    },
+  ] : employeeData;
   
     const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
   
@@ -145,7 +176,7 @@ const formattedDate = currentDate.toLocaleDateString('en-US', {
             </div>
 
           {/* </div> */}
-          {employeeData.map(
+          {transformedEmployeeData.map(
             ({
               id,
               name,
@@ -170,28 +201,28 @@ const formattedDate = currentDate.toLocaleDateString('en-US', {
   
           <div className="w-full p-2 lg:w-2/3">
             <div className="rounded-lg bg-card sm:h-80 h-60">
-              <Graph />
+              <Graph dashboardData={dashboardData?.data} />
             </div>
           </div>
           <div className="w-full p-2 lg:w-1/3">
             <div className="rounded-lg bg-card h-80">
-              <TopCountries />
+              <TopCountries dashboardData={dashboardData?.data} />
             </div>
           </div>
   
           <div className="w-full p-2 lg:w-1/3">
             <div className="rounded-lg bg-card h-80">
-              <Segmentation />
+              <Segmentation dashboardData={dashboardData?.data} />
             </div>
           </div>
           <div className="w-full p-2 lg:w-1/3">
             <div className="rounded-lg bg-card h-80">
-              <Satisfication />
+              <Satisfication dashboardData={dashboardData?.data} />
             </div>
           </div>
           <div className="w-full p-2 lg:w-1/3">
             <div className="rounded-lg bg-card overflow-hidden h-80">
-            <Segmentation2 />
+            <Segmentation2 dashboardData={dashboardData?.data} />
               {/* <AddComponent /> */}
             </div>
           </div>

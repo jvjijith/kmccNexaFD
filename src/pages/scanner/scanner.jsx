@@ -39,9 +39,10 @@ function Scanner() {
 
     // API hook for updating attendance
     const {
-        putData: updateAttendance,
-        loading: updateLoading
-    } = usePutData('/event-registrations');
+        mutate: updateAttendance,
+        isLoading: updateLoading,
+        isError: attendanceError
+    } = usePutData("event-registrations", `/event-registrations/${registrationId}`);
 
     // Parse URL to extract eventId and registrationId
     const parseScannedUrl = (url) => {
@@ -371,15 +372,17 @@ function Scanner() {
             attendanceStatus: newAttendanceStatus
         };
 
-        try {
-            await updateAttendance(updateData);
-            toast.success(`Attendance updated! Added ${attendanceUpdate} attendee(s).`);
-            fetchRegistration(); // Refresh data
-            setAttendanceUpdate(1); // Reset to default
-        } catch (error) {
-            console.error('Error updating attendance:', error);
-            toast.error('Failed to update attendance. Please try again.');
-        }
+        updateAttendance(updateData, {
+            onSuccess: (response) => {
+                toast.success(`Attendance updated! Added ${attendanceUpdate} attendee(s).`);
+                fetchRegistration(); // Refresh data
+                setAttendanceUpdate(1); // Reset to default
+            },
+            onError: (error) => {
+                console.error('Error updating attendance:', error);
+                toast.error('Failed to update attendance. Please try again.');
+            }
+        });
     };
 
     // Reset scanner
@@ -725,7 +728,7 @@ function Scanner() {
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-2">
                                 <div 
-                                    className="bg-secondary h-2 rounded-full transition-all duration-300"
+                                    className="bg-green-600 h-2 rounded-full transition-all duration-300"
                                     style={{
                                         width: `${Math.min(100, ((registrationData.totalAttendance || 0) / (registrationData.totalSeats || 1)) * 100)}%`
                                     }}
