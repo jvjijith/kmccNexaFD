@@ -221,7 +221,11 @@ function EventTable() {
               <Table.Cell className="border-border text-text-color">${event.priceConfig.amount}</Table.Cell>
               <Table.Cell className="border-border text-text-color">
                 <Dropdown label="Actions" inline className="bg-secondary-card text-text-color border-black">
-                  <Dropdown.Item onClick={() => navigate(`/event/edit`, { state: { event } })}>
+                  <Dropdown.Item onClick={() =>
+            event.eventType === "donation"
+              ? navigate(`/event/donation/edit`, { state: { event: event } })
+              : navigate(`/event/edit`, { state: { event: event } })
+          }>
                     Edit Event
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleViewRegistrations(event)}>

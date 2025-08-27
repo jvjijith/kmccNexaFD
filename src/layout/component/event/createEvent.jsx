@@ -90,6 +90,41 @@ function CreateEvent({ formData, handleChange, isSubmitting, errors = {} }) {
                     </p>
                 </div>
 
+                {/* Event Category Field */}
+                <div>
+                    <label className="block text-sm font-medium mb-2 text-text-color">
+                        Event Category*
+                    </label>
+                    <select
+                        name="eventType"
+                        value={formData.eventType || ''}
+                        onChange={handleChange}
+                        className={`p-3 bg-secondary-card border rounded-lg w-full text-text-color focus:outline-none focus:ring-2 focus:ring-secondary transition-colors ${
+                            errors.eventType ? 'border-red-500' : 'border-border'
+                        }`}
+                        required
+                    >
+                        <option value="" disabled>
+                            Select event category
+                        </option>
+                        <option value="donation">Donation</option>
+                        <option value="conference">Conference</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="seminar">Seminar</option>
+                        <option value="meetup">Meetup</option>
+                        <option value="webinar">Webinar</option>
+                        <option value="fundraiser">Fundraiser</option>
+                        <option value="networking">Networking</option>
+                        <option value="training">Training</option>
+                    </select>
+                    {errors.eventType && (
+                        <p className="text-red-500 text-sm mt-1">{errors.eventType}</p>
+                    )}
+                    <p className="text-sm text-gray-500 mt-1">
+                        Choose the category that best describes your event type
+                    </p>
+                </div>
+
                 {/* Capacity Section */}
                 <div className="bg-secondary-card p-6 rounded-lg border border-border">
                     <h3 className="text-lg font-medium mb-4 text-text-color">Event Capacity</h3>
@@ -244,6 +279,27 @@ function CreateEvent({ formData, handleChange, isSubmitting, errors = {} }) {
                         </div>
                     </div>
                 )}
+
+                {/* Custom Attendance Field */}
+                <div>
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            name="customAttendance"
+                            checked={formData.customAttendance || false}
+                            onChange={handleChange}
+                            className="w-5 h-5 text-secondary bg-secondary-card border-border rounded focus:ring-secondary focus:ring-2"
+                        />
+                        <div>
+                            <span className="text-sm font-medium text-text-color">
+                                Enable Custom Attendance Tracking
+                            </span>
+                            <p className="text-sm text-gray-500 mt-1">
+                                Allow registration fields to track custom attendance numbers
+                            </p>
+                        </div>
+                    </label>
+                </div>
             </div>
         </section>
     );
