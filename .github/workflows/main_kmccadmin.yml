@@ -9,6 +9,31 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      VITE_FB_API_KEY: "AIzaSyBsCwcyeCdU1Knkxy8A9FTE9zyThqkVvQ4"
+      VITE_FB_AUTH_DOMAIN: "nexa-372db.firebaseapp.com"
+      VITE_FB_PROJECT_ID: "nexa-372db"
+      VITE_FB_STORAGE_BUCKET: "nexa-372db.appspot.com"
+      VITE_FB_MESSAGING_CENTER_ID: "181752991244"
+      VITE_FB_APP_ID: "1:181752991244:web:ca9c58181ea33a82522829"
+      VITE_BASE_URL: "https://dev.nexalogics.com.au/api"
+      VITE_MEDIA_BASE_URL: "https://media.nexalogics.in/"
+      NEXA_ORANGE: "#ff4a17"
+      NEXA_GRAY: "#3f3f3f"
+      PRIMARY: "#fff8f6"
+      SECONDARY: "#eeeeee"
+      SIDEBAR: "#fffaf8"
+      FOCUS_COLOR: "#000000"
+      SIDEBAR_TEXT_COLOR: "#737791"
+      TEXT_COLOR: "#262b43"
+      BTN_TEXT_COLOR: "#ffffff"
+      PRIMARY_CARD: "#ffffff"
+      SECONDARY_CARD: "#ffffff"
+      PRIMARY_BUTTON_COLOR: "#000000"
+      SECONDARY_BUTTON_COLOR: "#3f3f3f"
+      BORDER: "#eeeeee"
+      TABLE_HEADING: "#fff8f6"
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
