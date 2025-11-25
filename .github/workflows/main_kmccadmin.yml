@@ -55,6 +55,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "KMCC"   # must match msdeploySite from publish profile
+          app-name: "kmccadmin"   # must match msdeploySite from publish profile
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_605A096334AE43B1A113055F2EC532B6 }}
           package: build.zip
+
