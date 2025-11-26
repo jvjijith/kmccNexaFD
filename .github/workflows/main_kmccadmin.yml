@@ -34,33 +34,12 @@ jobs:
       - name: Build Vite project
         run: npm run build
 
-      # 🔥 Add web.config inside dist/
-      - name: Create web.config for Azure Routing
-        run: |
-          cat << 'EOF' > dist/web.config
-          <?xml version="1.0" encoding="utf-8"?>
-          <configuration>
-            <system.webServer>
-              <staticContent>
-                <mimeMap fileExtension=".json" mimeType="application/json" />
-                <mimeMap fileExtension=".js" mimeType="text/javascript" />
-                <mimeMap fileExtension=".css" mimeType="text/css" />
-              </staticContent>
-              <rewrite>
-                <rules>
-                  <rule name="SPA Routes" stopProcessing="true">
-                    <match url=".*" />
-                    <conditions logicalGrouping="MatchAll" />
-                    <action type="Rewrite" url="/" />
-                  </rule>
-                </rules>
-              </rewrite>
-            </system.webServer>
-          </configuration>
-          EOF
+      - name: Verify dist folder
+        run: ls -la dist
 
-      - name: Create ZIP package
+      - name: Prepare ZIP for Azure
         run: |
+          mv web.config dist/
           cd dist
           zip -r ../app.zip .
 
