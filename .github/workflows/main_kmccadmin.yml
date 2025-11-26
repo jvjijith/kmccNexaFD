@@ -34,24 +34,12 @@ jobs:
       - name: Build Vite project
         run: npm run build
 
-      - name: Verify dist folder
-        run: ls -la dist
-
-      - name: Prepare ZIP for Azure
-        run: |
-          mv web.config dist/
-          cd dist
-          zip -r ../app.zip .
-
-      - name: Create ZIP package
-        run: |
-          cd dist
-          zip -r ../app.zip .
+      - name: Create zip from dist folder
+        run: zip -r app.zip dist
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: "kmccadmin"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_605A096334AE43B1A113055F2EC532B6 }}
-          package: "./app.zip"
-
+          package: app.zip
