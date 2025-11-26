@@ -43,9 +43,15 @@ jobs:
           cd dist
           zip -r ../app.zip .
 
+      - name: Create ZIP package
+        run: |
+          cd dist
+          zip -r ../app.zip .
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: "kmccadmin"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_605A096334AE43B1A113055F2EC532B6 }}
-          package: "app.zip"
+          package: "./app.zip"
+
