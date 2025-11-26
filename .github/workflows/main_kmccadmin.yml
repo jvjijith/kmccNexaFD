@@ -29,7 +29,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build Vite project
         run: npm run build
@@ -43,3 +43,4 @@ jobs:
           app-name: "kmccadmin"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_605A096334AE43B1A113055F2EC532B6 }}
           package: app.zip
+
